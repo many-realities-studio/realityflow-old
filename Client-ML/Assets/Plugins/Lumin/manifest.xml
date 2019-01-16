@@ -1,0 +1,9 @@
+<manifest xmlns:ml="magicleap" ml:package="ucf.realityflow" ml:version_code="1"  ml:version_name="1.0.3">
+  <application ml:visible_name="RealityFlow" ml:sdk_version="0.19.0" ml:min_api_level="3" ml:minimum_os="nova_1.0">
+      <uses-privilege ml:name="LocalAreaNetwork" />
+      <uses-privilege ml:name="Internet" />
+      <uses-privilege ml:name="WorldReconstruction" /> 
+    <component ml:name=".fullscreen" ml:visible_name="" ml:binary_name="bin/Player.elf" ml:type="Fullscreen">
+    </component>
+  </application>
+</manifest>

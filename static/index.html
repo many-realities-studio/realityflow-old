@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en-us">
+
+<head>
+    <meta charset="utf-8">
+    <meta nam e="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Flow Editor</title>
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <link rel="shortcut icon" href="TemplateData/favicon.ico" />
+    <script src="TemplateData/UnityProgress.js"></script>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/remarkable-bootstrap-notify/dist/bootstrap-notify.min.js"></script>
+    <script src="bower_components/text-encoding/lib/encoding.js"></script>
+    <script src="bower_components/text-encoding/lib/encoding-indexes.js"></script>
+    <script src="js/commands.js"></script>
+    <script src="js/events.js"></script>
+    <script src="js/flow_common.js"></script>
+    <script src="js/client_interface.js"></script>
+    <script src="js/flow.js"></script>
+    <script src="bower_components/WebMidi/src/webmidi.js"></script>
+    <script src="js/music.js"></script>
+    <link rel="stylesheet" href="css/common.css"></link>
+    <link rel="stylesheet" href="css/editor.css"></link>
+    <link rel="stylesheet" href="css/animate.css"></link>
+</head>
+
+<body>
+    <div id="projectCreateModal" tab-index="-1" role="dialog" class="modal fade extension"
+        data-include="project_create_modal">
+    </div>
+    <!-- /.modal -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+                <a class="navbar-brand" href="#">Seebright Flow</a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li id="projectsNav"><a href="#projects"><span class="glyphicon glyphicon-dashboard"></span>Projects</a></li>
+                    <li id="sourcesNav"><a href="#sources"><span class="glyphicon glyphicon-cloud"></span>Sources</a></li>
+                    <li id="statesNav" class="disabled"><a href="#states"><span class="glyphicon glyphicon-th"></span>States</a></li>
+                    <li id="editorNav" class="disabled"><a href="#editor"><span class="glyphicon glyphicon-grain"></span>Editor</a></li>
+                    <li id="helpNav"><a href="#help"><span class="glyphicon glyphicon-question-sign"></span>Help</a></li>
+                </ul>
+                <div id="activeProjectNav" class="nav navbar-text"></div>
+                <div id="activeBubbleNav" class="nav navbar-text"></div>
+                <div id="activeStateNav" class="nav navbar-text"></div>
+                <div id="loadingBox" class="nav navbar-text">
+                    <div id="spinner"></div>
+                    <div id="bgBar"></div>
+                    <div id="progressBar"></div>
+                    <p id="loadingInfo">Loading...</p>
+                </div>
+                <a class="nav navbar-text navbar-right" href="#user"><span class="glyphicon glyphicon-user"></span>lucid</a>
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+        <!--/.container-fluid -->
+    </nav>
+    <div class="container module" id="projectsContainer" data-include="projects/project_container">
+    </div>
+    <div class="container module" id="sourcesContainer" data-include="sources/sources_container">
+    </div>
+    <div class="container module" id="statesContainer" data-include="states/states_container">
+    </div>
+    <div class="container module" id="editorContainer" data-include="editor/editor_container">
+    </div>
+    <div class="container module" id="helpContainer" data-include="help/help_container">
+    </div>
+    </div>
+    <script>document.write('<script src="' + window.location.protocol + '//'
+            + location.host.split(':')[0] + ':' + '35729' + '/livereload.js"></' + 'script>')</script>
+</body>
+
+</html>

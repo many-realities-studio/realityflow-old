@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "Client-HL"
+		},
+		{
+			"path": "."
+		},
+		{
+			"path": "Client-ML"
+		}
+	],
+	"settings": {}
+}

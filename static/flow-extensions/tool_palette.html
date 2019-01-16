@@ -1,0 +1,83 @@
+<script>
+    $("#addCube").click(function () {
+        var cmd = { cmd: 2000, value: 2100, timestamp: Date.now() };
+        ws.send(JSON.stringify(cmd));
+        //console.log("[object_inspector] Sending create cube command", cmd);
+        //sendCommand(cmd); //<---
+    });
+    $("#editorToolPalette > ul > li > a").click(function (evt) {
+        evt.preventDefault();
+        //console.log("Clicked!", evt.currentTarget.id);
+        updateToolset(evt.currentTarget.id)
+    })
+    toolsets = ['primitives','components','transform','meta','events','bubbles'];
+    function updateToolset(hash) {
+        //console.log(hash);
+        for (var i = 0; i < toolsets.length; i++) {
+            if (hash.startsWith(toolsets[i])) {
+                //console.log("Showing ",hash);
+                $("#" + toolsets[i] + "Container").show();
+                $("#" + toolsets[i] + "Nav").parent().addClass("active");
+            } else {
+                //console.log("Hiding ",toolsets[i]);
+                $("#" + toolsets[i] + "Container").hide();
+                $("#" + toolsets[i] + "Nav").parent().removeClass('active');
+            }
+        }
+    };
+    $("#showAlert").click(function () {
+        $.notify({ message: "Hello world" },
+            {
+                position: "absolute",
+                offset: {
+                    x: 0,
+                    y: 50
+                },
+                spacing: 2,
+                type: "info",
+                delay: 3000,
+                newest_on_top: true,
+                mouse_over: "pause",
+                placement: { align: "center" },
+                template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+                '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                '<img data-notify="icon" class="img-circle pull-left">' +
+                '<span data-notify="title">{1}</span>' +
+                '<span data-notify="message">{2}</span>' +
+                '</div>'
+            }
+        );
+    });
+
+</script>
+<div class="panel-body" id="primitivesContainer">
+    <button id="addCube" type="button" class="btn btn-primary btn-lg">Cube</button>
+    <button id="addSphere" type="button" class="btn btn-primary btn-lg">Sphere</button>
+    <button id="addCapsule" type="button" class="btn btn-primary btn-lg">Capsule</button>
+    <button id="addText" type="button" class="btn btn-primary btn-lg">Text</button>
+    <button id="addPlane" type="button" class="btn btn-primary btn-lg">Plane</button>
+    <button id="addImage" type="button" class="btn btn-primary btn-lg">Image</button>
+</div>
+<div class="panel-body" id="transformContainer" style="display: none;">
+    Transform!
+</div>
+<div class="panel-body" id="componentsContainer" style="display: none;">
+    Components!
+</div>
+<div class="panel-body" id="metaContainer" style="display: none;">
+    Meta!
+</div>
+<div class="panel-body" id="eventsContainer" style="display: none;">
+    Events!
+</div>
+<div class="panel-body" id="bubblesContainer" style="display: none;">
+    Bubbles!
+</div>
+<ul class="nav nav-tabs">
+    <li class="active"><a href="#" id="primitivesNav">Primitives</a></li>
+    <li><a href="#" id="componentsNav">Components</a></li>
+    <li><a href="#" id="transformNav">Transforms</a></li>
+    <li><a href="#" id="metaNav">Meta</a></li>
+    <li><a href="#" id="eventsNav"> Events</a></li>
+    <li><a href="#" id="bubblesNav">Bubbles</a></li>
+</ul>

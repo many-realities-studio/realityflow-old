@@ -1,0 +1,22 @@
+{
+  "name": "Flow-Editor",
+  "homepage": "https://github.com/lucidbard/flow-editor",
+  "authors": [
+    "lucidbard <john@lucidbard.com>"
+  ],
+  "description": "A simple Web-based editor for Flow Content",
+  "main": "client_interface.js",
+  "license": "Proprietary",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "livereload-js": "^2.2.1",
+    "bootstrap3-typeahead": "git://github.com/bassjobsen/Bootstrap-3-Typeahead.git#master"
+  }
+}
