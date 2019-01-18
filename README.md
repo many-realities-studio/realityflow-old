@@ -6,5 +6,6 @@ To create a powerful cross-platform mixed reality content creation tool for non-
 users.
 * Project Members
 
+    Stephen Rigdon
 * 
 
