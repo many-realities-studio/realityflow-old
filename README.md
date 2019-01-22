@@ -5,5 +5,6 @@ This is the home of the RealityFlow Project.
 To create a powerful cross-platform mixed reality content creation tool for non-expert
 users.
 * Project Members
+* John Murray (Product Owner)
 * Manuel Govea (Unity Developer)
 
