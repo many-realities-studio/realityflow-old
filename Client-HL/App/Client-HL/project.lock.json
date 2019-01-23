@@ -15996,12 +15996,12 @@
   },
   "project": {
     "restore": {
-      "projectUniqueName": "C:\\Users\\kwilk\\Documents\\GitHub\\realityflow_ucf\\Client-HL\\App\\Client-HL\\Client-HL.csproj",
+      "projectUniqueName": "C:\\Users\\kwilk\\Documents\\realityflow\\Client-HL\\App\\Client-HL\\Client-HL.csproj",
       "projectName": "Client-HL",
-      "projectPath": "C:\\Users\\kwilk\\Documents\\GitHub\\realityflow_ucf\\Client-HL\\App\\Client-HL\\Client-HL.csproj",
-      "projectJsonPath": "C:\\Users\\kwilk\\Documents\\GitHub\\realityflow_ucf\\Client-HL\\App\\Client-HL\\project.json",
+      "projectPath": "C:\\Users\\kwilk\\Documents\\realityflow\\Client-HL\\App\\Client-HL\\Client-HL.csproj",
+      "projectJsonPath": "C:\\Users\\kwilk\\Documents\\realityflow\\Client-HL\\App\\Client-HL\\project.json",
       "packagesPath": "C:\\Users\\kwilk\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\kwilk\\Documents\\GitHub\\realityflow_ucf\\Client-HL\\App\\Client-HL\\obj\\",
+      "outputPath": "C:\\Users\\kwilk\\Documents\\realityflow\\Client-HL\\App\\Client-HL\\obj\\",
       "projectStyle": "ProjectJson",
       "configFilePaths": [
         "C:\\Users\\kwilk\\AppData\\Roaming\\NuGet\\NuGet.Config",

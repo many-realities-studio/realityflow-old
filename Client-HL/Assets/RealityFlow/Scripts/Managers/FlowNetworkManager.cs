@@ -203,10 +203,20 @@ public class FlowNetworkManager : MonoBehaviour
     }
 
 
+    public static List<FlowObject> toBeAdded;
 
     void Start()
     {
-
+        Debug.Log("Initialize FlowProject");
+        FlowProject.activeProject = new FlowProject();
+        FlowProject.activeProject.initialize();
+        if(FlowNetworkManager.toBeAdded != null && FlowNetworkManager.toBeAdded.Count > 0)
+        {
+            foreach (FlowObject evt in FlowNetworkManager.toBeAdded)
+            {
+                evt.Initialize();
+            }
+        }
 #if !UNITY_EDITOR && UNITY_WEBGL
         WebGLInput.captureAllKeyboardInput = false;
 #endif
