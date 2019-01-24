@@ -5,6 +5,8 @@ This is the home of the RealityFlow Project.
 To create a powerful cross-platform mixed reality content creation tool for non-expert
 users.
 * Project Members
-Jonathan White
-* 
+* John Murray (Product Owner)
+* Manuel Govea (Unity Developer)
+* Kayden Wilkinson (Augmented Reality Client Developer)
+* Jonathan White (Mobile Developer)
 
