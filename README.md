@@ -8,4 +8,6 @@ users.
 * John Murray (Product Owner)
 * Manuel Govea (Unity Developer)
 * Kayden Wilkinson (Augmented Reality Client Developer)
+* Jonathan White (Mobile Developer)
+
 
