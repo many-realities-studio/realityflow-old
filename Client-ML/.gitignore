@@ -4,8 +4,8 @@
 [Bb]uild/
 [Bb]uilds/
 Assets/AssetStoreTools*
-Client-ML/Assets/MagicLeap*
-Client-ML/.out/*
+Assets/MagicLeap*
+.out/*
 node_modules/
 .out/*
 .cache*
