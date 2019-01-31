@@ -74,7 +74,7 @@ gulp.task("run-server", function(cb) {
 });
 gulp.task('default', ['build-app', 'monitor', 'watch', 'run-server']);
 
-
+// New deploy to development server
 gulp.task('deploy_dev', function () {
     return gulp.src('.')
         .pipe(rsync({
