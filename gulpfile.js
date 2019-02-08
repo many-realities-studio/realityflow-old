@@ -63,7 +63,7 @@ function runNodeServer() {
     server = spawn('node',['node/server/bld/server.js'], {stdio: 'inherit'});
     server.on('close', function() {
         gutil.log("Server crashing");
-        runNodeServer(); 
+        runNodeServer();
     });
     return server;
 }
@@ -74,15 +74,15 @@ gulp.task("run-server", function(cb) {
 });
 gulp.task('default', ['build-app', 'monitor', 'watch', 'run-server']);
 
-
-gulp.task('deploy', function () {
+// New deploy to development server
+gulp.task('deploy_dev', function () {
     return gulp.src('.')
         .pipe(rsync({
-            hostname: 'jtm.io',
-            username: 'lucid',
+            hostname: 'plato.mrl.ai',
+            username: 'realityflow_daemon',
             recursive: true,
-            exclude: ['client','node_modules','.git','.vscode'],
-            destination: '/home/lucid/flow/',
+            exclude: ['client','node_modules','.git','.vscode','Client-HL','Client-ML','AR Demo'],
+            destination: '/var/realityflow/development/',
             chmod: "ugo=rwX",
             progress: true,
             archive: true,
@@ -98,7 +98,7 @@ var running = false;
 var runCommand = function (command, cb) {
     if (!running) {
         running = true;
-        
+
 /*        docker = spawn('docker-compose', ['up'],
             { stdio: ['ignore', process.stdout, process.stderr] });*/
         /*
@@ -121,7 +121,7 @@ var runCommand = function (command, cb) {
             console.log('child process exited with code ' + code.toString());
         });*/
     }
-    
+
 }
 
 gulp.task('editor', function () {
