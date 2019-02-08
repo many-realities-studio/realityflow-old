@@ -202,11 +202,13 @@ public class FlowNetworkManager : MonoBehaviour
         arButton.GetComponent<Button>().colors = cb;
     }
 
-
+    FlowProject testProject;
 
     void Start()
     {
-
+        testProject = new FlowProject();
+        testProject.initialize();
+        
 #if !UNITY_EDITOR && UNITY_WEBGL
         WebGLInput.captureAllKeyboardInput = false;
 #endif
