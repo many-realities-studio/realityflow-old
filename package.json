@@ -25,7 +25,6 @@
     "gulp-tslint": "^7.0.1",
     "gulp-typescript": "^3.1.4",
     "gulp-uglify": "^2.0.0",
-    "gulp-util": "^3.0.7",
     "isomorphic-ws": "^4.0.1",
     "mkdirs": "^0.0.2",
     "mongodb": "^2.2.11",
@@ -35,6 +34,7 @@
     "tslint": "^4.3.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
+    "webpack": "^4.29.3",
     "websocket": "^1.0.23",
     "ws": "^1.1.1"
   },
@@ -43,10 +43,16 @@
     "@types/mongoose": "^4.7.2",
     "@types/node": "^6.0.58",
     "@types/ws": "0.0.37",
+    "del": "^3.0.0",
     "gulp": "^3.9.1",
+    "gulp-print": "^5.0.0",
+    "gulp-util": "^3.0.8",
     "mocha": "^3.2.0",
     "ts-loader": "^5.2.2",
-    "typescript": "^2.9.2"
+    "typescript": "^2.9.2",
+    "vinyl-paths": "^2.1.0",
+    "webpack-cli": "^3.2.3",
+    "webpack-stream": "^5.2.1"
   },
   "scripts": {
     "test": "mocha",

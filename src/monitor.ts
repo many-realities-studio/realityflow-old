@@ -1,4 +1,4 @@
-console.log("Hello world 2");
+console.log("Hello world 3");
 const WebSocketIso = require("isomorphic-ws")
 
 //const ws = new WebSocketIso("ws://localhost:8999/");
@@ -6,7 +6,7 @@ const ws = new WebSocketIso("ws://tuleap.mrl.ai:8999/");
 ws.binaryType='arraybuffer';
 
 ws.onopen = function open() {
-  console.log("connected");
+  console.log("connected. Woohoo");
   let loginCmd = {cmd: 2,value: {data: 0, timestamp: new Date().getTime()}};
   ws.send(JSON.stringify(loginCmd));
 }

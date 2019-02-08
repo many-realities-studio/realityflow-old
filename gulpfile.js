@@ -21,12 +21,16 @@ var gulpif = require('gulp-if');
 
 var exec = require('child_process').exec;
 var rsync = require('gulp-rsync');
+const webpack_stream = require('webpack-stream')
+const webpack_config = require('./webpack.config.js');
+
 var mkdirs = require('mkdirs');
 var node;
 
-gulp.task('docker-compose',  ['build-app'], function(cb) {
-    runCommand("docker-compose up",cb);
-});
+const paths = {
+    src: './node/server/bld/',
+    build: './static/'
+};
 
 gulp.task('tslint', function() {
     return gulp.src(['src/**/*.ts', '!**/*.d.ts'])
@@ -36,13 +40,23 @@ gulp.task('tslint', function() {
 
 var tsProject = tsc.createProject("./src/tsconfig.json");
 
+gulp.task('webpack', () => {
+    return webpack_stream(webpack_config)
+        .pipe(gulp.dest(`${paths.build}`));
+});
+
 gulp.task("build-app", function () {
     console.log("Rebulding app");
     return gulp.src('src/**/*.ts')
         .pipe(tsProject(tsc.reporter.longReporter()))
         .pipe(gulp.dest("node/server/bld/"))
 });
-
+gulp.task("build-client", function () {
+    console.log("Rebulding app");
+    return gulp.src('src/**/*.ts')
+        .pipe(tsProject(tsc.reporter.longReporter()))
+        .pipe(gulp.dest("static/bld/"))
+});
 var tsTestProject = tsc.createProject("./src/tsconfig.json");
 
 gulp.task("build-test", function () {
@@ -72,7 +86,9 @@ gulp.task("run-server", function(cb) {
     gutil.log("Running server...");
     runNodeServer();
 });
-gulp.task('default', ['build-app', 'monitor', 'watch', 'run-server']);
+gulp.task("run-stable", ['run-server', 'webpack', 'watch-stable']);
+
+gulp.task('default', ['build-app', 'monitor', 'watch', 'run-server', 'webpack']);
 
 // New deploy to development server
 gulp.task('deploy_dev', function () {
@@ -81,7 +97,7 @@ gulp.task('deploy_dev', function () {
             hostname: 'plato.mrl.ai',
             username: 'realityflow_daemon',
             recursive: true,
-            exclude: ['client','node_modules','.git','.vscode','Client-HL','Client-ML','AR Demo'],
+            exclude: ['client','node_modules','.git','.vscode','Client-HL','Client-ML','AR Demo', 'object creation test'],
             destination: '/var/realityflow/development/',
             chmod: "ugo=rwX",
             progress: true,
@@ -92,7 +108,6 @@ gulp.task('deploy_dev', function () {
         }));
 });
 
-var docker;
 var running = false;
 
 var runCommand = function (command, cb) {
@@ -169,6 +184,9 @@ gulp.task('api-update', function () {
     return gulp.src(['./node/editor/server/bld/commands/*.js']);
 })
 
+gulp.task('watch-stable', function() {
+    gulp.watch(['./node/server/bld/server.js'], ['run-server']);
+});
 gulp.task('watch', ['build-app'], function () {
     gutil.log("Starting livereload server");
     try {
