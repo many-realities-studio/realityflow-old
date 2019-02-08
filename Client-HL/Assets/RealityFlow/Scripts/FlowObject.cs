@@ -22,7 +22,6 @@ public class FlowObject : MonoBehaviour {
 	void Update () {
 		if(FlowNetworkManager.connection_established) {
 			((FlowTransform)cmd.transform).Read(gameObject);
-			
 			CommandProcessor.sendCommand(cmd);
 		}
 	}
