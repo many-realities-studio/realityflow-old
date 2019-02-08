@@ -5,7 +5,9 @@ using System.Collections.Generic;
 public class FlowTransformPayload : FlowPayload
 {
     public new FlowTransform data;
-
+    public FlowTransformPayload(FlowTransform init) {
+        data = init;
+    }
     public FlowTransformPayload(string _tid) {
         data = new FlowTransform(_tid);
     }
