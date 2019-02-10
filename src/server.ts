@@ -21,7 +21,6 @@ export class ServerEventDispatcher {
     public static callbacks: Function[][];
 
     public static incoming(command: number, value: { data: any, timestamp: number }, client_id: number, transform?: IFlowTransform) {
-        console.log(value);
         ServerEventDispatcher.dispatch(command, value, value.timestamp, client_id, transform);
     }
 
@@ -71,24 +70,22 @@ export class ServerEventDispatcher {
     }
 
     public static broadcast(event_name: number, event_data: { data: any, _from?: string }, event_time: number, client_id: string,
-        user_id: string, transform_data?: IFlowTransform) {
+                            user_id: string, transform_data?: IFlowTransform) {
         event_data._from = client_id;
         ServerEventDispatcher.connections.forEach((connection, i) => {
             if (ServerEventDispatcher.connections[i].readyState === ServerEventDispatcher.connections[i].OPEN
-                && (user_hash[i] !== undefined && (user_hash[i] === user_id
-                    || user_hash[i] === "0"
-                    || user_id === "-1"))) {
+               // && (user_hash[i] !== undefined && (user_hash[i] === user_id
+               //     || user_hash[i] === "0"
+                //    || user_id === "-1"))
+               ) {
+                console.log(client_hash[i]);
                 // If the connection is admin or connection is same user.
-                if (event_name !== Commands.TRANSFORM_UPDATE
-                    //&& event_name !== Commands.modifier.UPDATE
-                    // && event_name !== Commands.modifier.APPLY
-                    && event_name !== Commands.transform.UPDATE
-                ) {
+                if (event_name !== Commands.transform.UPDATE) {
                     ServerEventDispatcher.send(event_name, event_data, event_time, i);
                 } else {
-                    if (client_hash[i] !== event_data._from) {
+//                    if (client_hash[i] !== event_data._from) {
                         ServerEventDispatcher.send(event_name, event_data, event_time, i, transform_data);
-                    }
+//                  }
                 }
             }
         });
@@ -127,9 +124,7 @@ export class ServerEventDispatcher {
         console.log("Just added connection " + client_id);
 
         function onMessageEvent(evt: MessageEvent) {
-            console.log("received message: " + evt.data);
             const json = JSON.parse(evt.data);
-            console.log(json);
             ServerEventDispatcher.incoming(json.cmd, json.value, client_id, json.transform);
         }
 
@@ -166,6 +161,7 @@ const apiFuncGroup = [ "state",
 // db.on("open", main);
 
 function main() {
+    console.log("New code");
     const app = express();
     // Test 3
     app.use(express.static("./static"));

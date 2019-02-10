@@ -26,7 +26,6 @@ public class FlowProject
     [System.NonSerialized]
     public static FlowProject activeProject;
 
-    
     public void initialize()
     {
         activeProject = this;
@@ -34,11 +33,13 @@ public class FlowProject
         {
             initialized = true;
             transformsById = new Dictionary<string, FlowTransform>();
-
+            if(transforms == null)
+                transforms = new List<FlowTransform>();
             for (int g = 0; g < transforms.Count; g++)
             {
                 transformsById.Add(transforms[g]._id, transforms[g]);
             }
         }
+        FlowObject.registerObject();
     }
 }

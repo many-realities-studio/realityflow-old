@@ -6,6 +6,7 @@ const commands_1 = require("../common/commands");
 let user_hash;
 let client_hash;
 function updateTransform(value, time, ws_id, transform) {
+    console.log("Updating transform");
     server_1.ServerEventDispatcher.broadcast(commands_1.Commands.transform.UPDATE, value, time, client_hash[ws_id], user_hash[ws_id], transform);
 }
 function default_1(sockServer, userHash, clientHash, cb) {

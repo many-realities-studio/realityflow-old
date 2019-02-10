@@ -11,6 +11,7 @@ let client_hash: string[];
 
 
 function updateTransform(value: { data: any }, time: number, ws_id: number, transform: IFlowTransform) {
+    console.log("Updating transform");
     ServerEventDispatcher.broadcast(Commands.transform.UPDATE, value, time, client_hash[ws_id], user_hash[ws_id], transform);
 }
 
