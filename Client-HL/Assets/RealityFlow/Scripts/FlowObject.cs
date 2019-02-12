@@ -20,9 +20,9 @@ public class FlowObject : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(FlowNetworkManager.connection_established) {
-			((FlowTransform)cmd.transform).Read(gameObject);
-			CommandProcessor.sendCommand(cmd);
-		}
+		// if(FlowNetworkManager.connection_established) {
+		// 	((FlowTransform)cmd.transform).Read(gameObject);
+		// 	CommandProcessor.sendCommand(cmd);
+		// }
 	}
 }

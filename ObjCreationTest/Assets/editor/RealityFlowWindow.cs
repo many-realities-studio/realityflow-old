@@ -16,6 +16,12 @@ public class RealityFlowWindow : EditorWindow {
 
     GUISkin skin;
 
+    int window = 0;
+
+    string uName = "", pWord = "";
+
+    string user = "Mago", pass = "12345";
+
     static ObjectData objectData;
 
     public static ObjectData ObjectInfo { get { return objectData; } }
@@ -92,10 +98,36 @@ public class RealityFlowWindow : EditorWindow {
     {
         GUILayout.BeginArea(bodySection);
 
-        //GUILayout.Label("Create new object");
-        if (GUILayout.Button("Create new Object", GUILayout.Height(40)))
+        switch(window)
         {
-            ObjectSettings.OpenWindow();
+            case 0:
+                // login window
+                EditorGUILayout.BeginHorizontal();
+                GUILayout.Label("User: ");
+                uName = EditorGUILayout.TextField(uName);
+                EditorGUILayout.EndHorizontal();
+                EditorGUILayout.BeginHorizontal();
+                GUILayout.Label("Password: ");
+                pWord = EditorGUILayout.TextField(pWord);
+                EditorGUILayout.EndHorizontal();
+
+                if (GUILayout.Button("Log in", GUILayout.Height(40)))
+                {
+                    if (uName.Equals(user) && pWord.Equals(pass))
+                    {
+                        window = 1;
+                        DrawBody();
+                    }
+                }
+                break;
+
+            case 1:
+                //GUILayout.Label("Create new object");
+                if (GUILayout.Button("Create new Object", GUILayout.Height(40)))
+                {
+                    ObjectSettings.OpenWindow();
+                }
+                break;
         }
 
         GUILayout.EndArea();
@@ -197,6 +229,10 @@ public class ObjectSettings : EditorWindow
             manager.tag = s;
 
             manager.AddComponent(typeof(ObjectManager));
+            manager.AddComponent(typeof(FlowNetworkManager));
+            manager.GetComponent<FlowNetworkManager>().LocalServer = Config.LOCAL_HOST;
+            manager.GetComponent<FlowNetworkManager>().mainGameCamera = GameObject.FindGameObjectWithTag("MainCamera");
+            manager.AddComponent(typeof(DoOnMainThread));
         }
 
         // Get prefab path
@@ -209,12 +245,10 @@ public class ObjectSettings : EditorWindow
 
         // Set the new flowObject as a child of the object manager
         objPrefab.transform.SetParent(manager.transform);
-
-        objPrefab.AddComponent(typeof(ObjectSync));
-        objPrefab.GetComponent<ObjectSync>().SetData(RealityFlowWindow.ObjectInfo);
-
         objPrefab.name = RealityFlowWindow.ObjectInfo.objectName;
         objPrefab.transform.localScale = RealityFlowWindow.ObjectInfo.scale;
+
+        objPrefab.AddComponent(typeof(FlowObject));
 
         // Clear all fields in the settings window
         objData.objectName = "";
