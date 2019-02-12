@@ -36,8 +36,10 @@ public class FlowProjectCommand : FlowEvent
 [System.Serializable]
 public class FlowTransformCommand : FlowEvent
 {
+    public FlowTransformCommand() {
+        this.cmd = Commands.Transform.UPDATE;
+    }
     public FlowTransform transform;
-
     public override void Send(WebSocket w)
     {
         timestamp = System.DateTime.UtcNow.Ticks;

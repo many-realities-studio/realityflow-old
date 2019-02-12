@@ -112,7 +112,6 @@ public class Commands
         public const int DISASSOCIATE_FLOW_OBJECt = 5011;
     }
     public const int REGISTER_CLIENT = 0;
-    public const int TRANSFORM_UPDATE = 1;
     public const int LOGIN = 2;
     public const int MAKE_MASTER = 3;
     public const int CONNECTION_REESTABLISHED = 4;

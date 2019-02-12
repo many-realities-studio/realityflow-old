@@ -21,12 +21,16 @@ var gulpif = require('gulp-if');
 
 var exec = require('child_process').exec;
 var rsync = require('gulp-rsync');
+const webpack_stream = require('webpack-stream')
+const webpack_config = require('./webpack.config.js');
+
 var mkdirs = require('mkdirs');
 var node;
 
-gulp.task('docker-compose',  ['build-app'], function(cb) {
-    runCommand("docker-compose up",cb);
-});
+const paths = {
+    src: './node/server/bld/',
+    build: './static/'
+};
 
 gulp.task('tslint', function() {
     return gulp.src(['src/**/*.ts', '!**/*.d.ts'])
@@ -36,13 +40,23 @@ gulp.task('tslint', function() {
 
 var tsProject = tsc.createProject("./src/tsconfig.json");
 
+gulp.task('webpack', () => {
+    return webpack_stream(webpack_config)
+        .pipe(gulp.dest(`${paths.build}`));
+});
+
 gulp.task("build-app", function () {
     console.log("Rebulding app");
     return gulp.src('src/**/*.ts')
         .pipe(tsProject(tsc.reporter.longReporter()))
         .pipe(gulp.dest("node/server/bld/"))
 });
-
+gulp.task("build-client", function () {
+    console.log("Rebulding app");
+    return gulp.src('src/**/*.ts')
+        .pipe(tsProject(tsc.reporter.longReporter()))
+        .pipe(gulp.dest("static/bld/"))
+});
 var tsTestProject = tsc.createProject("./src/tsconfig.json");
 
 gulp.task("build-test", function () {
@@ -63,7 +77,7 @@ function runNodeServer() {
     server = spawn('node',['node/server/bld/server.js'], {stdio: 'inherit'});
     server.on('close', function() {
         gutil.log("Server crashing");
-        runNodeServer(); 
+        runNodeServer();
     });
     return server;
 }
@@ -72,17 +86,19 @@ gulp.task("run-server", function(cb) {
     gutil.log("Running server...");
     runNodeServer();
 });
-gulp.task('default', ['build-app', 'monitor', 'watch', 'run-server']);
+gulp.task("run-stable", ['run-server', 'webpack', 'watch-stable']);
 
+gulp.task('default', ['build-app', 'monitor', 'watch', 'run-server', 'webpack']);
 
-gulp.task('deploy', function () {
+// New deploy to development server
+gulp.task('deploy_dev', function () {
     return gulp.src('.')
         .pipe(rsync({
-            hostname: 'jtm.io',
-            username: 'lucid',
+            hostname: 'plato.mrl.ai',
+            username: 'realityflow_daemon',
             recursive: true,
-            exclude: ['client','node_modules','.git','.vscode'],
-            destination: '/home/lucid/flow/',
+            exclude: ['client','node_modules','.git','.vscode','Client-HL','Client-ML','AR Demo', 'object creation test'],
+            destination: '/var/realityflow/development/',
             chmod: "ugo=rwX",
             progress: true,
             archive: true,
@@ -92,13 +108,12 @@ gulp.task('deploy', function () {
         }));
 });
 
-var docker;
 var running = false;
 
 var runCommand = function (command, cb) {
     if (!running) {
         running = true;
-        
+
 /*        docker = spawn('docker-compose', ['up'],
             { stdio: ['ignore', process.stdout, process.stderr] });*/
         /*
@@ -121,7 +136,7 @@ var runCommand = function (command, cb) {
             console.log('child process exited with code ' + code.toString());
         });*/
     }
-    
+
 }
 
 gulp.task('editor', function () {
@@ -169,6 +184,9 @@ gulp.task('api-update', function () {
     return gulp.src(['./node/editor/server/bld/commands/*.js']);
 })
 
+gulp.task('watch-stable', function() {
+    gulp.watch(['./node/server/bld/server.js'], ['run-server']);
+});
 gulp.task('watch', ['build-app'], function () {
     gutil.log("Starting livereload server");
     try {
