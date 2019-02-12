@@ -3,33 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class FlowObject : MonoBehaviour {
-    FlowTransform ft;
-	// Use this for initialization
-	void Start () {
-        ft = new FlowTransform(this.gameObject);
-        if(FlowProject.activeProject != null)
-            ft.RegisterTransform();
-        else
-        {
-            if(FlowNetworkManager.toBeAdded == null)
-            {
-                FlowNetworkManager.toBeAdded = new List<FlowObject>();
-                FlowNetworkManager.toBeAdded.Add(this);
-            }
-        }
 
+	FlowTransform ft;
+	FlowTransformCommand cmd = new FlowTransformCommand();
+	// Use this for initialization
+	void Start ()
+    {
+	    ft = new FlowTransform(gameObject);
+	    ft.id = "1";
+	    ft._id = "1";
+	    cmd.transform = ft;
+	    FlowObject.fo = this;
 	}
+
+	public static FlowObject fo;
+	public static void registerObject() {
+		fo.ft.RegisterTransform();
+	}
+	
     public void Initialize()
     {
         ft.RegisterTransform();
     }
-    // Update is called once per frame
-    void Update () {
-        if (FlowNetworkManager.connection_established)
-        {
-            FlowTransformCommand cmd = new FlowTransformCommand();
-            cmd.transform = ft;
-            CommandProcessor.sendCommand(new FlowTransformCommand());
-        }
+
+	// Update is called once per frame
+	void Update () {
+		if(FlowNetworkManager.connection_established) {
+			((FlowTransform)cmd.transform).Read(gameObject);
+			CommandProcessor.sendCommand(cmd);
+		}
 	}
 }

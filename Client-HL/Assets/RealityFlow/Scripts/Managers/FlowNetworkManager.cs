@@ -202,21 +202,13 @@ public class FlowNetworkManager : MonoBehaviour
         arButton.GetComponent<Button>().colors = cb;
     }
 
-
-    public static List<FlowObject> toBeAdded;
+    FlowProject testProject;
 
     void Start()
     {
-        Debug.Log("Initialize FlowProject");
-        FlowProject.activeProject = new FlowProject();
-        FlowProject.activeProject.initialize();
-        if(FlowNetworkManager.toBeAdded != null && FlowNetworkManager.toBeAdded.Count > 0)
-        {
-            foreach (FlowObject evt in FlowNetworkManager.toBeAdded)
-            {
-                evt.Initialize();
-            }
-        }
+        testProject = new FlowProject();
+        testProject.initialize();
+        
 #if !UNITY_EDITOR && UNITY_WEBGL
         WebGLInput.captureAllKeyboardInput = false;
 #endif
@@ -295,6 +287,7 @@ public class FlowNetworkManager : MonoBehaviour
         }
         
         connected = true;
+        FlowNetworkManager.connection_established = true;
         Debug.Log("[unity] Connected!");
         switch (clientType)
         {
@@ -386,10 +379,10 @@ public class FlowNetworkManager : MonoBehaviour
         }
         if (CommandProcessor.cmdBuffer.Count > 0 && connected)
         {
-            Debug.Log("Sending command!");
+//            Debug.Log("Sending command!");
             foreach (FlowEvent cmd in CommandProcessor.cmdBuffer)
             {
-                Debug.Log(JsonUtility.ToJson(cmd));
+//                Debug.Log(JsonUtility.ToJson(cmd));
                 cmd.Send(w);
             }
             CommandProcessor.cmdBuffer.Clear();

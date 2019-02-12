@@ -6,7 +6,11 @@ public class TransformMenuMovement : MonoBehaviour {
 
     Bounds toolBounds;
     GameObject cursor;
+    Vector3 menuPosition;
     bool initialSetupComplete = false;
+
+    [Range(-30.0f, 30)]
+    public float depth = .3f;
 
 	// Use this for initialization
 	void Start ()
@@ -17,24 +21,26 @@ public class TransformMenuMovement : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-		if(transform.localPosition.x - cursor.transform.localPosition.x > toolBounds.extents.x / 3 ||
-            transform.localPosition.x - cursor.transform.localPosition.x < -toolBounds.extents.x / 3 ||
-            transform.localPosition.y - cursor.transform.localPosition.y > toolBounds.extents.y / 3 ||
-            transform.localPosition.y - cursor.transform.localPosition.y < -toolBounds.extents.y / 3)
+        menuPosition = NRSRManager.menuPosition;
+
+		if(transform.localPosition.x - menuPosition.x > toolBounds.extents.x / 3 ||
+            transform.localPosition.x - menuPosition.x < -toolBounds.extents.x / 3 ||
+            transform.localPosition.y - menuPosition.y > toolBounds.extents.y / 3 ||
+            transform.localPosition.y - menuPosition.y < -toolBounds.extents.y / 3)
         {
-            transform.position = Vector3.Lerp(transform.position, cursor.transform.position, 0.02f);
+            transform.position = Vector3.Lerp(transform.position, menuPosition, 0.02f);
         }
 
         transform.rotation = Quaternion.Lerp(transform.rotation, cursor.transform.rotation * Quaternion.Euler(0, 0, 180), 1);
 
-        transform.position = new Vector3(transform.position.x, transform.position.y, cursor.transform.position.z - 0.3f);
+        transform.position = new Vector3(transform.position.x, transform.position.y, menuPosition.z - depth);
 	}
 
     void enabledGetPosition()
     {
         if(!initialSetupComplete)
         {
-            transform.position = cursor.transform.position;
+            transform.position = menuPosition;
             transform.rotation = cursor.transform.rotation * Quaternion.Euler(0, 0, 180);
             initialSetupComplete = true;
         }

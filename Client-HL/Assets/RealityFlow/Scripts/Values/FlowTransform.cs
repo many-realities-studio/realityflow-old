@@ -40,6 +40,16 @@ public class FlowTransform : FlowValue
         q_w = transform.localRotation.w;
     }
 
+    public void Read(GameObject go) {
+        x = go.transform.localPosition.x;
+        y = go.transform.localPosition.y;
+        z = go.transform.localPosition.z;
+        q_x = go.transform.localRotation.x;
+        q_y = go.transform.localRotation.y;
+        q_z = go.transform.localRotation.z;
+        q_w = go.transform.localRotation.w;
+    }
+
     public void Copy(FlowTransform source) {
         x = source.x;
         y = source.y;

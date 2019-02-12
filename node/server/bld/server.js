@@ -23,7 +23,6 @@ class ServerEventDispatcher {
         ServerEventDispatcher.wss.on("connection", this.connection);
     }
     static incoming(command, value, client_id, transform) {
-        console.log(value);
         ServerEventDispatcher.dispatch(command, value, value.timestamp, client_id, transform);
     }
     static send(event_name, event_data, event_time, client_id, transform_data) {
@@ -65,19 +64,17 @@ class ServerEventDispatcher {
     }
     static broadcast(event_name, event_data, event_time, client_id, user_id, transform_data) {
         event_data._from = client_id;
+        console.log(event_data._from);
         ServerEventDispatcher.connections.forEach((connection, i) => {
-            if (ServerEventDispatcher.connections[i].readyState === ServerEventDispatcher.connections[i].OPEN
-                && (user_hash[i] !== undefined && (user_hash[i] === user_id
-                    || user_hash[i] === "0"
-                    || user_id === "-1"))) {
-                if (event_name !== commands_1.Commands.TRANSFORM_UPDATE
-                    && event_name !== commands_1.Commands.transform.UPDATE) {
+            if (ServerEventDispatcher.connections[i].readyState === ServerEventDispatcher.connections[i].OPEN) {
+                console.log(client_hash[i]);
+                if (event_name !== commands_1.Commands.transform.UPDATE) {
                     ServerEventDispatcher.send(event_name, event_data, event_time, i);
                 }
                 else {
-                    if (client_hash[i] !== event_data._from) {
-                        ServerEventDispatcher.send(event_name, event_data, event_time, i, transform_data);
-                    }
+                    console.log("Sending to " + i);
+                    console.log("Sending data frame");
+                    ServerEventDispatcher.send(event_name, event_data, event_time, i, transform_data);
                 }
             }
         });
@@ -98,9 +95,7 @@ class ServerEventDispatcher {
         const client_id = ServerEventDispatcher.connections.indexOf(ws);
         console.log("Just added connection " + client_id);
         function onMessageEvent(evt) {
-            console.log("received message: " + evt.data);
             const json = JSON.parse(evt.data);
-            console.log(json);
             ServerEventDispatcher.incoming(json.cmd, json.value, client_id, json.transform);
         }
         function onCloseEvent(evt) {
@@ -126,6 +121,7 @@ const url = "mongodb://mongo:27017/flow";
 const apiFuncGroup = ["state",
     "client", "user", "event", "transform"];
 function main() {
+    console.log("New code");
     const app = express();
     app.use(express.static("./static"));
     const server = http.createServer(app);

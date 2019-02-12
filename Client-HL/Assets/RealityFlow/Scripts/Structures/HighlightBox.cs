@@ -22,10 +22,13 @@ public class HighlightBox : MonoBehaviour, IFocusable {
 
     public void OnFocusExit()
     {
-        if (boundingBoxCreated && isActive)
-            isActive = false;
-
+        if (!boundingBoxCreated || !isActive 
+            || NRSRManager.holdSelectedObject_LookingAtTransformTool 
+            || NRSRManager.holdSelectedObject_UsingTransformTool)
+            return;
+   
         NRSRManager.clearFocusedObjectFromManager();
+        isActive = false;
     }
 
     // Use this for initialization

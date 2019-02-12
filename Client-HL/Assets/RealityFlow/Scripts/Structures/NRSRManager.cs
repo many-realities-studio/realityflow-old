@@ -24,14 +24,64 @@ public class NRSRManager : Singleton<NRSRManager>
     public static event onObjectFocused objectFocused;
     public static event onObjectFocused objectUnFocused;
 
+    public RaycastHit hitInfo;
+    public static bool holdSelectedObject_LookingAtTransformTool;
+    public static bool holdSelectedObject_UsingTransformTool;
+    LayerMask layerMask;
+    public static Vector3 menuPosition;
+
+    private void Start()
+    {
+
+        layerMask = 1 << 23;
+        layerMask = ~layerMask;
+        
+    }
+
     private void Update()
     {
-        if (focusedObject == null && objectUnFocused != null)
-            objectUnFocused();
+        if (holdSelectedObject_UsingTransformTool)
+            return;
 
-        if (focusedObject != null && objectFocused != null)
-            objectFocused();
+        raycastToHoldFocusedObject();
+        menuPosition = hitInfo.point;
+
+        if (holdSelectedObject_LookingAtTransformTool)
+        {
+            objectFocused?.Invoke();
+        }
+        else
+        {
+            focusedObject = null;
+            objectUnFocused?.Invoke();
+        }
     }
+
+    public void raycastToHoldFocusedObject()
+    {
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward,
+            out hitInfo, Mathf.Infinity, layerMask))
+        {
+            if (hitInfo.transform == null)
+            {
+                holdSelectedObject_LookingAtTransformTool = false;
+                return;
+            }
+
+            if (focusedObject != null)
+            {
+                if (focusedObject.transform.root.name == hitInfo.transform.root.name)
+                {
+                    holdSelectedObject_LookingAtTransformTool = true;
+                }
+                else
+                    holdSelectedObject_LookingAtTransformTool = false;
+            }
+        }
+        else
+            holdSelectedObject_LookingAtTransformTool = false;
+    }
+
     private void FixedUpdate()
     {
         findObjectsInScene();

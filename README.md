@@ -10,6 +10,7 @@ users.
 * Kayden Wilkinson (Augmented Reality Client Developer)
 * Jonathan White (Mobile Developer)
 * Stephen Rigdon (Server and Database Developer)
+* Jonathan Havener (Web Developer)
 
 
 
