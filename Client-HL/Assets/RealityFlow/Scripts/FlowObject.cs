@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class FlowObject : MonoBehaviour {
+
+	public bool selected = false;
 	FlowTransform ft;
 	FlowTransformCommand cmd = new FlowTransformCommand();
 	// Use this for initialization
@@ -20,9 +22,13 @@ public class FlowObject : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		// if(FlowNetworkManager.connection_established) {
-		// 	((FlowTransform)cmd.transform).Read(gameObject);
-		// 	CommandProcessor.sendCommand(cmd);
-		// }
+		if (selected)
+		{
+			if(FlowNetworkManager.connection_established) 
+			{
+				((FlowTransform)cmd.transform).Read(gameObject);
+				CommandProcessor.sendCommand(cmd);
+			}
+		}
 	}
 }

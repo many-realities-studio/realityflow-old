@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 /// <summary>
 /// Establishes a connection to the Flow server through websocket connections and handles high-level communication
 /// </summary>
-
+[ExecuteInEditMode]
 public class FlowNetworkManager : MonoBehaviour
 {
     public bool LocalServer;
@@ -162,11 +162,20 @@ public class FlowNetworkManager : MonoBehaviour
         Debug.Log("Connected Websocket!");
     }
 
-    void Awake()
+    public void Awake()
     {
         instance = this;
         Debug.Log("Setting main camera " +  clientType);
+        
+        if (mainGameCamera == null)
+        {
+            GameObject cam = GameObject.FindGameObjectWithTag("MainCamera");
+            FlowCameras.mainCamera = cam.GetComponent<Camera>();
+        }
+        else
+        {
             FlowCameras.mainCamera = mainGameCamera.GetComponent<Camera>();
+        }
         mainCanvas = GameObject.Find("DebugCanvas").GetComponent<Canvas>();
         /* if (DebugPanel.instance.forceHolo == true)
         {
@@ -205,7 +214,7 @@ public class FlowNetworkManager : MonoBehaviour
 
     FlowProject testProject;
 
-    void Start()
+    public void Start()
     {
         testProject = new FlowProject();
         testProject.initialize();
@@ -314,41 +323,44 @@ public class FlowNetworkManager : MonoBehaviour
         //MidiOut.NoteOn (note, accidental, octave, value, channel);	
 
         //mainCanvas.renderMode = RenderMode.WorldSpace;
-        while (true)
-        {
-            reply = w.RecvString();
-            if (reply != null && reply != "Null")
-            {
-                Debug.Log("Processing Command");
-                FlowEvent incoming = JsonUtility.FromJson<FlowEvent>(reply);
-                if (incoming.cmd >= Commands.Project.MIN && incoming.cmd <= Commands.Project.MAX)
-                {
-                    CommandProcessor.processProjectCommand(JsonUtility.FromJson<FlowProjectCommand>(reply));
-                }
-                else
-                {
-                    CommandProcessor.processCommand(incoming);
-                }
-            }
-            if (w.error != null)
-            {
-                Debug.Log("[unity] Error: " + w.error);
-                connected = false;
 
-                yield return new WaitForSeconds(5);
-#if !UNITY_WSA || UNITY_EDITOR
-                DoOnMainThread.ExecuteOnMainThread.Enqueue(() =>
-                {
-                    StartCoroutine(ConnectWebsocket());
-                });
-                Debug.Log("Connect connection");
-                CommandProcessor.sendCommand(Commands.LOGIN, uid.ToString());
-                loggedIn = false;
-#endif
-            }
-            yield return 0;
-        }
-    }
+
+        // recieve updates from the server (currently not working)     
+//         while (true)
+//         {
+//             reply = w.RecvString();
+//             if (reply != null && reply != "Null")
+//             {
+//                 Debug.Log("Processing Command");
+//                 FlowEvent incoming = JsonUtility.FromJson<FlowEvent>(reply);
+//                 if (incoming.cmd >= Commands.Project.MIN && incoming.cmd <= Commands.Project.MAX)
+//                 {
+//                     CommandProcessor.processProjectCommand(JsonUtility.FromJson<FlowProjectCommand>(reply));
+//                 }
+//                 else
+//                 {
+//                     CommandProcessor.processCommand(incoming);
+//                 }
+//             }
+//             if (w.error != null)
+//             {
+//                 Debug.Log("[unity] Error: " + w.error);
+//                 connected = false;
+
+//                 yield return new WaitForSeconds(5);
+// #if !UNITY_WSA || UNITY_EDITOR
+//                 DoOnMainThread.ExecuteOnMainThread.Enqueue(() =>
+//                 {
+//                     StartCoroutine(ConnectWebsocket());
+//                 });
+//                 Debug.Log("Connect connection");
+//                 CommandProcessor.sendCommand(Commands.LOGIN, uid.ToString());
+//                 loggedIn = false;
+// #endif
+//             }
+//             yield return 0;
+//         }
+     }
 
     void OnWebLoggedIn()
     {
@@ -370,7 +382,7 @@ public class FlowNetworkManager : MonoBehaviour
     /// <summary>
     /// Update is called every frame, if the MonoBehaviour is enabled.
     /// </summary>
-    void Update()
+    public void Update()
     {
 
         // Start with delete key.
@@ -389,6 +401,42 @@ public class FlowNetworkManager : MonoBehaviour
             }
             CommandProcessor.cmdBuffer.Clear();
         }
+    }
+
+    // process incoming commands for edit mode
+    public void ProcessEditCommand ()
+    {
+        reply = w.RecvString();
+        if (reply != null && reply != "Null")
+        {
+            Debug.Log("Processing Command");
+            FlowEvent incoming = JsonUtility.FromJson<FlowEvent>(reply);
+            if (incoming.cmd >= Commands.Project.MIN && incoming.cmd <= Commands.Project.MAX)
+            {
+                CommandProcessor.processProjectCommand(JsonUtility.FromJson<FlowProjectCommand>(reply));
+            }
+            else
+            {
+                CommandProcessor.processCommand(incoming);
+            }
+        }
+//         if (w.error != null)
+//             {
+//                 Debug.Log("[unity] Error: " + w.error);
+//                 connected = false;
+
+//                 yield return new WaitForSeconds(5);
+// #if !UNITY_WSA || UNITY_EDITOR
+//                 DoOnMainThread.ExecuteOnMainThread.Enqueue(() =>
+//                 {
+//                     StartCoroutine(ConnectWebsocket());
+//                 });
+//                 Debug.Log("Connect connection");
+//                 CommandProcessor.sendCommand(Commands.LOGIN, uid.ToString());
+//                 loggedIn = false;
+// #endif
+//             }
+//             yield return 0;
     }
 
     public static int primitiveID = 0;

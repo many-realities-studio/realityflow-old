@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class FlowObject : MonoBehaviour {
+
+	public bool selected = false;
 	FlowTransform ft;
 	FlowTransformCommand cmd = new FlowTransformCommand();
 	// Use this for initialization
-	void Start () {
+	public void Start () {
 	ft = new FlowTransform(gameObject);
 	ft.id = "1";
 	ft._id = "1";
@@ -19,10 +22,14 @@ public class FlowObject : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		if(FlowNetworkManager.connection_established) {
-			((FlowTransform)cmd.transform).Read(gameObject);
-			CommandProcessor.sendCommand(cmd);
+	public void Update () {
+		if (selected)
+		{
+			if(FlowNetworkManager.connection_established) 
+			{
+				((FlowTransform)cmd.transform).Read(gameObject);
+				CommandProcessor.sendCommand(cmd);
+			}
 		}
 	}
 }

@@ -24,7 +24,37 @@ public class RealityFlowWindow : EditorWindow {
 
     static ObjectData objectData;
 
+    private int timer = 2;
+    private bool isManagerInit = false;
+
     public static ObjectData ObjectInfo { get { return objectData; } }
+
+    // private void CallbackFunction()
+    // {
+    //     if (--timer <= 0)
+    //     {
+    //         //GameObject gm = GameObject.Find("Updater");
+    //         GameObject gm = GameObject.FindGameObjectWithTag("ObjManager");
+
+    //         if (gm != null && window == 2)
+    //         {
+    //             // List<GameObject> li = gm.GetComponent<ObjectManager>().GetFlowObjects();
+
+    //             // foreach (GameObject o in li)
+    //             // {
+    //             //     o.GetComponent<FlowObject>().Update();
+    //             // }
+    //             // gm.GetComponent<FlowNetworkManager>().Update();
+    //             // gm.GetComponent<FlowNetworkManager>().ProcessEditCommand();
+
+    //             //gm.GetComponent<EditorUpdater>().Update();
+
+    //             UnityEditorInternal.InternalEditorUtility.RepaintAllViews();
+    //         }
+
+    //        timer = 2;
+    //     }
+    // }
 
     [MenuItem("Window/Reality Flow")]
     static void OpenWindow()
@@ -41,7 +71,20 @@ public class RealityFlowWindow : EditorWindow {
         InitTextures();
         InitData();
         skin = Resources.Load<GUISkin>("guiStyles/RFSkin");
+        CreateTag("ObjManager");
+        //EditorApplication.update += CallbackFunction;
     }
+
+    // void OnDisable()
+    // {
+    //     EditorApplication.update -= CallbackFunction;
+    //     GameObject gm = GameObject.FindGameObjectWithTag("ObjManager");
+
+    //     if (gm != null)
+    //     {
+    //         gm.GetComponent<FlowNetworkManager>().OnApplicationQuit();
+    //     }
+    // }
 
     private static void InitData()
     {
@@ -120,9 +163,28 @@ public class RealityFlowWindow : EditorWindow {
                     }
                 }
                 break;
-
+            
             case 1:
-                //GUILayout.Label("Create new object");
+                // GameObject gm = GameObject.FindGameObjectWithTag("ObjManager");
+
+                // if (gm != null)
+                // {
+                //     List<GameObject> li = gm.GetComponent<ObjectManager>().GetFlowObjects();
+
+                //     foreach (GameObject o in li)
+                //     {
+                //         o.GetComponent<FlowObject>().Start();
+                //     }
+
+                //     //gm.GetComponent<FlowNetworkManager>().Awake();
+                //     gm.GetComponent<FlowNetworkManager>().Start();
+                //     isManagerInit = true;
+                // }
+                window = 2;
+                DrawBody();
+                break;
+
+            case 2:
                 if (GUILayout.Button("Create new Object", GUILayout.Height(40)))
                 {
                     ObjectSettings.OpenWindow();
@@ -131,6 +193,31 @@ public class RealityFlowWindow : EditorWindow {
         }
 
         GUILayout.EndArea();
+    }
+
+    void CreateTag (string s)
+    {
+        // Open tagManager
+        SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
+        SerializedProperty tagsProp = tagManager.FindProperty("tags");
+
+        // First check if it is not already present
+        bool found = false;
+
+        for (int i = 0; i < tagsProp.arraySize; i++)
+        {
+            SerializedProperty t = tagsProp.GetArrayElementAtIndex(i);
+            if (t.stringValue.Equals(s)) { found = true; break; }
+        }
+
+        // if not found, add it
+        if (!found)
+        {
+            tagsProp.InsertArrayElementAtIndex(0);
+            SerializedProperty n = tagsProp.GetArrayElementAtIndex(0);
+            n.stringValue = s;
+            tagManager.ApplyModifiedPropertiesWithoutUndo();
+        }
     }
 
 }
@@ -192,47 +279,18 @@ public class ObjectSettings : EditorWindow
     void SaveObjectData(ObjectData objData)
     {
         string prefabPath; //path to the base prefab
-
-        // Open tagManager
-        SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
-        SerializedProperty tagsProp = tagManager.FindProperty("tags");
-
-        // Adding a Tag
         string s = "ObjManager";
-
-        // First check if it is not already present
-        bool found = false;
-
-        for (int i = 0; i < tagsProp.arraySize; i++)
-        {
-            SerializedProperty t = tagsProp.GetArrayElementAtIndex(i);
-            if (t.stringValue.Equals(s)) { found = true; break; }
-        }
-
-        // if not found, add it
-        if (!found)
-        {
-            tagsProp.InsertArrayElementAtIndex(0);
-            SerializedProperty n = tagsProp.GetArrayElementAtIndex(0);
-            n.stringValue = s;
-            tagManager.ApplyModifiedPropertiesWithoutUndo();
-        }
-
 
         // Check if there is already an object manager
         // if not, create one
         GameObject manager = GameObject.FindGameObjectWithTag(s);
+        bool managerExists = true;
 
         if (manager == null)
         {
             manager = new GameObject("ObjManager");
             manager.tag = s;
-
-            manager.AddComponent(typeof(ObjectManager));
-            manager.AddComponent(typeof(FlowNetworkManager));
-            manager.GetComponent<FlowNetworkManager>().LocalServer = Config.LOCAL_HOST;
-            manager.GetComponent<FlowNetworkManager>().mainGameCamera = GameObject.FindGameObjectWithTag("MainCamera");
-            manager.AddComponent(typeof(DoOnMainThread));
+            managerExists = false;
         }
 
         // Get prefab path
@@ -249,6 +307,26 @@ public class ObjectSettings : EditorWindow
         objPrefab.transform.localScale = RealityFlowWindow.ObjectInfo.scale;
 
         objPrefab.AddComponent(typeof(FlowObject));
+        // objPrefab.GetComponent<FlowObject>().Start();
+
+        // If the manager was just created add the necessary components
+        if (managerExists == false)
+        {
+            manager.AddComponent(typeof(ObjectManager));
+            manager.AddComponent(typeof(FlowNetworkManager));
+            manager.GetComponent<FlowNetworkManager>().LocalServer = Config.LOCAL_HOST;
+            manager.GetComponent<FlowNetworkManager>().mainGameCamera = GameObject.FindGameObjectWithTag("MainCamera");
+            manager.AddComponent(typeof(DoOnMainThread));
+
+            // GameObject child = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            // child.AddComponent<EditorUpdater>();
+            // child.name = "Updater";
+            // child.transform.SetParent(manager.transform);
+            // child.transform.position = new Vector3(1000,1000,0);
+
+            // manager.GetComponent<FlowNetworkManager>().Awake();
+            // manager.GetComponent<FlowNetworkManager>().Start();
+        }
 
         // Clear all fields in the settings window
         objData.objectName = "";
