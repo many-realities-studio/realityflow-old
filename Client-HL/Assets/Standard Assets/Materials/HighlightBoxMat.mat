@@ -98,7 +98,7 @@ Material:
     - _Mode: 3
     - _NearPlaneFade: 0
     - _OcclusionStrength: 1
-    - _Outline: 0.0047
+    - _Outline: 0.0148
     - _Parallax: 0.02
     - _Reflections: 1
     - _Refraction: 0

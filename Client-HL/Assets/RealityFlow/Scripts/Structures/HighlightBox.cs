@@ -3,112 +3,166 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HighlightBox : MonoBehaviour, IFocusable {
+public class HighlightBox : MonoBehaviour, IFocusable, IInputHandler {
 
-    Material highlightBoxMat;
-    GameObject srsBoundingBox;
+    Material gazedMat;
+    Material selectMat;
+
+    GameObject gazeBox;
+    GameObject selectBox;
+
     Bounds srsBounds;
-    bool isActive;
-    public bool boundingBoxCreated;
+
+    bool isGazed;
+    bool isSelected;
+
+    public bool boundBoxsCreated;
     public bool isRootObject;
-
-    public void OnFocusEnter()
-    {
-        if (boundingBoxCreated && !isActive)
-            isActive = true;
-
-        NRSRManager.sendFocusedObjectToManager(gameObject);
-    }
-
-    public void OnFocusExit()
-    {
-        if (!boundingBoxCreated || !isActive 
-            || NRSRManager.holdSelectedObject_LookingAtTransformTool 
-            || NRSRManager.holdSelectedObject_UsingTransformTool)
-            return;
-   
-        NRSRManager.clearFocusedObjectFromManager();
-        isActive = false;
-    }
 
     // Use this for initialization
     void Start ()
     {		
-        highlightBoxMat = NRSRManager.Instance.mat;
+        selectMat = NRSRManager.Instance.mat;
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {
-		if(!boundingBoxCreated && isRootObject)
-        {
+		if(!boundBoxsCreated && isRootObject)
             createBoundingBox();
-            boundingBoxCreated = true;
-        }
 
-        if (srsBoundingBox != null)
-            srsBoundingBox.SetActive(isActive);
+        if (gazeBox != null)
+            gazeBox.SetActive(isGazed);
+
+        if (selectBox != null)
+            selectBox.SetActive(isSelected);
 	}
+
+    public void OnFocusEnter()
+    {
+        if (boundBoxsCreated && !isGazed)
+            isGazed = true;
+    }
+
+    public void OnFocusExit()
+    {
+        if (!boundBoxsCreated || !isGazed)
+            return;
+   
+        isGazed = false;
+    }
+
+    public void OnInputDown(InputEventData eventData)
+    {
+        if (!boundBoxsCreated)
+            return;
+
+        if(isSelected)
+        {
+            NRSRManager.clearFocusedObjectFromManager();
+        }
+        else
+        {
+            NRSRManager.clearFocusedObjectFromManager();
+            NRSRManager.sendFocusedObjectToManager(gameObject);
+            isSelected = true;
+        }
+    }
+
+    public void OnInputUp(InputEventData eventData) {}
+
+    public void onObjectUnselect()
+    {
+        isSelected = false;
+    }
+
+    public void OnEnable()
+    {
+        NRSRManager.objectUnFocused += onObjectUnselect;
+    }
+
+    public void OnDisable()
+    {
+        NRSRManager.objectUnFocused -= onObjectUnselect;
+    }
 
     void createBoundingBox()
     {
-        srsBoundingBox = Instantiate(gameObject);
-        srsBoundingBox.name = "HighlightBox";
+        selectBox = Instantiate(gameObject);
+        selectBox.name = "selectBox";
 
-        if(srsBoundingBox.GetComponent<HighlightBox>() == null)
+        if(selectBox.GetComponent<HighlightBox>() == null)
         {
-            Destroy(srsBoundingBox);
+            Destroy(selectBox);
             return;
         }
 
-        Destroy(srsBoundingBox.GetComponent<HighlightBox>());
-        srsBoundingBox.tag = "Tool";
-        srsBoundingBox.transform.localScale *= 1.1f;
+        Destroy(selectBox.GetComponent<HighlightBox>());
+        selectBox.tag = "Tool";
 
-        srsBoundingBox.transform.parent = gameObject.transform;
+        gazeBox = Instantiate(selectBox);
+        gazeBox.name = "gazeBox";
 
-        List<Transform> children = new List<Transform>(srsBoundingBox.GetComponentsInChildren<Transform>());
-        foreach(Transform child in children)
+        gazeBox.transform.localScale *= 1.1f;
+        selectBox.transform.localScale *= 1.1f;
+
+        selectBox.transform.parent = gameObject.transform;
+        gazeBox.transform.parent = gameObject.transform;
+
+        List<Transform> selectChildren = new List<Transform>(selectBox.GetComponentsInChildren<Transform>());
+        List<Transform> gazedChildren = new List<Transform>(gazeBox.GetComponentsInChildren<Transform>());
+        for(int i = 0; i < gazedChildren.Count; i++)
         {
-            child.tag = "Tool";
-            if(child.GetComponent<MeshRenderer>() != null)
+            selectChildren[i].tag = "Tool";
+            gazedChildren[i].tag = "Tool";
+
+            if (selectChildren[i].GetComponent<MeshRenderer>() != null)
             {
-                child.GetComponent<MeshRenderer>().material = highlightBoxMat;
-                child.transform.parent = srsBoundingBox.transform;
+                selectChildren[i].GetComponent<MeshRenderer>().material = selectMat;
+                selectChildren[i].transform.parent = selectBox.transform;
+            }
+
+            if (gazedChildren[i].GetComponent<MeshRenderer>() != null)
+            {
+                gazedChildren[i].transform.parent = gazeBox.transform;
             }
         }
 
-        List<MeshFilter> childrenBounds = new List<MeshFilter>(srsBoundingBox.GetComponentsInChildren<MeshFilter>());
-        foreach(MeshFilter meshRen in childrenBounds)
-        {
-            if(meshRen.GetComponent<MeshFilter>() != null)
-            srsBounds.Encapsulate(meshRen.GetComponent<MeshFilter>().mesh.bounds);
-        }
+        boundBoxsCreated = true;
 
-        List<Vector3> srsPoints = new List<Vector3>();
-        srsPoints.Add(srsBounds.min * gameObject.transform.localScale.x * 1.1f);
-        srsPoints.Add(srsBounds.max * gameObject.transform.localScale.z * 1.1f);
-        srsPoints.Add(new Vector3(srsPoints[0].x, srsPoints[0].y, srsPoints[1].z));
-        srsPoints.Add(new Vector3(srsPoints[0].x, srsPoints[1].y, srsPoints[0].z));
-        srsPoints.Add(new Vector3(srsPoints[1].x, srsPoints[0].y, srsPoints[0].z));
-        srsPoints.Add(new Vector3(srsPoints[0].x, srsPoints[1].y, srsPoints[1].z));
-        srsPoints.Add(new Vector3(srsPoints[1].x, srsPoints[0].y, srsPoints[1].z));
-        srsPoints.Add(new Vector3(srsPoints[1].x, srsPoints[1].y, srsPoints[0].z));
+        //List<MeshFilter> childrenBounds = new List<MeshFilter>(selectBox.GetComponentsInChildren<MeshFilter>());
+        //foreach(MeshFilter meshRen in childrenBounds)
+        //{
+        //    if(meshRen.GetComponent<MeshFilter>() != null)
+        //        srsBounds.Encapsulate(meshRen.GetComponent<MeshFilter>().mesh.bounds);
+        //}
+
+        //List<Vector3> srsPoints = new List<Vector3>();
+        //srsPoints.Add(srsBounds.min * gameObject.transform.localScale.x * 1.1f);
+        //srsPoints.Add(srsBounds.max * gameObject.transform.localScale.z * 1.1f);
+        //srsPoints.Add(new Vector3(srsPoints[0].x, srsPoints[0].y, srsPoints[1].z));
+        //srsPoints.Add(new Vector3(srsPoints[0].x, srsPoints[1].y, srsPoints[0].z));
+        //srsPoints.Add(new Vector3(srsPoints[1].x, srsPoints[0].y, srsPoints[0].z));
+        //srsPoints.Add(new Vector3(srsPoints[0].x, srsPoints[1].y, srsPoints[1].z));
+        //srsPoints.Add(new Vector3(srsPoints[1].x, srsPoints[0].y, srsPoints[1].z));
+        //srsPoints.Add(new Vector3(srsPoints[1].x, srsPoints[1].y, srsPoints[0].z));
 
         //foreach (Vector3 point in srsPoints)
         //    createEndPoints(point + transform.position);
+
     }
 
-    void createEndPoints(Vector3 position)
-    {
-        GameObject cornerHandle = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+    //void createEndPoints(Vector3 position)
+    //{
+    //    GameObject cornerHandle = GameObject.CreatePrimitive(PrimitiveType.Sphere);
 
-        cornerHandle.name = "Handle";
-        cornerHandle.tag = "Tool";
+    //    cornerHandle.name = "Handle";
+    //    cornerHandle.tag = "Tool";
 
-        cornerHandle.transform.localScale *= .15f;
-        cornerHandle.transform.position = position;
-        cornerHandle.transform.parent = srsBoundingBox.transform;
-        cornerHandle.GetComponent<Renderer>().material = highlightBoxMat;
-    }
+    //    cornerHandle.transform.localScale *= .15f;
+    //    cornerHandle.transform.position = position;
+    //    cornerHandle.transform.parent = selectBox.transform;
+    //    cornerHandle.GetComponent<Renderer>().material = selectMat;
+    //}
+
 }
