@@ -64,7 +64,6 @@ class ServerEventDispatcher {
     }
     static broadcast(event_name, event_data, event_time, client_id, user_id, transform_data) {
         event_data._from = client_id;
-        console.log(event_data._from);
         ServerEventDispatcher.connections.forEach((connection, i) => {
             if (ServerEventDispatcher.connections[i].readyState === ServerEventDispatcher.connections[i].OPEN) {
                 console.log(client_hash[i]);
@@ -72,8 +71,6 @@ class ServerEventDispatcher {
                     ServerEventDispatcher.send(event_name, event_data, event_time, i);
                 }
                 else {
-                    console.log("Sending to " + i);
-                    console.log("Sending data frame");
                     ServerEventDispatcher.send(event_name, event_data, event_time, i, transform_data);
                 }
             }

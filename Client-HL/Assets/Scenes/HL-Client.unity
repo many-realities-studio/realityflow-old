@@ -777,7 +777,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b92b707d7e7145b4286a1c16074da173, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LocalServer: 0
+  LocalServer: 1
   music: 0
   mainGameCamera: {fileID: 1054442504}
   eventSystem: {fileID: 839972930}
@@ -2059,7 +2059,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7cd26485c536d94f9f97b99c2f8a0e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  depth: 0.1
 --- !u!1 &1999503441
 GameObject:
   m_ObjectHideFlags: 0
