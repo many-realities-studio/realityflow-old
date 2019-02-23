@@ -14,7 +14,6 @@ public class MovePanel : MonoBehaviour {
         if ( (GetComponent<RectTransform>().offsetMin.x == PANEL_OFFSET * panel) || 
             (GetComponent<RectTransform>().offsetMax.x == PANEL_OFFSET * panel) )
         {
-            Debug.Log("Gets here");
             // Set left, bottom RectTransform properties of panel
             GetComponent<RectTransform>().offsetMin = new Vector2(0, 0);
             // Set right, top RectTransform properties of panel
