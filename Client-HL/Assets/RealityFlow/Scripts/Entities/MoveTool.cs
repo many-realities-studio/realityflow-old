@@ -20,12 +20,14 @@ public class MoveTool : MonoBehaviour, IFocusable, IInputHandler, ISourceStateHa
     private bool isDragging;
     private bool isGazed;
 
-    private Vector3 manipulationEventData;
-    private Vector3 manipulationDelta;
+    private Vector3 manipulationEventData = Vector3.zero;
+    private Vector3 manipulationDelta = Vector3.zero;
 
     private Camera mainCamera;
     private IInputSource currentInputSource;
     private uint currentInputSourceId;
+
+    private GameObject cursor;
 
     // Use this for initialization
     void Start()
@@ -36,6 +38,7 @@ public class MoveTool : MonoBehaviour, IFocusable, IInputHandler, ISourceStateHa
         }
 
         mainCamera = Camera.main;
+        cursor = GameObject.Find("BasicCursor");
     }
 
     // Update is called once per frame
@@ -54,12 +57,19 @@ public class MoveTool : MonoBehaviour, IFocusable, IInputHandler, ISourceStateHa
             hostTransform.position = Vector3.Lerp(hostTransform.position, hostTransform.position + manipulationDelta, positionLerpSpeed);
     }
 
-    public void startDragging()
+    public void startDragging(InputEventData eventData)
     {
         if (!isDraggingEnabled || isDragging)
             return;
 
-     //   NRSRManager.holdSelectedObject_UsingTransformTool = true;
+        InputManager.Instance.PushModalInputHandler(gameObject);
+
+        Debug.Log("started dragging ");
+        isDragging = true;
+        currentInputSource = eventData.InputSource;
+        currentInputSourceId = eventData.SourceId;
+
+        //   NRSRManager.holdSelectedObject_UsingTransformTool = true;
     }
 
     public void stopDragging()
@@ -70,6 +80,7 @@ public class MoveTool : MonoBehaviour, IFocusable, IInputHandler, ISourceStateHa
             return;
         }
 
+        Debug.Log("stopped dragging");
         isDragging = false;
         currentInputSource = null;
         InputManager.Instance.PopFallbackInputHandler();
@@ -79,9 +90,7 @@ public class MoveTool : MonoBehaviour, IFocusable, IInputHandler, ISourceStateHa
     {
         Debug.Log("Gazing!!!!!!");
         if (isDraggingEnabled)
-        {
             isGazed = true;
-        }
     }
 
     public void OnFocusExit()
@@ -93,22 +102,12 @@ public class MoveTool : MonoBehaviour, IFocusable, IInputHandler, ISourceStateHa
     public void OnInputDown(InputEventData eventData)
     {
         Debug.Log("input down!!!");
-        if (isDragging ||
-           // !eventData.InputSource.SupportsInputInfo(eventData.SourceId, SupportedInputInfo.Position) ||
-            !isDraggingEnabled)
-            return;
-
-        InputManager.Instance.PushModalInputHandler(gameObject);
-
-        Debug.Log("is dragging ");
-        isDragging = true;
-        currentInputSource = eventData.InputSource;
-        currentInputSourceId = eventData.SourceId;
-        startDragging();
+        startDragging(eventData);
     }
 
     public void OnInputUp(InputEventData eventData)
     {
+        Debug.Log("input up!!!");
         if (currentInputSource != null && eventData.SourceId == currentInputSourceId)
             stopDragging();
     }
@@ -138,12 +137,12 @@ public class MoveTool : MonoBehaviour, IFocusable, IInputHandler, ISourceStateHa
 
     public void OnManipulationUpdated(ManipulationEventData eventData)
     {
-        Debug.LogFormat("onManipulationUpdated\r\nSource: {0} SourceId: {1}\r\nCumulativeDelta: {2} {3} {4}",
-            eventData.InputSource,
-            eventData.SourceId,
-            eventData.CumulativeDelta.x,
-            eventData.CumulativeDelta.y,
-            eventData.CumulativeDelta.z);
+        //Debug.LogFormat("onManipulationUpdated\r\nSource: {0} SourceId: {1}\r\nCumulativeDelta: {2} {3} {4}",
+            //eventData.InputSource,
+            //eventData.SourceId,
+            //eventData.CumulativeDelta.x,
+            //eventData.CumulativeDelta.y,
+            //eventData.CumulativeDelta.z);
 
         Vector3 delta = eventData.CumulativeDelta - manipulationEventData;
         manipulationDelta = delta * distanceScale;

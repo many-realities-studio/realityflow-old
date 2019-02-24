@@ -1174,13 +1174,13 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1199665798}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3e5b927a18b10c142908ad1f7036e281, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   hostTransform: {fileID: 0}
-  positionLerpSpeed: 0.2
+  positionLerpSpeed: 0.103
   rotationLerpSpeed: 0.2
   distanceScale: 8
   isDraggingEnabled: 1
