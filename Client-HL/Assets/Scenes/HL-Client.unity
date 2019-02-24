@@ -811,7 +811,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b92b707d7e7145b4286a1c16074da173, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LocalServer: 0
+  LocalServer: 1
   music: 0
   mainGameCamera: {fileID: 0}
   eventSystem: {fileID: 839972930}
