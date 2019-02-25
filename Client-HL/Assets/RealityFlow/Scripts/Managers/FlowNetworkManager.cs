@@ -166,7 +166,7 @@ public class FlowNetworkManager : MonoBehaviour
         instance = this;
         Debug.Log("Setting main camera " +  clientType);
             FlowCameras.mainCamera = mainGameCamera.GetComponent<Camera>();
-        mainCanvas = GameObject.Find("DebugCanvas").GetComponent<Canvas>();
+        mainCanvas = GameObject.Find("RootCanvas").GetComponent<Canvas>();
         /* if (DebugPanel.instance.forceHolo == true)
         {
             clientType = CLIENT_HOLOLENS;
