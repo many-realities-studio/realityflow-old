@@ -5,12 +5,21 @@ const express = require("express");
 const http = require("http");
 const ws_1 = require("ws");
 let heartbeat;
+var mongoose = require('mongoose');
+var database;
 let user_hash = [];
 let client_hash = [];
+const dburl = "mongodb://127.0.0.1:27017/realityflowdb";
 exports.isBound = [];
 const buffer = Buffer.alloc(1000);
 class ServerEventDispatcher {
     constructor(server) {
+        mongoose.connect(dburl);
+        database = mongoose.connection;
+        database.on('error', console.error.bind(console, 'connection error: '));
+        database.once('open', function () {
+            console.log('Database connection successful at ' + dburl);
+        });
         console.log("Setting up server");
         ServerEventDispatcher.wss = new ws_1.Server({ server }, function (err) {
             console.log("Connections set up " + err);
@@ -114,7 +123,6 @@ exports.ServerEventDispatcher = ServerEventDispatcher;
 ;
 const client_1 = require("./models/client");
 const user_1 = require("./models/user");
-const url = "mongodb://mongo:27017/flow";
 const apiFuncGroup = ["state",
     "client", "user", "event", "transform"];
 function main() {
@@ -124,7 +132,6 @@ function main() {
     const server = http.createServer(app);
     const sockServ = new ServerEventDispatcher(server);
     function setup() {
-        console.log("Connection established to", url);
         console.log("Setting all connections to disconnected");
         client_1.Client.find({}, function (err, res) {
             for (let client = 0; client < res.length; client++) {

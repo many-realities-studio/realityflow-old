@@ -28,7 +28,7 @@
     "isomorphic-ws": "^4.0.1",
     "mkdirs": "^0.0.2",
     "mongodb": "^2.2.11",
-    "mongoose": "^4.6.8",
+    "mongoose": "^4.13.18",
     "nodemon": "^1.4.1",
     "run-sequence": "^1.2.2",
     "tslint": "^4.3.1",

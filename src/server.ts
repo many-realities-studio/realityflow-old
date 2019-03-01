@@ -7,8 +7,11 @@ import { Server } from "ws";
 import { IFlowTransform } from "./common/IFlowTransform";
 
 let heartbeat;
+var mongoose = require('mongoose');
+var database;
 let user_hash: string[] = [];
 let client_hash: string[] = [];
+const dburl = "mongodb://127.0.0.1:27017/realityflowdb";
 export const isBound: boolean[] = [];
 const buffer = Buffer.alloc(1000);
 
@@ -104,6 +107,17 @@ export class ServerEventDispatcher {
     }
 
     constructor(server: http.Server) {
+
+        mongoose.connect(dburl);
+        database = mongoose.connection;
+
+        database.on('error', console.error.bind(console, 'connection error: '));
+        database.once('open', function(){
+
+            console.log('Database connection successful at ' + dburl);
+
+        });
+
         console.log("Setting up server");
         ServerEventDispatcher.wss = new Server({ server }, function (err: any) {
             console.log("Connections set up " + err);
@@ -114,6 +128,8 @@ export class ServerEventDispatcher {
         console.log("Receiving connections on port 8889", ServerEventDispatcher.wss);
         ServerEventDispatcher.callbacks = [];
         ServerEventDispatcher.wss.on("connection", this.connection);
+
+
 
     }
 
@@ -151,7 +167,7 @@ import { Client } from "./models/client";
 import { User } from "./models/user";
 
 // Connection URL. This is where your mongodb server is running.
-const url = "mongodb://mongo:27017/flow";
+
 
 // Use connect method to connect to the Server
 const apiFuncGroup = [ "state",
@@ -168,7 +184,6 @@ function main() {
     const server = http.createServer(app);
     const sockServ = new ServerEventDispatcher(server);
     function setup() {
-        console.log("Connection established to", url);
         console.log("Setting all connections to disconnected");
         Client.find({}, function (err, res) {
             for (let client = 0; client < res.length; client++) {
