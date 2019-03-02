@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[ExecuteInEditMode]
+// [ExecuteInEditMode]
 public class ObjectSync : MonoBehaviour {
 
     public ObjectData data;

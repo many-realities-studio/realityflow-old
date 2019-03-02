@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-[ExecuteInEditMode]
+// [ExecuteInEditMode]
 public class DoOnMainThread : MonoBehaviour
 {
 

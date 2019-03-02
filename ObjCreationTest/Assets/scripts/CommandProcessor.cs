@@ -61,7 +61,7 @@ public class clientRegisterCommand : FlowEvent
     public string details;
 }
 
-[ExecuteInEditMode]
+//[ExecuteInEditMode]
 public class CommandProcessor
 {
     const int PARAMETER_TRANSFORM = 0;

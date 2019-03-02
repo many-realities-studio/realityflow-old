@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[ExecuteInEditMode]
+// [ExecuteInEditMode]
 public class EditorUpdater : MonoBehaviour {
 	// Update is called once per frame
 	public void Update () {

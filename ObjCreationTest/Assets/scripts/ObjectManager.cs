@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[ExecuteInEditMode]
+// [ExecuteInEditMode]
 public class ObjectManager : MonoBehaviour {
 
 	List<GameObject> children;

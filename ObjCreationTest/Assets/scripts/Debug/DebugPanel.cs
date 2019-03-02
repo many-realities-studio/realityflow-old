@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 
-[ExecuteInEditMode]
+//[ExecuteInEditMode]
 public class DebugPanel : MonoBehaviour
 {
     public bool forceHolo;

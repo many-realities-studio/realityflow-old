@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 /// <summary>
 /// Establishes a connection to the Flow server through websocket connections and handles high-level communication
 /// </summary>
-[ExecuteInEditMode]
+// [ExecuteInEditMode]
 public class FlowNetworkManager : MonoBehaviour
 {
     public bool LocalServer;
@@ -326,40 +326,40 @@ public class FlowNetworkManager : MonoBehaviour
 
 
         // recieve updates from the server (currently not working)     
-//         while (true)
-//         {
-//             reply = w.RecvString();
-//             if (reply != null && reply != "Null")
-//             {
-//                 Debug.Log("Processing Command");
-//                 FlowEvent incoming = JsonUtility.FromJson<FlowEvent>(reply);
-//                 if (incoming.cmd >= Commands.Project.MIN && incoming.cmd <= Commands.Project.MAX)
-//                 {
-//                     CommandProcessor.processProjectCommand(JsonUtility.FromJson<FlowProjectCommand>(reply));
-//                 }
-//                 else
-//                 {
-//                     CommandProcessor.processCommand(incoming);
-//                 }
-//             }
-//             if (w.error != null)
-//             {
-//                 Debug.Log("[unity] Error: " + w.error);
-//                 connected = false;
+        while (true)
+        {
+            reply = w.RecvString();
+            if (reply != null && reply != "Null")
+            {
+                Debug.Log("Processing Command");
+                FlowEvent incoming = JsonUtility.FromJson<FlowEvent>(reply);
+                if (incoming.cmd >= Commands.Project.MIN && incoming.cmd <= Commands.Project.MAX)
+                {
+                    CommandProcessor.processProjectCommand(JsonUtility.FromJson<FlowProjectCommand>(reply));
+                }
+                else
+                {
+                    CommandProcessor.processCommand(incoming);
+                }
+            }
+            if (w.error != null)
+            {
+                Debug.Log("[unity] Error: " + w.error);
+                connected = false;
 
-//                 yield return new WaitForSeconds(5);
-// #if !UNITY_WSA || UNITY_EDITOR
-//                 DoOnMainThread.ExecuteOnMainThread.Enqueue(() =>
-//                 {
-//                     StartCoroutine(ConnectWebsocket());
-//                 });
-//                 Debug.Log("Connect connection");
-//                 CommandProcessor.sendCommand(Commands.LOGIN, uid.ToString());
-//                 loggedIn = false;
-// #endif
-//             }
-//             yield return 0;
-//         }
+                yield return new WaitForSeconds(5);
+#if !UNITY_WSA || UNITY_EDITOR
+                DoOnMainThread.ExecuteOnMainThread.Enqueue(() =>
+                {
+                    StartCoroutine(ConnectWebsocket());
+                });
+                Debug.Log("Connect connection");
+                CommandProcessor.sendCommand(Commands.LOGIN, uid.ToString());
+                loggedIn = false;
+#endif
+            }
+            yield return 0;
+        }
      }
 
     void OnWebLoggedIn()
