@@ -1,0 +1,17 @@
+{
+	"objects" :[
+	{
+		"prefab" : "Capsule",
+		"position" : "(2,0,0)",
+		"rotation" : "Quaternion.identity",
+		"scale" : "(1,1,1)",
+		"name" : "testCapsule"
+	},
+	{
+    		"prefab" : "Cube",
+    		"position": "(0,0,0)",
+    		"rotation": "Quaternion.identity",
+    		"scale": "(1,1,1)",
+    		"name": "testCube"
+ 	}]
+}

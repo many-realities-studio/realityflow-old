@@ -10,9 +10,6 @@ public class FlowTransform : FlowValue
     public float q_y;
     public float q_z;
     public float q_w;
-    public float s_x;
-    public float s_y;
-    public float s_z;
     [System.NonSerialized]
     public static int idCount = 0;
     [System.NonSerialized]
@@ -27,9 +24,6 @@ public class FlowTransform : FlowValue
         q_y = transform.localRotation.y;
         q_z = transform.localRotation.z;
         q_w = transform.localRotation.w;
-        s_x = transform.localScale.x;
-        s_y = transform.localScale.y;
-        s_z = transform.localScale.z;
     }
     public void Read() {
         x = transform.localPosition.x;
@@ -39,9 +33,6 @@ public class FlowTransform : FlowValue
         q_y = transform.localRotation.y;
         q_z = transform.localRotation.z;
         q_w = transform.localRotation.w;
-        s_x = transform.localScale.x;
-        s_y = transform.localScale.y;
-        s_z = transform.localScale.z;
     }
 
     public void Read(GameObject go) {
@@ -52,9 +43,6 @@ public class FlowTransform : FlowValue
         q_y = go.transform.localRotation.y;
         q_z = go.transform.localRotation.z;
         q_w = go.transform.localRotation.w;
-        s_x = go.transform.localScale.x;
-        s_y = go.transform.localScale.y;
-        s_z = go.transform.localScale.z;
     }
 
     public void Copy(FlowTransform source) {
@@ -65,9 +53,6 @@ public class FlowTransform : FlowValue
         q_y = source.q_y;
         q_z = source.q_z;
         q_w = source.q_w;
-        s_x = source.s_x;
-        s_y = source.s_y;
-        s_z = source.s_z;
     }
 
     public void Update() {
@@ -75,8 +60,6 @@ public class FlowTransform : FlowValue
         transform.localPosition = newPos;
         Quaternion newRot = new Quaternion(q_x, q_y, q_z, q_w);
         transform.localRotation = newRot;
-        Vector3 newScale = new Vector3(s_x,s_y,s_z);
-        transform.localScale = newScale;
     }
 
     public void RegisterTransform() {
@@ -102,12 +85,4 @@ public class FlowTransform : FlowValue
         y = _y;
         z = _z;
     }
-
-    public FlowTransform(float _s_x, float _s_y, float _s_z){
-        s_x = _s_x;
-        s_y = _s_y;
-        s_z = _s_z;
-    }
-
-    
 }
