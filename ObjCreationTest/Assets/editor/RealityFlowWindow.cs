@@ -5,6 +5,7 @@ using UnityEditor;
 
 public class RealityFlowWindow : EditorWindow {
 
+    Vector2 scrollPos = Vector2.zero;
     Texture2D headerSectionTexture;
     Texture2D bodySectionTexture;
 
@@ -140,7 +141,7 @@ public class RealityFlowWindow : EditorWindow {
     private void DrawBody()
     {
         GUILayout.BeginArea(bodySection);
-
+        scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(275), GUILayout.Height(100));
         switch(window)
         {
             case 0:
@@ -189,10 +190,51 @@ public class RealityFlowWindow : EditorWindow {
                 {
                     ObjectSettings.OpenWindow();
                 }
+                if (GUILayout.Button("Delete an Object", GUILayout.Height(40)))
+                {
+                    window = 3;
+                    DrawBody();
+                }
+                break;
+            case 3:
+                GameObject gm = GameObject.FindGameObjectWithTag("ObjManager");
+
+                EditorGUILayout.BeginHorizontal();
+                if (GUILayout.Button("Back", GUILayout.Height(20)))
+                {
+                    window = 2;
+                    DrawBody();
+                }
+                EditorGUILayout.EndHorizontal();
+
+                if (gm != null)
+                {
+                    List<GameObject> li = gm.GetComponent<ObjectManager>().GetFlowObjects();
+
+                    foreach (GameObject c in li)
+                    {
+                        
+                        if (GUILayout.Button(c.name, GUILayout.Height(30)))
+                        {
+                            DeleteObject(c);
+                        }
+                    }
+                }
                 break;
         }
-
+        EditorGUILayout.EndScrollView();
         GUILayout.EndArea();
+    }
+
+    void DeleteObject(GameObject c)
+    {
+        // create json string
+        string json = "";
+
+        // send json string to server
+
+        // delete game object locally
+        Destroy(c);
     }
 
     void CreateTag (string s)
@@ -342,10 +384,20 @@ public class ObjectSettings : EditorWindow
         obj.uv = mesh.uv;
         obj.triangles = mesh.triangles;
         obj.type = objPrefab.GetComponent<Collider>().GetType().Name;
-        obj.position = objPrefab.transform.localPosition;
-        obj.scale = objPrefab.transform.localScale;
-        obj.rotation = new Vector4(objPrefab.transform.rotation.x, objPrefab.transform.rotation.y, 
-                                    objPrefab.transform.rotation.z, objPrefab.transform.rotation.w);
+        // obj.position = objPrefab.transform.localPosition;
+        // obj.scale = objPrefab.transform.localScale;
+        // obj.rotation = new Vector4(objPrefab.transform.rotation.x, objPrefab.transform.rotation.y, 
+        //                             objPrefab.transform.rotation.z, objPrefab.transform.rotation.w);
+        obj.x = objPrefab.transform.localPosition.x;
+        obj.y = objPrefab.transform.localPosition.y;
+        obj.z = objPrefab.transform.localPosition.z;
+        obj.s_x = objPrefab.transform.localScale.x;
+        obj.s_y = objPrefab.transform.localScale.y;
+        obj.s_z = objPrefab.transform.localScale.z;
+        obj.q_x = objPrefab.transform.localRotation.x;
+        obj.q_y = objPrefab.transform.localRotation.y;
+        obj.q_z = objPrefab.transform.localRotation.z;
+        obj.q_w = objPrefab.transform.localRotation.w;
         obj.objectName = objPrefab.name;
         //obj.id = objPrefab.GetComponent<FlowObject>().ft.id;
         obj.id = "";
@@ -362,9 +414,9 @@ public class ObjectSettings : EditorWindow
         // newMesh.triangles = ret.triangles;
         // newMesh.RecalculateBounds();
         // newMesh.RecalculateNormals();
-        // oo.transform.localPosition = new Vector3(ret.position.x + 3, ret.position.y, ret.position.z);
-        // oo.transform.localScale = ret.scale;
-        // oo.transform.localRotation = Quaternion.Euler(ret.rotation);
+        // oo.transform.localPosition = new Vector3(ret.x + 3, ret.y, ret.z);
+        // oo.transform.localScale = new Vector3(ret.s_x, ret.s_y, ret.s_z);
+        // oo.transform.localRotation = Quaternion.Euler(new Vector4(ret.q_x, ret.q_y, ret.q_z, ret.q_w));
         // oo.name = ret.objectName;
         // oo.AddComponent<FlowObject>();
         // //oo.GetComponent<FlowObject>().ft.id = ret.id;
