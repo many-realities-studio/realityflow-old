@@ -334,6 +334,57 @@ public class ObjectSettings : EditorWindow
         objData.position = new Vector3(0, 0, 0);
         objData.rotation = new Vector3(0, 0, 0);
         objData.scale = new Vector3(0, 0, 0);
+
+        //create json and send to server
+        jsonObject obj = new jsonObject();
+        Mesh mesh = objPrefab.GetComponent<MeshFilter>().mesh;
+        obj.vertices = mesh.vertices;
+        obj.uv = mesh.uv;
+        obj.triangles = mesh.triangles;
+        obj.type = objPrefab.GetComponent<Collider>().GetType().Name;
+        obj.position = objPrefab.transform.localPosition;
+        obj.scale = objPrefab.transform.localScale;
+        obj.rotation = new Vector4(objPrefab.transform.rotation.x, objPrefab.transform.rotation.y, 
+                                    objPrefab.transform.rotation.z, objPrefab.transform.rotation.w);
+        obj.objectName = objPrefab.name;
+        //obj.id = objPrefab.GetComponent<FlowObject>().ft.id;
+        obj.id = "";
+        string json = JsonUtility.ToJson(obj);
+        Debug.Log(json);
+
+        // //Testing The Json object
+        // jsonObject ret = new jsonObject();
+        // JsonUtility.FromJsonOverwrite(json, ret);
+        // GameObject oo = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        // Mesh newMesh = oo.GetComponent<MeshFilter>().mesh;
+        // newMesh.vertices = ret.vertices;
+        // newMesh.uv = ret.uv;
+        // newMesh.triangles = ret.triangles;
+        // newMesh.RecalculateBounds();
+        // newMesh.RecalculateNormals();
+        // oo.transform.localPosition = new Vector3(ret.position.x + 3, ret.position.y, ret.position.z);
+        // oo.transform.localScale = ret.scale;
+        // oo.transform.localRotation = Quaternion.Euler(ret.rotation);
+        // oo.name = ret.objectName;
+        // oo.AddComponent<FlowObject>();
+        // //oo.GetComponent<FlowObject>().ft.id = ret.id;
+        // Destroy(oo.GetComponent<Collider>());
+    
+        // switch (ret.type)
+    	// {
+    	// 	case "BoxCollider":
+        // 	oo.AddComponent<BoxCollider>();
+        // 		break;
+    	// 	case "CapsuleCollider":
+    	// 	oo.AddComponent<CapsuleCollider>();
+        // 		break;
+        // 	case "SphereCollider":
+    	// 	oo.AddComponent<SphereCollider>();
+    	// 		break;
+        // 	case "MeshCollider":
+        // 	oo.AddComponent<MeshCollider>();
+    	// 		break;
+    	// }
     }
 }
 
