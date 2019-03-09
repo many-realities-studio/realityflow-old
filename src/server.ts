@@ -6,12 +6,19 @@ import * as http from "http";
 import { Server } from "ws";
 import { IFlowTransform } from "./common/IFlowTransform";
 
+// Models
+import { Client } from "./models/client";
+import { User } from "./models/user";
+import user from "./commands/user";
+
 let heartbeat;
 var mongoose = require('mongoose');
 var database;
 let user_hash: string[] = [];
 let client_hash: string[] = [];
 const dburl = "mongodb://127.0.0.1:27017/realityflowdb";
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 export const isBound: boolean[] = [];
 const buffer = Buffer.alloc(1000);
 
@@ -160,13 +167,34 @@ export class ServerEventDispatcher {
         ws.onerror = onErrorEvent;
     }
 
+    public sendToDB(){
+
+
+
+    }
+
+    public fetchFromDB(){
+
+        
+
+    }
+
+
+    private hashUserInfo(username: String, password: String){
+
+        var hashedUserName = bcrypt.hash(username, saltRounds);
+        var hashedPassword = bcrypt.hash(password, saltRounds);
+
+        var hashedUserInfo = {
+                                username: hashedUserName,
+                                password: hashedPassword
+                            }
+
+        return hashedUserInfo;
+
+    }
+
 };
-
-// Models
-import { Client } from "./models/client";
-import { User } from "./models/user";
-
-// Connection URL. This is where your mongodb server is running.
 
 
 // Use connect method to connect to the Server
