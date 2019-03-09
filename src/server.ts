@@ -9,7 +9,6 @@ import { IFlowTransform } from "./common/IFlowTransform";
 // Models
 import { Client } from "./models/client";
 import { User } from "./models/user";
-import user from "./commands/user";
 
 let heartbeat;
 var mongoose = require('mongoose');
@@ -176,6 +175,76 @@ export class ServerEventDispatcher {
     public fetchFromDB(){
 
         
+
+    }
+
+    private processUserInfo(user: {username: String, password: String}, userActionFlag: Number){
+
+        var currentUser;
+        var hashedCurrentUser;
+        var loginFlag;
+
+        if(userActionFlag==Commands.user.CREATE){
+
+            currentUser = new User({
+
+                username: user.username,
+                password: user.password
+
+            });
+
+            currentUser.save(function(err, currentUser){
+
+                if(err){
+                    return console.error(err);
+                }
+
+            });
+
+        }
+        else if(userActionFlag==Commands.user.FIND){
+
+            hashedCurrentUser = this.hashUserInfo(user.username, user.password);
+            
+            User.findOne({username: hashedCurrentUser.username}, function(err, retrievedUser){
+
+                if(err){
+
+                    return console.error(err);
+
+                }
+
+                if(retrievedUser.password===hashedCurrentUser.password){
+                    loginFlag = true;
+                }
+                else    
+                    loginFlag = false;
+
+            });
+
+            return loginFlag;
+
+        }
+        else if(userActionFlag==Commands.user.UPDATE){
+
+            hashedCurrentUser = this.hashUserInfo(user.username, user.password);
+            
+            User.findOneAndUpdate({username: hashedCurrentUser.username}, function(err, retrievedUser){
+            });
+
+        }
+        else if(userActionFlag==Commands.user.DELETE){
+
+
+
+        }
+        else{
+
+            console.log("Error in user account processing.");
+
+        }
+
+        return;
 
     }
 
