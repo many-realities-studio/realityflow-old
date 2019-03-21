@@ -6,9 +6,6 @@ using UnityEngine;
 public class jsonObject : ScriptableObject {
     
 	public int[] triangles;
-    // public Vector3 position;
-    // public Vector4 rotation;
-    // public Vector3 scale;
 	public float x;
     public float y;
     public float z;

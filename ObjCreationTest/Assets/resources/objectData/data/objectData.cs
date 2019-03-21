@@ -10,5 +10,6 @@ public class ObjectData : ScriptableObject {
     public Vector3 rotation;
     public Vector3 scale;
     public string objectName;
+    public Mesh mesh;
 
 }

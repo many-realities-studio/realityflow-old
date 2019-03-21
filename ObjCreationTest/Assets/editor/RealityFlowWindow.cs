@@ -166,26 +166,25 @@ public class RealityFlowWindow : EditorWindow {
                 break;
             
             case 1:
-                // GameObject gm = GameObject.FindGameObjectWithTag("ObjManager");
-
-                // if (gm != null)
-                // {
-                //     List<GameObject> li = gm.GetComponent<ObjectManager>().GetFlowObjects();
-
-                //     foreach (GameObject o in li)
-                //     {
-                //         o.GetComponent<FlowObject>().Start();
-                //     }
-
-                //     //gm.GetComponent<FlowNetworkManager>().Awake();
-                //     gm.GetComponent<FlowNetworkManager>().Start();
-                //     isManagerInit = true;
-                // }
-                window = 2;
-                DrawBody();
+                if (GUILayout.Button("New Project", GUILayout.Height(40)))
+                {
+                    window = 2;
+                    DrawBody();
+                }
+                if (GUILayout.Button("Load Project", GUILayout.Height(40)))
+                {
+                    window = 4;
+                    DrawBody();
+                }
                 break;
 
             case 2:
+                if (GUILayout.Button("Exit Project", GUILayout.Height(20)))
+                {
+                    ExitProject();
+                    window = 1;
+                    DrawBody();
+                }
                 if (GUILayout.Button("Create new Object", GUILayout.Height(40)))
                 {
                     ObjectSettings.OpenWindow();
@@ -221,6 +220,15 @@ public class RealityFlowWindow : EditorWindow {
                     }
                 }
                 break;
+            case 4:
+                EditorGUILayout.BeginHorizontal();
+                if (GUILayout.Button("Back", GUILayout.Height(20)))
+                {
+                    window = 1;
+                    DrawBody();
+                }
+                EditorGUILayout.EndHorizontal();
+                break;
         }
         EditorGUILayout.EndScrollView();
         GUILayout.EndArea();
@@ -235,6 +243,23 @@ public class RealityFlowWindow : EditorWindow {
 
         // delete game object locally
         Destroy(c);
+    }
+
+    void ExitProject()
+    {
+        GameObject gm = GameObject.FindGameObjectWithTag("ObjManager");
+
+        if (gm != null)
+        {
+            List<GameObject> li = gm.GetComponent<ObjectManager>().GetFlowObjects();
+
+            foreach (GameObject c in li)
+            {
+                Destroy(c);
+            }
+
+            Destroy(gm);
+        }
     }
 
     void CreateTag (string s)
@@ -289,8 +314,10 @@ public class ObjectSettings : EditorWindow
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
-        GUILayout.Label("Prefab");
-        objData.prefab = (GameObject)EditorGUILayout.ObjectField(objData.prefab, typeof(GameObject), false);
+        // GUILayout.Label("Prefab");
+        // objData.prefab = (GameObject)EditorGUILayout.ObjectField(objData.prefab, typeof(GameObject), false);
+        GUILayout.Label("Mesh");
+        objData.mesh = (Mesh)EditorGUILayout.ObjectField(objData.mesh, typeof(Mesh), false);
         EditorGUILayout.EndHorizontal();
 
         objData.position = EditorGUILayout.Vector3Field("Position", objData.position);
@@ -299,9 +326,13 @@ public class ObjectSettings : EditorWindow
 
         objData.scale = EditorGUILayout.Vector3Field("Scale", objData.scale);
 
-        if (objData.prefab == null)
+        // if (objData.prefab == null)
+        // {
+        //     EditorGUILayout.HelpBox("This object needs a [Prefab] before it can be created.", MessageType.Warning);
+        // }
+        if (objData.mesh == null)
         {
-            EditorGUILayout.HelpBox("This object needs a [Prefab] before it can be created.", MessageType.Warning);
+            EditorGUILayout.HelpBox("This object needs a [Mesh] before it can be created.", MessageType.Warning);
         }
         else if (objData.objectName == null || objData.objectName.Equals(""))
         {
@@ -336,12 +367,22 @@ public class ObjectSettings : EditorWindow
         }
 
         // Get prefab path
-        prefabPath = AssetDatabase.GetAssetPath(RealityFlowWindow.ObjectInfo.prefab);
+        // prefabPath = AssetDatabase.GetAssetPath(RealityFlowWindow.ObjectInfo.prefab);
 
-        GameObject objPrefab = (GameObject)AssetDatabase.LoadAssetAtPath(prefabPath, typeof(GameObject));
+        // GameObject objPrefab = (GameObject)AssetDatabase.LoadAssetAtPath(prefabPath, typeof(GameObject));
 
-        objPrefab = Instantiate(objPrefab, RealityFlowWindow.ObjectInfo.position, 
-            Quaternion.Euler( RealityFlowWindow.ObjectInfo.rotation.x, RealityFlowWindow.ObjectInfo.rotation.y, RealityFlowWindow.ObjectInfo.rotation.z));
+        // objPrefab = Instantiate(objPrefab, RealityFlowWindow.ObjectInfo.position, 
+        //     Quaternion.Euler( RealityFlowWindow.ObjectInfo.rotation.x, RealityFlowWindow.ObjectInfo.rotation.y, RealityFlowWindow.ObjectInfo.rotation.z));
+
+        GameObject objPrefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        Mesh objMesh = objPrefab.GetComponent<MeshFilter>().mesh;
+        objMesh.vertices = RealityFlowWindow.ObjectInfo.mesh.vertices;
+        objMesh.uv = RealityFlowWindow.ObjectInfo.mesh.uv;
+        objMesh.triangles = RealityFlowWindow.ObjectInfo.mesh.triangles;
+        objMesh.RecalculateBounds();
+        objMesh.RecalculateNormals();
+        objPrefab.AddComponent<BoxCollider>();
+        objPrefab.GetComponent<BoxCollider>().isTrigger = true;
 
         // Set the new flowObject as a child of the object manager
         objPrefab.transform.SetParent(manager.transform);
@@ -384,10 +425,6 @@ public class ObjectSettings : EditorWindow
         obj.uv = mesh.uv;
         obj.triangles = mesh.triangles;
         obj.type = objPrefab.GetComponent<Collider>().GetType().Name;
-        // obj.position = objPrefab.transform.localPosition;
-        // obj.scale = objPrefab.transform.localScale;
-        // obj.rotation = new Vector4(objPrefab.transform.rotation.x, objPrefab.transform.rotation.y, 
-        //                             objPrefab.transform.rotation.z, objPrefab.transform.rotation.w);
         obj.x = objPrefab.transform.localPosition.x;
         obj.y = objPrefab.transform.localPosition.y;
         obj.z = objPrefab.transform.localPosition.z;
