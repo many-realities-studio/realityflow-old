@@ -28,6 +28,7 @@ public class FlowProject
 
     public void initialize()
     {
+        transforms = new List<FlowTransform>();
         activeProject = this;
         if (!initialized)
         {

@@ -15,7 +15,7 @@ public class FlowNetworkManager : MonoBehaviour
     //string LOCAL_SERVER = "ws://echo.websocket.org";
     string LOCAL_SERVER = "ws://localhost:8999";
     string LAN_SERVER = "ws://192.168.1.246:8082";
-    string REMOTE_SERVER = "ws://plato.mrl.ai:8999";
+    string REMOTE_SERVER = "ws://plato.jtm.io:8999";
 
     float selectionSize = .65f;
     public bool music;
@@ -371,7 +371,6 @@ public class FlowNetworkManager : MonoBehaviour
     /// </summary>
     void Update()
     {
-
         // Start with delete key.
         if (Input.GetKeyDown(KeyCode.Delete))
         {
