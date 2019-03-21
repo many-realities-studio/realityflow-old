@@ -24,6 +24,11 @@ public class FlowTransform : FlowValue
         q_y = transform.localRotation.y;
         q_z = transform.localRotation.z;
         q_w = transform.localRotation.w;
+        if (_id == null)
+        {
+            _id = idCount.ToString() + "t";
+            idCount++;
+        }
     }
     public void Read() {
         x = transform.localPosition.x;
