@@ -381,8 +381,11 @@ public class ObjectSettings : EditorWindow
         objMesh.triangles = RealityFlowWindow.ObjectInfo.mesh.triangles;
         objMesh.RecalculateBounds();
         objMesh.RecalculateNormals();
+        objPrefab.transform.localPosition = RealityFlowWindow.ObjectInfo.position;
+        objPrefab.transform.localRotation = Quaternion.Euler(RealityFlowWindow.ObjectInfo.rotation);
+        Destroy(objPrefab.GetComponent<Collider>());
         objPrefab.AddComponent<BoxCollider>();
-        objPrefab.GetComponent<BoxCollider>().isTrigger = true;
+        //objPrefab.GetComponent<BoxCollider>().isTrigger = true;
 
         // Set the new flowObject as a child of the object manager
         objPrefab.transform.SetParent(manager.transform);
@@ -414,9 +417,10 @@ public class ObjectSettings : EditorWindow
         // Clear all fields in the settings window
         objData.objectName = "";
         objData.prefab = null;
+        objData.mesh = null;
         objData.position = new Vector3(0, 0, 0);
         objData.rotation = new Vector3(0, 0, 0);
-        objData.scale = new Vector3(0, 0, 0);
+        objData.scale = new Vector3(1, 1, 1);
 
         //create json and send to server
         jsonObject obj = new jsonObject();
