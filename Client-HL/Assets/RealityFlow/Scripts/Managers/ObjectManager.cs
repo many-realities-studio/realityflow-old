@@ -30,9 +30,21 @@ public class ObjectManager : MonoBehaviour {
         // spawn using resource based spawner
         foreach (ObjectData obj in objects.objects)
         {
-
             myPrefab = Resources.Load("Prefabs/" + obj.prefab) as GameObject;
-            Instantiate(myPrefab, stringToVector3(obj.position), Quaternion.identity);
+            GameObject temp = Instantiate(myPrefab, stringToVector3(obj.position), Quaternion.identity);
+            temp.AddComponent<Selector>();
+
+            // Add outline to object, which is used to show whether or not the object is selected
+            var outline = temp.AddComponent<Outline>();
+            outline.OutlineColor = new Color(0f, 0.141f, 1f);
+            outline.OutlineWidth = 1f;
+            outline.enabled = false;
+
+            // Add translation, rotation, and scaling tools to object
+            temp.AddComponent<TranslateTool>();
+            temp.AddComponent<ScaleTool>();
+            temp.AddComponent<RotateTool>();
+
             populateOutliner(obj.name);
         }
     }
