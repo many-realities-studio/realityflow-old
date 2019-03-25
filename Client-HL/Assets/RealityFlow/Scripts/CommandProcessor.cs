@@ -20,6 +20,7 @@ public class FlowDeviceCommand : FlowEvent
         value = new FlowDevicePayload(devicePayload);
     }
     public override void Send(WebSocket w)
+
     {
         timestamp = System.DateTime.UtcNow.Ticks;
         string stringCmd = JsonUtility.ToJson(this);
@@ -178,6 +179,7 @@ public class CommandProcessor
                     PlayerPrefs.SetString("client_id", FlowNetworkManager.identity_value);
 #endif
                 switch (FlowNetworkManager.clientType)
+
                 {
                     case FlowClient.CLIENT_EDITOR:
                         DebugPanel.instance.identity.text = "Edit(" + FlowNetworkManager.identity_value.Substring(FlowNetworkManager.identity_value.Length - 5, 5) + ")";

@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Tool
   layers:
   - Default
   - TransparentFX
@@ -28,6 +29,7 @@ TagManager:
   - 
   - 
   - 
+  - TransformTool
   - 
   - 
   - 
@@ -35,9 +37,11 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
+  - Spatial Mapping
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Debug
+    uniqueID: 898245155
     locked: 0
