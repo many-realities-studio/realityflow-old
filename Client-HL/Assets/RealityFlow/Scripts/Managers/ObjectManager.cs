@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using UnityEngine.UI;
 
 // TODO:
 // make file path a constant
@@ -26,7 +27,7 @@ public class ObjectManager : MonoBehaviour {
     void Start()
     {
         LoadJSON();
-
+        
         // spawn using resource based spawner
         foreach (ObjectData obj in objects.objects)
         {
@@ -112,9 +113,10 @@ public class ObjectManager : MonoBehaviour {
 
     public void populateOutliner(string name)
     {
+        Debug.Log(name);
         GameObject newItem = Instantiate(OutlinerItemPrefab) as GameObject;
-        OutlinerItemManager manager = newItem.GetComponent<OutlinerItemManager>();
-        manager.name.text = name;
+        Text objName = newItem.GetComponentInChildren<Text>();
+        objName.text = name;
         newItem.transform.SetParent(outlinerContent.transform);
         newItem.transform.localScale = Vector3.one;
     }

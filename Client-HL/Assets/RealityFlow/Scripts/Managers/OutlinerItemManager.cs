@@ -6,4 +6,5 @@ using UnityEngine.UI;
 public class OutlinerItemManager : MonoBehaviour {
 
     public Text name;
+
 }
