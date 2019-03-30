@@ -6,9 +6,18 @@ import * as http from "http";
 import { Server } from "ws";
 import { IFlowTransform } from "./common/IFlowTransform";
 
+// Models
+import { Client } from "./models/client";
+import { User } from "./models/user";
+
 let heartbeat;
+var mongoose = require('mongoose');
+var database;
 let user_hash: string[] = [];
 let client_hash: string[] = [];
+const dburl = "mongodb://127.0.0.1:27017/realityflowdb";
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 export const isBound: boolean[] = [];
 const buffer = Buffer.alloc(1000);
 
@@ -104,6 +113,17 @@ export class ServerEventDispatcher {
     }
 
     constructor(server: http.Server) {
+
+        mongoose.connect(dburl);
+        database = mongoose.connection;
+
+        database.on('error', console.error.bind(console, 'connection error: '));
+        database.once('open', function(){
+
+            console.log('Database connection successful at ' + dburl);
+
+        });
+
         console.log("Setting up server");
         ServerEventDispatcher.wss = new Server({ server }, function (err: any) {
             console.log("Connections set up " + err);
@@ -114,6 +134,8 @@ export class ServerEventDispatcher {
         console.log("Receiving connections on port 8889", ServerEventDispatcher.wss);
         ServerEventDispatcher.callbacks = [];
         ServerEventDispatcher.wss.on("connection", this.connection);
+
+
 
     }
 
@@ -144,14 +166,105 @@ export class ServerEventDispatcher {
         ws.onerror = onErrorEvent;
     }
 
+    public sendToDB(){
+
+
+
+    }
+
+    public fetchFromDB(){
+
+        
+
+    }
+
+    private processUserInfo(user: {username: String, password: String}, userActionFlag: Number){
+
+        var currentUser;
+        var hashedCurrentUser;
+        var loginFlag;
+
+        if(userActionFlag==Commands.user.CREATE){
+
+            currentUser = new User({
+
+                username: user.username,
+                password: user.password
+
+            });
+
+            currentUser.save(function(err, currentUser){
+
+                if(err){
+                    return console.error(err);
+                }
+
+            });
+
+        }
+        else if(userActionFlag==Commands.user.FIND){
+
+            hashedCurrentUser = this.hashUserInfo(user.username, user.password);
+            
+            User.findOne({username: hashedCurrentUser.username}, function(err, retrievedUser){
+
+                if(err){
+
+                    return console.error(err);
+
+                }
+
+                if(retrievedUser.password===hashedCurrentUser.password){
+                    loginFlag = true;
+                }
+                else    
+                    loginFlag = false;
+
+            });
+
+            return loginFlag;
+
+        }
+        else if(userActionFlag==Commands.user.UPDATE){
+
+            hashedCurrentUser = this.hashUserInfo(user.username, user.password);
+            
+            User.findOneAndUpdate({username: hashedCurrentUser.username}, function(err, retrievedUser){
+            });
+
+        }
+        else if(userActionFlag==Commands.user.DELETE){
+
+
+
+        }
+        else{
+
+            console.log("Error in user account processing.");
+
+        }
+
+        return;
+
+    }
+
+
+    private hashUserInfo(username: String, password: String){
+
+        var hashedUserName = bcrypt.hash(username, saltRounds);
+        var hashedPassword = bcrypt.hash(password, saltRounds);
+
+        var hashedUserInfo = {
+                                username: hashedUserName,
+                                password: hashedPassword
+                            }
+
+        return hashedUserInfo;
+
+    }
+
 };
 
-// Models
-import { Client } from "./models/client";
-import { User } from "./models/user";
-
-// Connection URL. This is where your mongodb server is running.
-const url = "mongodb://mongo:27017/flow";
 
 // Use connect method to connect to the Server
 const apiFuncGroup = [ "state",
@@ -168,7 +281,6 @@ function main() {
     const server = http.createServer(app);
     const sockServ = new ServerEventDispatcher(server);
     function setup() {
-        console.log("Connection established to", url);
         console.log("Setting all connections to disconnected");
         Client.find({}, function (err, res) {
             for (let client = 0; client < res.length; client++) {
