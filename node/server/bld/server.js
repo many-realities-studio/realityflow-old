@@ -4,12 +4,16 @@ const commands_1 = require("./common/commands");
 const express = require("express");
 const http = require("http");
 const ws_1 = require("ws");
+const client_1 = require("./models/client");
+const user_1 = require("./models/user");
 let heartbeat;
 var mongoose = require('mongoose');
 var database;
 let user_hash = [];
 let client_hash = [];
 const dburl = "mongodb://127.0.0.1:27017/realityflowdb";
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 exports.isBound = [];
 const buffer = Buffer.alloc(1000);
 class ServerEventDispatcher {
@@ -117,12 +121,64 @@ class ServerEventDispatcher {
         ws.onclose = onCloseEvent;
         ws.onerror = onErrorEvent;
     }
+    sendToDB() {
+    }
+    fetchFromDB() {
+    }
+    processUserInfo(user, userActionFlag) {
+        var currentUser;
+        var hashedCurrentUser;
+        var loginFlag;
+        if (userActionFlag == commands_1.Commands.user.CREATE) {
+            currentUser = new user_1.User({
+                username: user.username,
+                password: user.password
+            });
+            currentUser.save(function (err, currentUser) {
+                if (err) {
+                    return console.error(err);
+                }
+            });
+        }
+        else if (userActionFlag == commands_1.Commands.user.FIND) {
+            hashedCurrentUser = this.hashUserInfo(user.username, user.password);
+            user_1.User.findOne({ username: hashedCurrentUser.username }, function (err, retrievedUser) {
+                if (err) {
+                    return console.error(err);
+                }
+                if (retrievedUser.password === hashedCurrentUser.password) {
+                    loginFlag = true;
+                }
+                else
+                    loginFlag = false;
+            });
+            return loginFlag;
+        }
+        else if (userActionFlag == commands_1.Commands.user.UPDATE) {
+            hashedCurrentUser = this.hashUserInfo(user.username, user.password);
+            user_1.User.findOneAndUpdate({ username: hashedCurrentUser.username }, function (err, retrievedUser) {
+            });
+        }
+        else if (userActionFlag == commands_1.Commands.user.DELETE) {
+        }
+        else {
+            console.log("Error in user account processing.");
+        }
+        return;
+    }
+    hashUserInfo(username, password) {
+        var hashedUserName = bcrypt.hash(username, saltRounds);
+        var hashedPassword = bcrypt.hash(password, saltRounds);
+        var hashedUserInfo = {
+            username: hashedUserName,
+            password: hashedPassword
+        };
+        return hashedUserInfo;
+    }
 }
 ServerEventDispatcher.connections = [];
 exports.ServerEventDispatcher = ServerEventDispatcher;
 ;
-const client_1 = require("./models/client");
-const user_1 = require("./models/user");
 const apiFuncGroup = ["state",
     "client", "user", "event", "transform"];
 function main() {

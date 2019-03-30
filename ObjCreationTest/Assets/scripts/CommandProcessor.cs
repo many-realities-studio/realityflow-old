@@ -55,6 +55,28 @@ public class FlowTransformCommand : FlowEvent
     }
 }
 
+public class CreateFlowObjectCommand : FlowEvent
+{
+    public CreateFlowObjectCommand() {
+        this.cmd = Commands.FlowObject.CREATE;
+    }
+    public jsonObject obj;
+    public override void Send(WebSocket w)
+    {
+        timestamp = System.DateTime.UtcNow.Ticks;
+        string stringCmd = JsonUtility.ToJson(this);
+        Debug.Log(stringCmd);
+        w.SendString(stringCmd);
+    }
+
+    public void Copy(CreateFlowObjectCommand arg)
+    {
+        arg.cmd = this.cmd;
+        arg.obj = this.obj;
+        arg.value = this.value;
+    }
+}
+
 [System.Serializable]
 public class clientRegisterCommand : FlowEvent
 {
@@ -258,6 +280,33 @@ public class CommandProcessor
                     transform2.Update();
                 }
                 // This Code is only for calibration and assumes pre-decided IDs
+                break;
+            case Commands.FlowObject.CREATE:
+                CreateFlowObjectCommand fe = (CreateFlowObjectCommand)JsonUtility.FromJson<FlowEvent>(FlowNetworkManager.reply);
+                jsonObject obj =  fe.obj;
+                
+                GameObject newObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                newObj.AddComponent(typeof(FlowObject));
+
+                Mesh objMesh = newObj.GetComponent<MeshFilter>().mesh;
+                objMesh.vertices = obj.vertices;
+                objMesh.uv = obj.uv;
+                objMesh.triangles = obj.triangles;
+                objMesh.RecalculateBounds();
+                objMesh.RecalculateNormals();
+                newObj.transform.localPosition = new Vector3(obj.x, obj.y, obj.z);
+                newObj.transform.localRotation = Quaternion.Euler(new Vector4(obj.q_x, obj.q_y, obj.q_z, obj.q_w));
+                newObj.transform.localScale = new Vector3(obj.s_x, obj.s_y, obj.s_z);
+                MonoBehaviour.Destroy(newObj.GetComponent<Collider>());
+                newObj.AddComponent<BoxCollider>();
+                // Set the new flowObject as a child of the object manager
+                newObj.transform.SetParent(GameObject.FindGameObjectWithTag("ObjManager").transform);
+                newObj.name = obj.objectName;
+                newObj.AddComponent(typeof(FlowObject));
+                newObj.GetComponent<FlowObject>().Start();
+                newObj.GetComponent<FlowObject>().ft._id = obj._id;
+                newObj.GetComponent<FlowObject>().ft.id = obj.id;
+                FlowProject.activeProject.RegObj();
                 break;
             default:
                 break;

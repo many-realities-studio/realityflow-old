@@ -157,15 +157,35 @@ public class RealityFlowWindow : EditorWindow {
 
                 if (GUILayout.Button("Log in", GUILayout.Height(40)))
                 {
+					
+					GameObject manager = GameObject.FindGameObjectWithTag("ObjManager");
+					if ( manager == null)
+					{
+						manager = new GameObject("ObjManager");
+						manager.tag = "ObjManager";
+						manager.AddComponent(typeof(ObjectManager));
+						manager.AddComponent(typeof(FlowNetworkManager));
+						manager.GetComponent<FlowNetworkManager>().LocalServer = Config.LOCAL_HOST;
+						manager.GetComponent<FlowNetworkManager>().mainGameCamera = GameObject.FindGameObjectWithTag("MainCamera");
+						manager.AddComponent(typeof(DoOnMainThread));
+					}
+					
                     if (uName.Equals(user) && pWord.Equals(pass))
                     {
                         window = 1;
+                        pWord = "";
+                        uName = "";
                         DrawBody();
                     }
                 }
                 break;
             
             case 1:
+            if (GUILayout.Button("Logout", GUILayout.Height(20)))
+                {
+                    window = 0;
+                    DrawBody();
+                }
                 if (GUILayout.Button("New Project", GUILayout.Height(40)))
                 {
                     window = 2;
@@ -242,6 +262,7 @@ public class RealityFlowWindow : EditorWindow {
         // send json string to server
 
         // delete game object locally
+        FlowProject.activeProject.transformsById.Remove(c.GetComponent<FlowObject>().ft._id);
         Destroy(c);
     }
 
@@ -393,7 +414,10 @@ public class ObjectSettings : EditorWindow
         objPrefab.transform.localScale = RealityFlowWindow.ObjectInfo.scale;
 
         objPrefab.AddComponent(typeof(FlowObject));
-        // objPrefab.GetComponent<FlowObject>().Start();
+        objPrefab.GetComponent<FlowObject>().Start();
+        objPrefab.GetComponent<FlowObject>().ft._id = "1";
+        objPrefab.GetComponent<FlowObject>().ft.id = "1";
+        FlowProject.activeProject.RegObj();
 
         // If the manager was just created add the necessary components
         if (managerExists == false)
@@ -422,6 +446,7 @@ public class ObjectSettings : EditorWindow
         objData.rotation = new Vector3(0, 0, 0);
         objData.scale = new Vector3(1, 1, 1);
 
+        CreateFlowObjectCommand fEvent = new CreateFlowObjectCommand();
         //create json and send to server
         jsonObject obj = new jsonObject();
         Mesh mesh = objPrefab.GetComponent<MeshFilter>().mesh;
@@ -440,10 +465,13 @@ public class ObjectSettings : EditorWindow
         obj.q_z = objPrefab.transform.localRotation.z;
         obj.q_w = objPrefab.transform.localRotation.w;
         obj.objectName = objPrefab.name;
-        //obj.id = objPrefab.GetComponent<FlowObject>().ft.id;
-        obj.id = "";
-        string json = JsonUtility.ToJson(obj);
-        Debug.Log(json);
+        obj.id = objPrefab.GetComponent<FlowObject>().ft.id;
+        obj._id = objPrefab.GetComponent<FlowObject>().ft._id;
+        fEvent.obj = obj;
+        CommandProcessor.sendCommand(fEvent);
+        //obj.id = "";
+        //string json = JsonUtility.ToJson(obj);
+        //Debug.Log(json);
 
         // //Testing The Json object
         // jsonObject ret = new jsonObject();

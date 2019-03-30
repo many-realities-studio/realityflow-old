@@ -40,6 +40,11 @@ public class FlowProject
                 transformsById.Add(transforms[g]._id, transforms[g]);
             }
         }
+        //FlowObject.registerObject();
+    }
+
+    public void RegObj()
+    {
         FlowObject.registerObject();
     }
 }
