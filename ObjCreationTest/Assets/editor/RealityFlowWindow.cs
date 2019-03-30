@@ -172,6 +172,16 @@ public class RealityFlowWindow : EditorWindow {
 					
                     if (uName.Equals(user) && pWord.Equals(pass))
                     {
+                        FlowLoginCommand lEvent = new FlowLoginCommand();
+                        lEvent.user = new User(uName, pWord);
+                        FlowClient cl = new FlowClient();
+                        cl.type = FlowNetworkManager.clientType;
+                        lEvent.client = cl;
+                        CommandProcessor.sendCommand(lEvent);
+                    }
+
+                    if (Config.userId.Equals("-9999"))
+                    {
                         window = 1;
                         pWord = "";
                         uName = "";
@@ -184,6 +194,7 @@ public class RealityFlowWindow : EditorWindow {
             if (GUILayout.Button("Logout", GUILayout.Height(20)))
                 {
                     window = 0;
+                    Destroy(GameObject.FindGameObjectWithTag("ObjManager"));
                     DrawBody();
                 }
                 if (GUILayout.Button("New Project", GUILayout.Height(40)))
@@ -247,6 +258,25 @@ public class RealityFlowWindow : EditorWindow {
                     window = 1;
                     DrawBody();
                 }
+
+                if (Config.projectList != null)
+                {
+                    // foreach (KeyValuePair<string, string> c in Config.projectList)
+                    // {
+                    //     if (GUILayout.Button(c.Value, GUILayout.Height(30)))
+                    //     {
+                    //         // load project()
+                    //     }
+                    // }
+
+                    for (int i = 0; i < Config.projectList.Length; i++)
+                    {
+                        if (GUILayout.Button(Config.projectList[i].name, GUILayout.Height(30)))
+                        {
+                            // load project()
+                        }
+                    }
+                }
                 EditorGUILayout.EndHorizontal();
                 break;
         }
@@ -279,7 +309,7 @@ public class RealityFlowWindow : EditorWindow {
                 Destroy(c);
             }
 
-            Destroy(gm);
+            //Destroy(gm);
         }
     }
 

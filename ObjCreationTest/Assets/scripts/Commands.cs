@@ -114,6 +114,11 @@ public class Commands
         public const int ASSOCIATE_FLOW_OBJECT = 5010;
         public const int DISASSOCIATE_FLOW_OBJECt = 5011;
     }
+
+    public class User
+    {
+        public const int LOGIN = 10002;
+    }
     public const int REGISTER_CLIENT = 0;
     public const int LOGIN = 2;
     public const int MAKE_MASTER = 3;

@@ -145,17 +145,17 @@
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile.shader" />
      <None Include="Assets\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
      <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
- <Reference Include="Unity.PackageManagerUI.Editor">
- <HintPath>C:/Users/manugovea/.ssh/realityflow/ObjCreationTest/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
- </Reference>
- <Reference Include="Unity.XR.MagicLeap">
- <HintPath>C:/Users/manugovea/.ssh/realityflow/ObjCreationTest/Library/ScriptAssemblies/Unity.XR.MagicLeap.dll</HintPath>
- </Reference>
  <Reference Include="Unity.XR.MagicLeap.Editor">
  <HintPath>C:/Users/manugovea/.ssh/realityflow/ObjCreationTest/Library/ScriptAssemblies/Unity.XR.MagicLeap.Editor.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.StandardEvents">
  <HintPath>C:/Users/manugovea/.ssh/realityflow/ObjCreationTest/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
+ </Reference>
+ <Reference Include="Unity.PackageManagerUI.Editor">
+ <HintPath>C:/Users/manugovea/.ssh/realityflow/ObjCreationTest/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+ </Reference>
+ <Reference Include="Unity.XR.MagicLeap">
+ <HintPath>C:/Users/manugovea/.ssh/realityflow/ObjCreationTest/Library/ScriptAssemblies/Unity.XR.MagicLeap.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.AIModule">
  <HintPath>C:/Program Files/Unity 2018.1.9f1-MLTP8.1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>

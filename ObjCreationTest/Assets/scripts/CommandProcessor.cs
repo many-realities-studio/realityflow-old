@@ -55,6 +55,26 @@ public class FlowTransformCommand : FlowEvent
     }
 }
 
+public class FlowLoginCommand : FlowEvent
+{
+    public FlowLoginCommand()
+    {
+        this.cmd = Commands.User.LOGIN;
+    }
+
+    public User user;
+    public FlowClient client;
+    public FlowProject[] project;
+
+    public override void Send(WebSocket w)
+    {
+        timestamp = System.DateTime.UtcNow.Ticks;
+        string stringCmd = JsonUtility.ToJson(this);
+        Debug.Log(stringCmd);
+        w.SendString(stringCmd);
+    }
+}
+
 public class CreateFlowObjectCommand : FlowEvent
 {
     public CreateFlowObjectCommand() {
@@ -282,7 +302,7 @@ public class CommandProcessor
                 // This Code is only for calibration and assumes pre-decided IDs
                 break;
             case Commands.FlowObject.CREATE:
-                CreateFlowObjectCommand fe = (CreateFlowObjectCommand)JsonUtility.FromJson<FlowEvent>(FlowNetworkManager.reply);
+                CreateFlowObjectCommand fe = (CreateFlowObjectCommand)JsonUtility.FromJson<CreateFlowObjectCommand>(FlowNetworkManager.reply);
                 jsonObject obj =  fe.obj;
                 
                 GameObject newObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -307,6 +327,12 @@ public class CommandProcessor
                 newObj.GetComponent<FlowObject>().ft._id = obj._id;
                 newObj.GetComponent<FlowObject>().ft.id = obj.id;
                 FlowProject.activeProject.RegObj();
+                break;
+            case Commands.User.LOGIN:
+                FlowLoginCommand log = (FlowLoginCommand)JsonUtility.FromJson<FlowLoginCommand>(FlowNetworkManager.reply);
+                Config.userId = log.user.userId;
+                Config.deviceId = log.client._id;
+                Config.projectList = log.project;
                 break;
             default:
                 break;
