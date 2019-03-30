@@ -483,7 +483,7 @@ public class ObjectSettings : EditorWindow
         obj.vertices = mesh.vertices;
         obj.uv = mesh.uv;
         obj.triangles = mesh.triangles;
-        obj.type = objPrefab.GetComponent<Collider>().GetType().Name;
+        obj.type = objPrefab.GetComponent<Collider>().GetType().Name; // BoxCollider
         obj.x = objPrefab.transform.localPosition.x;
         obj.y = objPrefab.transform.localPosition.y;
         obj.z = objPrefab.transform.localPosition.z;

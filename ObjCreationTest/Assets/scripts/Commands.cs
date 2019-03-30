@@ -6,6 +6,11 @@ public class Commands
     }
     public class FlowObject {
         public const int CREATE = 1501;
+        public const int DELETE = 1502;
+    }
+    public class User
+    {
+        public const int LOGIN = 10002;
     }
     public class Value
     {
@@ -113,11 +118,6 @@ public class Commands
         public const int TRANSITION = 5009;
         public const int ASSOCIATE_FLOW_OBJECT = 5010;
         public const int DISASSOCIATE_FLOW_OBJECt = 5011;
-    }
-
-    public class User
-    {
-        public const int LOGIN = 10002;
     }
     public const int REGISTER_CLIENT = 0;
     public const int LOGIN = 2;
