@@ -16,6 +16,7 @@ public class FlowObject : MonoBehaviour {
 	ft._id = "1";
 	cmd.transform = ft;
 	FlowObject.fo = this;
+	//ft.RegisterTransform();
 	}
 	public static FlowObject fo;
 	public static void registerObject() {

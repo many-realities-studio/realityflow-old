@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class jsonObject : ScriptableObject {
+public class jsonObject : FlowValue {
     
 	public int[] triangles;
-    // public Vector3 position;
-    // public Vector4 rotation;
-    // public Vector3 scale;
 	public float x;
     public float y;
     public float z;
@@ -20,7 +17,7 @@ public class jsonObject : ScriptableObject {
     public float s_y;
     public float s_z;
 	public string type;
-	public string id;
+	//public string id;
     public string objectName;
 	public Vector3[] vertices;
 	public Vector2[] uv;

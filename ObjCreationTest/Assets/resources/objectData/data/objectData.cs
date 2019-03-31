@@ -8,7 +8,8 @@ public class ObjectData : ScriptableObject {
     public GameObject prefab;
     public Vector3 position;
     public Vector3 rotation;
-    public Vector3 scale;
+    public Vector3 scale = new Vector3(1,1,1);
     public string objectName;
+    public Mesh mesh;
 
 }
