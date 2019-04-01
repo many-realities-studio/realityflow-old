@@ -27,6 +27,7 @@ export class ClientOperations{
 
         });
 
+        console.log("finished creating client");
         return newClient;
 
     }

@@ -15,13 +15,16 @@ namespace Assets.RealityFlow.Scripts.Events
 
         public ObjectUpdateEvent()
         {
-            cmd = scmd;
+            command = scmd;
         }
 
         public void Send(FlowTObject transformToSend)
         {
             transform = transformToSend;
             transform.Read();
+
+            project_id = Config.projectId;
+            client_id = Config.deviceId;
 
             CommandProcessor.sendCommand(this);
         }

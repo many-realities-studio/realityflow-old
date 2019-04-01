@@ -15,12 +15,15 @@ namespace Assets.RealityFlow.Scripts.Events
 
         public ObjectCreationEvent()
         {
-            cmd = scmd;
+            command = scmd;
         }
 
         public void Send(FlowTObject objToSend)
         {
             obj = objToSend;
+
+            project_id = Config.projectId;
+            client_id = Config.deviceId;
 
             CommandProcessor.sendCommand(this);
         }

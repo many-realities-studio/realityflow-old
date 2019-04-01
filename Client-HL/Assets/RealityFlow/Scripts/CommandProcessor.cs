@@ -44,27 +44,37 @@ public class CommandProcessor
 
     public static void initializeRecieveEvents()
     {
+        // Object Events
         recieveEvents.Add(ObjectUpdateEvent.scmd, ObjectUpdateEvent.Receive);
         recieveEvents.Add(ObjectCreationEvent.scmd, ObjectCreationEvent.Receive);
+        recieveEvents.Add(ObjectDeleteEvent.scmd, ObjectDeleteEvent.Receive);
+
+        // Project Events
+        recieveEvents.Add(ProjectCreateEvent.scmd, ProjectCreateEvent.Receive);
+        recieveEvents.Add(ProjectFetchEvent.scmd, ProjectFetchEvent.Receive);
+        recieveEvents.Add(ProjectInviteEvent.scmd, ProjectInviteEvent.Receive);
+
+        // User Events
         recieveEvents.Add(UserLoginEvent.scmd, UserLoginEvent.Receive);
+        recieveEvents.Add(UserRegisterEvent.scmd, UserRegisterEvent.Receive);
     }
 
     public static int counter = 0;
     public static void processProjectCommand(FlowProjectCommand incoming)
     {
-        if (projectCbDictionary.ContainsKey(incoming.cmd))
+        if (projectCbDictionary.ContainsKey(incoming.command))
         {
             delegate_flow_project cb;
-            bool result = projectCbDictionary.TryGetValue(incoming.cmd, out cb);
+            bool result = projectCbDictionary.TryGetValue(incoming.command, out cb);
             if (result)
             {
                 cb(incoming);
             }
         }
-        if (listenerProjectDictionary.ContainsKey(incoming.cmd))
+        if (listenerProjectDictionary.ContainsKey(incoming.command))
         {
             List<delegate_flow_project> callbacks;
-            listenerProjectDictionary.TryGetValue(incoming.cmd, out callbacks);
+            listenerProjectDictionary.TryGetValue(incoming.command, out callbacks);
             foreach (delegate_flow_project cb in callbacks)
             {
                 cb(incoming);
@@ -74,24 +84,24 @@ public class CommandProcessor
     public static int processCommand(FlowEvent incoming)
     {
         int retValue = 0;
-        if (cmdCbDictionary.ContainsKey(incoming.cmd))
+        if (cmdCbDictionary.ContainsKey(incoming.command))
         {
             delegate_flow_cmd cb;
-            cmdCbDictionary.TryGetValue(incoming.cmd, out cb);
+            cmdCbDictionary.TryGetValue(incoming.command, out cb);
             cb(incoming);
-            cmdCbDictionary.Remove(incoming.cmd);
+            cmdCbDictionary.Remove(incoming.command);
         }
-        if (listenerCmdDictionary.ContainsKey(incoming.cmd))
+        if (listenerCmdDictionary.ContainsKey(incoming.command))
         {
             List<delegate_flow_cmd> callbacks;
-            listenerCmdDictionary.TryGetValue(incoming.cmd, out callbacks);
+            listenerCmdDictionary.TryGetValue(incoming.command, out callbacks);
             foreach (delegate_flow_cmd cb in callbacks)
             {
                 cb(incoming);
             }
         }
 
-        string debug_updates = recieveEvents[incoming.cmd]();
+        string debug_updates = recieveEvents[incoming.command]();
 
         if (FlowNetworkManager.debug)
             Debug.Log(debug_updates);
@@ -107,7 +117,7 @@ public class CommandProcessor
     public static void sendCommand(int command, string value)
     {
         FlowEvent newCmd = new FlowEvent();
-        newCmd.cmd = command;
+        newCmd.command = command;
         newCmd.value = new FlowPayload();
         newCmd.value.data = value;
         cmdBuffer.Add(newCmd);
@@ -116,7 +126,7 @@ public class CommandProcessor
     private static void sendCommand(int command, string value, delegate_flow_cmd callback)
     {
         FlowEvent newCmd = new FlowEvent();
-        newCmd.cmd = command;
+        newCmd.command = command;
         newCmd.value.data = value;
         cmdBuffer.Add(newCmd);
         if (cmdCbDictionary.ContainsKey(command))

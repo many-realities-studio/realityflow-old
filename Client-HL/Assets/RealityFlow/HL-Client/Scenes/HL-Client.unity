@@ -266,7 +266,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 100372371}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eb346f41f3e3d8b4d94cb1e6f4acc2bc, type: 3}
   m_Name: 
@@ -276,6 +276,7 @@ MonoBehaviour:
     __v: 
     _id: 
     id: 
+    triangles: 
     x: 0
     y: 0
     z: 0
@@ -286,6 +287,10 @@ MonoBehaviour:
     s_x: 0
     s_y: 0
     s_z: 0
+    type: 
+    objectName: 
+    vertices: []
+    uv: []
 --- !u!1 &124523475
 GameObject:
   m_ObjectHideFlags: 0
@@ -1073,7 +1078,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LocalServer: 1
-  _debug: 0
+  _debug: 1
   music: 0
   mainGameCamera: {fileID: 1924170753}
   eventSystem: {fileID: 839972930}

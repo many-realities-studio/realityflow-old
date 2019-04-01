@@ -22,4 +22,9 @@ public class FlowUser : FlowValue {
     {
         _id = id;
     }
+
+    public FlowUser()
+    {
+
+    }
 }

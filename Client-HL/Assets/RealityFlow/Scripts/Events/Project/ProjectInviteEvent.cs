@@ -8,24 +8,24 @@ using UnityEngine;
 namespace Assets.RealityFlow.Scripts.Events
 {
     [System.Serializable]
-    public class ProjectCreateEvent : FlowEvent
+    public class ProjectInviteEvent : FlowEvent
     {
-        public static int scmd = Commands.Project.CREATE;
+        public static int scmd = Commands.Project.INVITE;
 
         public FlowProject project;
         public FlowUser user;
-        public FlowClient client;
 
-        public ProjectCreateEvent()
+        public ProjectInviteEvent()
         {
             command = scmd;
         }
 
-        public void Send(string projectName)
+        public void send(string username)
         {
-            project = new FlowProject(projectName);
-            user = new FlowUser(Config.userId);
-            client = new FlowClient(Config.deviceId);
+            user = new FlowUser();
+            user.username = username;
+
+            project = new FlowProject(Config.projectId);
 
             CommandProcessor.sendCommand(this);
         }
@@ -37,11 +37,15 @@ namespace Assets.RealityFlow.Scripts.Events
 
         public static string Receive()
         {
-            ProjectCreateEvent log = JsonUtility.FromJson<ProjectCreateEvent>(FlowNetworkManager.reply);
+            ProjectInviteEvent log = JsonUtility.FromJson<ProjectInviteEvent>(FlowNetworkManager.reply);
             Config.projectIdList.Add(log.project._id);
             Config.projectId = log.project._id;
 
-            return "Receiving project create update: " + FlowNetworkManager.reply;
+            //add user project update here (it will add project to the users list)j
+
+            //add project react code here
+
+            return "Receiving project invite update: " + FlowNetworkManager.reply;
         }
     }
 }

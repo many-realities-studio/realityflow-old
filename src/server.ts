@@ -83,7 +83,7 @@ export class ServerEventDispatcher {
 
                 case Commands.project.CREATE:{
 
-                    var project = ProjectOperations.createProject(json.project, json.client, json.user);
+                    project = ProjectOperations.createProject(json.project, json.client, json.user);
                     json.scene._parentId = project._id;
                     var scene = SceneOperations.createScene(json.scene);
                     project.currentScene = scene._id;
@@ -185,24 +185,29 @@ export class ServerEventDispatcher {
                     var newUser = UserOperations.createUser(json.user);
                     var newClientId = ClientOperations.createClient(json.client, newUser._id, connection);
 
+                    console.log("Received user registration!");
                     var connectionTracker = {
-
+                        
                         clientId:   newClientId,
                         connection: connection
-
-                   };
-
-                   this.connections.push(connectionTracker);
-
+                        
+                    };
+                    
+                    this.connections.push(connectionTracker);
+                    
                     newUser.clients.push(newClientId);
+                    
+                    json.user = newUser;
+                    json.client._id = newClientId;
+                    var payloadString = JSON.stringify(json);
 
-                    var payloadString = JSON.stringify({
+                    // var payloadString = JSON.stringify({
 
-                        response:   'User Creation Successful',
-                        user:       {_id: newUser._id},
-                        client:     {_id: newClientId}
+                    //     response:   'User Creation Successful',
+                    //     user:       {_id: newUser._id},
+                    //     client:     {_id: newClientId}
 
-                    });
+                    // });
 
                     this.send(payloadString, connection);
 
@@ -540,11 +545,11 @@ function main() {
         function loadApiFunctions() {
             for (let i = 0; i < apiFuncGroup.length; i++) {
                 delete require.cache[require.resolve("./commands/" + apiFuncGroup[i] + ".js")];
-                let initCommands = require("./commands/" + apiFuncGroup[i]).default;
-                initCommands(sockServ, user_hash, client_hash, function () { /*console.log("Loaded" + apiFuncGroup[i]);*/ });
+            //    let initCommands = require("./commands/" + apiFuncGroup[i]).default;
+            //    initCommands(sockServ, user_hash, client_hash, function () { /*console.log("Loaded" + apiFuncGroup[i]);*/ });
             }
         }
-        loadApiFunctions();
+       // loadApiFunctions();
     
     // Setup
     //setup();

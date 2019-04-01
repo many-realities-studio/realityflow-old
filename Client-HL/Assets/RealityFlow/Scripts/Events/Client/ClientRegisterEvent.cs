@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Assets.RealityFlow.Scripts.Events.Client
+namespace Assets.RealityFlow.Scripts.Events
 {
     [System.Serializable]
     public class ClientRegisterEvent : FlowEvent
@@ -17,7 +17,7 @@ namespace Assets.RealityFlow.Scripts.Events.Client
 
         public ClientRegisterEvent()
         {
-            cmd = scmd;
+            command = scmd;
         }
 
         public void Send(int deviceType)

@@ -1,5 +1,5 @@
 import { User, IUserModel } from "../models/user";
-import { ServerEventDispatcher, isBound } from "../server";
+import { ServerEventDispatcher } from "../server";
 import { Commands } from "../common/commands";
 import { userInfo } from "os";
 

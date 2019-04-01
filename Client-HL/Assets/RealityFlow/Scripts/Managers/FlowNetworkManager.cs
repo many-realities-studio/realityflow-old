@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine.UI;
 using System.Runtime.InteropServices;
+using Assets.RealityFlow.Scripts.Events;
 
 /// <summary>
 /// Establishes a connection to the Flow server through websocket connections and handles high-level communication
@@ -212,6 +213,9 @@ public class FlowNetworkManager : MonoBehaviour
         testProject.initialize();
 
         CommandProcessor.initializeRecieveEvents();
+
+        UserRegisterEvent newUser = new UserRegisterEvent();
+        newUser.Send(new FlowUser("test1", "test1"), FlowClient.CLIENT_HOLOLENS);
         
 #if !UNITY_EDITOR && UNITY_WEBGL
         WebGLInput.captureAllKeyboardInput = false;
@@ -327,7 +331,7 @@ public class FlowNetworkManager : MonoBehaviour
             {
                 Debug.Log("Processing Command");
                 FlowEvent incoming = JsonUtility.FromJson<FlowEvent>(reply);
-                if (incoming.cmd >= Commands.Project.MIN && incoming.cmd <= Commands.Project.MAX)
+                if (incoming.command >= Commands.Project.MIN && incoming.command <= Commands.Project.MAX)
                 {
                     CommandProcessor.processProjectCommand(JsonUtility.FromJson<FlowProjectCommand>(reply));
                 }
@@ -406,7 +410,7 @@ public class FlowNetworkManager : MonoBehaviour
         {
             Debug.Log("Processing Command");
             FlowEvent incoming = JsonUtility.FromJson<FlowEvent>(reply);
-            if (incoming.cmd >= Commands.Project.MIN && incoming.cmd <= Commands.Project.MAX)
+            if (incoming.command >= Commands.Project.MIN && incoming.command <= Commands.Project.MAX)
             {
                 CommandProcessor.processProjectCommand(JsonUtility.FromJson<FlowProjectCommand>(reply));
             }
@@ -504,7 +508,7 @@ public class FlowNetworkManager : MonoBehaviour
     public void OnApplicationQuit()
     {
         FlowEvent closeEvent = new FlowEvent();
-        closeEvent.cmd = -1;
+        closeEvent.command = -1;
         CommandProcessor.sendCommand(closeEvent);
         Debug.Log("Closing!!");
         if(w != null && w.connected )

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Assets.RealityFlow.Scripts.Entities
+namespace Assets.RealityFlow.Scripts.Events
 {
     [System.Serializable]
     public class ObjectDeleteEvent : FlowEvent
@@ -15,13 +15,16 @@ namespace Assets.RealityFlow.Scripts.Entities
 
         public ObjectDeleteEvent()
         {
-            cmd = scmd;
+            command = scmd;
         }
 
         public void Send(string id)
         {
             objToDelete = new FlowTObject();
             objToDelete._id = id;
+
+            project_id = Config.projectId;
+            client_id = Config.deviceId;
 
             CommandProcessor.sendCommand(this);
         }

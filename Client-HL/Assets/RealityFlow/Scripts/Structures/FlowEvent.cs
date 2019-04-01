@@ -7,9 +7,11 @@ using UnityEngine;
 [System.Serializable]
 public class FlowEvent
 {
-    public int cmd;
+    public int command;
     public FlowPayload value;
     public long timestamp;
+    public string project_id;
+    public string client_id;
 
     public virtual void Send( WebSocket w ){}
 

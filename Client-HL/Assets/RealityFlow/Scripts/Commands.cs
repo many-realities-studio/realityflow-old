@@ -31,6 +31,7 @@ public class Commands
         public const int DELETE = 3009;
         public const int UPDATE = 3002;
         public const int FETCH = 3003;
+        public const int INVITE = 3005;
         public const int OPEN = 3007;
         public const int SET_ACTIVE = 3001;
         public const int FIND_ONE = 3008;

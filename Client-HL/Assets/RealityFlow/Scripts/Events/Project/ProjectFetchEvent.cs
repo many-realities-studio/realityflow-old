@@ -8,20 +8,20 @@ using UnityEngine;
 namespace Assets.RealityFlow.Scripts.Events
 {
     [System.Serializable]
-    public class UserLoginEvent : FlowEvent
+    public class ProjectFetchEvent : FlowEvent
     {
-        public static int scmd = Commands.User.LOGIN;
+        public static int scmd = Commands.Project.FETCH;
 
-        public FlowUser user;
+        public FlowProject project;
 
-        public UserLoginEvent()
+        public ProjectFetchEvent()
         {
             command = scmd;
         }
 
-        public void send(FlowUser user)
+        public void send()
         {
-            this.user = user;
+            project = new FlowProject(Config.projectId);
 
             CommandProcessor.sendCommand(this);
         }
@@ -33,9 +33,9 @@ namespace Assets.RealityFlow.Scripts.Events
 
         public static string Receive()
         {
-            UserLoginEvent log = JsonUtility.FromJson<UserLoginEvent>(FlowNetworkManager.reply);
-            Config.userId = log.user._id;
-            Config.projectIdList = log.user.project_ids;
+            ProjectFetchEvent log = JsonUtility.FromJson<ProjectFetchEvent>(FlowNetworkManager.reply);
+            
+            //to be continued
 
             return "Receiving user login update: " + FlowNetworkManager.reply;
         }
