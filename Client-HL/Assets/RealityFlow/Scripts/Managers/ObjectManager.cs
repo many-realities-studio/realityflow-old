@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using UnityEngine.UI;
+using UnityExtension;
 
 // TODO:
 // make file path a constant
@@ -17,13 +18,17 @@ public class ObjectManager : MonoBehaviour {
     // structures for resource based spawner
     public ObjectDataList objects = new ObjectDataList();
     private const string dataFileName = "testJSON.json";
+    private const string prefabPath = "Prefabs/";
+    private const string modelPath = "Assets/Resources/Models/";
     private ObjectData loadedData;
     private GameObject myPrefab;
 
     // outliner
     public Transform outlinerContent;
     public GameObject OutlinerItemPrefab;
+    public GameObject outliner;
 
+    // Load all objects in the scene
     void Start()
     {
         LoadJSON();
@@ -31,9 +36,46 @@ public class ObjectManager : MonoBehaviour {
         // spawn using resource based spawner
         foreach (ObjectData obj in objects.objects)
         {
-            myPrefab = Resources.Load("Prefabs/" + obj.prefab) as GameObject;
+            myPrefab = Resources.Load(prefabPath + obj.prefab) as GameObject;
             GameObject temp = Instantiate(myPrefab, stringToVector3(obj.position), Quaternion.identity);
-            temp.AddComponent<Selector>();
+            temp.transform.localScale = stringToVector3(obj.scale);
+            temp.name = obj.name;
+
+            if (obj.prefab == "Mesh")
+            {
+                // Initialize Mesh variables
+                //GameObject loadedModelObj = Resources.Load(modelPath + obj.mesh) as GameObject;
+                //Mesh mesh = loadedModelObj.GetComponent<MeshFilter>().mesh;
+                MeshFilter objMesh = temp.GetComponent<MeshFilter>();
+
+                //	Load the OBJ in
+                var lStream = new FileStream(modelPath + obj.mesh, FileMode.Open);
+                var meshObj = OBJLoader.LoadOBJ(lStream);
+                //var mesh = GetComponent<MeshFilter>();
+                objMesh.mesh.LoadOBJ(meshObj);
+                lStream.Close();
+
+                lStream = null;
+                meshObj = null;
+
+                // Generate new collider
+                Destroy(temp.GetComponent<Collider>());
+                temp.AddComponent<BoxCollider>();
+
+                // Test code to auto resize the object
+                //objMesh.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f); ;
+
+                /*if (mesh != null)
+                {
+                    objMesh.vertices = mesh.mesh.vertices;
+                    objMesh.uv = mesh.mesh.uv;
+                    objMesh.triangles = mesh.mesh.triangles;
+                    objMesh.RecalculateBounds();
+                    objMesh.RecalculateNormals();
+                    Destroy(temp.GetComponent<Collider>());
+                    temp.AddComponent<BoxCollider>();
+                }*/
+            }
 
             // Add outline to object, which is used to show whether or not the object is selected
             var outline = temp.AddComponent<Outline>();
@@ -41,12 +83,8 @@ public class ObjectManager : MonoBehaviour {
             outline.OutlineWidth = 1f;
             outline.enabled = false;
 
-            // Add translation, rotation, and scaling tools to object
-            temp.AddComponent<TranslateTool>();
-            temp.AddComponent<ScaleTool>();
-            temp.AddComponent<RotateTool>();
-
-            populateOutliner(obj.name);
+            //populateOutliner(obj.name, temp);
+            outliner.GetComponent<OutlinerManager>().addItem(temp);
         }
     }
 
@@ -110,14 +148,6 @@ public class ObjectManager : MonoBehaviour {
             Debug.LogError("Cannot load object data!");
         }
     }
-
-    public void populateOutliner(string name)
-    {
-        Debug.Log(name);
-        GameObject newItem = Instantiate(OutlinerItemPrefab) as GameObject;
-        Text objName = newItem.GetComponentInChildren<Text>();
-        objName.text = name;
-        newItem.transform.SetParent(outlinerContent.transform);
-        newItem.transform.localScale = Vector3.one;
-    }
+    
+    // Create a new object
 }

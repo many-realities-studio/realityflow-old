@@ -2,16 +2,26 @@
 	"objects" :[
 	{
 		"prefab" : "Capsule",
-		"position" : "(2,0,0)",
+		"mesh" : "",
+		"position" : "(20,0,0)",
 		"rotation" : "Quaternion.identity",
-		"scale" : "(1,1,1)",
+		"scale" : "(10,10,10)",
 		"name" : "testCapsule"
 	},
 	{
     		"prefab" : "Cube",
+		"mesh" : "",
     		"position": "(0,0,0)",
     		"rotation": "Quaternion.identity",
-    		"scale": "(1,1,1)",
+    		"scale": "(10,10,10)",
     		"name": "testCube"
+ 	},
+	{
+    		"prefab" : "Mesh",
+		"mesh" : "DressingTable.obj",
+    		"position": "(-20,0,0)",
+    		"rotation": "Quaternion.identity",
+    		"scale": "(0.1,0.1,0.1)",
+    		"name": "testMesh"
  	}]
 }

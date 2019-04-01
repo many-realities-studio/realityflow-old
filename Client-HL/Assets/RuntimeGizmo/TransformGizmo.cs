@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 using CommandUndoRedo;
+using UnityEngine.EventSystems;
 
 namespace RuntimeGizmos
 {
@@ -13,7 +14,7 @@ namespace RuntimeGizmos
 	[RequireComponent(typeof(Camera))]
 	public class TransformGizmo : MonoBehaviour
 	{
-		public TransformSpace space = TransformSpace.Global;
+		public TransformSpace space = TransformSpace.Local;
 		public TransformType transformType = TransformType.Move;
 		public TransformPivot pivot = TransformPivot.Pivot;
 		public CenterType centerType = CenterType.All;
@@ -467,10 +468,11 @@ namespace RuntimeGizmos
 			}
 			return Vector3.zero;
 		}
-	
-		void GetTarget()
+
+        // NOTE (JON): edited this to check if a GUI element is being clicked
+        void GetTarget()
 		{
-			if(nearAxis == Axis.None && Input.GetMouseButtonDown(0))
+			if(nearAxis == Axis.None && Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
 			{
 				bool isAdding = Input.GetKey(AddSelection);
 				bool isRemoving = Input.GetKey(RemoveSelection);
@@ -501,12 +503,18 @@ namespace RuntimeGizmos
 			}
 		}
 
+        // NOTE (Jon): This is the function that is called when an object is selected.
 		public void AddTarget(Transform target, bool addCommand = true)
 		{
+            // Target should be the GameObject selected. Use this to reference the object and reverse look up
+            // its ID.
 			if(target != null)
 			{
+                //Debug.Log(target.root.name);
 				if(targetRoots.ContainsKey(target)) return;
 				if(children.Contains(target)) return;
+                // Only allow user to select one object at a time
+                if (targetRoots.Count >= 1) return;
 
 				if(addCommand) UndoRedoManager.Insert(new AddTargetCommand(this, target, targetRootsOrdered));
 
@@ -542,7 +550,7 @@ namespace RuntimeGizmos
 			children.Clear();
 		}
 
-		void ClearAndAddTarget(Transform target)
+		public void ClearAndAddTarget(Transform target)
 		{
 			UndoRedoManager.Insert(new ClearAndAddTargetCommand(this, target, targetRootsOrdered));
 
