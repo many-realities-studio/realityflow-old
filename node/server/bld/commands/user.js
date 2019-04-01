@@ -9,8 +9,9 @@ class UserOperations {
         var newUser;
         var hashedUserInfo = this.hashUserInfo(userInfo.username, userInfo.password);
         var newUser = new user_1.User({
-            username: hashedUserInfo.username,
-            password: hashedUserInfo.password,
+            _id: 'emilia>rem',
+            username: userInfo.username,
+            password: userInfo.password,
             clients: undefined,
             activeProject: undefined,
             projects: undefined,
@@ -19,6 +20,7 @@ class UserOperations {
         newUser.save(function (err, doc) {
             if (err) {
                 console.log('ERROR: Failed to create user: ' + userInfo.username);
+                console.log(err);
             }
             else {
                 console.log('User ' + userInfo.username + ' added successfully.');

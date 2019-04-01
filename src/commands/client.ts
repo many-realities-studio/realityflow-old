@@ -8,7 +8,7 @@ export class ClientOperations{
 
     public static createClient(clientInfo: any, userId: String, connection: any){
 
-        var newClientId;
+        var client;
 
         var newClient = new Client({
 
@@ -21,14 +21,14 @@ export class ClientOperations{
 
             if(!err){
 
-                newClient = doc;
+                client = doc;
 
             }
 
         });
 
         console.log("finished creating client");
-        return newClient;
+        return client;
 
     }
 

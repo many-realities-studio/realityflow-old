@@ -201,6 +201,8 @@ export class ServerEventDispatcher {
                     json.client._id = newClientId;
                     var payloadString = JSON.stringify(json);
 
+                    
+
                     // var payloadString = JSON.stringify({
 
                     //     response:   'User Creation Successful',
@@ -208,6 +210,8 @@ export class ServerEventDispatcher {
                     //     client:     {_id: newClientId}
 
                     // });
+
+                    console.log(payloadString);
 
                     this.send(payloadString, connection);
 

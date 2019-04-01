@@ -20,9 +20,10 @@ namespace Assets.RealityFlow.Scripts.Events
             command = scmd;
         }
 
-        public void Send(FlowUser user, int deviceType)
+        public void Send(string username, string password, int deviceType)
         {
-            this.user = user;
+
+            user = new FlowUser(username, password);
             client = new FlowClient(deviceType);
 
             CommandProcessor.sendCommand(this);

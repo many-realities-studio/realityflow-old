@@ -129,6 +129,7 @@ class ServerEventDispatcher {
                     json.user = newUser;
                     json.client._id = newClientId;
                     var payloadString = JSON.stringify(json);
+                    console.log(payloadString);
                     this.send(payloadString, connection);
                     break;
                 }

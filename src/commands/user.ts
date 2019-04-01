@@ -17,8 +17,9 @@ export class UserOperations {
 
         var newUser = new User({
 
-            username: hashedUserInfo.username,
-            password: hashedUserInfo.password,
+            _id: 'emilia>rem',
+            username: userInfo.username,
+            password: userInfo.password,
             clients: undefined,
             activeProject: undefined,
             projects: undefined,
@@ -31,6 +32,7 @@ export class UserOperations {
             if(err){
 
                 console.log('ERROR: Failed to create user: ' + userInfo.username);
+                console.log(err);
 
             }
             else{
