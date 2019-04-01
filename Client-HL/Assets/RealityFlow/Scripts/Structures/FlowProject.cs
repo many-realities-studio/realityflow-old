@@ -28,7 +28,6 @@ public class FlowProject
 
     public void initialize()
     {
-        transforms = new List<FlowTransform>();
         activeProject = this;
         if (!initialized)
         {
@@ -41,6 +40,11 @@ public class FlowProject
                 transformsById.Add(transforms[g]._id, transforms[g]);
             }
         }
+        //FlowObject.registerObject();
+    }
+
+    public void RegObj()
+    {
         FlowObject.registerObject();
     }
 }

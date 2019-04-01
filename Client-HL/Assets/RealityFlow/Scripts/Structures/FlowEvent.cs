@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -10,9 +11,16 @@ public class FlowEvent
     public FlowPayload value;
     public long timestamp;
 
-    public virtual void Send( WebSocket w) {
-        string stringCmd = JsonUtility.ToJson(this);
-        //Debug.Log(stringCmd);
+    public virtual void Send( WebSocket w ){}
+
+    public virtual void Send( WebSocket w, FlowEvent evt) {
+        timestamp = DateTime.UtcNow.Ticks;
+        string stringCmd = JsonUtility.ToJson(evt);
+
+        if(FlowNetworkManager.debug)
+            Debug.Log(stringCmd);
+
         w.SendString(stringCmd);
     }
+
 }

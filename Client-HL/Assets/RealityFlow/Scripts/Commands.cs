@@ -4,6 +4,14 @@ public class Commands
     {
         public const int UPDATE = -2000;
     }
+    public class FlowObject {
+        public const int CREATE = 1501;
+        public const int DELETE = 1502;
+    }
+    public class User
+    {
+        public const int LOGIN = 10002;
+    }
     public class Value
     {
         public const int UPDATE = -1000;

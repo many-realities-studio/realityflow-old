@@ -8,14 +8,18 @@ using System.Runtime.InteropServices;
 /// <summary>
 /// Establishes a connection to the Flow server through websocket connections and handles high-level communication
 /// </summary>
+// [ExecuteInEditMode]
 public class FlowNetworkManager : MonoBehaviour
 {
     public bool LocalServer;
+    public static bool debug = true;
 
+    public bool _debug;
     //string LOCAL_SERVER = "ws://echo.websocket.org";
     string LOCAL_SERVER = "ws://localhost:8999";
     string LAN_SERVER = "ws://192.168.1.246:8082";
-    string REMOTE_SERVER = "ws://plato.jtm.io:8999";
+    string REMOTE_SERVER = "ws://plato.mrl.ai:8999";
+
 
     float selectionSize = .65f;
     public bool music;
@@ -72,17 +76,6 @@ public class FlowNetworkManager : MonoBehaviour
 
     WebSocket w;
     int thirdFrame = 0;
-
-    [System.Serializable]
-    public struct FlowUser
-    {
-        public String _id;
-        public String username;
-        public String active_project;
-        public List<FlowClient> clients;
-        public FlowState active_State;
-    }
-
 
     public int onFrame = 3;
     FlowTransform newVal;
@@ -161,12 +154,21 @@ public class FlowNetworkManager : MonoBehaviour
         Debug.Log("Connected Websocket!");
     }
 
-    void Awake()
+    public void Awake()
     {
         instance = this;
         Debug.Log("Setting main camera " +  clientType);
+        
+        if (mainGameCamera == null)
+        {
+            GameObject cam = GameObject.FindGameObjectWithTag("MainCamera");
+            FlowCameras.mainCamera = cam.GetComponent<Camera>();
+        }
+        else
+        {
             FlowCameras.mainCamera = mainGameCamera.GetComponent<Camera>();
-        mainCanvas = GameObject.Find("RootCanvas").GetComponent<Canvas>();
+        }
+       // mainCanvas = GameObject.Find("DebugCanvas").GetComponent<Canvas>();
         /* if (DebugPanel.instance.forceHolo == true)
         {
             clientType = CLIENT_HOLOLENS;
@@ -202,12 +204,14 @@ public class FlowNetworkManager : MonoBehaviour
         arButton.GetComponent<Button>().colors = cb;
     }
 
-    FlowProject testProject;
+    public static FlowProject testProject;
 
-    void Start()
+    public void Start()
     {
         testProject = new FlowProject();
         testProject.initialize();
+
+        CommandProcessor.initializeRecieveEvents();
         
 #if !UNITY_EDITOR && UNITY_WEBGL
         WebGLInput.captureAllKeyboardInput = false;
@@ -313,6 +317,9 @@ public class FlowNetworkManager : MonoBehaviour
         //MidiOut.NoteOn (note, accidental, octave, value, channel);	
 
         //mainCanvas.renderMode = RenderMode.WorldSpace;
+
+
+        // recieve updates from the server (currently not working)     
         while (true)
         {
             reply = w.RecvString();
@@ -347,7 +354,7 @@ public class FlowNetworkManager : MonoBehaviour
             }
             yield return 0;
         }
-    }
+     }
 
     void OnWebLoggedIn()
     {
@@ -369,8 +376,10 @@ public class FlowNetworkManager : MonoBehaviour
     /// <summary>
     /// Update is called every frame, if the MonoBehaviour is enabled.
     /// </summary>
-    void Update()
+    public void Update()
     {
+        debug = _debug;
+
         // Start with delete key.
         if (Input.GetKeyDown(KeyCode.Delete))
         {
@@ -387,6 +396,42 @@ public class FlowNetworkManager : MonoBehaviour
             }
             CommandProcessor.cmdBuffer.Clear();
         }
+    }
+
+    // process incoming commands for edit mode
+    public void ProcessEditCommand ()
+    {
+        reply = w.RecvString();
+        if (reply != null && reply != "Null")
+        {
+            Debug.Log("Processing Command");
+            FlowEvent incoming = JsonUtility.FromJson<FlowEvent>(reply);
+            if (incoming.cmd >= Commands.Project.MIN && incoming.cmd <= Commands.Project.MAX)
+            {
+                CommandProcessor.processProjectCommand(JsonUtility.FromJson<FlowProjectCommand>(reply));
+            }
+            else
+            {
+                CommandProcessor.processCommand(incoming);
+            }
+        }
+//         if (w.error != null)
+//             {
+//                 Debug.Log("[unity] Error: " + w.error);
+//                 connected = false;
+
+//                 yield return new WaitForSeconds(5);
+// #if !UNITY_WSA || UNITY_EDITOR
+//                 DoOnMainThread.ExecuteOnMainThread.Enqueue(() =>
+//                 {
+//                     StartCoroutine(ConnectWebsocket());
+//                 });
+//                 Debug.Log("Connect connection");
+//                 CommandProcessor.sendCommand(Commands.LOGIN, uid.ToString());
+//                 loggedIn = false;
+// #endif
+//             }
+//             yield return 0;
     }
 
     public static int primitiveID = 0;
