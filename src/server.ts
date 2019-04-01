@@ -4,44 +4,375 @@ import * as path from "path";
 import * as express from "express";
 import * as http from "http";
 import { Server } from "ws";
-import { IFlowTransform } from "./common/IFlowTransform";
 
-// Models
-import { Client } from "./models/client";
-import { User } from "./models/user";
+// DB API
+import {UserOperations} from "./commands/user";
+import {ClientOperations} from "./commands/client";
+import {ProjectOperations} from "./commands/project";
+import {SceneOperations} from "./commands/scene";
+import {ObjectOperations} from "./commands/object";
 
-let heartbeat;
 var mongoose = require('mongoose');
 var database;
 let user_hash: string[] = [];
 let client_hash: string[] = [];
 const dburl = "mongodb://127.0.0.1:27017/realityflowdb";
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
-export const isBound: boolean[] = [];
-const buffer = Buffer.alloc(1000);
 
 /**
  * The main server dispatcher
  */
 export class ServerEventDispatcher {
-    public static connections: WebSocket[] = [];
+    public static connections: any[] = [];
     public static wss: Server;
     public static callbacks: Function[][];
 
-    public static incoming(command: number, value: { data: any, timestamp: number }, client_id: number, transform?: IFlowTransform) {
-        ServerEventDispatcher.dispatch(command, value, value.timestamp, client_id, transform);
+    public static serverMessageProcessor(json: any, connection: any){
+
+        console.log("Entering Message Processor");
+
+       var command: Number = json.command;
+
+       if(command>=Commands.object.CREATE&&command<=Commands.object.DELETE){
+
+            switch(command){
+
+                case Commands.object.CREATE:{
+
+                    var object = ObjectOperations.createObject(json.object);
+                    var project = ProjectOperations.findProject(json.project._id);
+
+                    var sceneId = project.currentScene;
+                    var scene = SceneOperations.findScene(sceneId);
+
+                    scene.objects.push(object._id);
+
+                    var payloadString = JSON.stringify({
+
+                        object: object
+                        
+                    });
+
+                    this.send(payloadString, connection);
+
+
+                    break;
+                }
+
+                case Commands.object.UPDATE:{
+
+                    this.broadcast(json);
+                    ObjectOperations.updateObject(json.object);
+
+                    break;
+                }
+
+                case Commands.object.DELETE:{
+
+                    this.broadcast(json);
+                    ObjectOperations.deleteObject(json.object);
+
+                    break;
+                }
+
+            }
+
+       }
+       else if(command>=Commands.project.CREATE&&command<=Commands.project.DELETE){
+
+            switch(command){
+
+                case Commands.project.CREATE:{
+
+                    var project = ProjectOperations.createProject(json.project, json.client, json.user);
+                    json.scene._parentId = project._id;
+                    var scene = SceneOperations.createScene(json.scene);
+                    project.currentScene = scene._id;
+
+                    var payloadString = JSON.stringify({
+
+                        project: project,
+                        scene: scene
+
+                    });
+
+                    this.send(payloadString, connection);
+
+                    break;
+                }
+
+                case Commands.project.UPDATE:{
+
+
+                    break;
+                }
+
+                case Commands.project.FETCH:{
+
+
+                    break;
+                }
+
+                case Commands.project.OPEN:{
+
+                    var project = ProjectOperations.findProject(json.project._id);
+                    var scene = SceneOperations.findScene(project.currentScene);
+                    var objectIds = scene.objects;
+                    var objects = [];
+
+                    for(var x in objectIds){
+
+                        objects.push(
+
+                            ObjectOperations.findObject({_id: x})
+
+                        );
+
+                    }
+
+                    var payloadString = JSON.stringify({
+
+                        scene: scene,
+                        object: objects
+
+                    });
+
+                    this.send(payloadString, connection);
+
+                    break;
+                }
+
+                case Commands.project.DELETE:{
+
+
+                    break;
+                }
+
+            }
+
+       }
+       else if(command>=Commands.scene.CREATE&&command<=Commands.scene.DELETE){
+
+            switch(command){
+
+                case Commands.scene.CREATE:{
+
+
+                    break;
+                }
+
+                case Commands.scene.UPDATE:{
+
+
+                    break;
+                }
+
+                case Commands.scene.DELETE:{
+
+
+                    break;
+                }
+
+            }
+
+       }
+
+       else if(command>=Commands.user.CREATE&&command<=Commands.user.DELETE){
+
+            switch(command){
+
+                case Commands.user.CREATE: {
+
+                    var newUser = UserOperations.createUser(json.user);
+                    var newClientId = ClientOperations.createClient(json.client, newUser._id, connection);
+
+                    var connectionTracker = {
+
+                        clientId:   newClientId,
+                        connection: connection
+
+                   };
+
+                   this.connections.push(connectionTracker);
+
+                    newUser.clients.push(newClientId);
+
+                    var payloadString = JSON.stringify({
+
+                        response:   'User Creation Successful',
+                        user:       {_id: newUser._id},
+                        client:     {_id: newClientId}
+
+                    });
+
+                    this.send(payloadString, connection);
+
+                    break;
+                }
+
+
+                case Commands.user.LOGIN: {
+
+                    var returnedUser = UserOperations.loginUser(json.user);
+                    
+                    if(returnedUser.isLoggedIn){
+
+                       var projects = ProjectOperations.fetchProjects(returnedUser._id);
+                       var newClientId = ClientOperations.createClient(json.client, returnedUser._id, connection); 
+                       var currentUser = UserOperations.findUser(returnedUser._id);
+
+                       var connectionTracker = {
+
+                            clientId:   newClientId,
+                            connection: connection
+
+                       };
+
+                       this.connections.push(connectionTracker);
+
+                       currentUser.clients.push(newClientId);
+
+                       var payloadString = JSON.stringify({
+
+                            response: 'Login Successful',
+                            projects:  projects,
+                            user:      {_id: returnedUser._id},
+                            client:    {_id: newClientId}
+
+                       });
+
+                       this.send(payloadString, connection);
+
+                    }
+
+                    else{
+
+                        var payloadString = JSON.stringify({
+
+                            response: 'Login Unsuccessful'
+
+                        });
+
+                        this.send(payloadString, connection);
+
+                    }
+
+                    break;
+                }
+
+                case Commands.user.LOGOUT: {
+
+                    var user = UserOperations.findUser(json.user._id);
+
+                    var clientArray = user.clients;
+
+                    var filteredArray = clientArray.filter(function(value, index, array){
+
+                        return value!=json.client._id
+
+                    });
+
+                    user.clients = filteredArray;
+
+                    ClientOperations.deleteClient(json.client._id);
+
+                    var payloadString = JSON.stringify({
+
+                        response: 'Logout Successful'
+
+                    })
+
+                    this.send(payloadString, connection);
+
+                    var connectionIndex = this.connections.findIndex(x => x.clientId === json.client._id);
+                    delete this.connections[connectionIndex];
+
+                    break;
+                }
+
+                case Commands.user.FIND: {
+
+                    
+
+                    break;
+                }
+
+                case Commands.user.DELETE: {
+
+                    var User = UserOperations.findUser(json.user);
+                    var clientArray = User.clients;
+
+                    for(var arr in clientArray){
+
+                        ClientOperations.deleteClient(arr);
+
+                    }
+
+                    UserOperations.deleteUser(json.user);
+
+                    var payloadString = JSON.stringify({
+
+                        response: 'User deleted successfully'
+
+                    });
+
+                    break;
+                }
+
+            }
+
+       }
+       else{
+
+        console.log('ERROR: Invalid Command');
+
+       }
+
     }
 
-    public static send(event_name: number, event_data: { data: any, from?: string }, event_time: number, client_id: number,
+    public static broadcast(json: any){
+
+        var payloadString = JSON.stringify(json);
+
+        var project = ProjectOperations.findProject(json.project._id);
+        var clientArray = project.clients;
+
+        var filteredClientArray = clientArray.filter(function(value, index, arr){
+
+            return value!=json.client._id; 
+
+        });
+
+        var index;
+        var filteredConnections = [];
+
+        for(var x in filteredClientArray){
+
+          index = this.connections.findIndex(y => y.clientId === x);
+          filteredConnections.push(this.connections[index].connection);
+
+        }
+
+        for(var x in filteredConnections){
+
+            this.send(payloadString, x);
+
+        }
+
+    }
+
+    public static send(payloadString: any, connection: any){
+
+        let payload = Buffer.alloc(payloadString.length, payloadString);
+
+        connection.send(payload);
+
+    }
+
+   /* public static send(event_name: number, event_data: { data: any, from?: string }, event_time: number, client_id: number,
         transform_data?: IFlowTransform) {
         let payload = null;
         if (ServerEventDispatcher.connections[client_id].readyState !== 3) {
-            if (event_name === Commands.TRANSFORM_UPDATE ||
-                event_name === Commands.modifier.UPDATE ||
-                event_name === Commands.modifier.APPLY ||
-                event_name === Commands.modifier.COMMIT ||
-                event_name === Commands.transform.UPDATE
+            if (event_name === Commands.TRANSFORM_UPDATE
             ) {
                 // console.log("Sending a transform update with ", transform_data);
                 let payload_str = JSON.stringify({
@@ -66,9 +397,9 @@ export class ServerEventDispatcher {
             }
         }
         return this;
-    }
+    }*/
 
-    public static bind(event_name: number, callback: (value: { data: any, from?: string, description?: string, name?: string }
+/*    public static bind(event_name: number, callback: (value: { data: any, from?: string, description?: string, name?: string }
         , time: number, ws_id: number) => void) {
         if (event_name === undefined) {
             console.error("Binding unknown event ", event_name);
@@ -77,8 +408,8 @@ export class ServerEventDispatcher {
         ServerEventDispatcher.callbacks[event_name].push(callback);
         return this; // chainable
     }
-
-    public static broadcast(event_name: number, event_data: { data: any, _from?: string }, event_time: number, client_id: string,
+*/
+ /*   public static broadcast(event_name: number, event_data: { data: any, _from?: string }, event_time: number, client_id: string,
                             user_id: string, transform_data?: IFlowTransform) {
         event_data._from = client_id;
         ServerEventDispatcher.connections.forEach((connection, i) => {
@@ -87,7 +418,7 @@ export class ServerEventDispatcher {
                //     || user_hash[i] === "0"
                 //    || user_id === "-1"))
                ) {
-                console.log(client_hash[i]);
+                //console.log(client_hash[i]);
                 // If the connection is admin or connection is same user.
                 if (event_name !== Commands.transform.UPDATE) {
                     ServerEventDispatcher.send(event_name, event_data, event_time, i);
@@ -99,19 +430,19 @@ export class ServerEventDispatcher {
             }
         });
     }
-
-    private static dispatch(event_name: number, event_payload: { data: any, from?: string }, event_time: number,
+*/
+ /*   private static dispatch(event_name: number, event_payload: { data: any, from?: string }, event_time: number,
         connection_id: number, transform_data?: any) {
         const chain = ServerEventDispatcher.callbacks[event_name];
         if (typeof chain === "undefined") {
-            console.log("Unknown type: ", event_name,
-                "data", event_payload.data); return;
+         //   console.log("Unknown type: ", event_name,
+         //       "data", event_payload.data); return;
         } // no callbacks for this event
         for (let i = 0; i < chain.length; i++) {
             chain[i](event_payload, event_time, connection_id, transform_data);
         }
     }
-
+*/
     constructor(server: http.Server) {
 
         mongoose.connect(dburl);
@@ -131,7 +462,7 @@ export class ServerEventDispatcher {
         ServerEventDispatcher.wss.on("error", (err) => {
             console.log("error");
         });
-        console.log("Receiving connections on port 8889", ServerEventDispatcher.wss);
+       // console.log("Receiving connections on port 8889", ServerEventDispatcher.wss);
         ServerEventDispatcher.callbacks = [];
         ServerEventDispatcher.wss.on("connection", this.connection);
 
@@ -142,125 +473,25 @@ export class ServerEventDispatcher {
     private connection(ws: any, arg?: any): void {
         console.log(ws);
         ServerEventDispatcher.connections.push(ws);
-        const client_id: number = ServerEventDispatcher.connections.indexOf(ws);
-        console.log("Just added connection " + client_id);
+        var connection = ws;
 
         function onMessageEvent(evt: MessageEvent) {
             const json = JSON.parse(evt.data);
-            ServerEventDispatcher.incoming(json.cmd, json.value, client_id, json.transform);
+            ServerEventDispatcher.serverMessageProcessor(json, connection);
         }
 
         function onCloseEvent(evt: CloseEvent): any {
-            console.log("Closed connection", client_id);
-            delete ServerEventDispatcher.connections[client_id];
-            ServerEventDispatcher.dispatch(Commands.client.CLIENT_DISCONNECT, { data: client_id.toString() }, 0, client_id);
+           // ServerEventDispatcher.dispatch(Commands.client.CLIENT_DISCONNECT, { data: client_id.toString() }, 0, client_id);
         }
 
         function onErrorEvent(evt: ErrorEvent) {
-            console.log("Error: Closed connection");
-            ServerEventDispatcher.dispatch(Commands.client.CLIENT_DISCONNECT, { data: client_id.toString() }, 0, client_id);
+           // console.log("Error: Closed connection");
+           // ServerEventDispatcher.dispatch(Commands.client.CLIENT_DISCONNECT, { data: client_id.toString() }, 0, client_id);
         }
 
         ws.onmessage = onMessageEvent;
         ws.onclose = onCloseEvent;
         ws.onerror = onErrorEvent;
-    }
-
-    public sendToDB(){
-
-
-
-    }
-
-    public fetchFromDB(){
-
-        
-
-    }
-
-    private processUserInfo(user: {username: String, password: String}, userActionFlag: Number){
-
-        var currentUser;
-        var hashedCurrentUser;
-        var loginFlag;
-
-        if(userActionFlag==Commands.user.CREATE){
-
-            currentUser = new User({
-
-                username: user.username,
-                password: user.password
-
-            });
-
-            currentUser.save(function(err, currentUser){
-
-                if(err){
-                    return console.error(err);
-                }
-
-            });
-
-        }
-        else if(userActionFlag==Commands.user.FIND){
-
-            hashedCurrentUser = this.hashUserInfo(user.username, user.password);
-            
-            User.findOne({username: hashedCurrentUser.username}, function(err, retrievedUser){
-
-                if(err){
-
-                    return console.error(err);
-
-                }
-
-                if(retrievedUser.password===hashedCurrentUser.password){
-                    loginFlag = true;
-                }
-                else    
-                    loginFlag = false;
-
-            });
-
-            return loginFlag;
-
-        }
-        else if(userActionFlag==Commands.user.UPDATE){
-
-            hashedCurrentUser = this.hashUserInfo(user.username, user.password);
-            
-            User.findOneAndUpdate({username: hashedCurrentUser.username}, function(err, retrievedUser){
-            });
-
-        }
-        else if(userActionFlag==Commands.user.DELETE){
-
-
-
-        }
-        else{
-
-            console.log("Error in user account processing.");
-
-        }
-
-        return;
-
-    }
-
-
-    private hashUserInfo(username: String, password: String){
-
-        var hashedUserName = bcrypt.hash(username, saltRounds);
-        var hashedPassword = bcrypt.hash(password, saltRounds);
-
-        var hashedUserInfo = {
-                                username: hashedUserName,
-                                password: hashedPassword
-                            }
-
-        return hashedUserInfo;
-
     }
 
 };
@@ -274,14 +505,14 @@ const apiFuncGroup = [ "state",
 // db.on("open", main);
 
 function main() {
-    console.log("New code");
+    console.log("Test");
     const app = express();
     // Test 3
     app.use(express.static("./static"));
     const server = http.createServer(app);
     const sockServ = new ServerEventDispatcher(server);
-    function setup() {
-        console.log("Setting all connections to disconnected");
+    /*function setup() {
+        //console.log("Setting all connections to disconnected");
         Client.find({}, function (err, res) {
             for (let client = 0; client < res.length; client++) {
                 res[client].state = Commands.STATE_DISCONNECTED;
@@ -291,8 +522,8 @@ function main() {
                 for (let i = 0; i < res.length; i++) {
                     // res[i].populate();
                 }
-            });
-        });
+            }); 
+        });*/
 /*        process.on("message", function (msg: string) {
             let cmd: {
                 cmd: number, value: { data: any },
@@ -310,15 +541,15 @@ function main() {
             for (let i = 0; i < apiFuncGroup.length; i++) {
                 delete require.cache[require.resolve("./commands/" + apiFuncGroup[i] + ".js")];
                 let initCommands = require("./commands/" + apiFuncGroup[i]).default;
-                initCommands(sockServ, user_hash, client_hash, function () { console.log("Loaded" + apiFuncGroup[i]); });
+                initCommands(sockServ, user_hash, client_hash, function () { /*console.log("Loaded" + apiFuncGroup[i]);*/ });
             }
         }
         loadApiFunctions();
-    }
+    
     // Setup
-    setup();
+    //setup();
     server.listen(process.env.PORT || 8999, () => {
-        console.log(`Server started on port ${server.address().port} :)`);
+        //console.log(`Server started on port ${server.address().port} :)`);
     });
 }
 

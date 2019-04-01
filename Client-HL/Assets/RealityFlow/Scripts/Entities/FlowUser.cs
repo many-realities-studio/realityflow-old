@@ -4,15 +4,22 @@ using UnityEngine;
 
 [System.Serializable]
 public class FlowUser : FlowValue {
-    public string userId;
     public string username;
     public string password;
-    public string active_project;
-    public List<FlowClient> clients;
+    public string active_project_id;
+    public List<string> client_ids;
+    public List<string> project_ids;
+    public List<string> friend_ids;
 
-    public User (string username, string password)
+    public FlowUser (string username, string password)
+
     {
         this.username = username;
         this.password = password;
+    }
+
+    public FlowUser (string id)
+    {
+        _id = id;
     }
 }

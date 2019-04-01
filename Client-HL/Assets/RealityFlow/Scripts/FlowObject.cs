@@ -7,15 +7,15 @@ using UnityEngine;
 public class FlowObject : MonoBehaviour {
 
 	public bool selected = true;
-	public FlowTransform ft;
-	FlowTransformEvent transformUpdateEvent = new FlowTransformEvent();
+	public FlowTObject ft;
+	ObjectUpdateEvent transformUpdateEvent = new ObjectUpdateEvent();
     bool registered = false;
 	
 	public static List<FlowObject> fos = new List<FlowObject>();
 
 	// Use this for initialization
 	public void Start () {
-	    ft = new FlowTransform(gameObject);
+	    ft = new FlowTObject(gameObject);
 	    ft.id = "1";
 	    ft._id = "1";
 	    fos.Add(this);

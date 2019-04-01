@@ -11,11 +11,18 @@ namespace Assets.RealityFlow.Scripts.Events
     public class ObjectCreationEvent : FlowEvent
     {
         public static int scmd = Commands.FlowObject.CREATE;
-        public jsonObject obj;
+        public FlowTObject obj;
 
         public ObjectCreationEvent()
         {
             cmd = scmd;
+        }
+
+        public void Send(FlowTObject objToSend)
+        {
+            obj = objToSend;
+
+            CommandProcessor.sendCommand(this);
         }
 
         public override void Send(WebSocket w)
@@ -26,7 +33,7 @@ namespace Assets.RealityFlow.Scripts.Events
         public static string Receive()
         {
             ObjectCreationEvent fe = JsonUtility.FromJson<ObjectCreationEvent>(FlowNetworkManager.reply);
-            jsonObject obj = fe.obj;
+            FlowTObject obj = fe.obj;
 
             GameObject newObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
             newObj.AddComponent(typeof(FlowObject));

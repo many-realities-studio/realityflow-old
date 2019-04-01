@@ -11,6 +11,6 @@ public static class Config {
 	public static string projectId = "-9999";
 	public static string deviceId = "-9999";
 	//public static Dictionary<string, string> projectList; 
-	public static FlowProject[] projectList = null;
+	public static List<string> projectIdList = null;
 
 }

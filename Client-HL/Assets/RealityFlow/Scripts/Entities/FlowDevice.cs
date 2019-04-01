@@ -4,8 +4,8 @@ using UnityEngine;
 public class FlowDevice
 {
     public string _id;
-    public FlowTransform cameraOffset;
-    public FlowTransform cameraRotation;
+    public FlowTObject cameraOffset;
+    public FlowTObject cameraRotation;
     public int resolutionX;
     public int resolutionY;
     public float dpi;
@@ -42,6 +42,6 @@ public class FlowDevice
         uid = "3";
         dpi = Screen.dpi;
         description = SystemInfo.deviceName;
-        cameraRotation = new FlowTransform(FlowCameras.mainCamera.gameObject);
+        cameraRotation = new FlowTObject(FlowCameras.mainCamera.gameObject);
     }
 }

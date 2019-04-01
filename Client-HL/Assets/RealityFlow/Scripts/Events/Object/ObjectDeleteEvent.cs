@@ -10,7 +10,7 @@ namespace Assets.RealityFlow.Scripts.Entities
     [System.Serializable]
     public class ObjectDeleteEvent : FlowEvent
     {
-        public jsonObject objToDelete;
+        public FlowTObject objToDelete;
         public static int scmd = Commands.FlowObject.DELETE;
 
         public ObjectDeleteEvent()
@@ -20,8 +20,8 @@ namespace Assets.RealityFlow.Scripts.Entities
 
         public void Send(string id)
         {
-            objToDelete = new jsonObject();
-            objToDelete.id = id;
+            objToDelete = new FlowTObject();
+            objToDelete._id = id;
 
             CommandProcessor.sendCommand(this);
         }
@@ -34,9 +34,9 @@ namespace Assets.RealityFlow.Scripts.Entities
         public static string Receive()
         {
             ObjectDeleteEvent obj_delete_evt = JsonUtility.FromJson<ObjectDeleteEvent>(FlowNetworkManager.reply);
-            FlowTransform objToDelete = FlowProject.activeProject.transformsById[obj_delete_evt.objToDelete.id];
+            FlowTObject objToDelete = FlowProject.activeProject.transformsById[obj_delete_evt.objToDelete._id];
 
-            FlowProject.activeProject.transformsById.Remove(obj_delete_evt.objToDelete.id);
+            FlowProject.activeProject.transformsById.Remove(obj_delete_evt.objToDelete._id);
             UnityEngine.Object.Destroy(objToDelete.transform.gameObject);
 
             return "Receiving Object Delete Update " + FlowNetworkManager.reply;

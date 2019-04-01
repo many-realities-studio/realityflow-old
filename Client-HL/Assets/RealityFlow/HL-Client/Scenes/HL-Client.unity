@@ -1073,6 +1073,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LocalServer: 1
+  _debug: 0
   music: 0
   mainGameCamera: {fileID: 1924170753}
   eventSystem: {fileID: 839972930}

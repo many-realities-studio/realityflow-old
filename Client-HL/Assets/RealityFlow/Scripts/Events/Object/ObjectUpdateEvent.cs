@@ -8,17 +8,17 @@ using UnityEngine;
 namespace Assets.RealityFlow.Scripts.Events
 {
     [System.Serializable]
-    public class FlowTransformEvent : FlowEvent
+    public class ObjectUpdateEvent : FlowEvent
     {
-        public FlowTransform transform;
-        public static int scmd = Commands.Transform.UPDATE;
+        public FlowTObject transform;
+        public static int scmd = Commands.FlowObject.UPDATE;
 
-        public FlowTransformEvent()
+        public ObjectUpdateEvent()
         {
             cmd = scmd;
         }
 
-        public void Send(FlowTransform transformToSend)
+        public void Send(FlowTObject transformToSend)
         {
             transform = transformToSend;
             transform.Read();
@@ -33,8 +33,8 @@ namespace Assets.RealityFlow.Scripts.Events
 
         public static string Receive()
         {
-            FlowTransformEvent trans_update_cmd = JsonUtility.FromJson<FlowTransformEvent>(FlowNetworkManager.reply);
-            FlowTransform local_transform = FlowProject.activeProject.transformsById[trans_update_cmd.transform._id];
+            ObjectUpdateEvent trans_update_cmd = JsonUtility.FromJson<ObjectUpdateEvent>(FlowNetworkManager.reply);
+            FlowTObject local_transform = FlowProject.activeProject.transformsById[trans_update_cmd.transform._id];
             if (trans_update_cmd.transform._id != "1")
             {
                 local_transform.Copy(trans_update_cmd.transform);

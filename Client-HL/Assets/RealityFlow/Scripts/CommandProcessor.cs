@@ -44,7 +44,7 @@ public class CommandProcessor
 
     public static void initializeRecieveEvents()
     {
-        recieveEvents.Add(FlowTransformEvent.scmd, FlowTransformEvent.Receive);
+        recieveEvents.Add(ObjectUpdateEvent.scmd, ObjectUpdateEvent.Receive);
         recieveEvents.Add(ObjectCreationEvent.scmd, ObjectCreationEvent.Receive);
         recieveEvents.Add(UserLoginEvent.scmd, UserLoginEvent.Receive);
     }

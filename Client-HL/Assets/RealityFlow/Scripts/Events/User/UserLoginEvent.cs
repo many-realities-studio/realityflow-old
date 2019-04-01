@@ -12,20 +12,16 @@ namespace Assets.RealityFlow.Scripts.Events
     {
         public static int scmd = Commands.User.LOGIN;
 
-        public User user;
-        public FlowClient client;
-        public FlowProject[] project;
+        public FlowUser user;
 
         public UserLoginEvent()
         {
             cmd = scmd;
         }
 
-        public void send(User user, int clientType)
+        public void send(FlowUser user)
         {
             this.user = user;
-            client = new FlowClient();
-            client.type = clientType;
 
             CommandProcessor.sendCommand(this);
         }
@@ -38,9 +34,8 @@ namespace Assets.RealityFlow.Scripts.Events
         public static string Receive()
         {
             UserLoginEvent log = JsonUtility.FromJson<UserLoginEvent>(FlowNetworkManager.reply);
-            Config.userId = log.user.userId;
-            Config.deviceId = log.client._id;
-            Config.projectList = log.project;
+            Config.userId = log.user._id;
+            Config.projectIdList = log.user.project_ids;
 
             return "Receiving user login update: " + FlowNetworkManager.reply;
         }

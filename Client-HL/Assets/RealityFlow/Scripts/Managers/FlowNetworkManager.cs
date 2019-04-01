@@ -78,9 +78,9 @@ public class FlowNetworkManager : MonoBehaviour
     int thirdFrame = 0;
 
     public int onFrame = 3;
-    FlowTransform newVal;
+    FlowTObject newVal;
     bool selection = false;
-    FlowTransform cur_transform;
+    FlowTObject cur_transform;
     int count = 0;
 
     public static void ObjectCmd(FlowEvent jsonCmd)
@@ -130,7 +130,7 @@ public class FlowNetworkManager : MonoBehaviour
         else
         {
             Debug.Log("[unity] Connecting");
-            CommandProcessor.sendCommand(Commands.LOGIN, uid.ToString());
+            CommandProcessor.sendCommand(Commands.User.LOGIN, uid.ToString());
             DoOnMainThread.ExecuteOnMainThread.Enqueue(() =>
             {
                 StartCoroutine(ConnectWebsocket());
@@ -348,7 +348,7 @@ public class FlowNetworkManager : MonoBehaviour
                     StartCoroutine(ConnectWebsocket());
                 });
                 Debug.Log("Connect connection");
-                CommandProcessor.sendCommand(Commands.LOGIN, uid.ToString());
+                CommandProcessor.sendCommand(Commands.User.LOGIN, uid.ToString());
                 loggedIn = false;
 #endif
             }
@@ -361,7 +361,7 @@ public class FlowNetworkManager : MonoBehaviour
         Debug.Log("[unity] Logged in");
         DebugPanel.instance.clientIdentityValue.GetComponent<Text>().text = uid + " " + GetUsername();
         loggedIn = true;
-        CommandProcessor.sendCommand(Commands.LOGIN, uid.ToString());
+        CommandProcessor.sendCommand(Commands.User.LOGIN, uid.ToString());
         //DoOnMainThread.ExecuteOnMainThread.Enqueue(() => { StartCoroutine(ConnectWebsocket()); });
     }
 
@@ -370,7 +370,7 @@ public class FlowNetworkManager : MonoBehaviour
         Debug.Log("LoggedIn");
         //DebugPanel.instance.clientIdentityValue.GetComponent<Text>().text = uid + " " + GetUsername();
         loggedIn = true;
-        CommandProcessor.sendCommand(Commands.LOGIN, uid.ToString());
+        CommandProcessor.sendCommand(Commands.User.LOGIN, uid.ToString());
     }
 
     /// <summary>
@@ -436,14 +436,14 @@ public class FlowNetworkManager : MonoBehaviour
 
     public static int primitiveID = 0;
 
-    public void CreateText()
-    {
-        FlowEvent createCubeEvent = new FlowEvent();
-        createCubeEvent.cmd = Commands.Droplet.types.TEXT;
-        createCubeEvent.value = new FlowPayload(Commands.Droplet.types.TEXT.ToString());
-        //        CommandProcessor.EditorCommandProcessor(createCubeEvent);
-        CommandProcessor.sendCommand(createCubeEvent);
-    }
+    //public void CreateText()
+    //{
+    //    FlowEvent createCubeEvent = new FlowEvent();
+    //    createCubeEvent.cmd = Commands.Droplet.types.TEXT;
+    //    createCubeEvent.value = new FlowPayload(Commands.Droplet.types.TEXT.ToString());
+    //    //        CommandProcessor.EditorCommandProcessor(createCubeEvent);
+    //    CommandProcessor.sendCommand(createCubeEvent);
+    //}
 
     public void SetColor()
     {
