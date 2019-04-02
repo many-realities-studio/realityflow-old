@@ -3,21 +3,18 @@ import Schema = mongoose.Schema;
 import Types = Schema.Types;
 import ObjectId = Types.ObjectId;
 import ObjectIdType = mongoose.Types.ObjectId;
+import { User } from "./user";
 
 export declare interface IClientModel extends mongoose.Document {
-    activeConnectionId: number;
-    device: ObjectIdType;
-    type: number;
-    state: number;
-    uid: string;
+    _id:            String;
+    user:           ObjectIdType;
+    deviceType:     Number;
 }
 
 const clientSchema = new mongoose.Schema({
-    activeConnectionId: Number,
-    device: { type: String, ref: "Device"},
-    state: Number,
-    type: Number,
-    uid: { type: String, ref: "User", required: true },
+    _id:            String,
+    user:           {type: ObjectId, ref: User},
+    deviceType:     Number
 });
 
 export let Client = mongoose.model<IClientModel>("Client", clientSchema);

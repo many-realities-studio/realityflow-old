@@ -4,18 +4,23 @@ using System.Collections.Generic;
 using System;
 using UnityEngine.UI;
 using System.Runtime.InteropServices;
+using Assets.RealityFlow.Scripts.Events;
 
 /// <summary>
 /// Establishes a connection to the Flow server through websocket connections and handles high-level communication
 /// </summary>
+// [ExecuteInEditMode]
 public class FlowNetworkManager : MonoBehaviour
 {
     public bool LocalServer;
+    public static bool debug = true;
 
+    public bool _debug;
     //string LOCAL_SERVER = "ws://echo.websocket.org";
     string LOCAL_SERVER = "ws://localhost:8999";
     string LAN_SERVER = "ws://192.168.1.246:8082";
-    string REMOTE_SERVER = "ws://plato.jtm.io:8999";
+    string REMOTE_SERVER = "ws://plato.mrl.ai:8999";
+
 
     float selectionSize = .65f;
     public bool music;
@@ -73,21 +78,10 @@ public class FlowNetworkManager : MonoBehaviour
     WebSocket w;
     int thirdFrame = 0;
 
-    [System.Serializable]
-    public struct FlowUser
-    {
-        public String _id;
-        public String username;
-        public String active_project;
-        public List<FlowClient> clients;
-        public FlowState active_State;
-    }
-
-
     public int onFrame = 3;
-    FlowTransform newVal;
+    FlowTObject newVal;
     bool selection = false;
-    FlowTransform cur_transform;
+    FlowTObject cur_transform;
     int count = 0;
 
     public static void ObjectCmd(FlowEvent jsonCmd)
@@ -137,7 +131,7 @@ public class FlowNetworkManager : MonoBehaviour
         else
         {
             Debug.Log("[unity] Connecting");
-            CommandProcessor.sendCommand(Commands.LOGIN, uid.ToString());
+            CommandProcessor.sendCommand(Commands.User.LOGIN, uid.ToString());
             DoOnMainThread.ExecuteOnMainThread.Enqueue(() =>
             {
                 StartCoroutine(ConnectWebsocket());
@@ -161,12 +155,21 @@ public class FlowNetworkManager : MonoBehaviour
         Debug.Log("Connected Websocket!");
     }
 
-    void Awake()
+    public void Awake()
     {
         instance = this;
         Debug.Log("Setting main camera " +  clientType);
+        
+        if (mainGameCamera == null)
+        {
+            GameObject cam = GameObject.FindGameObjectWithTag("MainCamera");
+            FlowCameras.mainCamera = cam.GetComponent<Camera>();
+        }
+        else
+        {
             FlowCameras.mainCamera = mainGameCamera.GetComponent<Camera>();
-        mainCanvas = GameObject.Find("RootCanvas").GetComponent<Canvas>();
+        }
+       // mainCanvas = GameObject.Find("DebugCanvas").GetComponent<Canvas>();
         /* if (DebugPanel.instance.forceHolo == true)
         {
             clientType = CLIENT_HOLOLENS;
@@ -202,12 +205,17 @@ public class FlowNetworkManager : MonoBehaviour
         arButton.GetComponent<Button>().colors = cb;
     }
 
-    FlowProject testProject;
+    public static FlowProject testProject;
 
-    void Start()
+    public void Start()
     {
         testProject = new FlowProject();
         testProject.initialize();
+
+        CommandProcessor.initializeRecieveEvents();
+
+        UserRegisterEvent newUser = new UserRegisterEvent();
+        newUser.Send(new FlowUser("test1", "test1"), FlowClient.CLIENT_HOLOLENS);
         
 #if !UNITY_EDITOR && UNITY_WEBGL
         WebGLInput.captureAllKeyboardInput = false;
@@ -313,6 +321,9 @@ public class FlowNetworkManager : MonoBehaviour
         //MidiOut.NoteOn (note, accidental, octave, value, channel);	
 
         //mainCanvas.renderMode = RenderMode.WorldSpace;
+
+
+        // recieve updates from the server (currently not working)     
         while (true)
         {
             reply = w.RecvString();
@@ -320,7 +331,7 @@ public class FlowNetworkManager : MonoBehaviour
             {
                 Debug.Log("Processing Command");
                 FlowEvent incoming = JsonUtility.FromJson<FlowEvent>(reply);
-                if (incoming.cmd >= Commands.Project.MIN && incoming.cmd <= Commands.Project.MAX)
+                if (incoming.command >= Commands.Project.MIN && incoming.command <= Commands.Project.MAX)
                 {
                     CommandProcessor.processProjectCommand(JsonUtility.FromJson<FlowProjectCommand>(reply));
                 }
@@ -341,20 +352,20 @@ public class FlowNetworkManager : MonoBehaviour
                     StartCoroutine(ConnectWebsocket());
                 });
                 Debug.Log("Connect connection");
-                CommandProcessor.sendCommand(Commands.LOGIN, uid.ToString());
+                CommandProcessor.sendCommand(Commands.User.LOGIN, uid.ToString());
                 loggedIn = false;
 #endif
             }
             yield return 0;
         }
-    }
+     }
 
     void OnWebLoggedIn()
     {
         Debug.Log("[unity] Logged in");
         DebugPanel.instance.clientIdentityValue.GetComponent<Text>().text = uid + " " + GetUsername();
         loggedIn = true;
-        CommandProcessor.sendCommand(Commands.LOGIN, uid.ToString());
+        CommandProcessor.sendCommand(Commands.User.LOGIN, uid.ToString());
         //DoOnMainThread.ExecuteOnMainThread.Enqueue(() => { StartCoroutine(ConnectWebsocket()); });
     }
 
@@ -363,14 +374,16 @@ public class FlowNetworkManager : MonoBehaviour
         Debug.Log("LoggedIn");
         //DebugPanel.instance.clientIdentityValue.GetComponent<Text>().text = uid + " " + GetUsername();
         loggedIn = true;
-        CommandProcessor.sendCommand(Commands.LOGIN, uid.ToString());
+        CommandProcessor.sendCommand(Commands.User.LOGIN, uid.ToString());
     }
 
     /// <summary>
     /// Update is called every frame, if the MonoBehaviour is enabled.
     /// </summary>
-    void Update()
+    public void Update()
     {
+        debug = _debug;
+
         // Start with delete key.
         if (Input.GetKeyDown(KeyCode.Delete))
         {
@@ -389,16 +402,52 @@ public class FlowNetworkManager : MonoBehaviour
         }
     }
 
+    // process incoming commands for edit mode
+    public void ProcessEditCommand ()
+    {
+        reply = w.RecvString();
+        if (reply != null && reply != "Null")
+        {
+            Debug.Log("Processing Command");
+            FlowEvent incoming = JsonUtility.FromJson<FlowEvent>(reply);
+            if (incoming.command >= Commands.Project.MIN && incoming.command <= Commands.Project.MAX)
+            {
+                CommandProcessor.processProjectCommand(JsonUtility.FromJson<FlowProjectCommand>(reply));
+            }
+            else
+            {
+                CommandProcessor.processCommand(incoming);
+            }
+        }
+//         if (w.error != null)
+//             {
+//                 Debug.Log("[unity] Error: " + w.error);
+//                 connected = false;
+
+//                 yield return new WaitForSeconds(5);
+// #if !UNITY_WSA || UNITY_EDITOR
+//                 DoOnMainThread.ExecuteOnMainThread.Enqueue(() =>
+//                 {
+//                     StartCoroutine(ConnectWebsocket());
+//                 });
+//                 Debug.Log("Connect connection");
+//                 CommandProcessor.sendCommand(Commands.LOGIN, uid.ToString());
+//                 loggedIn = false;
+// #endif
+//             }
+//             yield return 0;
+    }
+
     public static int primitiveID = 0;
 
-    public void CreateText()
-    {
-        FlowEvent createCubeEvent = new FlowEvent();
-        createCubeEvent.cmd = Commands.Droplet.types.TEXT;
-        createCubeEvent.value = new FlowPayload(Commands.Droplet.types.TEXT.ToString());
-        //        CommandProcessor.EditorCommandProcessor(createCubeEvent);
-        CommandProcessor.sendCommand(createCubeEvent);
-    }
+    //public void CreateText()
+    //{
+    //    FlowEvent createCubeEvent = new FlowEvent();
+    //    createCubeEvent.cmd = Commands.Droplet.types.TEXT;
+    //    createCubeEvent.value = new FlowPayload(Commands.Droplet.types.TEXT.ToString());
+    //    //        CommandProcessor.EditorCommandProcessor(createCubeEvent);
+    //    CommandProcessor.sendCommand(createCubeEvent);
+    //}
 
     public void SetColor()
     {
@@ -459,7 +508,7 @@ public class FlowNetworkManager : MonoBehaviour
     public void OnApplicationQuit()
     {
         FlowEvent closeEvent = new FlowEvent();
-        closeEvent.cmd = -1;
+        closeEvent.command = -1;
         CommandProcessor.sendCommand(closeEvent);
         Debug.Log("Closing!!");
         if(w != null && w.connected )

@@ -61,6 +61,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\resources\objectData\data\jsonObject.cs" />
     <Compile Include="Assets\resources\objectData\data\objectData.cs" />
     <Compile Include="Assets\scripts\CommandProcessor.cs" />
     <Compile Include="Assets\scripts\Commands.cs" />
@@ -153,16 +154,16 @@
     <None Include="Assets\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
     <Reference Include="Unity.XR.MagicLeap.Editor">
-      <HintPath>C:/Users/Kayden/Documents/realityflow/ObjCreationTest/Library/ScriptAssemblies/Unity.XR.MagicLeap.Editor.dll</HintPath>
+      <HintPath>C:/Users/Kayden/Dropbox/realityflow/ObjCreationTest/Library/ScriptAssemblies/Unity.XR.MagicLeap.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.StandardEvents">
-      <HintPath>C:/Users/Kayden/Documents/realityflow/ObjCreationTest/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
+      <HintPath>C:/Users/Kayden/Dropbox/realityflow/ObjCreationTest/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="Unity.PackageManagerUI.Editor">
-      <HintPath>C:/Users/Kayden/Documents/realityflow/ObjCreationTest/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+      <HintPath>C:/Users/Kayden/Dropbox/realityflow/ObjCreationTest/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.XR.MagicLeap">
-      <HintPath>C:/Users/Kayden/Documents/realityflow/ObjCreationTest/Library/ScriptAssemblies/Unity.XR.MagicLeap.dll</HintPath>
+      <HintPath>C:/Users/Kayden/Dropbox/realityflow/ObjCreationTest/Library/ScriptAssemblies/Unity.XR.MagicLeap.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity 2018.1.9f2-MLTP10/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -360,7 +361,7 @@
       <HintPath>C:/Program Files/Unity 2018.1.9f2-MLTP10/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
     </Reference>
     <Reference Include="websocket-sharp">
-      <HintPath>C:/Users/Kayden/Documents/realityflow/ObjCreationTest/Assets/Plugins/websocket-sharp.dll</HintPath>
+      <HintPath>C:/Users/Kayden/Dropbox/realityflow/ObjCreationTest/Assets/Plugins/websocket-sharp.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Analytics">
       <HintPath>C:/Users/Kayden/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.16/UnityEngine.Analytics.dll</HintPath>

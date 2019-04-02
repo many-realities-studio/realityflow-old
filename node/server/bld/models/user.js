@@ -4,12 +4,15 @@ const mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 var Types = Schema.Types;
 var ObjectId = Types.ObjectId;
+const project_1 = require("./project");
+const client_1 = require("./client");
 const userSchema = new mongoose.Schema({
     _id: String,
-    active_bubble: { type: ObjectId, ref: "Bubble" },
-    active_project: { type: ObjectId, ref: "Project" },
-    active_state: { type: ObjectId, ref: "State" },
-    clients: [{ type: ObjectId, ref: "Client" }],
     username: String,
+    password: String,
+    clients: [{ type: ObjectId, ref: client_1.Client }],
+    activeProject: { type: ObjectId, ref: project_1.Project },
+    projects: [{ type: ObjectId, ref: project_1.Project }],
+    friends: [{ type: ObjectId, ref: 'User' }]
 });
 exports.User = mongoose.model("User", userSchema);
