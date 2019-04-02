@@ -221,7 +221,7 @@ public class FlowNetworkManager : MonoBehaviour
         string username = "test";
         string password = "test";
 
-        UserRegisterEvent register = new UserRegisterEvent();
+         UserRegisterEvent register = new UserRegisterEvent();
         register.Send(username, password, FlowClient.CLIENT_HOLOLENS);
 
         //UserLoginEvent login = new UserLoginEvent();
