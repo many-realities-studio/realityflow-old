@@ -209,6 +209,7 @@ public class FlowNetworkManager : MonoBehaviour
 
     public void Start()
     {
+        _debug = debug;
         testProject = new FlowProject();
         testProject.initialize();
 
@@ -220,11 +221,17 @@ public class FlowNetworkManager : MonoBehaviour
         string username = "test";
         string password = "test";
 
-        //UserRegisterEvent register = new UserRegisterEvent();
-        //register.Send(username, password, FlowClient.CLIENT_HOLOLENS);
+        UserRegisterEvent register = new UserRegisterEvent();
+        register.Send(username, password, FlowClient.CLIENT_HOLOLENS);
 
-        UserLoginEvent login = new UserLoginEvent();
-        login.Send(username, password);
+        //UserLoginEvent login = new UserLoginEvent();
+        //login.Send(username, password);
+
+        //ProjectCreateEvent createProj = new ProjectCreateEvent();
+        //createProj.Send("Subarus Maids2" + DateTime.Now.ToString());
+
+
+
 
 
 #if !UNITY_EDITOR && UNITY_WEBGL
@@ -390,17 +397,22 @@ public class FlowNetworkManager : MonoBehaviour
     /// <summary>
     /// Update is called every frame, if the MonoBehaviour is enabled.
     /// </summary>
+    /// 
+
+    bool registered = false;
     public void Update()
     {
         debug = _debug;
 
-        //if (Config.userId != "-9999")
+        //if (Config.userId != "-9999" && !registered)
         //{
         //    ProjectCreateEvent createProj = new ProjectCreateEvent();
         //    createProj.Send("Subarus Maids2" + DateTime.Now.ToString());
 
         //    ProjectFetchEvent fetchproj = new ProjectFetchEvent();
         //    fetchproj.Send();
+
+        //    registered = true;
         //}
 
         // Start with delete key.

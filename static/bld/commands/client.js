@@ -10,7 +10,6 @@ class ClientOperations {
         console.log('ClientInfo Payload: ' + clientInfo);
         console.log('UserInfo Payload: ' + userId);
         var newClient = new client_1.Client({
-            _id: objectId,
             user: userId,
             deviceType: clientInfo.deviceType,
         });

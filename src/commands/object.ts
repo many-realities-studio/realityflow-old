@@ -9,9 +9,12 @@ export class ObjectOperations {
     {
         var object;
 
+        console.log('Entering createObject...');
+        console.log('ObjectInfo type: '+objectInfo.type);
+        console.log('ObjectInfo name: '+objectInfo.name);
+
         var newObject = new Object({
 
-            _id:        objectId,
             type:       objectInfo.type,
             name:       objectInfo.name,
             triangles:  objectInfo.triangles,

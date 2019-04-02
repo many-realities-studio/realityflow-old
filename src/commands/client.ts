@@ -15,6 +15,7 @@ export class ClientOperations{
 
         var newClient = new Client({
 
+            _id:            objectId,
             user:           userId,
             deviceType:     clientInfo.deviceType,
 

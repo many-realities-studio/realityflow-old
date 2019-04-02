@@ -14,7 +14,7 @@ namespace Assets.RealityFlow.Scripts.Events
 
         public FlowUser user;
         public FlowClient client = new FlowClient();
-        public List<string> projects;
+        public List<FlowProject> projects;
 
         public UserLoginEvent()
         {
@@ -38,7 +38,13 @@ namespace Assets.RealityFlow.Scripts.Events
             UserLoginEvent log = JsonUtility.FromJson<UserLoginEvent>(FlowNetworkManager.reply);
             Config.userId = log.user._id;
             Config.deviceId = log.client._id;
-            Config.projectIdList = log.projects;
+            Config.projectList = log.projects;
+
+            //Config.projectId = Config.projectList[0]._id;
+
+            Debug.Log("received " + Config.projectList.Count + " projects from user " + Config.userId);
+            foreach (FlowProject pid in Config.projectList)
+                Debug.Log(pid.projectName);
 
             return "Receiving user login update: " + FlowNetworkManager.reply;
         }

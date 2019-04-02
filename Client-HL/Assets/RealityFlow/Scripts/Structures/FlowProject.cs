@@ -21,15 +21,14 @@ public class FlowProject : FlowValue
 
     [System.NonSerialized]
     public List<GameObject> objs = new List<GameObject>();
-
     
     [System.NonSerialized]
     public static FlowProject activeProject;
 
     public FlowProject(string nameOrId)
     {
-        projectName = nameOrId;
-        //_id = nameOrId;
+        //projectName = nameOrId;
+        _id = nameOrId;
     }
 
     public FlowProject()

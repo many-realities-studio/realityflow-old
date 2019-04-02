@@ -14,7 +14,7 @@ export declare interface IProjectModel extends mongoose.Document{
     projectName:    String;
     owner:          ObjectIdType;
     clients:        [ObjectIdType];
-    objects:        [ObjectIdType];
+    objs:           [ObjectIdType];
    /* currentScene:   ObjectIdType;
     prevScene:      [ObjectIdType];
     nextScene:      [ObjectIdType];
@@ -32,7 +32,7 @@ const projectSchema = new mongoose.Schema({
     projectName:    String,
     owner:          {type: ObjectId, ref: User},
     clients:        {type: ObjectId, ref: Client},
-    objects:        [{type: ObjectId, ref: Object}],
+    objs:        [{type: ObjectId, ref: Object}],
    /* currentScene:   {type: ObjectId, ref: Scene},
     prevScene:      [{type: ObjectId, ref: Scene}],
     nextScene:      [{type: ObjectId, ref: Scene}],

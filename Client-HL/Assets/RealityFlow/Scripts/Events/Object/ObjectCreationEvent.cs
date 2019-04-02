@@ -12,7 +12,7 @@ namespace Assets.RealityFlow.Scripts.Events
     {
         public static int scmd = Commands.FlowObject.CREATE;
         public FlowTObject obj;
-        public FlowProject proj;
+        public FlowProject project;
 
         public ObjectCreationEvent()
         {
@@ -23,8 +23,8 @@ namespace Assets.RealityFlow.Scripts.Events
         {
             obj = objToSend;
 
-            proj = new FlowProject();
-            proj._id = Config.projectId;
+            project = new FlowProject();
+            project._id = Config.projectId;
 
             CommandProcessor.sendCommand(this);
         }
@@ -52,12 +52,12 @@ namespace Assets.RealityFlow.Scripts.Events
             newObj.transform.localScale = new Vector3(obj.s_x, obj.s_y, obj.s_z);
             MonoBehaviour.Destroy(newObj.GetComponent<Collider>());
             newObj.AddComponent<BoxCollider>();
-            newObj.name = obj.objectName;
+            newObj.name = obj.name;
             newObj.AddComponent(typeof(FlowObject));
             newObj.GetComponent<FlowObject>().Start();
             newObj.GetComponent<FlowObject>().ft._id = obj._id;
             newObj.GetComponent<FlowObject>().ft.id = obj.id;
-            FlowProject.activeProject.RegObj(); //probably don't need this anymore
+            //FlowProject.activeProject.RegObj(); //probably don't need this anymore
 
             return "Recieving Object Creation update: " + FlowNetworkManager.reply;
         }

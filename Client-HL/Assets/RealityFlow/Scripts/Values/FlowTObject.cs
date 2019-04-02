@@ -15,7 +15,7 @@ public class FlowTObject : FlowValue
     public float s_y;
     public float s_z;
     public string type;
-    public string objectName;
+    public string name;
     public Vector3[] vertices;
     public Vector2[] uv;
     [System.NonSerialized]

@@ -17,6 +17,7 @@ export class ProjectOperations
             projectName: projectInfo.projectName,
             owner: userInfo._id,
             clients: [clientInfo._id],
+            objs: [],
             currentScene: undefined,
             prevScene: undefined,
             nextScene: undefined,
@@ -35,8 +36,6 @@ export class ProjectOperations
             console.log('Project '+projectInfo.projectName+' added successfully.');
             newProjectDoc = doc;
 
-            newProjectDoc.clients.push(clientInfo._id);
-
             return newProjectDoc;
         });
 
@@ -46,14 +45,17 @@ export class ProjectOperations
 
     public static fetchProjects(userInfo: any){
 
+        console.log('Entering Fetch Projects:');
+        console.log('User Id: '+userInfo._id);
         var projects = [];
 
-        var promise = Project.find({owner: userInfo._id}).exec();
+        var promise = Project.find({owner: userInfo._id}, '_id projectName').exec();
         
         promise.then(function(docs){
 
-                projects = docs;
+                projects.push(docs);
 
+            console.log('Projects: '+projects);
             return projects;
 
         });
@@ -63,18 +65,22 @@ export class ProjectOperations
 
     public static findProject(projectInfo: any){
 
+        console.log('Entering findProject...');
         var project;
 
+        console.log('Project ID: '+projectInfo._id);
         var promise = Project.findById(projectInfo._id).exec();
 
 
         promise.then(function(doc){
 
+                console.log('DOC: '+doc);
                 project = doc;
                 return project;
 
         });
         
+        console.log('Promise: '+promise);
         return promise;
 
     }

@@ -23,7 +23,8 @@ namespace Assets.RealityFlow.Scripts.Events
 
         public void Send(string projectName)
         {
-            project = new FlowProject(projectName);
+            project = new FlowProject();
+            project.projectName = projectName;
             user = new FlowUser(Config.userId);
             client = new FlowClient(Config.deviceId);
   
@@ -38,7 +39,7 @@ namespace Assets.RealityFlow.Scripts.Events
         public static string Receive()
         {
             ProjectCreateEvent log = JsonUtility.FromJson<ProjectCreateEvent>(FlowNetworkManager.reply);
-            Config.projectIdList.Add(log.project._id);
+            Config.projectList.Add(log.project);
             Config.projectId = log.project._id;
 
             return "Receiving project create update: " + FlowNetworkManager.reply;

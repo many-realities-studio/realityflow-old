@@ -38,7 +38,7 @@ namespace Assets.RealityFlow.Scripts.Events
         public static string Receive()
         {
             ProjectInviteEvent log = JsonUtility.FromJson<ProjectInviteEvent>(FlowNetworkManager.reply);
-            Config.projectIdList.Add(log.project._id);
+            Config.projectList.Add(log.project);
             Config.projectId = log.project._id;
 
             //add user project update here (it will add project to the users list)j

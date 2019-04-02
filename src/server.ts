@@ -36,29 +36,40 @@ export class ServerEventDispatcher {
 
                 case Commands.object.CREATE:{
 
-                    var object = await ObjectOperations.createObject(json.object);
-                    var project = await ProjectOperations.findProject(json.project._id);
+                    console.log('Object: '+json.obj);
+                    var object = await ObjectOperations.createObject(json.obj);
+                    var project = await ProjectOperations.findProject(json.project);
 
-                    var sceneId = project.currentScene;
-                    var scene = SceneOperations.findScene(sceneId);
+                    //var sceneId = project.currentScene;
+                    //var scene = SceneOperations.findScene(sceneId);
 
-                    scene.objects.push(object._id);
+                    //scene.objects.push(object._id);
 
-                    var payloadString = JSON.stringify({
+                    /*var payloadString = JSON.stringify({
 
                         object: object
                         
                     });
 
                     this.send(payloadString, connection);
+                    */
 
+                    console.log('Project: '+project);
+
+                    project.objs.push(object._id);
+                    project.save();
+
+                    json.project.objects.push(object._id);
+                    json.object._id = object._id;
+
+                    this.broadcast(json, true);
 
                     break;
                 }
 
                 case Commands.object.UPDATE:{
 
-                    this.broadcast(json);
+                    this.broadcast(json, false);
                     ObjectOperations.updateObject(json.object);
 
                     break;
@@ -66,7 +77,7 @@ export class ServerEventDispatcher {
 
                 case Commands.object.DELETE:{
 
-                    this.broadcast(json);
+                    this.broadcast(json, true);
                     ObjectOperations.deleteObject(json.object);
 
                     break;
@@ -81,7 +92,7 @@ export class ServerEventDispatcher {
 
                 case Commands.project.CREATE:{
 
-                    var projectId = await ProjectOperations.createProject(json.project, json.client, json.user);
+                    var project = await ProjectOperations.createProject(json.project, json.client, json.user);
 
                    /* var payloadString = JSON.stringify({
 
@@ -90,11 +101,23 @@ export class ServerEventDispatcher {
 
                     }); */
 
-                    console.log('Project ID: '+projectId);
+                    console.log('Project Created. Project ID: '+project);
 
-                    json.project._id = projectId;
+                    json.project = project;
 
                     var payloadString = JSON.stringify(json);
+
+
+                   /* var clientIndex = this.connections.findIndex(function(value){
+
+                        return value.clientId==json.client._id;
+
+                    });
+
+                    console.log("Client ID: "+json.client._id);
+                    console.log("Client Index: "+clientIndex);
+
+                    this.send(payloadString, this.connections[clientIndex].connection);*/
 
                     this.send(payloadString, connection);
 
@@ -115,16 +138,23 @@ export class ServerEventDispatcher {
 
                 case Commands.project.OPEN:{
 
-                    var project = await ProjectOperations.findProject(json.project._id);
+                    var project = await ProjectOperations.findProject(json.project);
                     //var scene = SceneOperations.findScene(project.currentScene);
+                    console.log('Project: '+project);
                     var objectIds = project.objects;
                     var objects = [];
 
-                    for(var x in objectIds){
+                    console.log('Object Ids: '+objectIds);
+                    
+                    if(objectIds==[]||objectIds==undefined){
+                        for(var x in objectIds){
 
-                        var currentObject = await ObjectOperations.findObject({_id: x});
+                            console.log('X: '+objectIds[x]);
+                            var currentObject = await ObjectOperations.findObject({_id: objectIds[x]});
 
-                        objects.push(currentObject);
+                            objects.push(currentObject);
+
+                       }
 
                     }
 
@@ -209,7 +239,7 @@ export class ServerEventDispatcher {
 
                     }); */
 
-                    json.user._id = newUserPayload.user._id;
+                    json.user._id = newUserPayload._id;
                     json.client._id = newClientId;
 
                     var payloadString = JSON.stringify(json);
@@ -223,13 +253,11 @@ export class ServerEventDispatcher {
                 case Commands.user.LOGIN: {
 
                     var returnedUser = await UserOperations.loginUser(json.user);
-                    console.log('ReturnedUser LoggedIn Server: '+returnedUser.isLoggedIn);
                     if(returnedUser._id!=''&&returnedUser._id!=undefined){
                        json.user._id = returnedUser._id;
-                       var projects = await ProjectOperations.fetchProjects(returnedUser._id);
+                       var projects = await ProjectOperations.fetchProjects(returnedUser);
                        var newClientId = ClientOperations.createClient(json.client, returnedUser._id);
                        json.client._id = newClientId;
-                       console.log('Returned: '+returnedUser._id);
                        var currentUser = await UserOperations.findUser(returnedUser);
                        console.log('Current User: '+currentUser);
 
@@ -242,8 +270,17 @@ export class ServerEventDispatcher {
 
                        this.connections.push(connectionTracker);
 
+                       console.log('Connections: '+this.connections.length);
+                       for(x in this.connections){
+    
+                        console.log('Connection Client IDs: '+this.connections[x].clientId);
+    
+                       }
+
                        currentUser.clients.push(newClientId);
                        currentUser.save();
+
+                       console.log('Current User 2: '+currentUser);
 
                        /*var payloadString = JSON.stringify({
 
@@ -254,7 +291,8 @@ export class ServerEventDispatcher {
 
                        });*/
 
-                       json.project = projects;
+                       
+                       json.projects = projects;
                        
                        var payloadString = JSON.stringify(json);
 
@@ -353,18 +391,28 @@ export class ServerEventDispatcher {
 
     }
 
-    public static async broadcast(json: any){
+    public static async broadcast(json: any, newFlag: boolean){
 
         var payloadString = JSON.stringify(json);
 
         var project = await ProjectOperations.findProject(json.project._id);
         var clientArray = project.clients;
+        var filteredClientArray = [];
 
-        var filteredClientArray = clientArray.filter(function(value, index, arr){
+        if(!newFlag){
 
-            return value!=json.client._id; 
+             filteredClientArray = clientArray.filter(function(value, index, arr){
 
-        });
+                return value!=json.client._id; 
+    
+            });
+    
+        }
+        else{
+
+             filteredClientArray = clientArray;
+
+        }
 
         var index;
         var filteredConnections = [];
@@ -386,9 +434,19 @@ export class ServerEventDispatcher {
 
     public static send(payloadString: any, connection: any){
 
+        console.log('Sending Payload to connection: '+connection);
+        //console.log('PayloadString: '+payloadString);
         let payload = Buffer.alloc(payloadString.length, payloadString);
 
-        connection.send(payload);
+        connection.send(payload, function ack(err){
+
+            if(err==undefined){
+
+                console.log('Payload sent successfully!');
+
+            }
+
+        });
 
     }
 
@@ -495,9 +553,10 @@ export class ServerEventDispatcher {
     }
 
     private connection(ws: any, arg?: any): void {
-        console.log(ws);
-        ServerEventDispatcher.connections.push(ws);
+        //console.log(ws);
+        //ServerEventDispatcher.connections.push(ws);
         var connection = ws;
+       // ws.send("Connected!");
 
         function onMessageEvent(evt: MessageEvent) {
             const json = JSON.parse(evt.data);
