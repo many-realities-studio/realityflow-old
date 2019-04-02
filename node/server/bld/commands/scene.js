@@ -1,13 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var bcrypt = require("bcrypt");
-var mongoose = require("mongoose");
+const mongoose = require("mongoose");
 const project_1 = require("../models/project");
 const scene_1 = require("../models/scene");
+var objectId = mongoose.Types.ObjectId();
 class SceneOperations {
     static createScene(sceneInfo) {
         var newSceneId;
         var newScene = new scene_1.Scene({
+            _id: objectId,
             _parentProject: sceneInfo._parentProject,
             created: sceneInfo.created,
             objects: []

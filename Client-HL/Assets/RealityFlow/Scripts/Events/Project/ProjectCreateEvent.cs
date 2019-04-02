@@ -26,7 +26,7 @@ namespace Assets.RealityFlow.Scripts.Events
             project = new FlowProject(projectName);
             user = new FlowUser(Config.userId);
             client = new FlowClient(Config.deviceId);
-
+  
             CommandProcessor.sendCommand(this);
         }
 

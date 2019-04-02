@@ -1,8 +1,8 @@
-var bcrypt = require("bcrypt");
-var mongoose = require("mongoose");
-
+import * as mongoose from "mongoose";
 import {IProjectModel, Project} from "../models/project";
 import {Scene, ISceneModel} from "../models/scene";
+
+var objectId = mongoose.Types.ObjectId();
 
 export class SceneOperations{
 
@@ -12,6 +12,7 @@ export class SceneOperations{
 
         var newScene = new Scene({
            
+            _id: objectId,
             _parentProject: sceneInfo._parentProject,
             created: sceneInfo.created,
             objects: []

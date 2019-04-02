@@ -10,16 +10,17 @@ namespace Assets.RealityFlow.Scripts.Events
     [System.Serializable]
     public class ProjectFetchEvent : FlowEvent
     {
-        public static int scmd = Commands.Project.FETCH;
+        public static int scmd = Commands.Project.OPEN;
 
         public FlowProject project;
+        public List<FlowTObject> objs;
 
         public ProjectFetchEvent()
         {
             command = scmd;
         }
 
-        public void send()
+        public void Send()
         {
             project = new FlowProject(Config.projectId);
 
@@ -34,10 +35,10 @@ namespace Assets.RealityFlow.Scripts.Events
         public static string Receive()
         {
             ProjectFetchEvent log = JsonUtility.FromJson<ProjectFetchEvent>(FlowNetworkManager.reply);
-            
-            //to be continued
+            Config.objs = log.objs;
 
-            return "Receiving user login update: " + FlowNetworkManager.reply;
+            //Debug.Log(Config.objs[0].objectName);
+            return "Receiving project open update: " + FlowNetworkManager.reply;
         }
     }
 }

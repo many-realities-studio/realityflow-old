@@ -22,7 +22,6 @@ namespace Assets.RealityFlow.Scripts.Events
 
         public void Send(string username, string password, int deviceType)
         {
-
             user = new FlowUser(username, password);
             client = new FlowClient(deviceType);
 

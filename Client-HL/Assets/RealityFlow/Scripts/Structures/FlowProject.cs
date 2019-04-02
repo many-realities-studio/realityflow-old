@@ -7,9 +7,9 @@ public class FlowProject : FlowValue
 {
     public int _uid;
     public string description;
-    public int dateCreated;
+    public int created;
     public int dateModified;
-    public string name;
+    public string projectName;
     public List<FlowTObject> transforms;
     [System.NonSerialized]
     public Dictionary<string, FlowTObject> transformsById;
@@ -28,8 +28,8 @@ public class FlowProject : FlowValue
 
     public FlowProject(string nameOrId)
     {
-        name = nameOrId;
-        _id = nameOrId;
+        projectName = nameOrId;
+        //_id = nameOrId;
     }
 
     public FlowProject()

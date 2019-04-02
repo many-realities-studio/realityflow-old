@@ -1,15 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose = require("mongoose");
 const user_1 = require("../models/user");
-let sockServ;
-let user_hash;
-let client_hash;
+var objectId = mongoose.Types.ObjectId();
 class UserOperations {
     static createUser(userInfo) {
         var newUser;
+        console.log('Entering CreateUser...');
+        console.log('UserInfo Username: ' + userInfo.username);
+        console.log('UserInfo Password: ' + userInfo.password);
         var hashedUserInfo = this.hashUserInfo(userInfo.username, userInfo.password);
         var newUser = new user_1.User({
-            _id: 'emilia>rem',
             username: userInfo.username,
             password: userInfo.password,
             clients: undefined,
@@ -17,24 +18,24 @@ class UserOperations {
             projects: undefined,
             friends: undefined
         });
-        newUser.save(function (err, doc) {
-            if (err) {
-                console.log('ERROR: Failed to create user: ' + userInfo.username);
-                console.log(err);
-            }
-            else {
-                console.log('User ' + userInfo.username + ' added successfully.');
-                newUser = doc;
-            }
+        console.log('User Presave: ' + newUser);
+        var promise = newUser.save();
+        console.log('Save User: ' + newUser);
+        promise.then(function (err, doc) {
+            console.log('User ' + userInfo.username + ' added successfully.');
+            newUser = doc;
+            return newUser;
         });
-        return newUser;
+        return promise;
     }
     static findUser(userInfo) {
         var returnedUser;
-        user_1.User.findById({ _id: userInfo._id }, function (err, doc) {
+        var promise = user_1.User.findById({ _id: userInfo._id }).exec();
+        promise.then(function (err, doc) {
             returnedUser = doc;
+            return returnedUser;
         });
-        return returnedUser;
+        return promise;
     }
     static loginUser(userInfo) {
         var returnedUser = {
@@ -42,20 +43,23 @@ class UserOperations {
             _id: ''
         };
         var hashedUserInfo = this.hashUserInfo(userInfo.username, userInfo.password);
-        user_1.User.find({ username: hashedUserInfo.username, password: hashedUserInfo.password }, { lean: true }, function (err, doc) {
-            if (err) {
-                console.log('Error');
+        console.log("looking for user: " + userInfo.username + " with password: " + userInfo.password);
+        var promise = user_1.User.findOne({ username: "test", password: "test" }).exec();
+        promise.then(function (doc) {
+            if (doc == undefined) {
                 returnedUser.isLoggedIn = false;
-            }
-            else if (!doc) {
-                returnedUser.isLoggedIn = false;
+                console.log('No doc found');
             }
             else {
                 returnedUser.isLoggedIn = true;
                 returnedUser._id = doc._id;
             }
+            console.log('Returned User payload Doc: ' + doc);
+            console.log('Returned User isLoggedIn: ' + returnedUser.isLoggedIn);
+            console.log('Returned User ID: ' + returnedUser._id);
+            return returnedUser;
         });
-        return returnedUser;
+        return promise;
     }
     static updateUser(userInfo) {
         var hashedUserInfo = this.hashUserInfo(userInfo.username, userInfo.password);

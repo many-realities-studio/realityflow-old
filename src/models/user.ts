@@ -7,7 +7,6 @@ import { Project } from "./project"
 import { Client } from "./client"
 
 export declare interface IUserModel extends mongoose.Document {
-    _id: string;
     username: String;
     password: String;
     clients: [ObjectIdType];
@@ -17,7 +16,6 @@ export declare interface IUserModel extends mongoose.Document {
 }
 
 const userSchema = new mongoose.Schema({
-    _id: String,
     username: String,
     password: String,
     clients: [{type: ObjectId, ref: Client}],

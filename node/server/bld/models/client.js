@@ -6,7 +6,6 @@ var Types = Schema.Types;
 var ObjectId = Types.ObjectId;
 const user_1 = require("./user");
 const clientSchema = new mongoose.Schema({
-    _id: String,
     user: { type: ObjectId, ref: user_1.User },
     deviceType: Number
 });

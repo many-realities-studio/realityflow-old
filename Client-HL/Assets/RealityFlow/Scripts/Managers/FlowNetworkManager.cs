@@ -214,9 +214,19 @@ public class FlowNetworkManager : MonoBehaviour
 
         CommandProcessor.initializeRecieveEvents();
 
-        UserRegisterEvent newUser = new UserRegisterEvent();
-        newUser.Send(new FlowUser("test1", "test1"), FlowClient.CLIENT_HOLOLENS);
-        
+        //string username = "ram " + DateTime.Now.ToString();
+        //string password = "rem " + DateTime.Now.ToString();
+
+        string username = "test";
+        string password = "test";
+
+        //UserRegisterEvent register = new UserRegisterEvent();
+        //register.Send(username, password, FlowClient.CLIENT_HOLOLENS);
+
+        UserLoginEvent login = new UserLoginEvent();
+        login.Send(username, password);
+
+
 #if !UNITY_EDITOR && UNITY_WEBGL
         WebGLInput.captureAllKeyboardInput = false;
 #endif
@@ -383,6 +393,15 @@ public class FlowNetworkManager : MonoBehaviour
     public void Update()
     {
         debug = _debug;
+
+        //if (Config.userId != "-9999")
+        //{
+        //    ProjectCreateEvent createProj = new ProjectCreateEvent();
+        //    createProj.Send("Subarus Maids2" + DateTime.Now.ToString());
+
+        //    ProjectFetchEvent fetchproj = new ProjectFetchEvent();
+        //    fetchproj.Send();
+        //}
 
         // Start with delete key.
         if (Input.GetKeyDown(KeyCode.Delete))

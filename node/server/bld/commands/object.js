@@ -1,11 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var mongoose = require("mongoose");
+const mongoose = require("mongoose");
 const object_1 = require("../models/object");
+var objectId = mongoose.Types.ObjectId();
 class ObjectOperations {
     static createObject(objectInfo) {
         var object;
         var newObject = new object_1.Object({
+            _id: objectId,
             type: objectInfo.type,
             name: objectInfo.name,
             triangles: objectInfo.triangles,
@@ -23,25 +25,22 @@ class ObjectOperations {
             uv: objectInfo.uv,
             locked: objectInfo.locked
         });
-        newObject.save(function (err, doc) {
-            if (err) {
-                console.log('ERROR: Failed to create object: ' + doc.name);
-            }
-            else {
-                console.log('Object ' + doc.name + ' added successfully.');
-                object = doc;
-            }
+        var promise = newObject.save();
+        promise.then(function (doc) {
+            console.log('Object ' + doc.name + ' added successfully.');
+            object = doc;
+            return object;
         });
-        return object;
+        return promise;
     }
     static findObject(objectInfo) {
         var object;
-        object_1.Object.findById(objectInfo._id, function (err, doc) {
-            if (!err) {
-                object = doc;
-            }
+        var promise = object_1.Object.findById(objectInfo._id).exec();
+        promise.then(function (doc) {
+            object = doc;
+            return object;
         });
-        return object;
+        return promise;
     }
     static updateObject(objectInfo) {
         object_1.Object.findOneAndUpdate({ _id: objectInfo._id }, {

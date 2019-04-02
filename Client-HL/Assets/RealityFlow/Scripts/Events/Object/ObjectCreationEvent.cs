@@ -12,6 +12,7 @@ namespace Assets.RealityFlow.Scripts.Events
     {
         public static int scmd = Commands.FlowObject.CREATE;
         public FlowTObject obj;
+        public FlowProject proj;
 
         public ObjectCreationEvent()
         {
@@ -22,8 +23,8 @@ namespace Assets.RealityFlow.Scripts.Events
         {
             obj = objToSend;
 
-            project_id = Config.projectId;
-            client_id = Config.deviceId;
+            proj = new FlowProject();
+            proj._id = Config.projectId;
 
             CommandProcessor.sendCommand(this);
         }
@@ -39,7 +40,6 @@ namespace Assets.RealityFlow.Scripts.Events
             FlowTObject obj = fe.obj;
 
             GameObject newObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            newObj.AddComponent(typeof(FlowObject));
 
             Mesh objMesh = newObj.GetComponent<MeshFilter>().mesh;
             objMesh.vertices = obj.vertices;

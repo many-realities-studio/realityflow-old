@@ -12,5 +12,6 @@ public static class Config {
 	public static string deviceId = "-9999";
 	//public static Dictionary<string, string> projectList; 
 	public static List<string> projectIdList = null;
+    public static List<FlowTObject> objs;
 
 }

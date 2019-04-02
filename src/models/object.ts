@@ -7,7 +7,6 @@ import { Scene } from "./scene";
 
 export declare interface IObjectModel extends mongoose.Document{
 
-    _id:        string;
     type:       string;
     name:       string;
     triangles:  Number[];
@@ -30,7 +29,6 @@ export declare interface IObjectModel extends mongoose.Document{
 
 const objectSchema = new mongoose.Schema({
 
-    _id:        String,
     type:       String,
     name:       String,
     triangles:  [],

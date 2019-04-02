@@ -1,54 +1,46 @@
-var bcrypt = require("bcrypt");
-var mongoose = require("mongoose");
-
-import {IUserModel, User} from "../models/user";
+import * as mongoose from "mongoose";
 import {Project, IProjectModel} from "../models/project";
-import { UserOperations } from "./user";
+
+var objectId = mongoose.Types.ObjectId();
 
 export class ProjectOperations
 {
 
     public static createProject(projectInfo: any, clientInfo: any, userInfo: any){
 
-        var newProjectId;
+        console.log('Entering Create Project...');
+
+        var newProjectDoc;
 
         var newProject = new Project({
 
             projectName: projectInfo.projectName,
             owner: userInfo._id,
-            clients: [],
+            clients: [clientInfo._id],
             currentScene: undefined,
             prevScene: undefined,
             nextScene: undefined,
-            bookmarks: [],
+            bookmarks: undefined,
             created: projectInfo.created,
             lastEdit: projectInfo.lastEdit,
             lastEditor: projectInfo.lastEditor
 
         });
 
-        newProject.clients.push(clientInfo._id);
+        var promise = newProject.save();
 
-        newProject.save(function(err, doc){
+        promise.then(function(doc){
 
-            if(err){
 
-                console.log('ERROR: Failed to create project: '+ projectInfo.projectName);
+            console.log('Project '+projectInfo.projectName+' added successfully.');
+            newProjectDoc = doc;
 
-            }
-            else{
+            newProjectDoc.clients.push(clientInfo._id);
 
-                console.log('Project '+projectInfo.projectName+' added successfully.');
-                newProject = doc;
-
-            }
-
+            return newProjectDoc;
         });
 
-        userInfo.projects.push(newProjectId);
-        UserOperations.updateUser(userInfo);
-
-        return newProject;
+        return promise;
 
     }
 
@@ -56,34 +48,34 @@ export class ProjectOperations
 
         var projects = [];
 
-        Project.find({owner: userInfo._id}, {lean: true}, function(err, docs){
-
-            if(!err){
+        var promise = Project.find({owner: userInfo._id}).exec();
+        
+        promise.then(function(docs){
 
                 projects = docs;
 
-            }
+            return projects;
 
         });
 
-        return projects;
+        return promise;
     }
 
     public static findProject(projectInfo: any){
 
         var project;
 
-        Project.findById(projectInfo._id, {lean: true}, function(err, doc){
+        var promise = Project.findById(projectInfo._id).exec();
 
-            if(!err){
+
+        promise.then(function(doc){
 
                 project = doc;
-
-            }
+                return project;
 
         });
-
-        return project;
+        
+        return promise;
 
     }
 

@@ -1,6 +1,7 @@
-var mongoose = require("mongoose");
-
+import * as mongoose from "mongoose";
 import {Object, IObjectModel} from "../models/object";
+
+var objectId = mongoose.Types.ObjectId();
 
 export class ObjectOperations {
 
@@ -10,6 +11,7 @@ export class ObjectOperations {
 
         var newObject = new Object({
 
+            _id:        objectId,
             type:       objectInfo.type,
             name:       objectInfo.name,
             triangles:  objectInfo.triangles,
@@ -29,39 +31,35 @@ export class ObjectOperations {
 
         });
 
-        newObject.save(function(err, doc){
+        var promise = newObject.save();
 
-            if(err){
-
-                console.log('ERROR: Failed to create object: ' + doc.name);
-
-            }
-            else{
+        promise.then(function(doc){
 
                 console.log('Object ' + doc.name + ' added successfully.');
                 object = doc;
 
-            }
+                return object;
+
         });
 
-        return object;
+        return promise;
     }
 
     public static findObject(objectInfo: any)
     {
         var object;
 
-        Object.findById(objectInfo._id, function(err, doc){
+        var promise = Object.findById(objectInfo._id).exec();
 
-            if(!err){
+        promise.then(function(doc){
 
                 object = doc;
-
-            }
+                return object;
 
         });
 
-        return object;
+        return promise;
+        
     }
 
     public static updateObject(objectInfo: any)
