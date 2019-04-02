@@ -78,10 +78,10 @@ public class ObjectManager : MonoBehaviour {
             }
 
             // Add outline to object, which is used to show whether or not the object is selected
-            var outline = temp.AddComponent<Outline>();
-            outline.OutlineColor = new Color(0f, 0.141f, 1f);
-            outline.OutlineWidth = 1f;
-            outline.enabled = false;
+            //var outline = temp.AddComponent<Outline>();
+            //outline.OutlineColor = new Color(0f, 0.141f, 1f);
+            //outline.OutlineWidth = 1f;
+            //outline.enabled = false;
 
             //populateOutliner(obj.name, temp);
             outliner.GetComponent<OutlinerManager>().addItem(temp);
@@ -150,4 +150,47 @@ public class ObjectManager : MonoBehaviour {
     }
     
     // Create a new object
+    public void create(int selection)
+    {
+        switch (selection)
+        {
+            // Cube
+            case 0:
+                myPrefab = Resources.Load(prefabPath + "Cube") as GameObject;
+                break;
+            // Sphere
+            case 1:
+                myPrefab = Resources.Load(prefabPath + "Sphere") as GameObject;
+                break;
+            // Capsule
+            case 2:
+                myPrefab = Resources.Load(prefabPath + "Capsule") as GameObject;
+                break;
+            // Mesh
+            case 3:
+                break;
+        }
+        GameObject temp = Instantiate(myPrefab, new Vector3(0f,0f,0f), Quaternion.identity);
+        temp.transform.localScale = new Vector3(10f, 10f, 10f);
+        outliner.GetComponent<OutlinerManager>().addItem(temp);
+    }
+
+    public void create(OBJData data)
+    {
+        myPrefab = Resources.Load(prefabPath + "Mesh") as GameObject;
+        GameObject temp = Instantiate(myPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
+        temp.transform.localScale = new Vector3(10f, 10f, 10f);
+        outliner.GetComponent<OutlinerManager>().addItem(temp);
+
+        MeshFilter objMesh = temp.GetComponent<MeshFilter>();
+
+        //	Load the OBJ in
+        //var lStream = new FileStream(modelPath + obj.mesh, FileMode.Open);
+        //var meshObj = OBJLoader.LoadOBJ(lStream);
+        objMesh.mesh.LoadOBJ(data);
+
+        // Generate new collider
+        Destroy(temp.GetComponent<Collider>());
+        temp.AddComponent<BoxCollider>();
+    }
 }

@@ -10,17 +10,18 @@ public class MeshListManager : MonoBehaviour
 
     public GameObject MeshPanelPrefab;
     public Transform content;
+    public ObjectManager objManager;
     private const string modelPath = "Assets/Resources/Models/";
     private string path;
 
     // List of .obj files in the project
     Dictionary <string, OBJData> objList;
     // List of entries in the mesh list window
-    List<GameObject> meshListEntries;
+    List<MeshListItem> meshListEntries;
 
     private void Start()
     {
-        meshListEntries = new List<GameObject>();
+        meshListEntries = new List<MeshListItem>();
 
         objList = new Dictionary<string, OBJData>();
         path = Application.dataPath + "/Resources/Models";
@@ -52,7 +53,7 @@ public class MeshListManager : MonoBehaviour
         GameObject newItem = Instantiate(MeshPanelPrefab) as GameObject;
         MeshListItem item = newItem.GetComponent<MeshListItem>();
         Text entryName = newItem.GetComponentInChildren<Text>();
-        meshListEntries.Add(newItem);
+        meshListEntries.Add(item);
         entryName.text = key;
         newItem.transform.SetParent(content.transform);
         newItem.transform.localScale = Vector3.one;
@@ -62,7 +63,7 @@ public class MeshListManager : MonoBehaviour
             // populate variables
             item.name = name;
             item.manager = this;
-            item.model = model;
+            item.model = objList[key];
             item.index = meshListEntries.Count - 1;
         }
         else
@@ -89,6 +90,20 @@ public class MeshListManager : MonoBehaviour
                     // deselect it!
                     toggle.changeState();
                 }
+            }
+        }
+    }
+
+    public void create()
+    {
+        // Find first selected item and pass it to object creation in the object
+        // manager
+        for (int i = 0; i < meshListEntries.Count; i++)
+        {
+            toggleButton toggle = meshListEntries[i].GetComponent<toggleButton>();
+            if (toggle != null && toggle.IsPressed)
+            {
+                objManager.create(meshListEntries[i].model);
             }
         }
     }
