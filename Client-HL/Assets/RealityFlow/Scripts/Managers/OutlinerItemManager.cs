@@ -1,9 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class OutlinerItemManager : MonoBehaviour {
 
-    public Text name;
+    public string name;
+    public GameObject obj;
+    public int index;
+    public OutlinerManager manager;
+
+    public void select()
+    {
+        manager.select(this);
+    }
 }

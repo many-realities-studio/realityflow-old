@@ -1,7 +1,9 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using UnityEngine.UI;
+using UnityExtension;
 
 // TODO:
 // make file path a constant
@@ -16,24 +18,73 @@ public class ObjectManager : MonoBehaviour {
     // structures for resource based spawner
     public ObjectDataList objects = new ObjectDataList();
     private const string dataFileName = "testJSON.json";
+    private const string prefabPath = "Prefabs/";
+    private const string modelPath = "Assets/Resources/Models/";
     private ObjectData loadedData;
     private GameObject myPrefab;
 
     // outliner
     public Transform outlinerContent;
     public GameObject OutlinerItemPrefab;
+    public GameObject outliner;
 
+    // Load all objects in the scene
     void Start()
     {
         LoadJSON();
-
+        
         // spawn using resource based spawner
         foreach (ObjectData obj in objects.objects)
         {
+            myPrefab = Resources.Load(prefabPath + obj.prefab) as GameObject;
+            GameObject temp = Instantiate(myPrefab, stringToVector3(obj.position), Quaternion.identity);
+            temp.transform.localScale = stringToVector3(obj.scale);
+            temp.name = obj.name;
 
-            myPrefab = Resources.Load("Prefabs/" + obj.prefab) as GameObject;
-            Instantiate(myPrefab, stringToVector3(obj.position), Quaternion.identity);
-            populateOutliner(obj.name);
+            if (obj.prefab == "Mesh")
+            {
+                // Initialize Mesh variables
+                //GameObject loadedModelObj = Resources.Load(modelPath + obj.mesh) as GameObject;
+                //Mesh mesh = loadedModelObj.GetComponent<MeshFilter>().mesh;
+                MeshFilter objMesh = temp.GetComponent<MeshFilter>();
+
+                //	Load the OBJ in
+                var lStream = new FileStream(modelPath + obj.mesh, FileMode.Open);
+                var meshObj = OBJLoader.LoadOBJ(lStream);
+                //var mesh = GetComponent<MeshFilter>();
+                objMesh.mesh.LoadOBJ(meshObj);
+                lStream.Close();
+
+                lStream = null;
+                meshObj = null;
+
+                // Generate new collider
+                Destroy(temp.GetComponent<Collider>());
+                temp.AddComponent<BoxCollider>();
+
+                // Test code to auto resize the object
+                //objMesh.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f); ;
+
+                /*if (mesh != null)
+                {
+                    objMesh.vertices = mesh.mesh.vertices;
+                    objMesh.uv = mesh.mesh.uv;
+                    objMesh.triangles = mesh.mesh.triangles;
+                    objMesh.RecalculateBounds();
+                    objMesh.RecalculateNormals();
+                    Destroy(temp.GetComponent<Collider>());
+                    temp.AddComponent<BoxCollider>();
+                }*/
+            }
+
+            // Add outline to object, which is used to show whether or not the object is selected
+            //var outline = temp.AddComponent<Outline>();
+            //outline.OutlineColor = new Color(0f, 0.141f, 1f);
+            //outline.OutlineWidth = 1f;
+            //outline.enabled = false;
+
+            //populateOutliner(obj.name, temp);
+            outliner.GetComponent<OutlinerManager>().addItem(temp);
         }
     }
 
@@ -97,13 +148,49 @@ public class ObjectManager : MonoBehaviour {
             Debug.LogError("Cannot load object data!");
         }
     }
-
-    public void populateOutliner(string name)
+    
+    // Create a new object
+    public void create(int selection)
     {
-        GameObject newItem = Instantiate(OutlinerItemPrefab) as GameObject;
-        OutlinerItemManager manager = newItem.GetComponent<OutlinerItemManager>();
-        manager.name.text = name;
-        newItem.transform.SetParent(outlinerContent.transform);
-        newItem.transform.localScale = Vector3.one;
+        switch (selection)
+        {
+            // Cube
+            case 0:
+                myPrefab = Resources.Load(prefabPath + "Cube") as GameObject;
+                break;
+            // Sphere
+            case 1:
+                myPrefab = Resources.Load(prefabPath + "Sphere") as GameObject;
+                break;
+            // Capsule
+            case 2:
+                myPrefab = Resources.Load(prefabPath + "Capsule") as GameObject;
+                break;
+            // Mesh
+            case 3:
+                break;
+        }
+        GameObject temp = Instantiate(myPrefab, new Vector3(0f,0f,0f), Quaternion.identity);
+        temp.transform.localScale = new Vector3(10f, 10f, 10f);
+        outliner.GetComponent<OutlinerManager>().addItem(temp);
+    }
+
+    public void create(OBJData data)
+    {
+        myPrefab = Resources.Load(prefabPath + "Mesh") as GameObject;
+        GameObject temp = Instantiate(myPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity);
+        temp.transform.localScale = new Vector3(10f, 10f, 10f);
+        outliner.GetComponent<OutlinerManager>().addItem(temp);
+
+        MeshFilter objMesh = temp.GetComponent<MeshFilter>();
+
+        //	Load the OBJ in
+        //var lStream = new FileStream(modelPath + obj.mesh, FileMode.Open);
+        //var meshObj = OBJLoader.LoadOBJ(lStream);
+        objMesh.mesh.LoadOBJ(data);
+
+        // Generate new collider
+        Destroy(temp.GetComponent<Collider>());
+        temp.AddComponent<BoxCollider>();
     }
 }
