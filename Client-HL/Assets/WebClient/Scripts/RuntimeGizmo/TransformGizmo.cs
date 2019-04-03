@@ -13,6 +13,8 @@ namespace RuntimeGizmos
 	[RequireComponent(typeof(Camera))]
 	public class TransformGizmo : MonoBehaviour
 	{
+        public GameObject objManager;
+
 		public TransformSpace space = TransformSpace.Global;
 		public TransformType transformType = TransformType.Move;
 		public TransformPivot pivot = TransformPivot.Pivot;
@@ -507,6 +509,7 @@ namespace RuntimeGizmos
 			{
 				if(targetRoots.ContainsKey(target)) return;
 				if(children.Contains(target)) return;
+                if (!objManager.GetComponent<SelectedManger>().checkOut(target.gameObject)) return;
 
 				if(addCommand) UndoRedoManager.Insert(new AddTargetCommand(this, target, targetRootsOrdered));
 
@@ -522,8 +525,9 @@ namespace RuntimeGizmos
 			if(target != null)
 			{
 				if(!targetRoots.ContainsKey(target)) return;
+                if (!objManager.GetComponent<SelectedManger>().returnObject()) return;
 
-				if(addCommand) UndoRedoManager.Insert(new RemoveTargetCommand(this, target));
+                if (addCommand) UndoRedoManager.Insert(new RemoveTargetCommand(this, target));
 
 				RemoveTargetHighlightedRenderers(target);
 				RemoveTargetRoot(target);
@@ -534,7 +538,8 @@ namespace RuntimeGizmos
 
 		public void ClearTargets(bool addCommand = true)
 		{
-			if(addCommand) UndoRedoManager.Insert(new ClearTargetsCommand(this, targetRootsOrdered));
+            if (!objManager.GetComponent<SelectedManger>().returnObject()) return;
+            if (addCommand) UndoRedoManager.Insert(new ClearTargetsCommand(this, targetRootsOrdered));
 
 			ClearAllHighlightedRenderers();
 			targetRoots.Clear();

@@ -4,8 +4,27 @@ using UnityEngine;
 
 public class SelectedManger : MonoBehaviour {
 
-    GameObject selectedObject;
+    public GameObject selectedObject;
     GameObject previousSelection;
+
+    public bool checkOut(GameObject pickedObject)
+    {
+        //make server call to see if successful
+        selectedObject = pickedObject;
+        if(selectedObject!=null)
+            selectedObject.GetComponent<FlowObject>().selected = true;
+        return true;
+        //else return false
+    }
+    public bool returnObject()
+    {
+        //make server call to deselect object
+        if (selectedObject != null)
+            selectedObject.GetComponent<FlowObject>().selected = false;
+        selectedObject = null;
+        return true;
+        //else return false
+    }
 
     public void updateSelected(GameObject passedObject)
     {
