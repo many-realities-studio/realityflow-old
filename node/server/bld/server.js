@@ -88,8 +88,17 @@ class ServerEventDispatcher {
                     case commands_1.Commands.project.OPEN: {
                         var project = yield project_1.ProjectOperations.findProject(json.project);
                         console.log("Project Clients: " + project.clients);
-                        project.clients.push(json.client._id);
-                        yield project.save();
+                        var projectClientsArray = String(project.clients);
+                        var existsFlag = false;
+                        for (var i = 0; i < projectClientsArray.length; i++) {
+                            if (projectClientsArray[i] == json.client._id) {
+                                existsFlag = true;
+                            }
+                        }
+                        if (!existsFlag) {
+                            project.clients.push(json.client._id);
+                            yield project.save();
+                        }
                         console.log('Project: ' + project);
                         var objectIds = project.objs;
                         var objects = [];
@@ -214,25 +223,39 @@ class ServerEventDispatcher {
         return __awaiter(this, void 0, void 0, function* () {
             var payloadString = JSON.stringify(json);
             var project = yield project_1.ProjectOperations.findProject(json.project);
+            var uniqueConnectionClients = [];
+            var uniqueConnections = [];
+            for (var i = 0; i < this.connections.length; i++) {
+                if (uniqueConnectionClients.indexOf(this.connections[i].clientId) == -1) {
+                    uniqueConnectionClients.push(this.connections[i].clientId);
+                    uniqueConnections.push(this.connections[i]);
+                }
+            }
             var clientArray = String(project.clients);
-            var filteredClientArray = [];
             var filteredConnections = [];
+            console.log('Project Clients Broadcast: ' + project.clients);
+            console.log('this.connections length Broadcast: ' + this.connections.length);
+            console.log('Unique Connections Length: ' + uniqueConnections.length);
             if (!newFlag) {
-                for (x in this.connections) {
-                    if (clientArray.includes(String(this.connections[x].clientId)) && String(this.connections[x].clientId != String(json.client_id))) {
-                        filteredConnections.push(this.connections[x].connection);
+                for (var i = 0; i < uniqueConnections.length; i++) {
+                    if (clientArray.includes(String(uniqueConnections[i].clientId)) && String(uniqueConnections[i].clientId != String(json.client_id))) {
+                        filteredConnections.push(uniqueConnections[i].connection);
+                        console.log('Filtered Connections' + uniqueConnections[i].clientId);
                     }
                 }
             }
             else {
-                for (x in this.connections) {
-                    if (clientArray.includes(String(this.connections[x].clientId))) {
-                        filteredConnections.push(this.connections[x].connection);
+                for (var i = 0; i < uniqueConnections.length; i++) {
+                    console.log('Unique Connections Broadcast' + uniqueConnections[i].clientId);
+                    if (clientArray.includes(String(uniqueConnections[i].clientId))) {
+                        filteredConnections.push(uniqueConnections[i].connection);
+                        console.log('Filtered Connections' + uniqueConnections[i].clientId);
                     }
                 }
             }
-            for (var x in filteredConnections) {
-                this.send(payloadString, filteredConnections[x]);
+            for (var i = 0; i < filteredConnections.length; i++) {
+                console.log('Filter connections length: ' + filteredConnections.length);
+                this.send(payloadString, filteredConnections[i]);
             }
         });
     }
@@ -251,6 +274,16 @@ class ServerEventDispatcher {
             ServerEventDispatcher.serverMessageProcessor(json, connection);
         }
         function onCloseEvent(evt) {
+            var clientId;
+            for (var x = 0; x < this.connections.length; x++) {
+                if (this.connections[x].connection == ws) {
+                    clientId = this.connections[x].clientId;
+                    this.connections = this.connections.filter(function (value, index, arr) {
+                        return index != x;
+                    });
+                    client_1.ClientOperations.deleteClient(clientId);
+                }
+            }
         }
         function onErrorEvent(evt) {
         }

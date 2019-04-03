@@ -56,7 +56,6 @@ class UserOperations {
             }
             console.log('Returned User payload Doc: ' + doc);
             console.log('Returned User isLoggedIn: ' + returnedUser.isLoggedIn);
-            console.log('Returned User ID: ' + returnedUser._id);
             return returnedUser;
         });
         return promise;
