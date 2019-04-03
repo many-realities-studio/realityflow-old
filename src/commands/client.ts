@@ -35,9 +35,9 @@ export class ClientOperations{
 
     }
 
-    public static deleteClient(clientInfo: any){
+    public static deleteClient(clientInfoId: any){
 
-        Client.findByIdAndRemove(clientInfo._id);
+        Client.findByIdAndRemove(clientInfoId);
 
     }
 

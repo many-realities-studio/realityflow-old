@@ -21,8 +21,8 @@ class ClientOperations {
         console.log('Saved Client: ' + objectId);
         return objectId;
     }
-    static deleteClient(clientInfo) {
-        client_1.Client.findByIdAndRemove(clientInfo._id);
+    static deleteClient(clientInfoId) {
+        client_1.Client.findByIdAndRemove(clientInfoId);
     }
 }
 exports.ClientOperations = ClientOperations;

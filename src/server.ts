@@ -145,8 +145,27 @@ export class ServerEventDispatcher {
 
                     var project = await ProjectOperations.findProject(json.project);
                     console.log("Project Clients: "+project.clients);
-                    project.clients.push(json.client._id);
-                    await project.save();
+
+                    var projectClientsArray = String(project.clients);
+                    var existsFlag = false;
+
+                    for(var i=0; i<projectClientsArray.length; i++){
+
+                        if(projectClientsArray[i]==json.client._id){
+
+                            existsFlag=true;
+
+                        }
+                        
+                    }
+
+                    if(!existsFlag){
+
+                        project.clients.push(json.client._id);
+                        await project.save();
+
+                    }
+
                     //promise = await ProjectOperations.saveProject(project);
 
                     //var scene = SceneOperations.findScene(project.currentScene);
@@ -410,9 +429,27 @@ export class ServerEventDispatcher {
         var payloadString = JSON.stringify(json);
 
         var project = await ProjectOperations.findProject(json.project);
+
+        var uniqueConnectionClients: any[] = [];
+        var uniqueConnections: any[] = [];
+
+        for(var i=0; i<this.connections.length; i++){
+
+            if(uniqueConnectionClients.indexOf(this.connections[i].clientId)==-1){
+
+                uniqueConnectionClients.push(this.connections[i].clientId);
+                uniqueConnections.push(this.connections[i]);
+
+            }
+
+        }
+
         var clientArray = String(project.clients);
-        var filteredClientArray = [];
         var filteredConnections = [];
+
+        console.log('Project Clients Broadcast: '+project.clients);
+        console.log('this.connections length Broadcast: '+this.connections.length);
+        console.log('Unique Connections Length: '+uniqueConnections.length);
 
        /* for(x in this.connections){
 
@@ -424,11 +461,14 @@ export class ServerEventDispatcher {
 
         if(!newFlag){
 
-             for(x in this.connections){
+             for(var i=0; i<uniqueConnections.length; i++){
 
-                if(clientArray.includes(String(this.connections[x].clientId))&&String(this.connections[x].clientId!=String(json.client_id))){
+                    //console.log('this.connections Broadcast'+this.connections[i].clientId);
 
-                    filteredConnections.push(this.connections[x].connection);
+                if(clientArray.includes(String(uniqueConnections[i].clientId))&&String(uniqueConnections[i].clientId!=String(json.client_id))){
+
+                    filteredConnections.push(uniqueConnections[i].connection);
+                    console.log('Filtered Connections'+uniqueConnections[i].clientId);
 
                 }
 
@@ -439,11 +479,14 @@ export class ServerEventDispatcher {
         }
         else{
 
-            for(x in this.connections){
+            for(var i=0; i<uniqueConnections.length; i++){
 
-                if(clientArray.includes(String(this.connections[x].clientId))){
+                console.log('Unique Connections Broadcast'+uniqueConnections[i].clientId);
 
-                    filteredConnections.push(this.connections[x].connection);
+                if(clientArray.includes(String(uniqueConnections[i].clientId))){
+
+                    filteredConnections.push(uniqueConnections[i].connection);
+                    console.log('Filtered Connections'+uniqueConnections[i].clientId);
 
                 }
 
@@ -474,9 +517,10 @@ export class ServerEventDispatcher {
 
         console.log('Filtered Connections: '+filteredConnections);*/
 
-        for(var x in filteredConnections){
+        for(var i=0; i<filteredConnections.length; i++){
 
-            this.send(payloadString, filteredConnections[x]);
+            console.log('Filter connections length: '+filteredConnections.length);
+            this.send(payloadString, filteredConnections[i]);
 
         }
 
@@ -613,6 +657,27 @@ export class ServerEventDispatcher {
 
         function onCloseEvent(evt: CloseEvent): any {
            // ServerEventDispatcher.dispatch(Commands.client.CLIENT_DISCONNECT, { data: client_id.toString() }, 0, client_id);
+
+           var clientId;
+
+           for(var x=0; x<this.connections.length; x++){
+
+                if(this.connections[x].connection==ws){
+
+                    clientId = this.connections[x].clientId;
+                    this.connections = this.connections.filter(function(value, index, arr){
+
+                        return index!=x
+
+                    });
+
+                    ClientOperations.deleteClient(clientId);
+
+                }
+
+           }
+
+           
         }
 
         function onErrorEvent(evt: ErrorEvent) {
