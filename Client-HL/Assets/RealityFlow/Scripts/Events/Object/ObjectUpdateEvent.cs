@@ -22,8 +22,8 @@ namespace Assets.RealityFlow.Scripts.Events
 
         public void Send(FlowTObject transformToSend)
         {
-            obj = transformToSend;
-            obj.Read();
+            obj = new FlowTObject();
+            obj.Copy(transformToSend);
 
             project = new FlowProject(Config.projectId);
             client = new FlowClient(Config.deviceId);
