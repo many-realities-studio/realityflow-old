@@ -1,11 +1,8 @@
+import * as mongoose from "mongoose";
 import { User, IUserModel } from "../models/user";
-import { ServerEventDispatcher } from "../server";
-import { Commands } from "../common/commands";
-import { userInfo } from "os";
+import { AssertionError } from "assert";
 
-let sockServ: ServerEventDispatcher;
-let user_hash: string[];
-let client_hash: string[];
+var objectId = mongoose.Types.ObjectId();
 
 export class UserOperations {
 
@@ -13,12 +10,16 @@ export class UserOperations {
 
         var newUser;
 
+        console.log('Entering CreateUser...');
+        console.log('UserInfo Username: '+userInfo.username);
+        console.log('UserInfo Password: '+userInfo.password);
+
         var hashedUserInfo = this.hashUserInfo(userInfo.username, userInfo.password);
 
         var newUser = new User({
 
-            username: hashedUserInfo.username,
-            password: hashedUserInfo.password,
+            username: userInfo.username,
+            password: userInfo.password,
             clients: undefined,
             activeProject: undefined,
             projects: undefined,
@@ -26,35 +27,40 @@ export class UserOperations {
 
         });
 
-        newUser.save(function(err, doc){
+        console.log('User Presave: '+newUser);
 
-            if(err){
 
-                console.log('ERROR: Failed to create user: ' + userInfo.username);
+        var promise = newUser.save();
 
-            }
-            else{
+            console.log('Save User: '+newUser);
+
+        promise.then(function(err, doc){
 
                 console.log('User ' + userInfo.username + ' added successfully.');
                 newUser = doc;
 
-            }
+            return newUser;    
         });
 
-        return newUser;
+        return promise;
+
     }
 
     public static findUser(userInfo: any){
 
         var returnedUser;
 
-        User.findById({_id: userInfo._id}, function(err, doc){
+        var promise = User.findById({_id: userInfo._id}).exec();
+        
+        promise.then(function(err, doc){
 
             returnedUser = doc;
 
+            return returnedUser;
+        
         });
 
-        return returnedUser;
+        return promise;
 
     }
 
@@ -68,17 +74,15 @@ export class UserOperations {
 
        var hashedUserInfo = this.hashUserInfo(userInfo.username, userInfo.password);
 
-        User.find({username: hashedUserInfo.username, password: hashedUserInfo.password}, {lean: true}, function(err, doc){
+       console.log("looking for user: " + userInfo.username + " with password: " + userInfo.password);
+         var promise = User.findOne({username:"test", password:"test"}).exec();
 
-            if(err){
+         promise.then(function(doc){
 
-                console.log('Error');
-                returnedUser.isLoggedIn = false;
-            }
-            else if(!doc){
+            if(doc==undefined){
 
                 returnedUser.isLoggedIn = false;
-
+                console.log('No doc found');
             }
             else{
 
@@ -87,9 +91,15 @@ export class UserOperations {
 
             }
 
+            console.log('Returned User payload Doc: '+doc);
+            console.log('Returned User isLoggedIn: '+returnedUser.isLoggedIn);
+            console.log('Returned User ID: '+returnedUser._id);
+
+            return returnedUser;
+            
         });
 
-        return returnedUser;
+        return promise;
 
     }
 

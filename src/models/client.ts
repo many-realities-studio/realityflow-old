@@ -6,15 +6,13 @@ import ObjectIdType = mongoose.Types.ObjectId;
 import { User } from "./user";
 
 export declare interface IClientModel extends mongoose.Document {
-    _id:            String;
     user:           ObjectIdType;
     deviceType:     Number;
 }
 
 const clientSchema = new mongoose.Schema({
-    _id:            String,
     user:           {type: ObjectId, ref: User},
     deviceType:     Number
-});
+},{usePushEach: true} );
 
-export let Client = mongoose.model<IClientModel>("Client", clientSchema);
+export const Client = mongoose.model<IClientModel>("Client", clientSchema);

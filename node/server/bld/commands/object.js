@@ -1,10 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var mongoose = require("mongoose");
+const mongoose = require("mongoose");
 const object_1 = require("../models/object");
+var objectId = mongoose.Types.ObjectId();
 class ObjectOperations {
     static createObject(objectInfo) {
         var object;
+        console.log('Entering createObject...');
+        console.log('ObjectInfo type: ' + objectInfo.type);
+        console.log('ObjectInfo name: ' + objectInfo.name);
         var newObject = new object_1.Object({
             type: objectInfo.type,
             name: objectInfo.name,
@@ -23,31 +27,25 @@ class ObjectOperations {
             uv: objectInfo.uv,
             locked: objectInfo.locked
         });
-        newObject.save(function (err, doc) {
-            if (err) {
-                console.log('ERROR: Failed to create object: ' + doc.name);
-            }
-            else {
-                console.log('Object ' + doc.name + ' added successfully.');
-                object = doc;
-            }
+        var promise = newObject.save();
+        promise.then(function (doc) {
+            console.log('Object ' + doc.name + ' added successfully.');
+            object = doc;
+            return object;
         });
-        return object;
+        return promise;
     }
-    static findObject(objectInfo) {
+    static findObject(objectInfoId) {
         var object;
-        object_1.Object.findById(objectInfo._id, function (err, doc) {
-            if (!err) {
-                object = doc;
-            }
+        var promise = object_1.Object.findById(objectInfoId).exec();
+        promise.then(function (doc) {
+            object = doc;
+            return object;
         });
-        return object;
+        return promise;
     }
     static updateObject(objectInfo) {
-        object_1.Object.findOneAndUpdate({ _id: objectInfo._id }, {
-            type: objectInfo.type,
-            name: objectInfo.name,
-            triangles: objectInfo.triangles,
+        var promise = object_1.Object.findOneAndUpdate({ _id: objectInfo._id }, {
             x: objectInfo.x,
             y: objectInfo.y,
             z: objectInfo.z,
@@ -58,17 +56,11 @@ class ObjectOperations {
             s_x: objectInfo.s_x,
             s_y: objectInfo.s_y,
             s_z: objectInfo.s_z,
-            vertices: objectInfo.vertices,
-            uv: objectInfo.uv,
-            locked: objectInfo.locked
-        }, function (err) {
-            if (err) {
-                console.log('ERROR: Failed to update object: ' + objectInfo.name);
-            }
-            else {
-                console.log('Object ' + objectInfo.name + ' updated successfully.');
-            }
+        }).exec();
+        promise.then(function (doc) {
+            console.log('Object ' + doc.name + ' updated successfully.');
         });
+        return promise;
     }
     static deleteObject(objectInfo) {
         object_1.Object.findByIdAndRemove(objectInfo._id);

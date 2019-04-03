@@ -1,18 +1,23 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const commands_1 = require("./common/commands");
 const express = require("express");
 const http = require("http");
 const ws_1 = require("ws");
+const mongoose = require("mongoose");
 const user_1 = require("./commands/user");
 const client_1 = require("./commands/client");
 const project_1 = require("./commands/project");
-const scene_1 = require("./commands/scene");
 const object_1 = require("./commands/object");
-var mongoose = require('mongoose');
 var database;
-let user_hash = [];
-let client_hash = [];
 const dburl = "mongodb://127.0.0.1:27017/realityflowdb";
 class ServerEventDispatcher {
     constructor(server) {
@@ -33,194 +38,213 @@ class ServerEventDispatcher {
         ServerEventDispatcher.wss.on("connection", this.connection);
     }
     static serverMessageProcessor(json, connection) {
-        console.log("Entering Message Processor");
-        var command = json.command;
-        if (command >= commands_1.Commands.object.CREATE && command <= commands_1.Commands.object.DELETE) {
-            switch (command) {
-                case commands_1.Commands.object.CREATE: {
-                    var object = object_1.ObjectOperations.createObject(json.object);
-                    var project = project_1.ProjectOperations.findProject(json.project._id);
-                    var sceneId = project.currentScene;
-                    var scene = scene_1.SceneOperations.findScene(sceneId);
-                    scene.objects.push(object._id);
-                    var payloadString = JSON.stringify({
-                        object: object
-                    });
-                    this.send(payloadString, connection);
-                    break;
-                }
-                case commands_1.Commands.object.UPDATE: {
-                    this.broadcast(json);
-                    object_1.ObjectOperations.updateObject(json.object);
-                    break;
-                }
-                case commands_1.Commands.object.DELETE: {
-                    this.broadcast(json);
-                    object_1.ObjectOperations.deleteObject(json.object);
-                    break;
-                }
-            }
-        }
-        else if (command >= commands_1.Commands.project.CREATE && command <= commands_1.Commands.project.DELETE) {
-            switch (command) {
-                case commands_1.Commands.project.CREATE: {
-                    project = project_1.ProjectOperations.createProject(json.project, json.client, json.user);
-                    json.scene._parentId = project._id;
-                    var scene = scene_1.SceneOperations.createScene(json.scene);
-                    project.currentScene = scene._id;
-                    var payloadString = JSON.stringify({
-                        project: project,
-                        scene: scene
-                    });
-                    this.send(payloadString, connection);
-                    break;
-                }
-                case commands_1.Commands.project.UPDATE: {
-                    break;
-                }
-                case commands_1.Commands.project.FETCH: {
-                    break;
-                }
-                case commands_1.Commands.project.OPEN: {
-                    var project = project_1.ProjectOperations.findProject(json.project._id);
-                    var scene = scene_1.SceneOperations.findScene(project.currentScene);
-                    var objectIds = scene.objects;
-                    var objects = [];
-                    for (var x in objectIds) {
-                        objects.push(object_1.ObjectOperations.findObject({ _id: x }));
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log("Entering Message Processor");
+            var command = json.command;
+            if (command >= commands_1.Commands.object.CREATE && command <= commands_1.Commands.object.DELETE) {
+                switch (command) {
+                    case commands_1.Commands.object.CREATE: {
+                        console.log('Object: ' + json.obj);
+                        var object = yield object_1.ObjectOperations.createObject(json.obj);
+                        var project = yield project_1.ProjectOperations.findProject(json.project);
+                        console.log('Project: ' + project);
+                        project.objs.push(object._id);
+                        yield project.save();
+                        json.project = project;
+                        json.obj._id = object._id;
+                        this.broadcast(json, true);
+                        break;
                     }
-                    var payloadString = JSON.stringify({
-                        scene: scene,
-                        object: objects
-                    });
-                    this.send(payloadString, connection);
-                    break;
-                }
-                case commands_1.Commands.project.DELETE: {
-                    break;
-                }
-            }
-        }
-        else if (command >= commands_1.Commands.scene.CREATE && command <= commands_1.Commands.scene.DELETE) {
-            switch (command) {
-                case commands_1.Commands.scene.CREATE: {
-                    break;
-                }
-                case commands_1.Commands.scene.UPDATE: {
-                    break;
-                }
-                case commands_1.Commands.scene.DELETE: {
-                    break;
+                    case commands_1.Commands.object.UPDATE: {
+                        this.broadcast(json, false);
+                        yield object_1.ObjectOperations.updateObject(json.obj);
+                        break;
+                    }
+                    case commands_1.Commands.object.DELETE: {
+                        this.broadcast(json, true);
+                        object_1.ObjectOperations.deleteObject(json.obj);
+                        break;
+                    }
                 }
             }
-        }
-        else if (command >= commands_1.Commands.user.CREATE && command <= commands_1.Commands.user.DELETE) {
-            switch (command) {
-                case commands_1.Commands.user.CREATE: {
-                    var newUser = user_1.UserOperations.createUser(json.user);
-                    var newClientId = client_1.ClientOperations.createClient(json.client, newUser._id, connection);
-                    console.log("Received user registration!");
-                    var connectionTracker = {
-                        clientId: newClientId,
-                        connection: connection
-                    };
-                    this.connections.push(connectionTracker);
-                    newUser.clients.push(newClientId);
-                    json.user = newUser;
-                    json.client._id = newClientId;
-                    var payloadString = JSON.stringify(json);
-                    this.send(payloadString, connection);
-                    break;
+            else if (command >= commands_1.Commands.project.CREATE && command <= commands_1.Commands.project.DELETE) {
+                switch (command) {
+                    case commands_1.Commands.project.CREATE: {
+                        var project = yield project_1.ProjectOperations.createProject(json.project, json.client, json.user);
+                        project.clients.push(json.client._id);
+                        yield project.save();
+                        console.log('Project Created. Project ID: ' + project);
+                        json.project = project;
+                        var payloadString = JSON.stringify(json);
+                        this.send(payloadString, connection);
+                        break;
+                    }
+                    case commands_1.Commands.project.UPDATE: {
+                        break;
+                    }
+                    case commands_1.Commands.project.FETCH: {
+                        break;
+                    }
+                    case commands_1.Commands.project.OPEN: {
+                        var project = yield project_1.ProjectOperations.findProject(json.project);
+                        console.log("Project Clients: " + project.clients);
+                        project.clients.push(json.client._id);
+                        yield project.save();
+                        console.log('Project: ' + project);
+                        var objectIds = project.objs;
+                        var objects = [];
+                        console.log('Object IDs Length: ' + objectIds.length);
+                        console.log("Object IDs: " + objectIds);
+                        if (objectIds.length > 0) {
+                            console.log('CHECK');
+                            for (var i = 0; i < objectIds.length; i++) {
+                                console.log('X: ' + objectIds[i]);
+                                var currentObject = yield object_1.ObjectOperations.findObject(objectIds[i]);
+                                objects.push(currentObject);
+                            }
+                            console.log("Objects: " + objects);
+                        }
+                        json.objs = objects;
+                        var payloadString = JSON.stringify(json);
+                        this.send(payloadString, connection);
+                        break;
+                    }
+                    case commands_1.Commands.project.DELETE: {
+                        break;
+                    }
                 }
-                case commands_1.Commands.user.LOGIN: {
-                    var returnedUser = user_1.UserOperations.loginUser(json.user);
-                    if (returnedUser.isLoggedIn) {
-                        var projects = project_1.ProjectOperations.fetchProjects(returnedUser._id);
-                        var newClientId = client_1.ClientOperations.createClient(json.client, returnedUser._id, connection);
-                        var currentUser = user_1.UserOperations.findUser(returnedUser._id);
+            }
+            else if (command >= commands_1.Commands.scene.CREATE && command <= commands_1.Commands.scene.DELETE) {
+                switch (command) {
+                    case commands_1.Commands.scene.CREATE: {
+                        break;
+                    }
+                    case commands_1.Commands.scene.UPDATE: {
+                        break;
+                    }
+                    case commands_1.Commands.scene.DELETE: {
+                        break;
+                    }
+                }
+            }
+            else if (command >= commands_1.Commands.user.CREATE && command <= commands_1.Commands.user.DELETE) {
+                switch (command) {
+                    case commands_1.Commands.user.CREATE: {
+                        var newUserPayload = yield user_1.UserOperations.createUser(json.user);
+                        var newClientId = client_1.ClientOperations.createClient(json.client, newUserPayload._id);
                         var connectionTracker = {
                             clientId: newClientId,
                             connection: connection
                         };
                         this.connections.push(connectionTracker);
-                        currentUser.clients.push(newClientId);
-                        var payloadString = JSON.stringify({
-                            response: 'Login Successful',
-                            projects: projects,
-                            user: { _id: returnedUser._id },
-                            client: { _id: newClientId }
-                        });
+                        newUserPayload.clients.push(newClientId);
+                        newUserPayload.save();
+                        json.user._id = newUserPayload._id;
+                        json.client._id = newClientId;
+                        var payloadString = JSON.stringify(json);
                         this.send(payloadString, connection);
+                        break;
                     }
-                    else {
-                        var payloadString = JSON.stringify({
-                            response: 'Login Unsuccessful'
+                    case commands_1.Commands.user.LOGIN: {
+                        var returnedUser = yield user_1.UserOperations.loginUser(json.user);
+                        if (returnedUser._id != '' && returnedUser._id != undefined) {
+                            json.user._id = returnedUser._id;
+                            var projects = yield project_1.ProjectOperations.fetchProjects(returnedUser);
+                            var newClientId = client_1.ClientOperations.createClient(json.client, returnedUser._id);
+                            json.client._id = newClientId;
+                            var currentUser = yield user_1.UserOperations.findUser(returnedUser);
+                            console.log('Current User: ' + currentUser);
+                            var connectionTracker = {
+                                clientId: newClientId,
+                                connection: connection
+                            };
+                            this.connections.push(connectionTracker);
+                            console.log('Connections: ' + this.connections.length);
+                            for (var x in this.connections) {
+                                console.log('Connection Client IDs: ' + this.connections[x].clientId);
+                            }
+                            currentUser.clients.push(newClientId);
+                            currentUser.save();
+                            console.log('Current User 2: ' + currentUser);
+                            json.projects = projects;
+                            var payloadString = JSON.stringify(json);
+                            this.send(payloadString, connection);
+                        }
+                        else {
+                            var payloadString = JSON.stringify(json);
+                            this.send(payloadString, connection);
+                        }
+                        break;
+                    }
+                    case commands_1.Commands.user.LOGOUT: {
+                        var user = user_1.UserOperations.findUser(json.user._id);
+                        var clientArray = user.clients;
+                        var filteredArray = clientArray.filter(function (value, index, array) {
+                            return value != json.client._id;
                         });
+                        user.clients = filteredArray;
+                        client_1.ClientOperations.deleteClient(json.client._id);
+                        var payloadString = JSON.stringify(json);
                         this.send(payloadString, connection);
+                        var connectionIndex = this.connections.findIndex(x => x.clientId === json.client._id);
+                        delete this.connections[connectionIndex];
+                        break;
                     }
-                    break;
-                }
-                case commands_1.Commands.user.LOGOUT: {
-                    var user = user_1.UserOperations.findUser(json.user._id);
-                    var clientArray = user.clients;
-                    var filteredArray = clientArray.filter(function (value, index, array) {
-                        return value != json.client._id;
-                    });
-                    user.clients = filteredArray;
-                    client_1.ClientOperations.deleteClient(json.client._id);
-                    var payloadString = JSON.stringify({
-                        response: 'Logout Successful'
-                    });
-                    this.send(payloadString, connection);
-                    var connectionIndex = this.connections.findIndex(x => x.clientId === json.client._id);
-                    delete this.connections[connectionIndex];
-                    break;
-                }
-                case commands_1.Commands.user.FIND: {
-                    break;
-                }
-                case commands_1.Commands.user.DELETE: {
-                    var User = user_1.UserOperations.findUser(json.user);
-                    var clientArray = User.clients;
-                    for (var arr in clientArray) {
-                        client_1.ClientOperations.deleteClient(arr);
+                    case commands_1.Commands.user.FIND: {
+                        break;
                     }
-                    user_1.UserOperations.deleteUser(json.user);
-                    var payloadString = JSON.stringify({
-                        response: 'User deleted successfully'
-                    });
-                    break;
+                    case commands_1.Commands.user.DELETE: {
+                        var User = user_1.UserOperations.findUser(json.user);
+                        var clientArray = User.clients;
+                        for (var arr in clientArray) {
+                            client_1.ClientOperations.deleteClient(arr);
+                        }
+                        user_1.UserOperations.deleteUser(json.user);
+                        var payloadString = JSON.stringify(json);
+                        break;
+                    }
                 }
             }
-        }
-        else {
-            console.log('ERROR: Invalid Command');
-        }
-    }
-    static broadcast(json) {
-        var payloadString = JSON.stringify(json);
-        var project = project_1.ProjectOperations.findProject(json.project._id);
-        var clientArray = project.clients;
-        var filteredClientArray = clientArray.filter(function (value, index, arr) {
-            return value != json.client._id;
+            else {
+                console.log('ERROR: Invalid Command');
+            }
         });
-        var index;
-        var filteredConnections = [];
-        for (var x in filteredClientArray) {
-            index = this.connections.findIndex(y => y.clientId === x);
-            filteredConnections.push(this.connections[index].connection);
-        }
-        for (var x in filteredConnections) {
-            this.send(payloadString, x);
-        }
+    }
+    static broadcast(json, newFlag) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var payloadString = JSON.stringify(json);
+            var project = yield project_1.ProjectOperations.findProject(json.project);
+            var clientArray = String(project.clients);
+            var filteredClientArray = [];
+            var filteredConnections = [];
+            if (!newFlag) {
+                for (x in this.connections) {
+                    if (clientArray.includes(String(this.connections[x].clientId)) && String(this.connections[x].clientId != String(json.client_id))) {
+                        filteredConnections.push(this.connections[x].connection);
+                    }
+                }
+            }
+            else {
+                for (x in this.connections) {
+                    if (clientArray.includes(String(this.connections[x].clientId))) {
+                        filteredConnections.push(this.connections[x].connection);
+                    }
+                }
+            }
+            for (var x in filteredConnections) {
+                this.send(payloadString, filteredConnections[x]);
+            }
+        });
     }
     static send(payloadString, connection) {
         let payload = Buffer.alloc(payloadString.length, payloadString);
-        connection.send(payload);
+        connection.send(payload, function ack(err) {
+            if (err == undefined) {
+                console.log('Payload sent successfully!');
+            }
+        });
     }
     connection(ws, arg) {
-        console.log(ws);
-        ServerEventDispatcher.connections.push(ws);
         var connection = ws;
         function onMessageEvent(evt) {
             const json = JSON.parse(evt.data);

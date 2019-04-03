@@ -1,12 +1,17 @@
-var mongoose = require("mongoose");
-
+import * as mongoose from "mongoose";
 import {Object, IObjectModel} from "../models/object";
+
+var objectId = mongoose.Types.ObjectId();
 
 export class ObjectOperations {
 
     public static createObject(objectInfo: any)
     {
         var object;
+
+        console.log('Entering createObject...');
+        console.log('ObjectInfo type: '+objectInfo.type);
+        console.log('ObjectInfo name: '+objectInfo.name);
 
         var newObject = new Object({
 
@@ -29,48 +34,41 @@ export class ObjectOperations {
 
         });
 
-        newObject.save(function(err, doc){
+        var promise = newObject.save();
 
-            if(err){
-
-                console.log('ERROR: Failed to create object: ' + doc.name);
-
-            }
-            else{
+        promise.then(function(doc){
 
                 console.log('Object ' + doc.name + ' added successfully.');
                 object = doc;
 
-            }
+                return object;
+
         });
 
-        return object;
+        return promise;
     }
 
-    public static findObject(objectInfo: any)
+    public static findObject(objectInfoId: any)
     {
         var object;
 
-        Object.findById(objectInfo._id, function(err, doc){
+        var promise = Object.findById(objectInfoId).exec();
 
-            if(!err){
+        promise.then(function(doc){
 
                 object = doc;
-
-            }
+                return object;
 
         });
 
-        return object;
+        return promise;
+        
     }
 
     public static updateObject(objectInfo: any)
     {
-        Object.findOneAndUpdate({_id: objectInfo._id}, {
+        var promise = Object.findOneAndUpdate({_id: objectInfo._id}, {
 
-            type:       objectInfo.type,
-            name:       objectInfo.name,
-            triangles:  objectInfo.triangles,
             x:          objectInfo.x,
             y:          objectInfo.y,
             z:          objectInfo.z,
@@ -81,24 +79,16 @@ export class ObjectOperations {
             s_x:        objectInfo.s_x,
             s_y:        objectInfo.s_y,
             s_z:        objectInfo.s_z,
-            vertices:   objectInfo.vertices,
-            uv:         objectInfo.uv,
-            locked:     objectInfo.locked
 
-        }, function(err){
+        }).exec();
 
-            if(err){
+        promise.then(function(doc){
 
-                console.log('ERROR: Failed to update object: ' + objectInfo.name);
-
-            }
-            else{
-
-                console.log('Object ' + objectInfo.name + ' updated successfully.');
-
-            }
+                console.log('Object ' + doc.name + ' updated successfully.');
 
         });
+
+        return promise;
     }
 
     public static deleteObject(objectInfo: any)

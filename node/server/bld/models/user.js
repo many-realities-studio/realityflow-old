@@ -7,12 +7,11 @@ var ObjectId = Types.ObjectId;
 const project_1 = require("./project");
 const client_1 = require("./client");
 const userSchema = new mongoose.Schema({
-    _id: String,
     username: String,
     password: String,
     clients: [{ type: ObjectId, ref: client_1.Client }],
     activeProject: { type: ObjectId, ref: project_1.Project },
     projects: [{ type: ObjectId, ref: project_1.Project }],
     friends: [{ type: ObjectId, ref: 'User' }]
-});
+}, { usePushEach: true });
 exports.User = mongoose.model("User", userSchema);

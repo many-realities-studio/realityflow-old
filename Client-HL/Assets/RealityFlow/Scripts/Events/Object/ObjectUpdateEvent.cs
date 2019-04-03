@@ -10,8 +10,10 @@ namespace Assets.RealityFlow.Scripts.Events
     [System.Serializable]
     public class ObjectUpdateEvent : FlowEvent
     {
-        public FlowTObject transform;
+        public FlowTObject obj;
         public static int scmd = Commands.FlowObject.UPDATE;
+        public FlowProject project;
+        public FlowClient client;
 
         public ObjectUpdateEvent()
         {
@@ -20,11 +22,11 @@ namespace Assets.RealityFlow.Scripts.Events
 
         public void Send(FlowTObject transformToSend)
         {
-            transform = transformToSend;
-            transform.Read();
+            obj = new FlowTObject();
+            obj.Copy(transformToSend);
 
-            project_id = Config.projectId;
-            client_id = Config.deviceId;
+            project = new FlowProject(Config.projectId);
+            client = new FlowClient(Config.deviceId);
 
             CommandProcessor.sendCommand(this);
         }
@@ -37,10 +39,10 @@ namespace Assets.RealityFlow.Scripts.Events
         public static string Receive()
         {
             ObjectUpdateEvent trans_update_cmd = JsonUtility.FromJson<ObjectUpdateEvent>(FlowNetworkManager.reply);
-            FlowTObject local_transform = FlowProject.activeProject.transformsById[trans_update_cmd.transform._id];
-            if (trans_update_cmd.transform._id != "1")
+            FlowTObject local_transform = FlowProject.activeProject.transformsById[trans_update_cmd.obj._id];
+            if (trans_update_cmd.obj._id != "1")
             {
-                local_transform.Copy(trans_update_cmd.transform);
+                local_transform.Copy(trans_update_cmd.obj);
                 local_transform.Update();
             }
 

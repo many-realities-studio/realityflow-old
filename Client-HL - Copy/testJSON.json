@@ -1,0 +1,36 @@
+<<<<<<< HEAD
+{
+	"objects" :[
+	{
+		"prefab" : "Capsule",
+		"position" : "(2,0,0)",
+		"rotation" : "Quaternion.identity",
+		"scale" : "(1,1,1)",
+		"name" : "testCapsule"
+	},
+	{
+    		"prefab" : "Cube",
+    		"position": "(0,0,0)",
+    		"rotation": "Quaternion.identity",
+    		"scale": "(1,1,1)",
+    		"name": "testCube"
+ 	}]
+=======
+{
+	"objects" :[
+	{
+		"prefab" : "Capsule",
+		"position" : "(2,0,0)",
+		"rotation" : "Quaternion.identity",
+		"scale" : "(1,1,1)",
+		"name" : "testCapsule"
+	},
+	{
+    		"prefab" : "Cube",
+    		"position": "(0,0,0)",
+    		"rotation": "Quaternion.identity",
+    		"scale": "(1,1,1)",
+    		"name": "testCube"
+ 	}]
+>>>>>>> 8592be32e56dfeab7e1fa58ed0fe1b8046b73170
+}

@@ -1,55 +1,64 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var bcrypt = require("bcrypt");
-var mongoose = require("mongoose");
+const mongoose = require("mongoose");
 const project_1 = require("../models/project");
-const user_1 = require("./user");
+var objectId = mongoose.Types.ObjectId();
 class ProjectOperations {
     static createProject(projectInfo, clientInfo, userInfo) {
-        var newProjectId;
+        console.log('Entering Create Project...');
+        var newProjectDoc;
         var newProject = new project_1.Project({
             projectName: projectInfo.projectName,
             owner: userInfo._id,
             clients: [],
+            objs: [],
             currentScene: undefined,
             prevScene: undefined,
             nextScene: undefined,
-            bookmarks: [],
+            bookmarks: undefined,
             created: projectInfo.created,
             lastEdit: projectInfo.lastEdit,
             lastEditor: projectInfo.lastEditor
         });
-        newProject.clients.push(clientInfo._id);
-        newProject.save(function (err, doc) {
-            if (err) {
-                console.log('ERROR: Failed to create project: ' + projectInfo.projectName);
-            }
-            else {
-                console.log('Project ' + projectInfo.projectName + ' added successfully.');
-                newProject = doc;
-            }
+        var promise = newProject.save();
+        promise.then(function (doc) {
+            console.log('Project ' + projectInfo.projectName + ' added successfully.');
+            newProjectDoc = doc;
+            return newProjectDoc;
         });
-        userInfo.projects.push(newProjectId);
-        user_1.UserOperations.updateUser(userInfo);
-        return newProject;
+        return promise;
+    }
+    static saveProject(project) {
+        var promise = project.save();
+        promise.then(function (doc) {
+            return doc;
+        });
+        return promise;
     }
     static fetchProjects(userInfo) {
+        console.log('Entering Fetch Projects:');
+        console.log('User Id: ' + userInfo._id);
         var projects = [];
-        project_1.Project.find({ owner: userInfo._id }, { lean: true }, function (err, docs) {
-            if (!err) {
-                projects = docs;
-            }
+        var promise = project_1.Project.find({ owner: userInfo._id }, '_id projectName').exec();
+        promise.then(function (docs) {
+            projects.push(docs);
+            console.log('Projects: ' + projects);
+            return projects;
         });
-        return projects;
+        return promise;
     }
     static findProject(projectInfo) {
+        console.log('Entering findProject...');
         var project;
-        project_1.Project.findById(projectInfo._id, { lean: true }, function (err, doc) {
-            if (!err) {
-                project = doc;
-            }
+        console.log('Project ID: ' + projectInfo._id);
+        var promise = project_1.Project.findById(projectInfo._id).exec();
+        promise.then(function (doc) {
+            console.log('DOC: ' + doc);
+            project = doc;
+            return project;
         });
-        return project;
+        console.log('Promise: ' + promise);
+        return promise;
     }
     static deleteProject(projectInfo) {
         project_1.Project.findByIdAndRemove(projectInfo._id);

@@ -7,9 +7,9 @@ public class FlowProject : FlowValue
 {
     public int _uid;
     public string description;
-    public int dateCreated;
+    public int created;
     public int dateModified;
-    public string name;
+    public string projectName;
     public List<FlowTObject> transforms;
     [System.NonSerialized]
     public Dictionary<string, FlowTObject> transformsById;
@@ -21,15 +21,13 @@ public class FlowProject : FlowValue
 
     [System.NonSerialized]
     public List<GameObject> objs = new List<GameObject>();
-
     
     [System.NonSerialized]
     public static FlowProject activeProject;
 
-    public FlowProject(string nameOrId)
+    public FlowProject(string id)
     {
-        name = nameOrId;
-        _id = nameOrId;
+        _id = id;
     }
 
     public FlowProject()
