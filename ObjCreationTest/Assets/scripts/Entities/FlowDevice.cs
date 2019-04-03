@@ -4,8 +4,8 @@ using UnityEngine;
 public class FlowDevice
 {
     public string _id;
-    public FlowTransform cameraOffset;
-    public FlowTransform cameraRotation;
+    public FlowTObject cameraOffset;
+    public FlowTObject cameraRotation;
     public int resolutionX;
     public int resolutionY;
     public float dpi;
@@ -23,25 +23,25 @@ public class FlowDevice
 
     public FlowDevice()
     {
-        deviceModel = SystemInfo.deviceModel;
-        switch (SystemInfo.deviceType)
-        {
-            case DeviceType.Unknown:
-                deviceType = UNKNOWN;
-                break;
-            case DeviceType.Handheld:
-                deviceType = HANDHELD;
-                break;
-            case DeviceType.Desktop:
-                deviceType = DESKTOP;
-                break;
-        }
-        _id = SystemInfo.deviceUniqueIdentifier;
-        resolutionX = Screen.currentResolution.width;
-        resolutionY = Screen.currentResolution.height;
-        uid = "3";
-        dpi = Screen.dpi;
-        description = SystemInfo.deviceName;
-        cameraRotation = new FlowTransform(FlowCameras.mainCamera.gameObject);
+        //deviceModel = SystemInfo.deviceModel;
+        //switch (SystemInfo.deviceType)
+        //{
+        //    case DeviceType.Unknown:
+        //        deviceType = UNKNOWN;
+        //        break;
+        //    case DeviceType.Handheld:
+        //        deviceType = HANDHELD;
+        //        break;
+        //    case DeviceType.Desktop:
+        //        deviceType = DESKTOP;
+        //        break;
+        //}
+        //_id = SystemInfo.deviceUniqueIdentifier;
+        //resolutionX = Screen.currentResolution.width;
+        //resolutionY = Screen.currentResolution.height;
+        //uid = "3";
+        //dpi = Screen.dpi;
+        //description = SystemInfo.deviceName;
+        //cameraRotation = new FlowTObject(FlowCameras.mainCamera.gameObject);
     }
 }

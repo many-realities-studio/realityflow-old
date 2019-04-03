@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine.UI;
 using System.Runtime.InteropServices;
+using Assets.RealityFlow.Scripts.Events;
 
 /// <summary>
 /// Establishes a connection to the Flow server through websocket connections and handles high-level communication
@@ -12,11 +13,14 @@ using System.Runtime.InteropServices;
 public class FlowNetworkManager : MonoBehaviour
 {
     public bool LocalServer;
+    public static bool debug = false;
 
+    public bool _debug;
     //string LOCAL_SERVER = "ws://echo.websocket.org";
     string LOCAL_SERVER = "ws://localhost:8999";
     string LAN_SERVER = "ws://192.168.1.246:8082";
     string REMOTE_SERVER = "ws://plato.mrl.ai:8999";
+
 
     float selectionSize = .65f;
     public bool music;
@@ -74,21 +78,10 @@ public class FlowNetworkManager : MonoBehaviour
     WebSocket w;
     int thirdFrame = 0;
 
-    [System.Serializable]
-    public struct FlowUser
-    {
-        public String _id;
-        public String username;
-        public String active_project;
-        public List<FlowClient> clients;
-        public FlowState active_State;
-    }
-
-
     public int onFrame = 3;
-    FlowTransform newVal;
+    FlowTObject newVal;
     bool selection = false;
-    FlowTransform cur_transform;
+    FlowTObject cur_transform;
     int count = 0;
 
     public static void ObjectCmd(FlowEvent jsonCmd)
@@ -138,7 +131,7 @@ public class FlowNetworkManager : MonoBehaviour
         else
         {
             Debug.Log("[unity] Connecting");
-            CommandProcessor.sendCommand(Commands.LOGIN, uid.ToString());
+            CommandProcessor.sendCommand(Commands.User.LOGIN, uid.ToString());
             DoOnMainThread.ExecuteOnMainThread.Enqueue(() =>
             {
                 StartCoroutine(ConnectWebsocket());
@@ -176,7 +169,7 @@ public class FlowNetworkManager : MonoBehaviour
         {
             FlowCameras.mainCamera = mainGameCamera.GetComponent<Camera>();
         }
-        mainCanvas = GameObject.Find("DebugCanvas").GetComponent<Canvas>();
+       // mainCanvas = GameObject.Find("DebugCanvas").GetComponent<Canvas>();
         /* if (DebugPanel.instance.forceHolo == true)
         {
             clientType = CLIENT_HOLOLENS;
@@ -212,13 +205,36 @@ public class FlowNetworkManager : MonoBehaviour
         arButton.GetComponent<Button>().colors = cb;
     }
 
-    FlowProject testProject;
+    public static FlowProject testProject;
 
     public void Start()
     {
+        _debug = debug;
         testProject = new FlowProject();
         testProject.initialize();
-        
+
+        CommandProcessor.initializeRecieveEvents();
+
+        //string username = "ram " + DateTime.Now.ToString();
+        //string password = "rem " + DateTime.Now.ToString();
+
+        string username = "test";
+        string password = "test";
+
+        UserRegisterEvent register = new UserRegisterEvent();
+        register.Send(username, password, FlowClient.CLIENT_HOLOLENS);
+
+        //UserLoginEvent login = new UserLoginEvent();
+        //login.Send(username, password);
+
+        //ProjectCreateEvent createProj = new ProjectCreateEvent();
+        //createProj.Send("Subarus Maids2" + DateTime.Now.ToString());
+
+        //ProjectFetchEvent fetchproj = new ProjectFetchEvent();
+        //fetchproj.Send();
+
+
+
 #if !UNITY_EDITOR && UNITY_WEBGL
         WebGLInput.captureAllKeyboardInput = false;
 #endif
@@ -333,14 +349,7 @@ public class FlowNetworkManager : MonoBehaviour
             {
                 Debug.Log("Processing Command");
                 FlowEvent incoming = JsonUtility.FromJson<FlowEvent>(reply);
-                if (incoming.cmd >= Commands.Project.MIN && incoming.cmd <= Commands.Project.MAX)
-                {
-                    CommandProcessor.processProjectCommand(JsonUtility.FromJson<FlowProjectCommand>(reply));
-                }
-                else
-                {
-                    CommandProcessor.processCommand(incoming);
-                }
+                CommandProcessor.processCommand(incoming);
             }
             if (w.error != null)
             {
@@ -353,8 +362,9 @@ public class FlowNetworkManager : MonoBehaviour
                 {
                     StartCoroutine(ConnectWebsocket());
                 });
+
                 Debug.Log("Connect connection");
-                CommandProcessor.sendCommand(Commands.LOGIN, uid.ToString());
+                CommandProcessor.sendCommand(Commands.User.LOGIN, uid.ToString());
                 loggedIn = false;
 #endif
             }
@@ -367,7 +377,7 @@ public class FlowNetworkManager : MonoBehaviour
         Debug.Log("[unity] Logged in");
         DebugPanel.instance.clientIdentityValue.GetComponent<Text>().text = uid + " " + GetUsername();
         loggedIn = true;
-        CommandProcessor.sendCommand(Commands.LOGIN, uid.ToString());
+        CommandProcessor.sendCommand(Commands.User.LOGIN, uid.ToString());
         //DoOnMainThread.ExecuteOnMainThread.Enqueue(() => { StartCoroutine(ConnectWebsocket()); });
     }
 
@@ -376,14 +386,29 @@ public class FlowNetworkManager : MonoBehaviour
         Debug.Log("LoggedIn");
         //DebugPanel.instance.clientIdentityValue.GetComponent<Text>().text = uid + " " + GetUsername();
         loggedIn = true;
-        CommandProcessor.sendCommand(Commands.LOGIN, uid.ToString());
+        CommandProcessor.sendCommand(Commands.User.LOGIN, uid.ToString());
     }
 
     /// <summary>
     /// Update is called every frame, if the MonoBehaviour is enabled.
     /// </summary>
+    /// 
+
+    bool registered = false;
     public void Update()
     {
+        debug = _debug;
+
+        //if (Config.userId != "-9999" && !registered)
+        //{
+        //    ProjectCreateEvent createProj = new ProjectCreateEvent();
+        //    createProj.Send("Subarus Maids2" + DateTime.Now.ToString());
+
+        //    ProjectFetchEvent fetchproj = new ProjectFetchEvent();
+        //    fetchproj.Send();
+
+        //    registered = true;
+        //}
 
         // Start with delete key.
         if (Input.GetKeyDown(KeyCode.Delete))
@@ -411,7 +436,7 @@ public class FlowNetworkManager : MonoBehaviour
         {
             Debug.Log("Processing Command");
             FlowEvent incoming = JsonUtility.FromJson<FlowEvent>(reply);
-            if (incoming.cmd >= Commands.Project.MIN && incoming.cmd <= Commands.Project.MAX)
+            if (incoming.command >= Commands.Project.MIN && incoming.command <= Commands.Project.MAX)
             {
                 CommandProcessor.processProjectCommand(JsonUtility.FromJson<FlowProjectCommand>(reply));
             }
@@ -441,14 +466,14 @@ public class FlowNetworkManager : MonoBehaviour
 
     public static int primitiveID = 0;
 
-    public void CreateText()
-    {
-        FlowEvent createCubeEvent = new FlowEvent();
-        createCubeEvent.cmd = Commands.Droplet.types.TEXT;
-        createCubeEvent.value = new FlowPayload(Commands.Droplet.types.TEXT.ToString());
-        //        CommandProcessor.EditorCommandProcessor(createCubeEvent);
-        CommandProcessor.sendCommand(createCubeEvent);
-    }
+    //public void CreateText()
+    //{
+    //    FlowEvent createCubeEvent = new FlowEvent();
+    //    createCubeEvent.cmd = Commands.Droplet.types.TEXT;
+    //    createCubeEvent.value = new FlowPayload(Commands.Droplet.types.TEXT.ToString());
+    //    //        CommandProcessor.EditorCommandProcessor(createCubeEvent);
+    //    CommandProcessor.sendCommand(createCubeEvent);
+    //}
 
     public void SetColor()
     {
@@ -509,7 +534,7 @@ public class FlowNetworkManager : MonoBehaviour
     public void OnApplicationQuit()
     {
         FlowEvent closeEvent = new FlowEvent();
-        closeEvent.cmd = -1;
+        closeEvent.command = -1;
         CommandProcessor.sendCommand(closeEvent);
         Debug.Log("Closing!!");
         if(w != null && w.connected )

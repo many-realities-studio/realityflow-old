@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class FlowProject
+public class FlowProject : FlowValue
 {
     public int _uid;
-    public String description;
-    public int dateCreated;
+    public string description;
+    public int created;
     public int dateModified;
-    public String name;
-    public List<FlowTransform> transforms;
+    public string projectName;
+    public List<FlowTObject> transforms;
     [System.NonSerialized]
-    public Dictionary<string, FlowTransform> transformsById;
+    public Dictionary<string, FlowTObject> transformsById;
     [System.NonSerialized]
     public List<int> collaborators;
     public List<int> activeConnections;
@@ -21,10 +21,19 @@ public class FlowProject
 
     [System.NonSerialized]
     public List<GameObject> objs = new List<GameObject>();
-
     
     [System.NonSerialized]
     public static FlowProject activeProject;
+
+    public FlowProject(string id)
+    {
+        _id = id;
+    }
+
+    public FlowProject()
+    {
+
+    }
 
     public void initialize()
     {
@@ -32,9 +41,9 @@ public class FlowProject
         if (!initialized)
         {
             initialized = true;
-            transformsById = new Dictionary<string, FlowTransform>();
+            transformsById = new Dictionary<string, FlowTObject>();
             if(transforms == null)
-                transforms = new List<FlowTransform>();
+                transforms = new List<FlowTObject>();
             for (int g = 0; g < transforms.Count; g++)
             {
                 transformsById.Add(transforms[g]._id, transforms[g]);

@@ -1,36 +1,43 @@
-﻿using System.Collections;
+﻿using Assets.RealityFlow.Scripts.Events;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 // [ExecuteInEditMode]
 public class FlowObject : MonoBehaviour {
 
-	public bool selected = false;
-	public FlowTransform ft;
-	FlowTransformCommand cmd = new FlowTransformCommand();
+	public bool selected = true;
+	public FlowTObject ft;
+	ObjectUpdateEvent transformUpdateEvent = new ObjectUpdateEvent();
+    bool registered = false;
 	
+	public static List<FlowObject> fos = new List<FlowObject>();
+
 	// Use this for initialization
 	public void Start () {
-	ft = new FlowTransform(gameObject);
-	ft.id = "1";
-	ft._id = "1";
-	cmd.transform = ft;
-	FlowObject.fo = this;
-	//ft.RegisterTransform();
+	    //ft = new FlowTObject(gameObject);
+	    //ft.id = "1";
+	    //ft._id = "1";
+	    fos.Add(this);
+	    //ft.RegisterTransform();
 	}
-	public static FlowObject fo;
 	public static void registerObject() {
-		fo.ft.RegisterTransform();
+        foreach(FlowObject fo in fos)
+		    fo.ft.RegisterTransform();
+
+        fos.Clear();
 	}
 	
 	// Update is called once per frame
 	public void Update () {
+        if (fos.Count > 0 && FlowNetworkManager.testProject != null)
+            registerObject();
+
 		if (selected)
 		{
 			if(FlowNetworkManager.connection_established) 
 			{
-				((FlowTransform)cmd.transform).Read(gameObject);
-				CommandProcessor.sendCommand(cmd);
+                transformUpdateEvent.Send(ft);
 			}
 		}
 	}

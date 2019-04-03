@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using Assets.RealityFlow.Scripts.Events;
 
 public class RealityFlowWindow : EditorWindow {
 
@@ -15,6 +16,8 @@ public class RealityFlowWindow : EditorWindow {
     Rect headerSection;
     Rect bodySection;
 
+    bool loggedIn = false;
+
     GUISkin skin;
 
     int window = 0;
@@ -22,6 +25,7 @@ public class RealityFlowWindow : EditorWindow {
     string uName = "", pWord = "";
 
     string user = "Mago", pass = "12345";
+    string projectName;
 
     static ObjectData objectData;
 
@@ -95,9 +99,16 @@ public class RealityFlowWindow : EditorWindow {
     // Simmilar to update
     private void OnGUI()
     {
+        if (!Config.userId.Equals("-9999") && loggedIn == false)
+        {
+            window = 1;
+            pWord = "";
+            uName = "";
+            loggedIn = true;
+        }
         DrawLayouts();
         DrawHeader();
-        DrawBody();
+        DrawBody();        
     }
 
     // Initializes the texture2d values
@@ -165,41 +176,44 @@ public class RealityFlowWindow : EditorWindow {
 						manager.tag = "ObjManager";
 						manager.AddComponent(typeof(ObjectManager));
 						manager.AddComponent(typeof(FlowNetworkManager));
+                        manager.GetComponent<FlowNetworkManager>()._debug = false;
 						manager.GetComponent<FlowNetworkManager>().LocalServer = Config.LOCAL_HOST;
 						manager.GetComponent<FlowNetworkManager>().mainGameCamera = GameObject.FindGameObjectWithTag("MainCamera");
 						manager.AddComponent(typeof(DoOnMainThread));
 					}
-					
-                    if (uName.Equals(user) && pWord.Equals(pass))
-                    {
-                        FlowLoginCommand lEvent = new FlowLoginCommand();
-                        lEvent.user = new User(uName, pWord);
-                        FlowClient cl = new FlowClient();
-                        cl.type = FlowNetworkManager.clientType;
-                        lEvent.client = cl;
-                        CommandProcessor.sendCommand(lEvent);
-                    }
 
-                    if (Config.userId.Equals("-9999"))
-                    {
-                        window = 1;
-                        pWord = "";
-                        uName = "";
-                        DrawBody();
-                    }
+                    // TODO: username and password for the real thing 
+                    UserLoginEvent login = new UserLoginEvent();
+                    login.Send(uName, pWord);
                 }
+
+                //Debug.Log(Config.userId);
+                //if (Config.userId.Equals("-9999"))
+                //{
+                //    DrawBody();
+                //}
+                //else
+                //{
+                //    window = 1;
+                //    pWord = "";
+                //    uName = "";
+                //    DrawBody();
+                //}
                 break;
             
             case 1:
             if (GUILayout.Button("Logout", GUILayout.Height(20)))
                 {
+                    // TODO: do logout
+                    loggedIn = false;
+                    Config.userId = "-9999";
                     window = 0;
                     Destroy(GameObject.FindGameObjectWithTag("ObjManager"));
                     DrawBody();
                 }
                 if (GUILayout.Button("New Project", GUILayout.Height(40)))
                 {
-                    window = 2;
+                    window = 5;
                     DrawBody();
                 }
                 if (GUILayout.Button("Load Project", GUILayout.Height(40)))
@@ -208,7 +222,6 @@ public class RealityFlowWindow : EditorWindow {
                     DrawBody();
                 }
                 break;
-
             case 2:
                 if (GUILayout.Button("Exit Project", GUILayout.Height(20)))
                 {
@@ -246,6 +259,7 @@ public class RealityFlowWindow : EditorWindow {
                         
                         if (GUILayout.Button(c.name, GUILayout.Height(30)))
                         {
+                            // TODO: replace this with the delete object call
                             DeleteObject(c);
                         }
                     }
@@ -258,26 +272,56 @@ public class RealityFlowWindow : EditorWindow {
                     window = 1;
                     DrawBody();
                 }
+                EditorGUILayout.EndHorizontal();
 
                 if (Config.projectList != null)
                 {
-                    // foreach (KeyValuePair<string, string> c in Config.projectList)
-                    // {
-                    //     if (GUILayout.Button(c.Value, GUILayout.Height(30)))
-                    //     {
-                    //         // load project()
-                    //     }
-                    // }
-
-                    for (int i = 0; i < Config.projectList.Length; i++)
+                    // TODO: get the list of projects in some way or another
+                    foreach (FlowProject c in Config.projectList)
                     {
-                        if (GUILayout.Button(Config.projectList[i].name, GUILayout.Height(30)))
+                        if (GUILayout.Button(c.projectName, GUILayout.Height(30)))
                         {
-                            // load project()
+                            Config.projectId = c._id;
+                            ProjectFetchEvent fetch = new ProjectFetchEvent();
+                            fetch.Send();
+                            window = 2;
+                            //DrawBody();
                         }
                     }
                 }
+                break;
+            // project creation window
+            case 5:
+                EditorGUILayout.BeginHorizontal();
+                GUILayout.Label("Project Name: ");
+                projectName = EditorGUILayout.TextField(projectName);
                 EditorGUILayout.EndHorizontal();
+
+                if (projectName == null || projectName.Equals(""))
+                {
+                    EditorGUILayout.HelpBox("Enter a name for the project", MessageType.Warning);
+                }
+                else
+                {
+                    if (GUILayout.Button("Create Project", GUILayout.Height(40)))
+                    {
+                        // TODO: call create project 
+                        ProjectCreateEvent create = new ProjectCreateEvent();
+                        create.Send(projectName);
+
+                        Debug.Log(Config.projectId);
+                        if (Config.projectId.Equals("-9999"))
+                        {
+                            DrawBody();
+                        }
+                        else
+                        {
+                            window = 2;
+                            projectName = "";
+                            DrawBody();
+                        }
+                    }
+                }
                 break;
         }
         EditorGUILayout.EndScrollView();
@@ -287,18 +331,14 @@ public class RealityFlowWindow : EditorWindow {
     void DeleteObject(GameObject c)
     {
         // create json string
-        string json = "";
-
-        // send json string to server
-
-        // delete game object locally
-        FlowProject.activeProject.transformsById.Remove(c.GetComponent<FlowObject>().ft._id);
-        Destroy(c);
+        ObjectDeleteEvent delete = new ObjectDeleteEvent();
+        delete.Send(c.GetComponent<FlowTObject>()._id);
     }
 
     void ExitProject()
     {
         GameObject gm = GameObject.FindGameObjectWithTag("ObjManager");
+        Config.projectId = "-9999";
 
         if (gm != null)
         {
@@ -415,39 +455,7 @@ public class ObjectSettings : EditorWindow
             manager = new GameObject("ObjManager");
             manager.tag = s;
             managerExists = false;
-        }
-
-        // Get prefab path
-        // prefabPath = AssetDatabase.GetAssetPath(RealityFlowWindow.ObjectInfo.prefab);
-
-        // GameObject objPrefab = (GameObject)AssetDatabase.LoadAssetAtPath(prefabPath, typeof(GameObject));
-
-        // objPrefab = Instantiate(objPrefab, RealityFlowWindow.ObjectInfo.position, 
-        //     Quaternion.Euler( RealityFlowWindow.ObjectInfo.rotation.x, RealityFlowWindow.ObjectInfo.rotation.y, RealityFlowWindow.ObjectInfo.rotation.z));
-
-        GameObject objPrefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        Mesh objMesh = objPrefab.GetComponent<MeshFilter>().mesh;
-        objMesh.vertices = RealityFlowWindow.ObjectInfo.mesh.vertices;
-        objMesh.uv = RealityFlowWindow.ObjectInfo.mesh.uv;
-        objMesh.triangles = RealityFlowWindow.ObjectInfo.mesh.triangles;
-        objMesh.RecalculateBounds();
-        objMesh.RecalculateNormals();
-        objPrefab.transform.localPosition = RealityFlowWindow.ObjectInfo.position;
-        objPrefab.transform.localRotation = Quaternion.Euler(RealityFlowWindow.ObjectInfo.rotation);
-        Destroy(objPrefab.GetComponent<Collider>());
-        objPrefab.AddComponent<BoxCollider>();
-        //objPrefab.GetComponent<BoxCollider>().isTrigger = true;
-
-        // Set the new flowObject as a child of the object manager
-        objPrefab.transform.SetParent(manager.transform);
-        objPrefab.name = RealityFlowWindow.ObjectInfo.objectName;
-        objPrefab.transform.localScale = RealityFlowWindow.ObjectInfo.scale;
-
-        objPrefab.AddComponent(typeof(FlowObject));
-        objPrefab.GetComponent<FlowObject>().Start();
-        objPrefab.GetComponent<FlowObject>().ft._id = "1";
-        objPrefab.GetComponent<FlowObject>().ft.id = "1";
-        FlowProject.activeProject.RegObj();
+        }  
 
         // If the manager was just created add the necessary components
         if (managerExists == false)
@@ -457,85 +465,28 @@ public class ObjectSettings : EditorWindow
             manager.GetComponent<FlowNetworkManager>().LocalServer = Config.LOCAL_HOST;
             manager.GetComponent<FlowNetworkManager>().mainGameCamera = GameObject.FindGameObjectWithTag("MainCamera");
             manager.AddComponent(typeof(DoOnMainThread));
-
-            // GameObject child = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            // child.AddComponent<EditorUpdater>();
-            // child.name = "Updater";
-            // child.transform.SetParent(manager.transform);
-            // child.transform.position = new Vector3(1000,1000,0);
-
-            // manager.GetComponent<FlowNetworkManager>().Awake();
-            // manager.GetComponent<FlowNetworkManager>().Start();
         }
 
-        // Clear all fields in the settings window
-        objData.objectName = "";
-        objData.prefab = null;
-        objData.mesh = null;
-        objData.position = new Vector3(0, 0, 0);
-        objData.rotation = new Vector3(0, 0, 0);
-        objData.scale = new Vector3(1, 1, 1);
+        FlowTObject obj = new FlowTObject();
+        obj.vertices = RealityFlowWindow.ObjectInfo.mesh.vertices;
+        obj.uv = RealityFlowWindow.ObjectInfo.mesh.uv;
+        obj.triangles = RealityFlowWindow.ObjectInfo.mesh.triangles;
+        obj.x = RealityFlowWindow.ObjectInfo.position.x;
+        obj.y = RealityFlowWindow.ObjectInfo.position.y;
+        obj.z = RealityFlowWindow.ObjectInfo.position.z;
+        Quaternion rot = Quaternion.Euler(RealityFlowWindow.ObjectInfo.rotation);
+        obj.q_x = rot.x;
+        obj.q_y = rot.y;
+        obj.q_z = rot.z;
+        obj.q_w = rot.w;
+        obj.s_x = RealityFlowWindow.ObjectInfo.scale.x;
+        obj.s_y = RealityFlowWindow.ObjectInfo.scale.y;
+        obj.s_z = RealityFlowWindow.ObjectInfo.scale.z;
+        obj.type = "BoxCollider";
+        obj.name = RealityFlowWindow.ObjectInfo.objectName;
 
-        CreateFlowObjectCommand fEvent = new CreateFlowObjectCommand();
-        //create json and send to server
-        jsonObject obj = new jsonObject();
-        Mesh mesh = objPrefab.GetComponent<MeshFilter>().mesh;
-        obj.vertices = mesh.vertices;
-        obj.uv = mesh.uv;
-        obj.triangles = mesh.triangles;
-        obj.type = objPrefab.GetComponent<Collider>().GetType().Name; // BoxCollider
-        obj.x = objPrefab.transform.localPosition.x;
-        obj.y = objPrefab.transform.localPosition.y;
-        obj.z = objPrefab.transform.localPosition.z;
-        obj.s_x = objPrefab.transform.localScale.x;
-        obj.s_y = objPrefab.transform.localScale.y;
-        obj.s_z = objPrefab.transform.localScale.z;
-        obj.q_x = objPrefab.transform.localRotation.x;
-        obj.q_y = objPrefab.transform.localRotation.y;
-        obj.q_z = objPrefab.transform.localRotation.z;
-        obj.q_w = objPrefab.transform.localRotation.w;
-        obj.objectName = objPrefab.name;
-        obj.id = objPrefab.GetComponent<FlowObject>().ft.id;
-        obj._id = objPrefab.GetComponent<FlowObject>().ft._id;
-        fEvent.obj = obj;
-        CommandProcessor.sendCommand(fEvent);
-        //obj.id = "";
-        //string json = JsonUtility.ToJson(obj);
-        //Debug.Log(json);
-
-        // //Testing The Json object
-        // jsonObject ret = new jsonObject();
-        // JsonUtility.FromJsonOverwrite(json, ret);
-        // GameObject oo = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        // Mesh newMesh = oo.GetComponent<MeshFilter>().mesh;
-        // newMesh.vertices = ret.vertices;
-        // newMesh.uv = ret.uv;
-        // newMesh.triangles = ret.triangles;
-        // newMesh.RecalculateBounds();
-        // newMesh.RecalculateNormals();
-        // oo.transform.localPosition = new Vector3(ret.x + 3, ret.y, ret.z);
-        // oo.transform.localScale = new Vector3(ret.s_x, ret.s_y, ret.s_z);
-        // oo.transform.localRotation = Quaternion.Euler(new Vector4(ret.q_x, ret.q_y, ret.q_z, ret.q_w));
-        // oo.name = ret.objectName;
-        // oo.AddComponent<FlowObject>();
-        // //oo.GetComponent<FlowObject>().ft.id = ret.id;
-        // Destroy(oo.GetComponent<Collider>());
-    
-        // switch (ret.type)
-    	// {
-    	// 	case "BoxCollider":
-        // 	oo.AddComponent<BoxCollider>();
-        // 		break;
-    	// 	case "CapsuleCollider":
-    	// 	oo.AddComponent<CapsuleCollider>();
-        // 		break;
-        // 	case "SphereCollider":
-    	// 	oo.AddComponent<SphereCollider>();
-    	// 		break;
-        // 	case "MeshCollider":
-        // 	oo.AddComponent<MeshCollider>();
-    	// 		break;
-    	// }
+        ObjectCreationEvent createObject = new ObjectCreationEvent();
+        createObject.Send(obj);
     }
 }
 
