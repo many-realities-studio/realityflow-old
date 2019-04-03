@@ -24,6 +24,7 @@ namespace Assets.RealityFlow.Scripts.Events
         {
             user = new FlowUser(username, password);
             client = new FlowClient(deviceType);
+            Config.deviceType = deviceType;
 
             CommandProcessor.sendCommand(this);
         }
@@ -38,6 +39,7 @@ namespace Assets.RealityFlow.Scripts.Events
             UserRegisterEvent log = JsonUtility.FromJson<UserRegisterEvent>(FlowNetworkManager.reply);
             Config.userId = log.user._id;
             Config.deviceId = log.client._id;
+
 
             return "Receiving user create update: " + FlowNetworkManager.reply;
         }

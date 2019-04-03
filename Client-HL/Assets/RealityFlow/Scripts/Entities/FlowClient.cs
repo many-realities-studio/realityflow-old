@@ -16,6 +16,8 @@ public class FlowClient : FlowValue
     public const int CLIENT_RIPPLE = 2;
     [System.NonSerialized]
     public const int CLIENT_HOLOLENS = 3;
+    [System.NonSerialized]
+    public const int CLIENT_MOBILE = 4;
 
     public FlowClient()
     {

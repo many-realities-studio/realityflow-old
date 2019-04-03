@@ -13,7 +13,7 @@ using Assets.RealityFlow.Scripts.Events;
 public class FlowNetworkManager : MonoBehaviour
 {
     public bool LocalServer;
-    public static bool debug = false;
+    public static bool debug = true;
 
     public bool _debug;
     //string LOCAL_SERVER = "ws://echo.websocket.org";
@@ -221,11 +221,11 @@ public class FlowNetworkManager : MonoBehaviour
         string username = "test";
         string password = "test";
 
-        UserRegisterEvent register = new UserRegisterEvent();
-        register.Send(username, password, FlowClient.CLIENT_HOLOLENS);
+        //UserRegisterEvent register = new UserRegisterEvent();
+        //register.Send(username, password, FlowClient.CLIENT_HOLOLENS);
 
-        //UserLoginEvent login = new UserLoginEvent();
-        //login.Send(username, password);
+        UserLoginEvent login = new UserLoginEvent();
+        login.Send(username, password);
 
         //ProjectCreateEvent createProj = new ProjectCreateEvent();
         //createProj.Send("Subarus Maids2" + DateTime.Now.ToString());
@@ -399,16 +399,19 @@ public class FlowNetworkManager : MonoBehaviour
     {
         debug = _debug;
 
-        //if (Config.userId != "-9999" && !registered)
-        //{
-        //    ProjectCreateEvent createProj = new ProjectCreateEvent();
-        //    createProj.Send("Subarus Maids2" + DateTime.Now.ToString());
+        if (Config.userId != "-9999" && !registered)
+        {
+            //ProjectCreateEvent createProj = new ProjectCreateEvent();
+            //createProj.Send("Subarus Maids1" + DateTime.Now.ToString());
+            //createProj.Send("Subarus Maids2" + DateTime.Now.ToString());
+            //createProj.Send("Subarus Maids3" + DateTime.Now.ToString());
 
-        //    ProjectFetchEvent fetchproj = new ProjectFetchEvent();
-        //    fetchproj.Send();
+            Config.projectId = "5ca523bbcdc9a0053f2e6799";
+            ProjectFetchEvent fetchproj = new ProjectFetchEvent();
+            fetchproj.Send();
 
-        //    registered = true;
-        //}
+            registered = true;
+        }
 
         // Start with delete key.
         if (Input.GetKeyDown(KeyCode.Delete))

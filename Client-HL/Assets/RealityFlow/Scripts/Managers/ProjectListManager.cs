@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.IO;
 
 public class ProjectListManager : MonoBehaviour {
 
     private const string dataFileName = "testProjectList.json";
+    private bool populated;
     public ProjectDataList projects = new ProjectDataList();
     public GameObject ProjectPanelPrefab;
     public Transform content;
@@ -14,26 +16,35 @@ public class ProjectListManager : MonoBehaviour {
 
     private void Start()
     {
-        LoadJSON();
+        //LoadJSON();
         projectListEntries = new List<ProjectListItem>();
+        populated = false;
+    }
 
-        foreach( ProjectData pd in projects.listOfProjects)
+    private void Update()
+    {
+
+        if (!populated && Config.projectList != null && Config.projectList.Count > 0)
         {
-            GameObject newItem = Instantiate(ProjectPanelPrefab) as GameObject;
-            ProjectListItem item = newItem.GetComponent<ProjectListItem>();
-            Text entryName = newItem.GetComponentInChildren<Text>();
-            projectListEntries.Add(item);
-            entryName.text = pd.projectName;
-            newItem.transform.SetParent(content.transform);
-            newItem.transform.localScale = Vector3.one;
-
-            if (item != null)
+            foreach (FlowProject p in Config.projectList)
             {
-                item.name = pd.projectName;
-                item.id = pd.projectId;
-                item.manager = this;
-                item.index = projectListEntries.Count - 1;
+                GameObject newItem = Instantiate(ProjectPanelPrefab) as GameObject;
+                ProjectListItem item = newItem.GetComponent<ProjectListItem>();
+                Text entryName = newItem.GetComponentInChildren<Text>();
+                projectListEntries.Add(item);
+                entryName.text = p.projectName;
+                newItem.transform.SetParent(content.transform);
+                newItem.transform.localScale = Vector3.one;
+
+                if (item != null)
+                {
+                    item.name = p.projectName;
+                    item.id = p._id;
+                    item.manager = this;
+                    item.index = projectListEntries.Count - 1;
+                }
             }
+            populated = true;
         }
     }
 
@@ -84,6 +95,8 @@ public class ProjectListManager : MonoBehaviour {
                     // !!!   THIS IS WHERE YOU WILL LOAD THE PROJECT   !!!
                     // !!!                                             !!!
                     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    Config.projectId = projectListEntries[i].id;
+                    SceneManager.LoadScene(1);
                 }
                 else if (toggle.IsPressed)
                 {
