@@ -69,9 +69,6 @@ export class ObjectOperations {
     {
         var promise = Object.findOneAndUpdate({_id: objectInfo._id}, {
 
-            type:       objectInfo.type,
-            name:       objectInfo.name,
-            triangles:  objectInfo.triangles,
             x:          objectInfo.x,
             y:          objectInfo.y,
             z:          objectInfo.z,
@@ -82,9 +79,6 @@ export class ObjectOperations {
             s_x:        objectInfo.s_x,
             s_y:        objectInfo.s_y,
             s_z:        objectInfo.s_z,
-            vertices:   objectInfo.vertices,
-            uv:         objectInfo.uv,
-            locked:     objectInfo.locked
 
         }).exec();
 

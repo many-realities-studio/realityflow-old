@@ -176,6 +176,7 @@ public class RealityFlowWindow : EditorWindow {
 						manager.tag = "ObjManager";
 						manager.AddComponent(typeof(ObjectManager));
 						manager.AddComponent(typeof(FlowNetworkManager));
+                        manager.GetComponent<FlowNetworkManager>()._debug = false;
 						manager.GetComponent<FlowNetworkManager>().LocalServer = Config.LOCAL_HOST;
 						manager.GetComponent<FlowNetworkManager>().mainGameCamera = GameObject.FindGameObjectWithTag("MainCamera");
 						manager.AddComponent(typeof(DoOnMainThread));

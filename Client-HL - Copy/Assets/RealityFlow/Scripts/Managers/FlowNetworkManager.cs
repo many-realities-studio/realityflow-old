@@ -13,7 +13,7 @@ using Assets.RealityFlow.Scripts.Events;
 public class FlowNetworkManager : MonoBehaviour
 {
     public bool LocalServer;
-    public static bool debug = true;
+    public static bool debug = false;
 
     public bool _debug;
     //string LOCAL_SERVER = "ws://echo.websocket.org";

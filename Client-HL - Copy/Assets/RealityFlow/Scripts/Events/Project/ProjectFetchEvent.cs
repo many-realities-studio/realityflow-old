@@ -49,9 +49,9 @@ namespace Assets.RealityFlow.Scripts.Events
                 // therefore unity cant properly deserialize it and you get garbage data instead
 
                 Debug.Log("creating object: " + obj.name);
-                Debug.Log("creating object: " + obj._id);
-                Debug.Log("vertice[0] = " + obj.vertices[0].x + "   " + obj.vertices[0].y + "   " + obj.vertices[0].z + "");
-                Debug.Log("uv[0] = " + obj.uv[0].x + "   " + obj.uv[0].y + "   ");
+               // Debug.Log("creating object: " + obj._id);
+               // Debug.Log("vertice[0] = " + obj.vertices[0].x + "   " + obj.vertices[0].y + "   " + obj.vertices[0].z + "");
+              //  Debug.Log("uv[0] = " + obj.uv[0].x + "   " + obj.uv[0].y + "   ");
                 GameObject newObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
                 Mesh objMesh = newObj.GetComponent<MeshFilter>().mesh;

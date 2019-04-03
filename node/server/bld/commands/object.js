@@ -46,9 +46,6 @@ class ObjectOperations {
     }
     static updateObject(objectInfo) {
         var promise = object_1.Object.findOneAndUpdate({ _id: objectInfo._id }, {
-            type: objectInfo.type,
-            name: objectInfo.name,
-            triangles: objectInfo.triangles,
             x: objectInfo.x,
             y: objectInfo.y,
             z: objectInfo.z,
@@ -59,9 +56,6 @@ class ObjectOperations {
             s_x: objectInfo.s_x,
             s_y: objectInfo.s_y,
             s_z: objectInfo.s_z,
-            vertices: objectInfo.vertices,
-            uv: objectInfo.uv,
-            locked: objectInfo.locked
         }).exec();
         promise.then(function (doc) {
             console.log('Object ' + doc.name + ' updated successfully.');
