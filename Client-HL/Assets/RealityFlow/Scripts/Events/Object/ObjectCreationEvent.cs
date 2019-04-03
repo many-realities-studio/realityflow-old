@@ -54,7 +54,8 @@ namespace Assets.RealityFlow.Scripts.Events
             newObj.AddComponent<BoxCollider>();
             newObj.name = obj.name;
             newObj.AddComponent(typeof(FlowObject));
-            newObj.GetComponent<FlowObject>().Start();
+            //newObj.GetComponent<FlowObject>().Start();
+            newObj.GetComponent<FlowObject>().ft = new FlowTObject(newObj);
             newObj.GetComponent<FlowObject>().ft._id = obj._id;
             newObj.GetComponent<FlowObject>().ft.id = obj.id;
             //FlowProject.activeProject.RegObj(); //probably don't need this anymore

@@ -16,7 +16,7 @@ export class ProjectOperations
 
             projectName: projectInfo.projectName,
             owner: userInfo._id,
-            clients: [clientInfo._id],
+            clients: [],
             objs: [],
             currentScene: undefined,
             prevScene: undefined,
@@ -37,6 +37,20 @@ export class ProjectOperations
             newProjectDoc = doc;
 
             return newProjectDoc;
+        });
+
+        return promise;
+
+    }
+
+    public static saveProject(project: any){
+
+        var promise = project.save();
+
+        promise.then(function(doc){
+
+            return doc;
+
         });
 
         return promise;

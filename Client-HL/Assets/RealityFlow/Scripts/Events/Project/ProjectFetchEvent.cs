@@ -14,6 +14,7 @@ namespace Assets.RealityFlow.Scripts.Events
 
         public FlowProject project;
         public List<FlowTObject> objs;
+        public FlowClient client;
 
         public ProjectFetchEvent()
         {
@@ -23,6 +24,7 @@ namespace Assets.RealityFlow.Scripts.Events
         public void Send()
         {
             project = new FlowProject(Config.projectId);
+            client = new FlowClient(Config.deviceId);
 
             CommandProcessor.sendCommand(this);
         }
@@ -39,6 +41,7 @@ namespace Assets.RealityFlow.Scripts.Events
 
             foreach (FlowTObject obj in Config.objs)
             {
+                Debug.Log("creating object: " + obj.name);
                 GameObject newObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
                 Mesh objMesh = newObj.GetComponent<MeshFilter>().mesh;
@@ -54,7 +57,8 @@ namespace Assets.RealityFlow.Scripts.Events
                 newObj.AddComponent<BoxCollider>();
                 newObj.name = obj.name;
                 newObj.AddComponent(typeof(FlowObject));
-                newObj.GetComponent<FlowObject>().Start();
+                //newObj.GetComponent<FlowObject>().Start();
+                newObj.GetComponent<FlowObject>().ft = new FlowTObject(newObj);
                 newObj.GetComponent<FlowObject>().ft._id = obj._id;
                 newObj.GetComponent<FlowObject>().ft.id = obj.id;
                 //FlowProject.activeProject.RegObj(); //probably don't need this anymore

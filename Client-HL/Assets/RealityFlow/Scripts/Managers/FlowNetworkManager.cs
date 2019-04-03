@@ -230,8 +230,8 @@ public class FlowNetworkManager : MonoBehaviour
         //ProjectCreateEvent createProj = new ProjectCreateEvent();
         //createProj.Send("Subarus Maids2" + DateTime.Now.ToString());
 
-        ProjectFetchEvent fetchproj = new ProjectFetchEvent();
-        fetchproj.Send();
+        //ProjectFetchEvent fetchproj = new ProjectFetchEvent();
+        //fetchproj.Send();
 
 
 
@@ -362,6 +362,7 @@ public class FlowNetworkManager : MonoBehaviour
                 {
                     StartCoroutine(ConnectWebsocket());
                 });
+
                 Debug.Log("Connect connection");
                 CommandProcessor.sendCommand(Commands.User.LOGIN, uid.ToString());
                 loggedIn = false;

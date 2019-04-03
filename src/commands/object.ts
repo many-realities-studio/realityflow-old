@@ -48,11 +48,11 @@ export class ObjectOperations {
         return promise;
     }
 
-    public static findObject(objectInfo: any)
+    public static findObject(objectInfoId: any)
     {
         var object;
 
-        var promise = Object.findById(objectInfo._id).exec();
+        var promise = Object.findById(objectInfoId).exec();
 
         promise.then(function(doc){
 
@@ -67,7 +67,7 @@ export class ObjectOperations {
 
     public static updateObject(objectInfo: any)
     {
-        Object.findOneAndUpdate({_id: objectInfo._id}, {
+        var promise = Object.findOneAndUpdate({_id: objectInfo._id}, {
 
             type:       objectInfo.type,
             name:       objectInfo.name,
@@ -86,20 +86,15 @@ export class ObjectOperations {
             uv:         objectInfo.uv,
             locked:     objectInfo.locked
 
-        }, function(err){
+        }).exec();
 
-            if(err){
+        promise.then(function(doc){
 
-                console.log('ERROR: Failed to update object: ' + objectInfo.name);
-
-            }
-            else{
-
-                console.log('Object ' + objectInfo.name + ' updated successfully.');
-
-            }
+                console.log('Object ' + doc.name + ' updated successfully.');
 
         });
+
+        return promise;
     }
 
     public static deleteObject(objectInfo: any)

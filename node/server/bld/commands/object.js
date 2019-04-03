@@ -35,9 +35,9 @@ class ObjectOperations {
         });
         return promise;
     }
-    static findObject(objectInfo) {
+    static findObject(objectInfoId) {
         var object;
-        var promise = object_1.Object.findById(objectInfo._id).exec();
+        var promise = object_1.Object.findById(objectInfoId).exec();
         promise.then(function (doc) {
             object = doc;
             return object;
@@ -45,7 +45,7 @@ class ObjectOperations {
         return promise;
     }
     static updateObject(objectInfo) {
-        object_1.Object.findOneAndUpdate({ _id: objectInfo._id }, {
+        var promise = object_1.Object.findOneAndUpdate({ _id: objectInfo._id }, {
             type: objectInfo.type,
             name: objectInfo.name,
             triangles: objectInfo.triangles,
@@ -62,14 +62,11 @@ class ObjectOperations {
             vertices: objectInfo.vertices,
             uv: objectInfo.uv,
             locked: objectInfo.locked
-        }, function (err) {
-            if (err) {
-                console.log('ERROR: Failed to update object: ' + objectInfo.name);
-            }
-            else {
-                console.log('Object ' + objectInfo.name + ' updated successfully.');
-            }
+        }).exec();
+        promise.then(function (doc) {
+            console.log('Object ' + doc.name + ' updated successfully.');
         });
+        return promise;
     }
     static deleteObject(objectInfo) {
         object_1.Object.findByIdAndRemove(objectInfo._id);

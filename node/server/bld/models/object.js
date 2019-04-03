@@ -18,5 +18,5 @@ const objectSchema = new mongoose.Schema({
     vertices: [Array],
     uv: [Array],
     locked: Boolean,
-});
+}, { usePushEach: true });
 exports.Object = mongoose.model("Object", objectSchema);

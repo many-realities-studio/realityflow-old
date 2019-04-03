@@ -46,6 +46,6 @@ const objectSchema = new mongoose.Schema({
     uv:         [Array],
     locked:     Boolean,
 
-});
+},{usePushEach: true});
 
 export const Object = mongoose.model<IObjectModel>("Object", objectSchema);

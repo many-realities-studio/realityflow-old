@@ -6,6 +6,9 @@ import * as http from "http";
 import { Server } from "ws";
 import * as mongoose from "mongoose";
 
+// Models
+import {Project, IProjectModel} from "./models/project";
+
 // DB API
 import {UserOperations} from "./commands/user";
 import {ClientOperations} from "./commands/client";
@@ -57,10 +60,10 @@ export class ServerEventDispatcher {
                     console.log('Project: '+project);
 
                     project.objs.push(object._id);
-                    project.save();
+                    await project.save();
 
-                    json.project.objects.push(object._id);
-                    json.object._id = object._id;
+                    json.project = project;
+                    json.obj._id = object._id;
 
                     this.broadcast(json, true);
 
@@ -70,7 +73,7 @@ export class ServerEventDispatcher {
                 case Commands.object.UPDATE:{
 
                     this.broadcast(json, false);
-                    ObjectOperations.updateObject(json.object);
+                   await ObjectOperations.updateObject(json.objs);
 
                     break;
                 }
@@ -78,7 +81,7 @@ export class ServerEventDispatcher {
                 case Commands.object.DELETE:{
 
                     this.broadcast(json, true);
-                    ObjectOperations.deleteObject(json.object);
+                    ObjectOperations.deleteObject(json.objs);
 
                     break;
                 }
@@ -93,6 +96,8 @@ export class ServerEventDispatcher {
                 case Commands.project.CREATE:{
 
                     var project = await ProjectOperations.createProject(json.project, json.client, json.user);
+                    project.clients.push(json.client._id);
+                    await project.save();
 
                    /* var payloadString = JSON.stringify({
 
@@ -139,22 +144,31 @@ export class ServerEventDispatcher {
                 case Commands.project.OPEN:{
 
                     var project = await ProjectOperations.findProject(json.project);
+                    console.log("Project Clients: "+project.clients);
+                    project.clients.push(json.client._id);
+                    await project.save();
+                    //promise = await ProjectOperations.saveProject(project);
+
                     //var scene = SceneOperations.findScene(project.currentScene);
                     console.log('Project: '+project);
-                    var objectIds = project.objects;
+                    var objectIds = project.objs;
                     var objects = [];
 
-                    console.log('Object Ids: '+objectIds);
-                    
-                    if(objectIds==[]||objectIds==undefined){
-                        for(var x in objectIds){
+                    console.log('Object IDs Length: '+objectIds.length);
 
-                            console.log('X: '+objectIds[x]);
-                            var currentObject = await ObjectOperations.findObject({_id: objectIds[x]});
+                    console.log("Object IDs: "+objectIds);
+                    if(objectIds.length>0){
+                        console.log('CHECK');
+                        for(var i=0; i<objectIds.length; i++){
+
+                            console.log('X: '+objectIds[i]);
+                            var currentObject = await ObjectOperations.findObject(objectIds[i]);
 
                             objects.push(currentObject);
 
                        }
+
+                    console.log("Objects: "+objects);
 
                     }
 
@@ -165,7 +179,7 @@ export class ServerEventDispatcher {
 
                     });*/
 
-                    json.object = objects;
+                    json.objs = objects;
 
                     var payloadString = JSON.stringify(json);
 
@@ -271,7 +285,7 @@ export class ServerEventDispatcher {
                        this.connections.push(connectionTracker);
 
                        console.log('Connections: '+this.connections.length);
-                       for(x in this.connections){
+                       for(var x in this.connections){
     
                         console.log('Connection Client IDs: '+this.connections[x].clientId);
     
@@ -395,38 +409,74 @@ export class ServerEventDispatcher {
 
         var payloadString = JSON.stringify(json);
 
-        var project = await ProjectOperations.findProject(json.project._id);
-        var clientArray = project.clients;
+        var project = await ProjectOperations.findProject(json.project);
+        var clientArray = String(project.clients);
         var filteredClientArray = [];
+        var filteredConnections = [];
+
+       /* for(x in this.connections){
+
+            console.log("this.connection: "+this.connections[x].clientId);
+
+        }
+        */
+        //console.log("Project clients: "+clientArray);
 
         if(!newFlag){
 
-             filteredClientArray = clientArray.filter(function(value, index, arr){
+             for(x in this.connections){
 
-                return value!=json.client._id; 
-    
-            });
+                if(clientArray.includes(String(this.connections[x].clientId))&&String(this.connections[x].clientId!=String(json.client_id))){
+
+                    filteredConnections.push(this.connections[x].connection);
+
+                }
+
+             }
+
+           // console.log("Filtered Client Array: "+filteredClientArray);
     
         }
         else{
 
-             filteredClientArray = clientArray;
+            for(x in this.connections){
 
+                if(clientArray.includes(String(this.connections[x].clientId))){
+
+                    filteredConnections.push(this.connections[x].connection);
+
+                }
+
+             }
+
+             //filteredClientArray.push(clientArray);
+             //console.log("Filtered Client Array: "+filteredClientArray);
         }
 
-        var index;
-        var filteredConnections = [];
+        /*var index;
+        
+
+        console.log("filteredClientArrayLength: "+filteredClientArray.length);
 
         for(var x in filteredClientArray){
 
-          index = this.connections.findIndex(y => y.clientId === x);
+          console.log("filteredClientArray[x]: "+filteredClientArray[x]);
+          index = this.connections.findIndex(function(value){
+
+            console.log("Value client ID: "+value.clientId);
+            return value.clientId===filteredClientArray[x];
+
+          });
+          console.log("Index: "+index);
           filteredConnections.push(this.connections[index].connection);
 
         }
 
+        console.log('Filtered Connections: '+filteredConnections);*/
+
         for(var x in filteredConnections){
 
-            this.send(payloadString, x);
+            this.send(payloadString, filteredConnections[x]);
 
         }
 
@@ -434,8 +484,6 @@ export class ServerEventDispatcher {
 
     public static send(payloadString: any, connection: any){
 
-        console.log('Sending Payload to connection: '+connection);
-        //console.log('PayloadString: '+payloadString);
         let payload = Buffer.alloc(payloadString.length, payloadString);
 
         connection.send(payload, function ack(err){

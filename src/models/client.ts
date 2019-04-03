@@ -13,6 +13,6 @@ export declare interface IClientModel extends mongoose.Document {
 const clientSchema = new mongoose.Schema({
     user:           {type: ObjectId, ref: User},
     deviceType:     Number
-});
+},{usePushEach: true} );
 
 export const Client = mongoose.model<IClientModel>("Client", clientSchema);

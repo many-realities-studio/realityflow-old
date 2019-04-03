@@ -13,5 +13,5 @@ const userSchema = new mongoose.Schema({
     activeProject: { type: ObjectId, ref: project_1.Project },
     projects: [{ type: ObjectId, ref: project_1.Project }],
     friends: [{ type: ObjectId, ref: 'User' }]
-});
+}, { usePushEach: true });
 exports.User = mongoose.model("User", userSchema);

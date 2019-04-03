@@ -10,10 +10,10 @@ const client_1 = require("./client");
 const projectSchema = new mongoose.Schema({
     projectName: String,
     owner: { type: ObjectId, ref: user_1.User },
-    clients: { type: ObjectId, ref: client_1.Client },
+    clients: [{ type: ObjectId, ref: client_1.Client }],
     objs: [{ type: ObjectId, ref: object_1.Object }],
     created: Date,
     lastEdit: Date,
     lastEditor: { type: ObjectId, ref: user_1.User },
-});
+}, { usePushEach: true });
 exports.Project = mongoose.model("Project", projectSchema);

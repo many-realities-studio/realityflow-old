@@ -31,7 +31,7 @@ const projectSchema = new mongoose.Schema({
 
     projectName:    String,
     owner:          {type: ObjectId, ref: User},
-    clients:        {type: ObjectId, ref: Client},
+    clients:        [{type: ObjectId, ref: Client}],
     objs:        [{type: ObjectId, ref: Object}],
    /* currentScene:   {type: ObjectId, ref: Scene},
     prevScene:      [{type: ObjectId, ref: Scene}],
@@ -41,7 +41,9 @@ const projectSchema = new mongoose.Schema({
     lastEdit:       Date,
     lastEditor:     {type: ObjectId, ref: User},
 
-});
+},{usePushEach: true});
+
+
 
 
 export const Project = mongoose.model<IProjectModel>("Project", projectSchema);

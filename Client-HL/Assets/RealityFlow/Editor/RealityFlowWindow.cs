@@ -296,16 +296,16 @@ public class RealityFlowWindow : EditorWindow {
                         create.Send(projectName);
 
                         Debug.Log(Config.projectId);
-                        //if (Config.projectId.Equals("-9999"))
-                        //{
-                        //    DrawBody();
-                        //}
-                        //else
-                        //{
-                        //    window = 2;
-                        //    projectName = "";
-                        //    DrawBody();
-                        //}
+                        if (Config.projectId.Equals("-9999"))
+                        {
+                            DrawBody();
+                        }
+                        else
+                        {
+                            window = 2;
+                            projectName = "";
+                            DrawBody();
+                        }
                     }
                 }
                 break;

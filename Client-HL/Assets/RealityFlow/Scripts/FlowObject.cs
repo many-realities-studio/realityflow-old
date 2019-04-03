@@ -15,9 +15,9 @@ public class FlowObject : MonoBehaviour {
 
 	// Use this for initialization
 	public void Start () {
-	    ft = new FlowTObject(gameObject);
-	    ft.id = "1";
-	    ft._id = "1";
+	    //ft = new FlowTObject(gameObject);
+	    //ft.id = "1";
+	    //ft._id = "1";
 	    fos.Add(this);
 	    //ft.RegisterTransform();
 	}

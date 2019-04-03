@@ -10,7 +10,7 @@ class ProjectOperations {
         var newProject = new project_1.Project({
             projectName: projectInfo.projectName,
             owner: userInfo._id,
-            clients: [clientInfo._id],
+            clients: [],
             objs: [],
             currentScene: undefined,
             prevScene: undefined,
@@ -25,6 +25,13 @@ class ProjectOperations {
             console.log('Project ' + projectInfo.projectName + ' added successfully.');
             newProjectDoc = doc;
             return newProjectDoc;
+        });
+        return promise;
+    }
+    static saveProject(project) {
+        var promise = project.save();
+        promise.then(function (doc) {
+            return doc;
         });
         return promise;
     }
