@@ -221,8 +221,8 @@ public class FlowNetworkManager : MonoBehaviour
         string username = "test";
         string password = "test";
 
-         UserRegisterEvent register = new UserRegisterEvent();
-        register.Send(username, password, FlowClient.CLIENT_HOLOLENS);
+        //UserRegisterEvent register = new UserRegisterEvent();
+        //register.Send(username, password, FlowClient.CLIENT_HOLOLENS);
 
         //UserLoginEvent login = new UserLoginEvent();
         //login.Send(username, password);
@@ -230,7 +230,8 @@ public class FlowNetworkManager : MonoBehaviour
         //ProjectCreateEvent createProj = new ProjectCreateEvent();
         //createProj.Send("Subarus Maids2" + DateTime.Now.ToString());
 
-
+        ProjectFetchEvent fetchproj = new ProjectFetchEvent();
+        fetchproj.Send();
 
 
 
@@ -348,14 +349,7 @@ public class FlowNetworkManager : MonoBehaviour
             {
                 Debug.Log("Processing Command");
                 FlowEvent incoming = JsonUtility.FromJson<FlowEvent>(reply);
-                if (incoming.command >= Commands.Project.MIN && incoming.command <= Commands.Project.MAX)
-                {
-                    CommandProcessor.processProjectCommand(JsonUtility.FromJson<FlowProjectCommand>(reply));
-                }
-                else
-                {
-                    CommandProcessor.processCommand(incoming);
-                }
+                CommandProcessor.processCommand(incoming);
             }
             if (w.error != null)
             {
