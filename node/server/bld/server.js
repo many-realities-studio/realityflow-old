@@ -57,12 +57,12 @@ class ServerEventDispatcher {
                     }
                     case commands_1.Commands.object.UPDATE: {
                         this.broadcast(json, false);
-                        yield object_1.ObjectOperations.updateObject(json.objs);
+                        yield object_1.ObjectOperations.updateObject(json.obj);
                         break;
                     }
                     case commands_1.Commands.object.DELETE: {
                         this.broadcast(json, true);
-                        object_1.ObjectOperations.deleteObject(json.objs);
+                        object_1.ObjectOperations.deleteObject(json.obj);
                         break;
                     }
                 }

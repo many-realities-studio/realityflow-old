@@ -23,25 +23,25 @@ public class FlowDevice
 
     public FlowDevice()
     {
-        deviceModel = SystemInfo.deviceModel;
-        switch (SystemInfo.deviceType)
-        {
-            case DeviceType.Unknown:
-                deviceType = UNKNOWN;
-                break;
-            case DeviceType.Handheld:
-                deviceType = HANDHELD;
-                break;
-            case DeviceType.Desktop:
-                deviceType = DESKTOP;
-                break;
-        }
-        _id = SystemInfo.deviceUniqueIdentifier;
-        resolutionX = Screen.currentResolution.width;
-        resolutionY = Screen.currentResolution.height;
-        uid = "3";
-        dpi = Screen.dpi;
-        description = SystemInfo.deviceName;
-        cameraRotation = new FlowTObject(FlowCameras.mainCamera.gameObject);
+        //deviceModel = SystemInfo.deviceModel;
+        //switch (SystemInfo.deviceType)
+        //{
+        //    case DeviceType.Unknown:
+        //        deviceType = UNKNOWN;
+        //        break;
+        //    case DeviceType.Handheld:
+        //        deviceType = HANDHELD;
+        //        break;
+        //    case DeviceType.Desktop:
+        //        deviceType = DESKTOP;
+        //        break;
+        //}
+        //_id = SystemInfo.deviceUniqueIdentifier;
+        //resolutionX = Screen.currentResolution.width;
+        //resolutionY = Screen.currentResolution.height;
+        //uid = "3";
+        //dpi = Screen.dpi;
+        //description = SystemInfo.deviceName;
+        //cameraRotation = new FlowTObject(FlowCameras.mainCamera.gameObject);
     }
 }

@@ -36,12 +36,22 @@ namespace Assets.RealityFlow.Scripts.Events
 
         public static string Receive()
         {
-            ProjectFetchEvent log = JsonUtility.FromJson<ProjectFetchEvent>(FlowNetworkManager.reply);
+            ProjectFetchEvent log = new ProjectFetchEvent();
+            JsonUtility.FromJsonOverwrite(FlowNetworkManager.reply, log);
             Config.objs = log.objs;
+
+            //Debug.Log("vertice[0] = " + log.objs[0].vertices[0].x);
 
             foreach (FlowTObject obj in Config.objs)
             {
+
+                // the array of vectors and UV are returning in the following format: vertices[[{x = 1, y = 2, z = 3}]] instead of vertices[{x = 1, y = 2, z = 3}]
+                // therefore unity cant properly deserialize it and you get garbage data instead
+
                 Debug.Log("creating object: " + obj.name);
+                Debug.Log("creating object: " + obj._id);
+                Debug.Log("vertice[0] = " + obj.vertices[0].x + "   " + obj.vertices[0].y + "   " + obj.vertices[0].z + "");
+                Debug.Log("uv[0] = " + obj.uv[0].x + "   " + obj.uv[0].y + "   ");
                 GameObject newObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
                 Mesh objMesh = newObj.GetComponent<MeshFilter>().mesh;
@@ -57,6 +67,7 @@ namespace Assets.RealityFlow.Scripts.Events
                 newObj.AddComponent<BoxCollider>();
                 newObj.name = obj.name;
                 newObj.AddComponent(typeof(FlowObject));
+                newObj.GetComponent<FlowObject>().selected = false; // might want to comment this one out
                 //newObj.GetComponent<FlowObject>().Start();
                 newObj.GetComponent<FlowObject>().ft = new FlowTObject(newObj);
                 newObj.GetComponent<FlowObject>().ft._id = obj._id;

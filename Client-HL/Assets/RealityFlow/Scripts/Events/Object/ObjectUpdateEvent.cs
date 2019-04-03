@@ -12,6 +12,8 @@ namespace Assets.RealityFlow.Scripts.Events
     {
         public FlowTObject obj;
         public static int scmd = Commands.FlowObject.UPDATE;
+        public FlowProject project;
+        public FlowClient client;
 
         public ObjectUpdateEvent()
         {
@@ -23,8 +25,8 @@ namespace Assets.RealityFlow.Scripts.Events
             obj = transformToSend;
             obj.Read();
 
-            project_id = Config.projectId;
-            client_id = Config.deviceId;
+            project = new FlowProject(Config.projectId);
+            client = new FlowClient(Config.deviceId);
 
             CommandProcessor.sendCommand(this);
         }

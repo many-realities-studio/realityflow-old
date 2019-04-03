@@ -22,6 +22,8 @@ public class FlowTObject : FlowValue
     public static int idCount = 0;
     [System.NonSerialized]
     public Transform transform;
+    [System.NonSerialized]
+    public Mesh mesh;
 
     public FlowTObject()
     {
@@ -40,6 +42,12 @@ public class FlowTObject : FlowValue
         s_x = transform.localScale.x;
         s_y = transform.localScale.y;
         s_z = transform.localScale.z;
+        mesh = obj.GetComponent<MeshFilter>().mesh;
+        triangles = mesh.triangles;
+        uv = mesh.uv;
+        vertices = mesh.vertices;
+        name = obj.name;
+        type = "BoxCollider";
     }
     public void Read() {
         x = transform.localPosition.x;
@@ -52,6 +60,9 @@ public class FlowTObject : FlowValue
         s_x = transform.localScale.x;
         s_y = transform.localScale.y;
         s_z = transform.localScale.z;
+        vertices = mesh.vertices;
+        uv = mesh.uv;
+        triangles = mesh.triangles;
     }
 
     public void Read(GameObject go) {
@@ -65,6 +76,13 @@ public class FlowTObject : FlowValue
         s_x = go.transform.localScale.x;
         s_y = go.transform.localScale.y;
         s_z = go.transform.localScale.z;
+        Mesh newMesh = go.GetComponent<MeshFilter>().mesh;
+        vertices = newMesh.vertices;
+        uv = newMesh.uv;
+        triangles = newMesh.triangles;
+        name = go.name;
+        type = "BoxCollider";
+
     }
 
     public void Copy(FlowTObject source) {
@@ -78,6 +96,11 @@ public class FlowTObject : FlowValue
         s_x = source.s_x;
         s_y = source.s_y;
         s_z = source.s_z;
+        vertices = source.mesh.vertices;
+        uv = source.mesh.uv;
+        triangles = source.mesh.triangles;
+        name = source.name;
+        type = "BoxCollider";
     }
 
     public void Update() {
@@ -87,6 +110,11 @@ public class FlowTObject : FlowValue
         transform.localRotation = newRot;
         Vector3 newScale = new Vector3(s_x,s_y,s_z);
         transform.localScale = newScale;
+        mesh.vertices = vertices;
+        mesh.uv = uv;
+        mesh.triangles = triangles;
+        mesh.RecalculateBounds();
+        mesh.RecalculateNormals();
     }
 
     public void RegisterTransform() {

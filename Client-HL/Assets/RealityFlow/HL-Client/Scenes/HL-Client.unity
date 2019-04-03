@@ -288,7 +288,7 @@ MonoBehaviour:
     s_y: 0
     s_z: 0
     type: 
-    objectName: 
+    name: 
     vertices: []
     uv: []
 --- !u!1 &124523475
@@ -1065,7 +1065,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &850352792
 MonoBehaviour:
   m_ObjectHideFlags: 0

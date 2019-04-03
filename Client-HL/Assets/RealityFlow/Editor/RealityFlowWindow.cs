@@ -185,6 +185,19 @@ public class RealityFlowWindow : EditorWindow {
                     UserLoginEvent login = new UserLoginEvent();
                     login.Send("test", "test");
                 }
+
+                //Debug.Log(Config.userId);
+                //if (Config.userId.Equals("-9999"))
+                //{
+                //    DrawBody();
+                //}
+                //else
+                //{
+                //    window = 1;
+                //    pWord = "";
+                //    uName = "";
+                //    DrawBody();
+                //}
                 break;
             
             case 1:

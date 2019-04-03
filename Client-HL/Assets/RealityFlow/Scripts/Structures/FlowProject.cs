@@ -25,10 +25,9 @@ public class FlowProject : FlowValue
     [System.NonSerialized]
     public static FlowProject activeProject;
 
-    public FlowProject(string nameOrId)
+    public FlowProject(string id)
     {
-        //projectName = nameOrId;
-        _id = nameOrId;
+        _id = id;
     }
 
     public FlowProject()

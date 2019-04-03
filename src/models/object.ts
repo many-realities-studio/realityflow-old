@@ -20,8 +20,8 @@ export declare interface IObjectModel extends mongoose.Document{
     s_x:        Number;
     s_y:        Number;
     s_z:        Number;
-    vertices:   Number[][];
-    uv:         Number[][];
+    vertices:   Number[];
+    uv:         Number[];
     locked:     Boolean;
 
 }
@@ -42,8 +42,8 @@ const objectSchema = new mongoose.Schema({
     s_x:        Number,
     s_y:        Number,
     s_z:        Number,
-    vertices:   [Array],
-    uv:         [Array],
+    vertices:   [],
+    uv:         [],
     locked:     Boolean,
 
 },{usePushEach: true});

@@ -73,7 +73,7 @@ export class ServerEventDispatcher {
                 case Commands.object.UPDATE:{
 
                     this.broadcast(json, false);
-                   await ObjectOperations.updateObject(json.objs);
+                   await ObjectOperations.updateObject(json.obj);
 
                     break;
                 }
@@ -81,7 +81,7 @@ export class ServerEventDispatcher {
                 case Commands.object.DELETE:{
 
                     this.broadcast(json, true);
-                    ObjectOperations.deleteObject(json.objs);
+                    ObjectOperations.deleteObject(json.obj);
 
                     break;
                 }
@@ -152,7 +152,7 @@ export class ServerEventDispatcher {
                     //var scene = SceneOperations.findScene(project.currentScene);
                     console.log('Project: '+project);
                     var objectIds = project.objs;
-                    var objects = [];
+                    var objects = []; // I think the problem is here
 
                     console.log('Object IDs Length: '+objectIds.length);
 
