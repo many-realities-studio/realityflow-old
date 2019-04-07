@@ -10,16 +10,15 @@ class ClientOperations {
         console.log('ClientInfo Payload: ' + clientInfo);
         console.log('UserInfo Payload: ' + userId);
         var newClient = new client_1.Client({
-            _id: objectId,
             user: userId,
             deviceType: clientInfo.deviceType,
         });
         console.log('Client PreSave: ' + newClient);
         var promise = newClient.save(function (err, doc) {
             createdClient = doc;
+            console.log('Saved Client: ' + createdClient._id);
         });
-        console.log('Saved Client: ' + objectId);
-        return objectId;
+        return promise;
     }
     static deleteClient(clientInfoId) {
         client_1.Client.findByIdAndRemove(clientInfoId);

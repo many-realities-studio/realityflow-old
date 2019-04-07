@@ -15,7 +15,6 @@ export class ClientOperations{
 
         var newClient = new Client({
 
-            _id:            objectId,
             user:           userId,
             deviceType:     clientInfo.deviceType,
 
@@ -25,13 +24,14 @@ export class ClientOperations{
 
         var promise = newClient.save(function(err, doc){
 
-                createdClient = doc;
+            createdClient = doc;
 
+            console.log('Saved Client: '+createdClient._id);
+        
+           // return createdClient._id;
         });
 
-            console.log('Saved Client: '+objectId);
-
-        return objectId;
+        return promise;
 
     }
 

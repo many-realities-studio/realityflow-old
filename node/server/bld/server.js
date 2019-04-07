@@ -140,7 +140,8 @@ class ServerEventDispatcher {
                 switch (command) {
                     case commands_1.Commands.user.CREATE: {
                         var newUserPayload = yield user_1.UserOperations.createUser(json.user);
-                        var newClientId = client_1.ClientOperations.createClient(json.client, newUserPayload._id);
+                        var newClientId = yield client_1.ClientOperations.createClient(json.client, newUserPayload._id);
+                        newClientId = newClientId._id;
                         var connectionTracker = {
                             clientId: newClientId,
                             connection: connection
@@ -159,7 +160,8 @@ class ServerEventDispatcher {
                         if (returnedUser._id != '' && returnedUser._id != undefined) {
                             json.user._id = returnedUser._id;
                             var projects = yield project_1.ProjectOperations.fetchProjects(returnedUser);
-                            var newClientId = client_1.ClientOperations.createClient(json.client, returnedUser._id);
+                            var newClientId = yield client_1.ClientOperations.createClient(json.client, returnedUser._id);
+                            newClientId = newClientId._id;
                             json.client._id = newClientId;
                             var currentUser = yield user_1.UserOperations.findUser(returnedUser);
                             console.log('Current User: ' + currentUser);
@@ -238,9 +240,10 @@ class ServerEventDispatcher {
             console.log('Unique Connections Length: ' + uniqueConnections.length);
             if (!newFlag) {
                 for (var i = 0; i < uniqueConnections.length; i++) {
-                    if (clientArray.includes(String(uniqueConnections[i].clientId)) && String(uniqueConnections[i].clientId != String(json.client_id))) {
+                    console.log('this.connections Broadcast ' + this.connections[i].clientId);
+                    if (clientArray.includes(String(uniqueConnections[i].clientId)) && String(uniqueConnections[i].clientId) != String(json.client._id)) {
                         filteredConnections.push(uniqueConnections[i].connection);
-                        console.log('Filtered Connections' + uniqueConnections[i].clientId);
+                        console.log('Filtered Connections ' + uniqueConnections[i].clientId);
                     }
                 }
             }

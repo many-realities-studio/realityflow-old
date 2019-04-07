@@ -184,7 +184,7 @@ public class RealityFlowWindow : EditorWindow {
 
                     // TODO: username and password for the real thing 
                     UserLoginEvent login = new UserLoginEvent();
-                    login.Send(uName, pWord);
+                    login.Send(uName, pWord, FlowClient.CLIENT_EDITOR);
                 }
 
                 //Debug.Log(Config.userId);

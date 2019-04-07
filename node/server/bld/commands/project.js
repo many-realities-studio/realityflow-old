@@ -10,8 +10,8 @@ class ProjectOperations {
         var newProject = new project_1.Project({
             projectName: projectInfo.projectName,
             owner: userInfo._id,
-            clients: [],
-            objs: [],
+            clients: [clientInfo._id],
+            objs: undefined,
             currentScene: undefined,
             prevScene: undefined,
             nextScene: undefined,

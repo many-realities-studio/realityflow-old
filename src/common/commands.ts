@@ -34,6 +34,7 @@ export class Commands {
     public static client = class {
         public static REGISTER_CLIENT = 5000;
         public static LOGIN = 5001;
+        
         public static MAKE_MASTER = 3;
         public static CONNECTION_REESTABLISHED = 4;
         public static NEW_CLIENT = 6;

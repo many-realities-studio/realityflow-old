@@ -16,8 +16,8 @@ export class ProjectOperations
 
             projectName: projectInfo.projectName,
             owner: userInfo._id,
-            clients: [],
-            objs: [],
+            clients: [clientInfo._id],
+            objs: undefined,
             currentScene: undefined,
             prevScene: undefined,
             nextScene: undefined,

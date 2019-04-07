@@ -6,14 +6,11 @@ import * as http from "http";
 import { Server } from "ws";
 import * as mongoose from "mongoose";
 
-// Models
-import {Project, IProjectModel} from "./models/project";
-
 // DB API
 import {UserOperations} from "./commands/user";
 import {ClientOperations} from "./commands/client";
 import {ProjectOperations} from "./commands/project";
-import {SceneOperations} from "./commands/scene";
+//import {SceneOperations} from "./commands/scene";
 import {ObjectOperations} from "./commands/object";
 
 var database;
@@ -249,8 +246,8 @@ export class ServerEventDispatcher {
                 case Commands.user.CREATE: {
 
                     var newUserPayload = await UserOperations.createUser(json.user);
-                    var newClientId = ClientOperations.createClient(json.client, newUserPayload._id);
-                    
+                    var newClientId = await ClientOperations.createClient(json.client, newUserPayload._id);
+                    newClientId = newClientId._id;
 
                     var connectionTracker = {
 
@@ -289,7 +286,8 @@ export class ServerEventDispatcher {
                     if(returnedUser._id!=''&&returnedUser._id!=undefined){
                        json.user._id = returnedUser._id;
                        var projects = await ProjectOperations.fetchProjects(returnedUser);
-                       var newClientId = ClientOperations.createClient(json.client, returnedUser._id);
+                       var newClientId = await ClientOperations.createClient(json.client, returnedUser._id);
+                       newClientId = newClientId._id;
                        json.client._id = newClientId;
                        var currentUser = await UserOperations.findUser(returnedUser);
                        console.log('Current User: '+currentUser);
@@ -463,12 +461,12 @@ export class ServerEventDispatcher {
 
              for(var i=0; i<uniqueConnections.length; i++){
 
-                    //console.log('this.connections Broadcast'+this.connections[i].clientId);
+                    console.log('this.connections Broadcast '+this.connections[i].clientId);
 
-                if(clientArray.includes(String(uniqueConnections[i].clientId))&&String(uniqueConnections[i].clientId!=String(json.client_id))){
+                if(clientArray.includes(String(uniqueConnections[i].clientId))&&String(uniqueConnections[i].clientId)!=String(json.client._id)){
 
                     filteredConnections.push(uniqueConnections[i].connection);
-                    console.log('Filtered Connections'+uniqueConnections[i].clientId);
+                    console.log('Filtered Connections '+uniqueConnections[i].clientId);
 
                 }
 

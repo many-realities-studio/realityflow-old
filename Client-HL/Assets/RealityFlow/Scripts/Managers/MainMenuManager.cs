@@ -15,7 +15,7 @@ public class MainMenuManager : MonoBehaviour {
         // send json with entered username and password
         // make email and username the same field so users can log in with either?
         UserLoginEvent login = new UserLoginEvent();
-        login.Send(username.text, password.text);
+        login.Send(username.text, password.text, FlowClient.CLIENT_MOBILE);
     }
 
     public void signup()

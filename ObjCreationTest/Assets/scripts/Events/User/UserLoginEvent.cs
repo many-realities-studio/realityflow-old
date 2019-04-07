@@ -13,7 +13,7 @@ namespace Assets.RealityFlow.Scripts.Events
         public static int scmd = Commands.User.LOGIN;
 
         public FlowUser user;
-        public FlowClient client = new FlowClient();
+        public FlowClient client;
         public List<FlowProject> projects;
 
         public UserLoginEvent()
@@ -21,9 +21,10 @@ namespace Assets.RealityFlow.Scripts.Events
             command = scmd;
         }
 
-        public void Send(string username, string password)
+        public void Send(string username, string password, int deviceType)
         {
             user = new FlowUser(username, password);
+            client = new FlowClient(deviceType);
 
             CommandProcessor.sendCommand(this);
         }

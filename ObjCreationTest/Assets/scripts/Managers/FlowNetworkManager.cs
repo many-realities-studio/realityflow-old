@@ -13,7 +13,7 @@ using Assets.RealityFlow.Scripts.Events;
 public class FlowNetworkManager : MonoBehaviour
 {
     public bool LocalServer;
-    public static bool debug = false;
+    public static bool debug = true;
 
     public bool _debug;
     //string LOCAL_SERVER = "ws://echo.websocket.org";
@@ -221,8 +221,8 @@ public class FlowNetworkManager : MonoBehaviour
         string username = "test";
         string password = "test";
 
-        UserRegisterEvent register = new UserRegisterEvent();
-        register.Send(username, password, FlowClient.CLIENT_HOLOLENS);
+        //UserRegisterEvent register = new UserRegisterEvent();
+        //register.Send(username, password, FlowClient.CLIENT_HOLOLENS);
 
         //UserLoginEvent login = new UserLoginEvent();
         //login.Send(username, password);

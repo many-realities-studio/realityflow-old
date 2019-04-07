@@ -22,6 +22,7 @@ namespace Assets.RealityFlow.Scripts.Events
 
         public void Send(FlowTObject transformToSend)
         {
+            transformToSend.Read();
             obj = new FlowTObject();
             obj.Copy(transformToSend);
 

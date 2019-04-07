@@ -1,4 +1,4 @@
-import * as mongoose from "mongoose";
+/*import * as mongoose from "mongoose";
 import {IProjectModel, Project} from "../models/project";
 import {Scene, ISceneModel} from "../models/scene";
 
@@ -12,7 +12,6 @@ export class SceneOperations{
 
         var newScene = new Scene({
            
-            _id: objectId,
             _parentProject: sceneInfo._parentProject,
             created: sceneInfo.created,
             objects: []
@@ -94,4 +93,4 @@ export class SceneOperations{
         Scene.findByIdAndRemove(sceneInfo._id);
 
     }
-}
+}*/

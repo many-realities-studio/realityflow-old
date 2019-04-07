@@ -225,7 +225,7 @@ public class FlowNetworkManager : MonoBehaviour
         //register.Send(username, password, FlowClient.CLIENT_HOLOLENS);
 
         UserLoginEvent login = new UserLoginEvent();
-        login.Send(username, password);
+        login.Send(username, password, FlowClient.CLIENT_HOLOLENS);
 
         //ProjectCreateEvent createProj = new ProjectCreateEvent();
         //createProj.Send("Subarus Maids2" + DateTime.Now.ToString());
@@ -406,7 +406,7 @@ public class FlowNetworkManager : MonoBehaviour
             //createProj.Send("Subarus Maids2" + DateTime.Now.ToString());
             //createProj.Send("Subarus Maids3" + DateTime.Now.ToString());
 
-            Config.projectId = "5ca523bbcdc9a0053f2e6799";
+            Config.projectId = "5caa6ed219812402d181d1b4";
             ProjectFetchEvent fetchproj = new ProjectFetchEvent();
             fetchproj.Send();
 

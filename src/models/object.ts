@@ -3,7 +3,7 @@ import Schema = mongoose.Schema;
 import Types = Schema.Types;
 import ObjectId = Types.ObjectId;
 import ObjectIdType = mongoose.Types.ObjectId;
-import { Scene } from "./scene";
+//import { Scene } from "./scene";
 
 export declare interface IObjectModel extends mongoose.Document{
 
