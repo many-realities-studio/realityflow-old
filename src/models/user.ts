@@ -15,6 +15,9 @@ export declare interface IUserModel extends mongoose.Document {
     friends:  [ObjectIdType];
 }
 
+//The usePushEach property is a workaround for a
+//known Mongo issue that prohibits modifying
+//arrays stored in the DB
 const userSchema = new mongoose.Schema({
     username: String,
     password: String,

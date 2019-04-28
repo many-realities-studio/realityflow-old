@@ -46,14 +46,17 @@ namespace HoloToolkit.Unity.UX
 
             if (target == targetObject && rawBoundingCornersObtained)
             {
-                boundsPoints.Clear();
-                for (int i = 0; i < rawBoundingCorners.Count; ++i)
+                if(target != null)
                 {
-                    boundsPoints.Add(target.transform.localToWorldMatrix.MultiplyPoint(rawBoundingCorners[i]));
-                }
+                    boundsPoints.Clear();
+                    for (int i = 0; i < rawBoundingCorners.Count; ++i)
+                    {
+                        boundsPoints.Add(target.transform.localToWorldMatrix.MultiplyPoint(rawBoundingCorners[i]));
+                    }
 
-                worldBoundingCorners.Clear();
-                worldBoundingCorners.AddRange(boundsPoints);
+                    worldBoundingCorners.Clear();
+                    worldBoundingCorners.AddRange(boundsPoints);
+                }
             }
         }
 

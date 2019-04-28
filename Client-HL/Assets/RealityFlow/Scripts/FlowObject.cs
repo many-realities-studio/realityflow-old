@@ -8,6 +8,7 @@ public class FlowObject : MonoBehaviour {
 
 	public bool selected = true;
 	public FlowTObject ft;
+    public FlowTObject pastState;
 	ObjectUpdateEvent transformUpdateEvent = new ObjectUpdateEvent();
     bool registered = false;
 	
@@ -21,6 +22,7 @@ public class FlowObject : MonoBehaviour {
 	    fos.Add(this);
 	    //ft.RegisterTransform();
 	}
+
 	public static void registerObject() {
         foreach(FlowObject fo in fos)
 		    fo.ft.RegisterTransform();
@@ -33,12 +35,21 @@ public class FlowObject : MonoBehaviour {
         if (fos.Count > 0 && FlowNetworkManager.testProject != null)
             registerObject();
 
-		if (selected)
-		{
-			if(FlowNetworkManager.connection_established) 
-			{
-                transformUpdateEvent.Send(ft);
-			}
-		}
-	}
+        //if (pastState.Equals(ft))
+        //    selected = true;
+
+        if (selected)
+        {
+            if (FlowNetworkManager.connected)
+            {
+                ft.Read();
+
+                if (!pastState.Equals(ft))
+                {
+                    pastState.Copy(ft);
+                    transformUpdateEvent.Send(ft);
+                }
+            }
+        }
+    }
 }

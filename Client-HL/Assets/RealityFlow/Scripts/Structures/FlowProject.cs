@@ -49,7 +49,6 @@ public class FlowProject : FlowValue
                 transformsById.Add(transforms[g]._id, transforms[g]);
             }
         }
-        //FlowObject.registerObject();
     }
 
     public void RegObj()

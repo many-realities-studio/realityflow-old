@@ -5,7 +5,6 @@ const project_1 = require("../models/project");
 var objectId = mongoose.Types.ObjectId();
 class ProjectOperations {
     static createProject(projectInfo, clientInfo, userInfo) {
-        console.log('Entering Create Project...');
         var newProjectDoc;
         var newProject = new project_1.Project({
             projectName: projectInfo.projectName,
@@ -22,7 +21,6 @@ class ProjectOperations {
         });
         var promise = newProject.save();
         promise.then(function (doc) {
-            console.log('Project ' + projectInfo.projectName + ' added successfully.');
             newProjectDoc = doc;
             return newProjectDoc;
         });
@@ -36,28 +34,21 @@ class ProjectOperations {
         return promise;
     }
     static fetchProjects(userInfo) {
-        console.log('Entering Fetch Projects:');
-        console.log('User Id: ' + userInfo._id);
         var projects = [];
         var promise = project_1.Project.find({ owner: userInfo._id }, '_id projectName').exec();
         promise.then(function (docs) {
             projects.push(docs);
-            console.log('Projects: ' + projects);
             return projects;
         });
         return promise;
     }
     static findProject(projectInfo) {
-        console.log('Entering findProject...');
         var project;
-        console.log('Project ID: ' + projectInfo._id);
         var promise = project_1.Project.findById(projectInfo._id).exec();
         promise.then(function (doc) {
-            console.log('DOC: ' + doc);
             project = doc;
             return project;
         });
-        console.log('Promise: ' + promise);
         return promise;
     }
     static deleteProject(projectInfo) {

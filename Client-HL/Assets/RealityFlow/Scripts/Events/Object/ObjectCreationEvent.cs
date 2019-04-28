@@ -1,4 +1,6 @@
-﻿using System;
+﻿using HoloToolkit.Unity.InputModule.Utilities.Interactions;
+using HoloToolkit.Unity.UX;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -54,12 +56,35 @@ namespace Assets.RealityFlow.Scripts.Events
             newObj.AddComponent<BoxCollider>();
             newObj.name = obj.name;
             newObj.AddComponent(typeof(FlowObject));
-            newObj.GetComponent<FlowObject>().selected = false; // might want to comment this one out
+
+            switch (Config.DEVICE_TYPE)
+            {
+                case FlowClient.CLIENT_HOLOLENS:
+                    newObj.AddComponent(typeof(TwoHandManipulatable));
+                    newObj.AddComponent(typeof(BoundingBoxRig));
+
+                    BoundingBox interactBox = (BoundingBox)Resources.Load("Prefabs/BoundingBoxBasic", typeof(BoundingBox));
+                    newObj.GetComponent<TwoHandManipulatable>().BoundingBoxPrefab = interactBox;
+                    newObj.GetComponent<BoundingBoxRig>().BoundingBoxPrefab = interactBox;
+
+                    AppBar menuBar = (AppBar)Resources.Load("Prefabs/AppBar", typeof(AppBar));
+                    newObj.GetComponent<BoundingBoxRig>().AppBarPrefab = menuBar;
+                    break;
+            }
+
+            newObj.GetComponent<FlowObject>().selected = true; // might want to comment this one out
+            Material mat = newObj.GetComponent<MeshRenderer>().material;
+            mat.color = obj.color;
             //newObj.GetComponent<FlowObject>().Start();
             newObj.GetComponent<FlowObject>().ft = new FlowTObject(newObj);
             newObj.GetComponent<FlowObject>().ft._id = obj._id;
             newObj.GetComponent<FlowObject>().ft.id = obj.id;
+            newObj.GetComponent<FlowObject>().pastState = new FlowTObject();
+            newObj.GetComponent<FlowObject>().pastState.Copy(newObj.GetComponent<FlowObject>().ft);
+
+            newObj.GetComponent<FlowObject>().ft.flowObject = newObj.GetComponent<FlowObject>();
             //FlowProject.activeProject.RegObj(); //probably don't need this anymore
+
 
             return "Recieving Object Creation update: " + FlowNetworkManager.reply;
         }

@@ -8,11 +8,14 @@
         "preserveConstEnums": true,
         "noEmitOnError": true,
         "sourceMap": true,
-        "outDir": "../node/editor/server/bld"
+        "outDir": "../node/editor/server/bld",
+        "lib": [ "es2015" ]
     },
     "exclude": [
-        "**/*.spec.ts",
         "**/node_modules",
         "**web-client"
+    ],
+    "include": [
+        "**/*.spec.ts"
     ]
 }

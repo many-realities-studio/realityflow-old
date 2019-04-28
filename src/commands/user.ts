@@ -3,6 +3,8 @@ import { User, IUserModel } from "../models/user";
 import { AssertionError } from "assert";
 
 var objectId = mongoose.Types.ObjectId();
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 export class UserOperations {
 
@@ -10,16 +12,12 @@ export class UserOperations {
 
         var newUser;
 
-        console.log('Entering CreateUser...');
-        console.log('UserInfo Username: '+userInfo.username);
-        console.log('UserInfo Password: '+userInfo.password);
-
         var hashedUserInfo = this.hashUserInfo(userInfo.username, userInfo.password);
 
         var newUser = new User({
 
             username: userInfo.username,
-            password: userInfo.password,
+            password: hashedUserInfo.password,
             clients: undefined,
             activeProject: undefined,
             projects: undefined,
@@ -27,16 +25,10 @@ export class UserOperations {
 
         });
 
-        console.log('User Presave: '+newUser);
-
-
         var promise = newUser.save();
-
-            console.log('Save User: '+newUser);
 
         promise.then(function(err, doc){
 
-                console.log('User ' + userInfo.username + ' added successfully.');
                 newUser = doc;
 
             return newUser;    
@@ -50,7 +42,7 @@ export class UserOperations {
 
         var returnedUser;
 
-        var promise = User.findById({_id: userInfo._id}).exec();
+        var promise = User.findById(userInfo._id).exec();
         
         promise.then(function(err, doc){
 
@@ -66,35 +58,13 @@ export class UserOperations {
 
     public static loginUser(userInfo: any){
 
-       var returnedUser = {
-
-            isLoggedIn: false,
-            _id:        ''
-       }
-
        var hashedUserInfo = this.hashUserInfo(userInfo.username, userInfo.password);
 
-       console.log("looking for user: " + userInfo.username + " with password: " + userInfo.password);
-         var promise = User.findOne({username:"test", password:"test"}).exec();
+         var promise = User.findOne({username: userInfo.username}).exec();
 
          promise.then(function(doc){
 
-            if(doc==undefined){
-
-                returnedUser.isLoggedIn = false;
-                console.log('No doc found');
-            }
-            else{
-
-                returnedUser.isLoggedIn = true;
-                returnedUser._id = doc._id;
-
-            }
-
-            console.log('Returned User payload Doc: '+doc);
-            console.log('Returned User isLoggedIn: '+returnedUser.isLoggedIn);
-
-            return returnedUser;
+            return doc;
             
         });
 
@@ -108,7 +78,7 @@ export class UserOperations {
         var hashedUserInfo = this.hashUserInfo(userInfo.username, userInfo.password);
         User.findOneAndUpdate({_id: userInfo._id}, {
 
-            username: hashedUserInfo.username,
+            username: userInfo.username,
             password: hashedUserInfo.password,
             clients: userInfo.clients,
             activeProject: userInfo.activeProject,
@@ -138,11 +108,8 @@ export class UserOperations {
 
     public static hashUserInfo(username: String, password: String){
 
-        const bcrypt = require('bcrypt');
-        const saltRounds = 10;
-
-        var hashedUserName = bcrypt.hash(username, saltRounds);
-        var hashedPassword = bcrypt.hash(password, saltRounds);
+        var hashedUserName = bcrypt.hashSync(username, saltRounds);
+        var hashedPassword = bcrypt.hashSync(password, saltRounds);
 
         var hashedUserInfo = {
 

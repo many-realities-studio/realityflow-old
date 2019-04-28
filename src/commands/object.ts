@@ -9,28 +9,30 @@ export class ObjectOperations {
     {
         var object;
 
-        console.log('Entering createObject...');
-        console.log('ObjectInfo type: '+objectInfo.type);
-        console.log('ObjectInfo name: '+objectInfo.name);
-
         var newObject = new Object({
 
-            type:       objectInfo.type,
-            name:       objectInfo.name,
-            triangles:  objectInfo.triangles,
-            x:          objectInfo.x,
-            y:          objectInfo.y,
-            z:          objectInfo.z,
-            q_x:        objectInfo.q_x,
-            q_y:        objectInfo.q_y,
-            q_z:        objectInfo.q_z,
-            q_w:        objectInfo.q_w,
-            s_x:        objectInfo.s_x,
-            s_y:        objectInfo.s_y,
-            s_z:        objectInfo.s_z,
-            vertices:   objectInfo.vertices,
-            uv:         objectInfo.uv,
-            locked:     objectInfo.locked
+            type:           objectInfo.type,
+            name:           objectInfo.name,
+            triangles:      objectInfo.triangles,
+            x:              objectInfo.x,
+            y:              objectInfo.y,
+            z:              objectInfo.z,
+            q_x:            objectInfo.q_x,
+            q_y:            objectInfo.q_y,
+            q_z:            objectInfo.q_z,
+            q_w:            objectInfo.q_w,
+            s_x:            objectInfo.s_x,
+            s_y:            objectInfo.s_y,
+            s_z:            objectInfo.s_z,
+            color:          objectInfo.color,
+            vertices:       objectInfo.vertices,
+            uv:             objectInfo.uv,
+            texture:        objectInfo.texture,
+            textureHeight:  objectInfo.textureHeight,
+            textureWidth:   objectInfo.textureWidth,
+            textureFormat:  objectInfo.textureFormat,
+            mipmapCount:    objectInfo.mipmapCount,
+            locked:         objectInfo.locked
 
         });
 
@@ -38,7 +40,6 @@ export class ObjectOperations {
 
         promise.then(function(doc){
 
-                console.log('Object ' + doc.name + ' added successfully.');
                 object = doc;
 
                 return object;
@@ -79,12 +80,11 @@ export class ObjectOperations {
             s_x:        objectInfo.s_x,
             s_y:        objectInfo.s_y,
             s_z:        objectInfo.s_z,
+            color:      objectInfo.color
 
         }).exec();
 
         promise.then(function(doc){
-
-                console.log('Object ' + doc.name + ' updated successfully.');
 
         });
 
@@ -93,6 +93,6 @@ export class ObjectOperations {
 
     public static deleteObject(objectInfo: any)
     {
-        Object.findByIdAndRemove(objectInfo._id);
+        Object.findByIdAndRemove(objectInfo._id).exec();
     }
 }

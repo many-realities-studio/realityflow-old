@@ -26,7 +26,9 @@ export declare interface IProjectModel extends mongoose.Document{
 
 }
 
-
+//The usePushEach property is a workaround for a
+//known Mongo issue that prohibits modifying
+//arrays stored in the DB
 const projectSchema = new mongoose.Schema({
 
     projectName:    String,

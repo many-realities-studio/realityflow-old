@@ -12,39 +12,38 @@ using Assets.RealityFlow.Scripts.Events;
 // [ExecuteInEditMode]
 public class FlowNetworkManager : MonoBehaviour
 {
-    public bool LocalServer;
-    public static bool debug = true;
+    // used to access non-static properties such as the debug attribute
+    public static FlowNetworkManager instance;
 
-    public bool _debug;
-    //string LOCAL_SERVER = "ws://echo.websocket.org";
+    // debug logs are only created if this is turned on. This can be done in the unity gui
+    public bool debug;
+
+    public bool LocalServer = false;
+
+    public GameObject mainGameCamera;
+    public static string reply;
+    public static bool connected = false;
+
+    public static FlowProject testProject;
+    bool registered = false;
+
+    WebSocket w;
+    IEnumerator coroutine;
+
+#if UNITY_EDITOR
+    public static int clientType = CLIENT_EDITOR;
+    private IEnumerator onLoggedInCoroutine;
+#endif
+
+    #region assign server urls
+
     string LOCAL_SERVER = "ws://localhost:8999";
     string LAN_SERVER = "ws://192.168.1.246:8082";
     string REMOTE_SERVER = "ws://plato.mrl.ai:8999";
 
+    #endregion
 
-    float selectionSize = .65f;
-    public bool music;
-    private int ignoreLayer;
-    private int selectionLayer;
-    public GameObject mainGameCamera;
-    public GameObject eventSystem;
-    public static String reply;
-    public Text connectionStatus;
-    public static Canvas mainCanvas;
-    public static FlowNetworkManager instance;
-    private static bool connected = false;
-    public static String username;
-    public static String password;
-    public static int uid = 3;
-    public static string identity_value = "-1";
-    public string test;
-    public GameObject parentObject;
-    IEnumerator coroutine;
-    public static bool connection_established = false;
-
-    bool loggedIn = false;
-
-    public static bool isMaster = false;
+    #region instantiate client constants
 
     public const int CLIENT_EDITOR = 0;
     public const int CLIENT_WEB = 1;
@@ -53,112 +52,50 @@ public class FlowNetworkManager : MonoBehaviour
 
     private const int ERROR_NO_CLIENT_FOUND = 0;
 
-#if UNITY_EDITOR || UNITY_WSA || UNITY_ANDROID || UNITY_IOS
+    #endregion
 
-    public static int GetUID()
+    // hard coded login info. This can be configured from the unity gui and should be removed once a login system is added to the HL-Client
+    public string username;
+    public string password;
+
+    // hard coded project id. This can be configured from the unity gui and should be removed once a project selection system is added to the HL-Client
+    public string project_name;
+
+    // Hard coded login. This should be removed when a login system is added to the HL-Client
+    public void login()
     {
-        return 3;
-    }
-    public static int GetUserID()
-    {
-        return uid;
-    }
-
-    public static void SendString(string s)
-    {
-        Debug.Log(s);
-    }
-
-    public static string GetUsername()
-    {
-        return username;
-    }
-#endif
-
-    WebSocket w;
-    int thirdFrame = 0;
-
-    public int onFrame = 3;
-    FlowTObject newVal;
-    bool selection = false;
-    FlowTObject cur_transform;
-    int count = 0;
-
-    public static void ObjectCmd(FlowEvent jsonCmd)
-    {
-        Debug.Log("[unity] Received object JSON command:");
-        Debug.Log(jsonCmd.ToString());
+        UserLoginEvent login = new UserLoginEvent();
+        login.Send(username, password, FlowClient.CLIENT_HOLOLENS);
     }
 
-    public void TriggerEvent()
+    // Hard coded project load. This should be removed when a project selection system is added to the HL-Client
+    public void loadProject()
     {
-        Debug.Log("[unity] Event Triggered!");
+        foreach (FlowProject project in Config.projectList)
+            if (project.projectName == project_name)
+                Config.projectId = project._id;
+
+        ProjectFetchEvent fetchproj = new ProjectFetchEvent();
+        fetchproj.Send();
+
+        registered = true;
     }
 
-
-#if !UNITY_EDITOR && UNITY_WEBGL
-
-    [DllImport("__Internal")]
-    public static extern string GetUsername();
-
-    [DllImport("__Internal")]
-    public static extern void SendTransform(float x, float y, float z);
-    
-    [DllImport("__Internal")]
-    public static extern void SendString(string s);
-#endif
-
-#if UNITY_EDITOR
-    public static int clientType = 0;
-    private IEnumerator onLoggedInCoroutine;
-#elif UNITY_WEBGL && !UNITY_EDITOR
-    public static int clientType = 1;
-#elif UNITY_IOS || UNITY_ANDROID && !UNITY_EDITOR
-    public static int clientType = 2;
-#elif UNITY_WSA && !UNITY_EDITOR
-    public static int clientType = 3;
-#endif
-
-    public void connectDisconnect()
+    /* This function locates objects that are removed by the the holotoolkits' appbar and sends delete updates to the server */
+    public void locateObjectsToDelete()
     {
-        if (connected)
-        {
-            Debug.Log("[unity] Disconnecting");
-            w.Close();
-            connectionStatus.text = "Connect";
-            connected = false;
-        }
-        else
-        {
-            Debug.Log("[unity] Connecting");
-            CommandProcessor.sendCommand(Commands.User.LOGIN, uid.ToString());
-            DoOnMainThread.ExecuteOnMainThread.Enqueue(() =>
+        foreach (string id in FlowProject.activeProject.transformsById.Keys)
+            if (FlowProject.activeProject.transformsById[id].transform == null)
             {
-                StartCoroutine(ConnectWebsocket());
-            });
-            connectionStatus.text = "Disconnect";
-        }
-    }
-
-    void WPLogin()
-    {
-        //login.ShowLoginScreen();
-        //login.login_username.text = username;
-        //login.login_password.text = password;
-        //login.DoLogin();
-    }
-
-    IEnumerator ReconnectWebsocket()
-    {
-        yield return new WaitForSeconds(5);
-        yield return StartCoroutine(w.Connect());
-        Debug.Log("Connected Websocket!");
+                ObjectDeleteEvent deleteObject = new ObjectDeleteEvent();
+                deleteObject.Send(id);
+                FlowProject.activeProject.transformsById.Remove(id);
+            }
     }
 
     public void Awake()
     {
-        instance = this;
-        Debug.Log("Setting main camera " +  clientType);
+        log("Setting main camera " +  clientType);
         
         if (mainGameCamera == null)
         {
@@ -169,384 +106,125 @@ public class FlowNetworkManager : MonoBehaviour
         {
             FlowCameras.mainCamera = mainGameCamera.GetComponent<Camera>();
         }
-       // mainCanvas = GameObject.Find("DebugCanvas").GetComponent<Canvas>();
-        /* if (DebugPanel.instance.forceHolo == true)
-        {
-            clientType = CLIENT_HOLOLENS;
-        }
-        if (DebugPanel.instance.forceWeb == true)
-            clientType = CLIENT_WEB;
-        if (clientType == CLIENT_HOLOLENS)
-        {
-            mainGameCamera.transform.position = new Vector3(0, 0.25f, -0.7f);
-            mainGameCamera.transform.rotation = Quaternion.identity;
-        }*/
-    }
-
-    bool AR_Enabled = true;
-    GameObject arButton;
-
-    public void toggleAR()
-    {
-        if (arButton == null)
-            arButton = GameObject.Find("AR Input");
-        ColorBlock cb = arButton.GetComponent<Button>().colors;
-        AR_Enabled = !AR_Enabled;
-        if (AR_Enabled)
-        {
-            cb.normalColor = new Color(0, .86f, 0);
-            cb.highlightedColor = new Color(0, 1, 0);
-        }
-        else
-        {
-            cb.normalColor = Color.white;
-            cb.highlightedColor = Color.white;
-        }
-        arButton.GetComponent<Button>().colors = cb;
-    }
-
-    public static FlowProject testProject;
-
-    public void Start()
-    {
-        _debug = debug;
-        testProject = new FlowProject();
-        testProject.initialize();
-
-        CommandProcessor.initializeRecieveEvents();
-
-        //string username = "ram " + DateTime.Now.ToString();
-        //string password = "rem " + DateTime.Now.ToString();
-
-        string username = "test";
-        string password = "test";
-
-        //UserRegisterEvent register = new UserRegisterEvent();
-        //register.Send(username, password, FlowClient.CLIENT_HOLOLENS);
-
-        UserLoginEvent login = new UserLoginEvent();
-        login.Send(username, password, FlowClient.CLIENT_HOLOLENS);
-
-        //ProjectCreateEvent createProj = new ProjectCreateEvent();
-        //createProj.Send("Subarus Maids2" + DateTime.Now.ToString());
-
-        //ProjectFetchEvent fetchproj = new ProjectFetchEvent();
-        //fetchproj.Send();
-
-
-
-#if !UNITY_EDITOR && UNITY_WEBGL
-        WebGLInput.captureAllKeyboardInput = false;
-#endif
-
-        username = GetUsername();
-        uid = GetUID();
-
-        Application.runInBackground = true;
-        if (clientType == CLIENT_EDITOR)
-        {
-            // Enable Vuforia
-            mainGameCamera.SetActive(true);
-  //          VectorLine.SetCamera3D(FlowCameras.mainCamera);
-
-//            if (login != null)
-//                login.fetch_account_id = true;
-//            WULogin.onLoggedIn += OnLoggedIn;
-        }
-        else if (clientType == CLIENT_WEB)
-        {
-            FlowCameras.mainCamera = mainGameCamera.GetComponent<Camera>();
-            //login.gameObject.SetActive(false);
-            string loginName = GetUsername();
-        }
-        else if (clientType == CLIENT_HOLOLENS)
-        {
-            Debug.Log("HOLOLENS!");
-            mainGameCamera.SetActive(true);
-            //mainGameCamera.GetComponent<Camera>().enabled = false;
-            //mainGameCamera.tag = "MainCamera";
-
-            //login.gameObject.SetActive(false);
-            string loginName = GetUsername();
-#if UNITY_WSA
-            eventSystem.AddComponent<UnityEngine.EventSystems.HoloLensInputModule>();
-#endif
-        }
-
-        if (LocalServer)
-        {
-            if ((clientType != CLIENT_RIPPLE && clientType != CLIENT_HOLOLENS) || (DebugPanel.instance.forceHolo))
-            {
-                w = new WebSocket(new Uri(LOCAL_SERVER));
-                Debug.Log("[unity] Connecting to " + LOCAL_SERVER);
-            }
-            else
-            {
-                Debug.Log("[unity] Connecting to " + LAN_SERVER);
-                w = new WebSocket(new Uri(LAN_SERVER));
-            }
-        }
-        else
-        {
-            Debug.Log("[unity] Connecting Websocket " + REMOTE_SERVER);
-            w = new WebSocket(new Uri(REMOTE_SERVER));
-        }
-        //w.Connect();
-        //ConnectWebsocket();
-        Debug.Log("Going to Websocket Connection...");
-        DoOnMainThread.ExecuteOnMainThread.Enqueue(() =>
-        {
-            StartCoroutine(ConnectWebsocket());
-        });
-        Debug.Log("Sent Connection Request");
     }
 
     IEnumerator ConnectWebsocket()
     {
-        Debug.Log("Connecting...");
+        log("Connecting...");
         yield return StartCoroutine(w.Connect());
-        Debug.Log("Connecting...2");
+        log("Connecting...2");
         while (w.error == "Closed")
         {
             yield return StartCoroutine(ReconnectWebsocket());
-            Debug.Log("Closed connection");
+            log("Closed connection");
         }
         
         connected = true;
-        FlowNetworkManager.connection_established = true;
-        Debug.Log("[unity] Connected!");
-        switch (clientType)
-        {
-            case CLIENT_EDITOR:
-                OnLoggedIn();
-                //WPLogin();
-                break;
-            case CLIENT_WEB:
-                OnWebLoggedIn();
-                break;
-            case CLIENT_HOLOLENS:
-                OnLoggedIn();
-                break;
-        }
-        Debug.Log("CONNECTED WEBSOCKET");
+        log("CONNECTED WEBSOCKET");
 
-        //NoteEnum note = NoteEnum.C;
-	    //AccidentalEnum accidental = AccidentalEnum.None;
-	    //OctaveEnum octave = OctaveEnum.Octave4;
-	    //ChannelEnum channel = ChannelEnum.C0;
-
-	    //int value = 80;
-        //MidiOut.NoteOn (note, accidental, octave, value, channel);	
-
-        //mainCanvas.renderMode = RenderMode.WorldSpace;
-
-
-        // recieve updates from the server (currently not working)     
         while (true)
         {
             reply = w.RecvString();
             if (reply != null && reply != "Null")
             {
-                Debug.Log("Processing Command");
                 FlowEvent incoming = JsonUtility.FromJson<FlowEvent>(reply);
                 CommandProcessor.processCommand(incoming);
             }
             if (w.error != null)
             {
-                Debug.Log("[unity] Error: " + w.error);
+                log("[unity] Error: " + w.error);
                 connected = false;
 
                 yield return new WaitForSeconds(5);
-#if !UNITY_WSA || UNITY_EDITOR
+#if !UNITY_WSA
                 DoOnMainThread.ExecuteOnMainThread.Enqueue(() =>
                 {
                     StartCoroutine(ConnectWebsocket());
                 });
-
-                Debug.Log("Connect connection");
-                CommandProcessor.sendCommand(Commands.User.LOGIN, uid.ToString());
-                loggedIn = false;
 #endif
             }
             yield return 0;
         }
-     }
-
-    void OnWebLoggedIn()
+     } 
+    IEnumerator ReconnectWebsocket()
     {
-        Debug.Log("[unity] Logged in");
-        DebugPanel.instance.clientIdentityValue.GetComponent<Text>().text = uid + " " + GetUsername();
-        loggedIn = true;
-        CommandProcessor.sendCommand(Commands.User.LOGIN, uid.ToString());
-        //DoOnMainThread.ExecuteOnMainThread.Enqueue(() => { StartCoroutine(ConnectWebsocket()); });
+        yield return new WaitForSeconds(5);
+        yield return StartCoroutine(w.Connect());
+        log("Connected Websocket!");
     }
 
-    void OnLoggedIn()
+    public void Start()
     {
-        Debug.Log("LoggedIn");
-        //DebugPanel.instance.clientIdentityValue.GetComponent<Text>().text = uid + " " + GetUsername();
-        loggedIn = true;
-        CommandProcessor.sendCommand(Commands.User.LOGIN, uid.ToString());
+        instance = this;
+        testProject = new FlowProject();
+        testProject.initialize();
+
+        // loads receive functions into command processor dictionary 
+        if(CommandProcessor.receiveEvents.Count == 0)
+            CommandProcessor.initializeRecieveEvents();
+
+        login();
+
+        if (LocalServer)
+        {
+            if ((clientType != CLIENT_RIPPLE && clientType != CLIENT_HOLOLENS) || (DebugPanel.instance.forceHolo))
+            {
+                log("[unity] Connecting to " + LOCAL_SERVER);
+                w = new WebSocket(new Uri(LOCAL_SERVER));
+            }
+            else
+            {
+                log("[unity] Connecting to " + LAN_SERVER);
+                w = new WebSocket(new Uri(LAN_SERVER));
+            }
+        }
+        else
+        {
+            log("[unity] Connecting Websocket " + REMOTE_SERVER);
+            w = new WebSocket(new Uri(REMOTE_SERVER));
+        }
+
+        log("Going to Websocket Connection...");
+
+        DoOnMainThread.ExecuteOnMainThread.Enqueue(() =>
+        {
+            StartCoroutine(ConnectWebsocket());
+        });
+
+        log("Sent Connection Request");
     }
-
-    /// <summary>
-    /// Update is called every frame, if the MonoBehaviour is enabled.
-    /// </summary>
-    /// 
-
-    bool registered = false;
     public void Update()
     {
-        debug = _debug;
+        if (Config.loggedIn && !registered)
+            loadProject();
 
-        if (Config.userId != "-9999" && !registered)
-        {
-            //ProjectCreateEvent createProj = new ProjectCreateEvent();
-            //createProj.Send("Subarus Maids1" + DateTime.Now.ToString());
-            //createProj.Send("Subarus Maids2" + DateTime.Now.ToString());
-            //createProj.Send("Subarus Maids3" + DateTime.Now.ToString());
-
-            Config.projectId = "5caa6ed219812402d181d1b4";
-            ProjectFetchEvent fetchproj = new ProjectFetchEvent();
-            fetchproj.Send();
-
-            registered = true;
-        }
-
-        // Start with delete key.
-        if (Input.GetKeyDown(KeyCode.Delete))
-        {
-            Debug.Log("Deleting!!!");
-            // Send Delete Commands
-        }
+        if (FlowProject.activeProject != null && FlowProject.activeProject.transformsById != null)
+            locateObjectsToDelete();
+            
+        // sends any commands that have been queued 
         if (CommandProcessor.cmdBuffer.Count > 0 && connected)
         {
-//            Debug.Log("Sending command!");
             foreach (FlowEvent cmd in CommandProcessor.cmdBuffer)
-            {
-//                Debug.Log(JsonUtility.ToJson(cmd));
                 cmd.Send(w);
-            }
             CommandProcessor.cmdBuffer.Clear();
         }
     }
 
-    // process incoming commands for edit mode
-    public void ProcessEditCommand ()
+    //  To be used in place of Debug.log. This function checks the debug paremeter before logging
+    public static void log(string log)
     {
-        reply = w.RecvString();
-        if (reply != null && reply != "Null")
-        {
-            Debug.Log("Processing Command");
-            FlowEvent incoming = JsonUtility.FromJson<FlowEvent>(reply);
-            if (incoming.command >= Commands.Project.MIN && incoming.command <= Commands.Project.MAX)
-            {
-                CommandProcessor.processProjectCommand(JsonUtility.FromJson<FlowProjectCommand>(reply));
-            }
-            else
-            {
-                CommandProcessor.processCommand(incoming);
-            }
-        }
-//         if (w.error != null)
-//             {
-//                 Debug.Log("[unity] Error: " + w.error);
-//                 connected = false;
-
-//                 yield return new WaitForSeconds(5);
-// #if !UNITY_WSA || UNITY_EDITOR
-//                 DoOnMainThread.ExecuteOnMainThread.Enqueue(() =>
-//                 {
-//                     StartCoroutine(ConnectWebsocket());
-//                 });
-//                 Debug.Log("Connect connection");
-//                 CommandProcessor.sendCommand(Commands.LOGIN, uid.ToString());
-//                 loggedIn = false;
-// #endif
-//             }
-//             yield return 0;
+        if (instance != null && instance.debug)
+            Debug.Log(log);
     }
 
-    public static int primitiveID = 0;
-
-    //public void CreateText()
-    //{
-    //    FlowEvent createCubeEvent = new FlowEvent();
-    //    createCubeEvent.cmd = Commands.Droplet.types.TEXT;
-    //    createCubeEvent.value = new FlowPayload(Commands.Droplet.types.TEXT.ToString());
-    //    //        CommandProcessor.EditorCommandProcessor(createCubeEvent);
-    //    CommandProcessor.sendCommand(createCubeEvent);
-    //}
-
-    public void SetColor()
-    {
-        /*
-        Droplet drop = SelectionManager.GetSelection();
-        if (drop != null)
-            Debug.Log(drop.gameObject.name);
-        TransformCommand setColorModifierEvent = new TransformCommand();
-        setColorModifierEvent.cmd = Commands.Modifier.types.COLOR;
-        Color newColor = Color.white;
-        setColorModifierEvent.transform = new FlowTransform(newColor.r, newColor.g, newColor.b, newColor.a);
-        setColorModifierEvent.transform.id = drop._id;
-        CommandProcessor.EditorCommandProcessor(setColorModifierEvent);
-        */
-    }
-
-    public void AddScale()
-    {
-        /*
-        Droplet drop = SelectionManager.GetSelection();
-        if (drop != null)
-            Debug.Log(drop.gameObject.name);
-        TransformCommand scaleObjectEvent = new TransformCommand();
-        scaleObjectEvent.cmd = Commands.Modifier.types.SCALE;
-        scaleObjectEvent.transform = new FlowTransform(0.22225f, 0.127f, 1.49225f);
-        scaleObjectEvent.transform.id = drop._id;
-        CommandProcessor.EditorCommandProcessor(scaleObjectEvent);
-        */
-    }
-
-    public int ARRAY_SIZE = 5;
-    public Vector3 ARRAY_OFFSET = new Vector3(.4f, .4f, .4f);
-
-
-    public void MakeArray()
-    {
-        /*
-        Droplet drop = SelectionManager.GetSelection();
-        if (drop != null)
-            Debug.Log(drop.gameObject.name);
-        float off_x = 0.15f;
-        TransformCommand createArrayEvent = new TransformCommand();
-        createArrayEvent.cmd = Commands.Modifier.types.ARRAY;
-        createArrayEvent.transform = new FlowTransform(off_x, 0, 0);
-        createArrayEvent.transform.id = drop._id;
-        int id = CommandProcessor.EditorCommandProcessor(createArrayEvent);
-        */
-    }
-
-    public void ResetPlayerPrefs()
-    {
-        PlayerPrefs.DeleteAll();
-        identity_value = "-1";
-        connection_established = false;
-        w.Close();
-    }
-
+    // Run on exit of application. Logs the user out of the server and closes the websocket
     public void OnApplicationQuit()
     {
-        FlowEvent closeEvent = new FlowEvent();
-        closeEvent.command = -1;
-        CommandProcessor.sendCommand(closeEvent);
-        Debug.Log("Closing!!");
+        UserLogoutEvent logout = new UserLogoutEvent();
+        logout.Send();
+
+        log("Closing!!");
         if(w != null && w.connected )
         w.Close();
     }
-
-#if !UNITY_EDITOR && UNITY_WEBGL
-    [DllImport("__Internal")]
-    private static extern int GetUID();
-#endif
-
 }

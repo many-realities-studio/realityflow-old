@@ -1,14 +1,11 @@
 using System;
 using UnityEngine;
 
-/// <summary>
-/// 
-/// </summary>
 [System.Serializable]
 public class FlowEvent
 {
     public int command;
-    public FlowPayload value;
+    public int _id;
     public long timestamp;
     public string project_id;
     public string client_id;
@@ -19,10 +16,18 @@ public class FlowEvent
         timestamp = DateTime.UtcNow.Ticks;
         string stringCmd = JsonUtility.ToJson(evt);
 
-        if(FlowNetworkManager.debug)
-            Debug.Log(stringCmd);
+        FlowNetworkManager.log("Sending " + stringCmd);
 
-        w.SendString(stringCmd);
+        try
+        {
+            w.SendString(stringCmd);
+        }
+        catch
+        {
+            FlowNetworkManager.log("The update didnt send, and the websocket connection status is: " + w.connected +
+                "\nthe json is: " + stringCmd);
+        }
+
     }
 
 }

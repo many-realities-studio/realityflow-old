@@ -1,0 +1,9 @@
+Adobe Dimension.bin -> 83F9AC8779BA898D856A8B60A94F75E9.bin
+Shape_base_baseColor.png -> 3D500E7F4EE4966EDD131407C7A63110.png
+Shape_base_emissive.png -> 19D7F4A04BE350FC03DBC0A948B56AE2.png
+Shape_base_normal.png -> 42D8A8D9A7CAFA5729936C1E7D3EF116.png
+Shape_base_occlusionRoughnessMetallic.png -> 357F45A9F957A4D07D4BEFC7DF78183C.png
+Shape_shape_baseColor.png -> 9E3A51979985CAD3856EFCBBAAE83E99.png
+Shape_shape_emissive.png -> 9E097F03D9C0ECB0C323ED48DA0FDE75.png
+Shape_shape_normal.png -> 391720B37157B03848B458E83697CC88.png
+Shape_shape_occlusionRoughnessMetallic.png -> B48206D833C06E822C033A59D3203FCC.png

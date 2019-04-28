@@ -23,6 +23,8 @@ namespace Assets.RealityFlow.Scripts.Events
 
         public void Send(string username, string password, int deviceType)
         {
+            Config.DEVICE_TYPE = deviceType;
+
             user = new FlowUser(username, password);
             client = new FlowClient(deviceType);
 
@@ -40,11 +42,7 @@ namespace Assets.RealityFlow.Scripts.Events
             Config.userId = log.user._id;
             Config.deviceId = log.client._id;
             Config.projectList = log.projects;
-            Config.deviceType = log.client.deviceType;
-
-            //Config.projectId = Config.projectList[0]._id;
-
-            
+            Config.loggedIn = true;
 
             return "Receiving user login update: " + FlowNetworkManager.reply;
         }

@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose = require("mongoose");
+var Schema = mongoose.Schema;
+var Types = Schema.Types;
 const objectSchema = new mongoose.Schema({
     type: String,
     name: String,
@@ -15,8 +17,14 @@ const objectSchema = new mongoose.Schema({
     s_x: Number,
     s_y: Number,
     s_z: Number,
+    color: Types.Mixed,
     vertices: [],
     uv: [],
-    locked: Boolean,
+    texture: [],
+    textureHeight: Number,
+    textureWidth: Number,
+    textureFormat: Number,
+    mipmapCount: Number,
+    locked: Boolean
 }, { usePushEach: true });
 exports.Object = mongoose.model("Object", objectSchema);

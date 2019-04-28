@@ -9,10 +9,6 @@ export class ClientOperations{
 
         var createdClient;
 
-        console.log('Entering createClient...');
-        console.log('ClientInfo Payload: '+clientInfo);
-        console.log('UserInfo Payload: '+userId);
-
         var newClient = new Client({
 
             user:           userId,
@@ -20,13 +16,9 @@ export class ClientOperations{
 
         });
 
-        console.log('Client PreSave: '+newClient);
-
         var promise = newClient.save(function(err, doc){
 
             createdClient = doc;
-
-            console.log('Saved Client: '+createdClient._id);
         
            // return createdClient._id;
         });

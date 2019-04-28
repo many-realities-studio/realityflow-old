@@ -10,6 +10,9 @@ export declare interface IClientModel extends mongoose.Document {
     deviceType:     Number;
 }
 
+//The usePushEach property is a workaround for a
+//known Mongo issue that prohibits modifying
+//arrays stored in the DB
 const clientSchema = new mongoose.Schema({
     user:           {type: ObjectId, ref: User},
     deviceType:     Number

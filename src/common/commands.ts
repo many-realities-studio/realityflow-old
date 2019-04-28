@@ -11,6 +11,7 @@ export class Commands {
         public static CREATE = 3000;
         public static UPDATE = 3002;
         public static FETCH = 3003;
+        public static ADD_USER = 3005;
         public static OPEN = 3007;
         public static FIND_ONE = 3008;
     };

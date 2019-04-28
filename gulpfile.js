@@ -97,7 +97,7 @@ gulp.task('deploy_dev', function () {
             hostname: 'plato.mrl.ai',
             username: 'realityflow_daemon',
             recursive: true,
-            exclude: ['client','node_modules','.git','.vscode','Client-HL','Client-ML','AR Demo', 'object creation test'],
+            exclude: ['client','node_modules','.git','.vscode','Client-HL', 'Client-HL - Copy', 'Client-HL - Copy - Copy', 'Client-ML','AR Demo', 'object creation test', 'ObjCreationTest'],
             destination: '/var/realityflow/development/',
             chmod: "ugo=rwX",
             progress: true,

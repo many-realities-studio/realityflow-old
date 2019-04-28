@@ -259,12 +259,14 @@ namespace HoloToolkit.Unity.UX
             objectToBound = this.gameObject;
 
             boxInstance = Instantiate(BoundingBoxPrefab) as BoundingBox;
+            //boxInstance.transform.SetParent(objectToBound.transform);
             boxInstance.Target = objectToBound;
             boxInstance.FlattenPreference = flattenedAxis;
 
             BuildRig();
 
             appBarInstance = Instantiate(appBarPrefab) as AppBar;
+           // appBarInstance.transform.SetParent(objectToBound.transform);
             appBarInstance.BoundingBox = boxInstance;
             appBarInstance.HoverOffsetZ = appBarHoverOffsetZ;
 

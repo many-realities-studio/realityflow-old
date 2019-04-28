@@ -1,0 +1,139 @@
+fileFormatVersion: 2
+guid: fe33dedc736d67144afd5067ed3f2a68
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: 10240_Office_Desk_v2_Body
+    100002: 10240_Office_Desk_v2_Box01
+    100004: 10240_Office_Desk_v2_Box02
+    100006: 10240_Office_Desk_v2_Box03
+    100008: 10240_Office_Desk_v2_Box04
+    100010: 10240_Office_Desk_v2_Box05
+    100012: 10240_Office_Desk_v2_Box06
+    100014: 10240_Office_Desk_v2_Box07
+    100016: 10240_Office_Desk_v2_Box08
+    100018: 10240_Office_Desk_v2_Box09
+    100020: //RootNode
+    400000: 10240_Office_Desk_v2_Body
+    400002: 10240_Office_Desk_v2_Box01
+    400004: 10240_Office_Desk_v2_Box02
+    400006: 10240_Office_Desk_v2_Box03
+    400008: 10240_Office_Desk_v2_Box04
+    400010: 10240_Office_Desk_v2_Box05
+    400012: 10240_Office_Desk_v2_Box06
+    400014: 10240_Office_Desk_v2_Box07
+    400016: 10240_Office_Desk_v2_Box08
+    400018: 10240_Office_Desk_v2_Box09
+    400020: //RootNode
+    2100000: 10240_Office_Desk_v2
+    2300000: 10240_Office_Desk_v2_Body
+    2300002: 10240_Office_Desk_v2_Box01
+    2300004: 10240_Office_Desk_v2_Box02
+    2300006: 10240_Office_Desk_v2_Box03
+    2300008: 10240_Office_Desk_v2_Box04
+    2300010: 10240_Office_Desk_v2_Box05
+    2300012: 10240_Office_Desk_v2_Box06
+    2300014: 10240_Office_Desk_v2_Box07
+    2300016: 10240_Office_Desk_v2_Box08
+    2300018: 10240_Office_Desk_v2_Box09
+    3300000: 10240_Office_Desk_v2_Body
+    3300002: 10240_Office_Desk_v2_Box01
+    3300004: 10240_Office_Desk_v2_Box02
+    3300006: 10240_Office_Desk_v2_Box03
+    3300008: 10240_Office_Desk_v2_Box04
+    3300010: 10240_Office_Desk_v2_Box05
+    3300012: 10240_Office_Desk_v2_Box06
+    3300014: 10240_Office_Desk_v2_Box07
+    3300016: 10240_Office_Desk_v2_Box08
+    3300018: 10240_Office_Desk_v2_Box09
+    4300000: 10240_Office_Desk_v2_Body
+    4300002: 10240_Office_Desk_v2_Box01
+    4300004: 10240_Office_Desk_v2_Box02
+    4300006: 10240_Office_Desk_v2_Box03
+    4300008: 10240_Office_Desk_v2_Box04
+    4300010: 10240_Office_Desk_v2_Box05
+    4300012: 10240_Office_Desk_v2_Box06
+    4300014: 10240_Office_Desk_v2_Box07
+    4300016: 10240_Office_Desk_v2_Box08
+    4300018: 10240_Office_Desk_v2_Box09
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

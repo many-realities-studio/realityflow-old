@@ -22,9 +22,10 @@ namespace Assets.RealityFlow.Scripts.Events
 
         public void Send(string username, string password, int deviceType)
         {
+            Config.DEVICE_TYPE = deviceType;
+
             user = new FlowUser(username, password);
             client = new FlowClient(deviceType);
-            Config.deviceType = deviceType;
 
             CommandProcessor.sendCommand(this);
         }

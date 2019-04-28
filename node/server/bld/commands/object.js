@@ -6,9 +6,6 @@ var objectId = mongoose.Types.ObjectId();
 class ObjectOperations {
     static createObject(objectInfo) {
         var object;
-        console.log('Entering createObject...');
-        console.log('ObjectInfo type: ' + objectInfo.type);
-        console.log('ObjectInfo name: ' + objectInfo.name);
         var newObject = new object_1.Object({
             type: objectInfo.type,
             name: objectInfo.name,
@@ -23,13 +20,18 @@ class ObjectOperations {
             s_x: objectInfo.s_x,
             s_y: objectInfo.s_y,
             s_z: objectInfo.s_z,
+            color: objectInfo.color,
             vertices: objectInfo.vertices,
             uv: objectInfo.uv,
+            texture: objectInfo.texture,
+            textureHeight: objectInfo.textureHeight,
+            textureWidth: objectInfo.textureWidth,
+            textureFormat: objectInfo.textureFormat,
+            mipmapCount: objectInfo.mipmapCount,
             locked: objectInfo.locked
         });
         var promise = newObject.save();
         promise.then(function (doc) {
-            console.log('Object ' + doc.name + ' added successfully.');
             object = doc;
             return object;
         });
@@ -56,14 +58,14 @@ class ObjectOperations {
             s_x: objectInfo.s_x,
             s_y: objectInfo.s_y,
             s_z: objectInfo.s_z,
+            color: objectInfo.color
         }).exec();
         promise.then(function (doc) {
-            console.log('Object ' + doc.name + ' updated successfully.');
         });
         return promise;
     }
     static deleteObject(objectInfo) {
-        object_1.Object.findByIdAndRemove(objectInfo._id);
+        object_1.Object.findByIdAndRemove(objectInfo._id).exec();
     }
 }
 exports.ObjectOperations = ObjectOperations;

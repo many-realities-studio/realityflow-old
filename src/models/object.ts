@@ -7,44 +7,58 @@ import ObjectIdType = mongoose.Types.ObjectId;
 
 export declare interface IObjectModel extends mongoose.Document{
 
-    type:       string;
-    name:       string;
-    triangles:  Number[];
-    x:          Number;
-    y:          Number;
-    z:          Number;
-    q_x:        Number;
-    q_y:        Number;
-    q_z:        Number;
-    q_w:        Number;
-    s_x:        Number;
-    s_y:        Number;
-    s_z:        Number;
-    vertices:   Number[];
-    uv:         Number[];
-    locked:     Boolean;
+    type:           string;
+    name:           string;
+    triangles:      Number[];
+    x:              Number;
+    y:              Number;
+    z:              Number;
+    q_x:            Number;
+    q_y:            Number;
+    q_z:            Number;
+    q_w:            Number;
+    s_x:            Number;
+    s_y:            Number;
+    s_z:            Number;
+    color:          Object;
+    vertices:       Number[];
+    uv:             Number[];
+    texture:        Number[];
+    textureHeight:  Number;
+    textureWidth:   Number;
+    textureFormat:  Number;
+    mipmapCount:    Number;
+    locked:         Boolean;
 
 }
 
-
+//The usePushEach property is a workaround for a
+//known Mongo issue that prohibits modifying
+//arrays stored in the DB
 const objectSchema = new mongoose.Schema({
 
-    type:       String,
-    name:       String,
-    triangles:  [],
-    x:          Number,
-    y:          Number,
-    z:          Number,
-    q_x:        Number,
-    q_y:        Number,
-    q_z:        Number,
-    q_w:        Number,
-    s_x:        Number,
-    s_y:        Number,
-    s_z:        Number,
-    vertices:   [],
-    uv:         [],
-    locked:     Boolean,
+    type:           String,
+    name:           String,
+    triangles:      [],
+    x:              Number,
+    y:              Number,
+    z:              Number,
+    q_x:            Number,
+    q_y:            Number,
+    q_z:            Number,
+    q_w:            Number,
+    s_x:            Number,
+    s_y:            Number,
+    s_z:            Number,
+    color:          Types.Mixed,
+    vertices:       [],
+    uv:             [],
+    texture:        [],
+    textureHeight:  Number,
+    textureWidth:   Number,
+    textureFormat:  Number,
+    mipmapCount:    Number,
+    locked:         Boolean
 
 },{usePushEach: true});
 

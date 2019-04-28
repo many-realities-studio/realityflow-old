@@ -1,4 +1,6 @@
-﻿using System;
+﻿using HoloToolkit.Unity.InputModule.Utilities.Interactions;
+using HoloToolkit.Unity.UX;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -40,18 +42,11 @@ namespace Assets.RealityFlow.Scripts.Events
             JsonUtility.FromJsonOverwrite(FlowNetworkManager.reply, log);
             Config.objs = log.objs;
 
-            //Debug.Log("vertice[0] = " + log.objs[0].vertices[0].x);
-
             foreach (FlowTObject obj in Config.objs)
             {
 
-                // the array of vectors and UV are returning in the following format: vertices[[{x = 1, y = 2, z = 3}]] instead of vertices[{x = 1, y = 2, z = 3}]
-                // therefore unity cant properly deserialize it and you get garbage data instead
+                FlowNetworkManager.log("creating object: " + obj.name);
 
-                Debug.Log("creating object: " + obj.name);
-             //   Debug.Log("creating object: " + obj._id);
-              //  Debug.Log("vertice[0] = " + obj.vertices[0].x + "   " + obj.vertices[0].y + "   " + obj.vertices[0].z + "");
-               // Debug.Log("uv[0] = " + obj.uv[0].x + "   " + obj.uv[0].y + "   ");
                 GameObject newObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
                 Mesh objMesh = newObj.GetComponent<MeshFilter>().mesh;
@@ -67,15 +62,34 @@ namespace Assets.RealityFlow.Scripts.Events
                 newObj.AddComponent<BoxCollider>();
                 newObj.name = obj.name;
                 newObj.AddComponent(typeof(FlowObject));
-                newObj.GetComponent<FlowObject>().selected = false; // might want to comment this one out
-                //newObj.GetComponent<FlowObject>().Start();
+
+                switch (Config.DEVICE_TYPE)
+                {
+                    case FlowClient.CLIENT_HOLOLENS:
+                        newObj.AddComponent(typeof(TwoHandManipulatable));
+                        newObj.AddComponent(typeof(BoundingBoxRig));
+
+                        BoundingBox interactBox = (BoundingBox)Resources.Load("Prefabs/BoundingBoxBasic", typeof(BoundingBox));
+                        newObj.GetComponent<TwoHandManipulatable>().BoundingBoxPrefab = interactBox;
+                        newObj.GetComponent<BoundingBoxRig>().BoundingBoxPrefab = interactBox;
+
+                        AppBar menuBar = (AppBar)Resources.Load("Prefabs/AppBar", typeof(AppBar));
+                        newObj.GetComponent<BoundingBoxRig>().AppBarPrefab = menuBar;
+                        break;
+                }
+
+                newObj.GetComponent<FlowObject>().selected = true; 
+                Material mat = newObj.GetComponent<MeshRenderer>().material;
+                mat.color = obj.color;
                 newObj.GetComponent<FlowObject>().ft = new FlowTObject(newObj);
                 newObj.GetComponent<FlowObject>().ft._id = obj._id;
                 newObj.GetComponent<FlowObject>().ft.id = obj.id;
-                //FlowProject.activeProject.RegObj(); //probably don't need this anymore
+                newObj.GetComponent<FlowObject>().pastState = new FlowTObject();
+                newObj.GetComponent<FlowObject>().pastState.Copy(newObj.GetComponent<FlowObject>().ft);
+
+                newObj.GetComponent<FlowObject>().ft.flowObject = newObj.GetComponent<FlowObject>();
             }
 
-            //Debug.Log(Config.objs[0].objectName);
             return "Receiving project open update: " + FlowNetworkManager.reply;
         }
     }

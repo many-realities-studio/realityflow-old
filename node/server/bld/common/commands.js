@@ -15,6 +15,7 @@ Commands.project = (_b = class {
     _b.CREATE = 3000,
     _b.UPDATE = 3002,
     _b.FETCH = 3003,
+    _b.ADD_USER = 3005,
     _b.OPEN = 3007,
     _b.FIND_ONE = 3008,
     _b);
