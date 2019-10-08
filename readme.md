@@ -10,3 +10,4 @@ Advisor: Dr. John Murray
 * Matthew Kurtz
 * Philip Bettler
 * Nyasha Frank
+* Yash Bhosale
