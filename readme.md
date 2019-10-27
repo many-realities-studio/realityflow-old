@@ -11,3 +11,4 @@ Advisor: Dr. John Murray
 * Philip Bettler
 * Nyasha Frank
 * Yash Bhosale
+* Alexis Lambert
