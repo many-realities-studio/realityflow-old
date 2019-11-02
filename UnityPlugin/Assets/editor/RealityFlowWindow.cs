@@ -185,7 +185,7 @@ public class RealityFlowWindow : EditorWindow {
                 break;
             
             case 1: // User Hub
-            if (GUILayout.Button("Logout", GUILayout.Height(20)))
+                if (GUILayout.Button("Logout", GUILayout.Height(20)))
                 {
                     UserLogoutEvent logout = new UserLogoutEvent();
                     logout.Send();

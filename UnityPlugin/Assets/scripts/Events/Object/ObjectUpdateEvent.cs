@@ -37,11 +37,6 @@ namespace Assets.RealityFlow.Scripts.Events
             CommandProcessor.sendCommand(this);
         }
 
-        public override void Send(WebSocket w)
-        {
-            base.Send(w, this);
-        }
-
         public static string Receive()
         {
             ObjectUpdateEvent trans_update_cmd = JsonUtility.FromJson<ObjectUpdateEvent>(FlowNetworkManager.reply);
