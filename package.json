@@ -39,6 +39,7 @@
     "ws": "^1.1.1"
   },
   "devDependencies": {
+    "@types/jest": "^24.0.21",
     "@types/mongodb": "^2.1.37",
     "@types/mongoose": "^4.7.2",
     "@types/node": "^6.0.58",
@@ -47,7 +48,9 @@
     "gulp": "^3.9.1",
     "gulp-print": "^5.0.0",
     "gulp-util": "^3.0.8",
+    "jest": "^24.9.0",
     "mocha": "^3.2.0",
+    "ts-jest": "^24.1.0",
     "ts-loader": "^5.2.2",
     "typescript": "^2.9.2",
     "vinyl-paths": "^2.1.0",
