@@ -379,13 +379,13 @@ namespace HoloToolkit.Unity
             GUILayout.FlexibleSpace();
             var previousLabelWidth = EditorGUIUtility.labelWidth;
             EditorGUIUtility.labelWidth = 105;
-            bool generateReferenceProjects = EditorUserBuildSettings.wsaGenerateReferenceProjects;
-            bool shouldGenerateProjects = EditorGUILayout.Toggle(useCSharpProjectsLabel, generateReferenceProjects);
+            //bool generateReferenceProjects = EditorUserBuildSettings.wsaGenerateReferenceProjects;
+            //bool shouldGenerateProjects = EditorGUILayout.Toggle(useCSharpProjectsLabel, generateReferenceProjects);
 
-            if (shouldGenerateProjects != generateReferenceProjects)
-            {
-                EditorUserBuildSettings.wsaGenerateReferenceProjects = shouldGenerateProjects;
-            }
+            //if (shouldGenerateProjects != generateReferenceProjects)
+            //{
+            //    EditorUserBuildSettings.wsaGenerateReferenceProjects = shouldGenerateProjects;
+            //}
 
             EditorGUIUtility.labelWidth = previousLabelWidth;
 
