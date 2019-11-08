@@ -1,5 +1,7 @@
 import { ServerEventDispatcher } from "../server";
 import { Commands } from "./commands";
+import {databaseController} from "./databaseController"
+
 
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -25,34 +27,24 @@ public static async serverMessageProcessor(json: any, connection: any){
             // sends out payload with updated project and object info
             case Commands.object.CREATE:{
 
-                var object = await ObjectOperations.createObject(json.obj);
-                var project = await ProjectOperations.findProject(json.project);
+                var ret = await databaseController.createObject(json)
 
-                //var sceneId = project.currentScene;
-                //var scene = SceneOperations.findScene(sceneId);
-
-                //scene.objects.push(object._id);
-
-                //ServerEventDispatcher.send(payloadString, connection);
-
-                project.objs.push(object._id);
-                await project.save();
-
-                json.project = project;
-                json.obj._id = object._id;
-
-                ServerEventDispatcher.broadcast(json, true);
-
-                break;
+                ServerEventDispatcher.broadcast(ret, true);
+                
             }
 
-            //Updates the object info in the DB and broadcasts the
-            //change to all other involved clients
+            //Broadcasts the change to all other involved clients
             case Commands.object.UPDATE:{
-
                 ServerEventDispatcher.broadcast(json, false);
-               await ObjectOperations.updateObject(json.obj);
-
+                break;
+            }
+            
+            // Update the object info in the DB
+            // I know this is silly, but it's a little messy
+            // to have control going both ways - esp. when changes 
+            // aren't just going to the database anymore
+            case Commands.object.UPDATELONGTERM:{
+                await databaseController.updateObject(json)
                 break;
             }
 
@@ -61,10 +53,7 @@ public static async serverMessageProcessor(json: any, connection: any){
             case Commands.object.DELETE:{
 
                 ServerEventDispatcher.broadcast(json, true);
-                var project = await ProjectOperations.findProject(json.project);
-                project.objs.splice(project.objs.indexOf(json.obj._id),1);
-                await project.save();
-                await ObjectOperations.deleteObject(json.obj);
+                await databaseController.deleteObject(json)
 
                 break;
             }
@@ -76,76 +65,61 @@ public static async serverMessageProcessor(json: any, connection: any){
 
         switch(command){
 
-            //Creates project in DB and sends project ID back to creator
+            // Creates project in DB and sends project ID back to creator
+            // as of 
             case Commands.project.CREATE:{
 
-                var project = await ProjectOperations.createProject(json.project, json.client, json.user);
-                project.clients.push(json.client._id);
-                await project.save();
-
-                json.project = project;
-
-                var payloadString = JSON.stringify(json);
-                ServerEventDispatcher.send(payloadString, connection);
+                var payload: String = await databaseController.createProject(json)
+                ServerEventDispatcher.send(payload, connection);
 
                 break;
             }
 
             case Commands.project.UPDATE:{
-
+                // there's nothing in here????
 
                 break;
             }
 
             case Commands.project.FETCH:{
-
+                // there's also nothing in here???
 
                 break;
             }
 
-            //Fetches project from DB, adds current client ID to
-            //project client IDs list, fetches all objects in the
-            //project, and broadcasts the complete payload to the requestor
-            case Commands.project.OPEN:{
+            // TODO : This just adds anyone who asks for a project onto the list of 
+            // project owners. This is not what we want!
 
+            // Fetches project from DB, adds current client ID to
+            // project client IDs list, fetches all objects in the
+            // project, and broadcasts the complete payload to the requestor
+            case Commands.project.OPEN:{
+            
+                //I think that this client stuff isn't that necessary?
                 var project = await ProjectOperations.findProject(json.project);
 
                 var projectClientsArray = String(project.clients);
-                var existsFlag = false;
+                var clientInProject = false;
 
+                // fix
                 for(var i=0; i<projectClientsArray.length; i++){
 
                     if(projectClientsArray[i]==json.client._id){
 
-                        existsFlag=true;
+                        clientInProject=true;
 
                     }
-                    
-                }
 
-                if(!existsFlag){
+                }
+                // fix
+                if(!clientInProject){
 
                     project.clients.push(json.client._id);
                     await project.save();
 
                 }
 
-                //promise = await ProjectOperations.saveProject(project);
-
-                //var scene = SceneOperations.findScene(project.currentScene);
-                var objectIds = project.objs;
-                var objects = [];
-
-                if(objectIds.length>0){
-                    for(var i=0; i<objectIds.length; i++){
-
-                        var currentObject = await ObjectOperations.findObject(objectIds[i]);
-
-                        objects.push(currentObject);
-
-                   }
-
-                }
+                var objects = await databaseController.fetchObjects(json)
 
                 json.objs = objects;
                 var payloadString = JSON.stringify(json);
@@ -155,14 +129,13 @@ public static async serverMessageProcessor(json: any, connection: any){
             }
 
             case Commands.project.DELETE:{
-
-
+                await databaseController.deleteProject(json);
                 break;
             }
 
         }
-
    }
+   // this is completely empty
    else if(command>=Commands.scene.CREATE&&command<=Commands.scene.DELETE){
 
         switch(command){
@@ -198,8 +171,7 @@ public static async serverMessageProcessor(json: any, connection: any){
             //sends the new user ID and client ID back to the creator
             case Commands.user.CREATE: {
 
-                var newUserPayload = await UserOperations.createUser(json.user);
-                var newClientId = await ClientOperations.createClient(json.client, newUserPayload._id);
+                // None of this should be being done in the message processor
                 newClientId = newClientId._id;
 
                 var connectionTracker = {
@@ -207,15 +179,11 @@ public static async serverMessageProcessor(json: any, connection: any){
                     clientId:   newClientId,
                     connection: connection
 
-               };
+                };
 
-               ServerEventDispatcher.connections.push(connectionTracker);
-
-                newUserPayload.clients.push(newClientId);
-                newUserPayload.save();
-
-                json.user._id = newUserPayload._id;
-                json.client._id = newClientId;
+                json = await databaseController.createUser(json)
+               
+                ServerEventDispatcher.connections.push(connectionTracker);
 
                 var payloadString = JSON.stringify(json);
 
@@ -231,40 +199,33 @@ public static async serverMessageProcessor(json: any, connection: any){
             //returns the client ID and project ID(s) to the logged in user
             case Commands.user.LOGIN: {
 
-                var returnedUser = await UserOperations.loginUser(json.user);
+                var loginData = await databaseController.loginUser(json);
+                var newClientId = loginData.newClientId;
                 
-                if(returnedUser!=undefined){
-
-                if(bcrypt.compareSync(json.user.password, returnedUser.password)){
-                   
-                    json.user._id = returnedUser._id;
-                   var projects = await ProjectOperations.fetchProjects(returnedUser);
-                   var newClientId = await ClientOperations.createClient(json.client, returnedUser._id);
-                   newClientId = newClientId._id;
-                   json.client._id = newClientId;
-                   var currentUser = await UserOperations.findUser(returnedUser);
-
-                   var connectionTracker = {
+                // Mongoose has structures for password comparisons!
+                if(loginData != null){
+                
+                    var connectionTracker = {
 
                         clientId:   newClientId,
                         connection: connection
 
-                   };
+                    };
 
-                   ServerEventDispatcher.connections.push(connectionTracker);
+                    // None of this code in itself should be in --messageprocessor.ts--
 
-                   for(var x in ServerEventDispatcher.connections){
+                    ServerEventDispatcher.connections.push(connectionTracker);
 
-                   }
+                    for(var x in ServerEventDispatcher.connections){}
 
-                   currentUser.clients.push(newClientId);
-                   currentUser.save();
-                   
-                   json.projects = projects;
-                   
-                   var payloadString = JSON.stringify(json);
+                    loginData.currentUser.clients.push(newClientId);
+                    loginData.currentUser.save();
+                    
+                    json.projects = loginData.projects;
+                    
+                    var payloadString = JSON.stringify(json);
 
-                   ServerEventDispatcher.send(payloadString, connection);
+                    ServerEventDispatcher.send(payloadString, connection);
 
                 }
 
@@ -276,14 +237,6 @@ public static async serverMessageProcessor(json: any, connection: any){
 
                 }
 
-            }
-            else{
-
-                var payloadString = JSON.stringify(json);
-
-                ServerEventDispatcher.send(payloadString, connection);
-
-            }
 
                 break;
             }
@@ -292,24 +245,9 @@ public static async serverMessageProcessor(json: any, connection: any){
             //client ID and connection from server connection array
             case Commands.user.LOGOUT: {
 
-                var user = await UserOperations.findUser(json.user);
+                await databaseController.logoutUser(json)
 
-                var clientArray = user.clients;
-
-                var filteredArray = clientArray.filter(function(value, index, array){
-
-                    return value!=json.client._id
-
-                });
-
-                user.clients = filteredArray;
-
-                ClientOperations.deleteClient(json.client._id);
-
-                var payloadString = JSON.stringify(json);
-
-                //ServerEventDispatcher.send(payloadString, connection);
-
+                // This is a big no-no! This should be happening in the ServerEventDispatcher code 
                 var connectionIndex = ServerEventDispatcher.connections.findIndex(x => x.clientId === json.client._id);
                 delete ServerEventDispatcher.connections[connectionIndex];
 
@@ -326,16 +264,7 @@ public static async serverMessageProcessor(json: any, connection: any){
             //Delets user from DB
             case Commands.user.DELETE: {
 
-                var User = UserOperations.findUser(json.user);
-                var clientArray = User.clients;
-
-                for(var arr in clientArray){
-
-                    ClientOperations.deleteClient(arr);
-
-                }
-
-                UserOperations.deleteUser(json.user);
+                await databaseController.deleteUser(json)
 
                 var payloadString = JSON.stringify(json);
 
