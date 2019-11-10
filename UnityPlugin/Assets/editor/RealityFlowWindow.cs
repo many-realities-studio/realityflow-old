@@ -264,7 +264,7 @@ public class RealityFlowWindow : EditorWindow
         // Create "Create new object" Button and define onClick action
         if (GUILayout.Button("Create new Object", GUILayout.Height(40)))
         {
-            // Todo: What does this do?
+            // Opens a new window/unity utility tab to create an object
             ObjectSettings.OpenWindow();
         }
 
@@ -685,6 +685,9 @@ public class ConfirmationWindow : EditorWindow
     }
 }
 
+/// <summary>
+/// A new editor window to handle changing a unity object's parameters
+/// </summary>
 public class ObjectSettings : EditorWindow
 {
     static ObjectSettings window;
