@@ -243,26 +243,31 @@ public static async serverMessageProcessor(json: any, connection: any){
                    newClientId = newClientId._id;
                    json.client._id = newClientId;
                    var currentUser = await UserOperations.findUser(returnedUser);
-
+                    
                    var connectionTracker = {
 
-                        clientId:   newClientId,
-                        connection: connection
+                    clientId:   newClientId,
+                    connection: connection
 
-                   };
+                    };
 
-                   ServerEventDispatcher.connections.push(connectionTracker);
+                    ServerEventDispatcher.connections.push(connectionTracker);
 
-                   for(var x in ServerEventDispatcher.connections){
+                    for(var x in ServerEventDispatcher.connections){
 
-                   }
+                    }
 
-                   currentUser.clients.push(newClientId);
-                   currentUser.save();
-                   
+                    if(currentUser.clients){
+                            currentUser.clients.push(newClientId);
+                            currentUser.save();
+                    }
+
+                    
+                    
                    json.projects = projects;
                    
                    var payloadString = JSON.stringify(json);
+                   console.log(payloadString);
 
                    ServerEventDispatcher.send(payloadString, connection);
 

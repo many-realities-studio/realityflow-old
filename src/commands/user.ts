@@ -40,18 +40,26 @@ export class UserOperations {
 
     public static findUser(userInfo: any){
 
-        var returnedUser;
+        var returnedUser = null;
 
-        var promise = User.findById(userInfo._id).exec();
+        var promise = User.find({ username: userInfo.username}).exec();
         
-        promise.then(function(err, doc){
+        promise.catch(function(err) {
+            console.log("BERROR:\n" + err);
+        });
+        
+        promise.then(function(doc){
 
-            returnedUser = doc;
+            if(doc)
+                returnedUser = doc;
+
+            
 
             return returnedUser;
         
         });
 
+        
         return promise;
 
     }
