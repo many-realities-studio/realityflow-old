@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Assets.RealityFlow.Scripts.Events;
+using System;
 
 
 // This file contains the functions used to populate and maintain the projects list.
@@ -39,6 +40,9 @@ public class ProjectListManager : MonoBehaviour {
     //private Text entry;
     private GameObject activePanel;
 
+    public Text greeting;
+    public bool usernameSet = false;
+
     private void Start()
     {
         ProjectDataList projects = new ProjectDataList();
@@ -47,8 +51,27 @@ public class ProjectListManager : MonoBehaviour {
         Config.projectId = PROJECT_UNSET;
     }
 
+    public void OnEnable()
+    {
+        Debug.Log("AWAAAAAKKEEEEE");
+        usernameSet = true;
+        SetGreeting(Config.username);
+        Debug.Log(greeting.text);
+    }
+    public void SetGreeting(string name)
+    {
+        greeting = GameObject.Find("Greeting").GetComponent<Text>();
+        greeting.text = "Hello " + name + "!";
+    }
+
     private void Update()
     {
+        if (usernameSet && Config.username != "")
+        {
+            SetGreeting(Config.username);
+            usernameSet = false;
+        }
+           
 
         if (!populated && Config.projectList != null && Config.projectList.Count > 0)
         {

@@ -12,6 +12,7 @@ public static class Config {
 	public static int CHANGE_TYPE = 0;
 
 	public static string userId = "-9999";
+    public static string username = "";
 	public static string projectId = "-9999";
 	public static string deviceId = "-9999";
     public static int deviceType = -1;
