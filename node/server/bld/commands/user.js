@@ -28,7 +28,7 @@ class UserOperations {
         var returnedUser = null;
         var promise = user_1.User.find({ username: userInfo.username }).exec();
         promise.catch(function (err) {
-            console.log("BERROR:\n" + err);
+            console.log(err);
         });
         promise.then(function (doc) {
             if (doc)

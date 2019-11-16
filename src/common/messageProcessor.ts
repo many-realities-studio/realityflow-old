@@ -253,24 +253,16 @@ public static async serverMessageProcessor(json: any, connection: any){
 
                     ServerEventDispatcher.connections.push(connectionTracker);
 
-                    for(var x in ServerEventDispatcher.connections){
-
-                    }
-
                     if(currentUser.clients){
                             currentUser.clients.push(newClientId);
                             currentUser.save();
                     }
-
-                    
                     
                    json.projects = projects;
                    
                    var payloadString = JSON.stringify(json);
-                   console.log(payloadString);
 
                    ServerEventDispatcher.send(payloadString, connection);
-
                 }
 
                 else{

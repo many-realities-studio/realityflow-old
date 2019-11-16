@@ -68,7 +68,7 @@ class ServerEventDispatcher {
     static send(payloadString, connection) {
         connection.send(payloadString, function ack(err) {
             if (err) {
-                console.log("ERROR SENDING\n" + err);
+                console.log(err);
             }
         });
     }
@@ -76,7 +76,6 @@ class ServerEventDispatcher {
         var connection = ws;
         function onMessageEvent(evt) {
             const json = JSON.parse(evt.data);
-            console.log(json);
             messageProcessor_1.MessageProcessor.serverMessageProcessor(json, connection);
         }
         function onCloseEvent(evt) {

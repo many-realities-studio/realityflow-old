@@ -142,15 +142,12 @@ class MessageProcessor {
                                     connection: connection
                                 };
                                 server_1.ServerEventDispatcher.connections.push(connectionTracker);
-                                for (var x in server_1.ServerEventDispatcher.connections) {
-                                }
                                 if (currentUser.clients) {
                                     currentUser.clients.push(newClientId);
                                     currentUser.save();
                                 }
                                 json.projects = projects;
                                 var payloadString = JSON.stringify(json);
-                                console.log(payloadString);
                                 server_1.ServerEventDispatcher.send(payloadString, connection);
                             }
                             else {

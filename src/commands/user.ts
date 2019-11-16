@@ -45,7 +45,7 @@ export class UserOperations {
         var promise = User.find({ username: userInfo.username}).exec();
         
         promise.catch(function(err) {
-            console.log("BERROR:\n" + err);
+            console.log(err);
         });
         
         promise.then(function(doc){
@@ -53,15 +53,10 @@ export class UserOperations {
             if(doc)
                 returnedUser = doc;
 
-            
-
             return returnedUser;
-        
         });
 
-        
         return promise;
-
     }
 
     public static loginUser(userInfo: any){
@@ -77,7 +72,6 @@ export class UserOperations {
         });
 
         return promise;
-
     }
 
 

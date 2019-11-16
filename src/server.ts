@@ -89,12 +89,11 @@ export class ServerEventDispatcher {
     public static send(payloadString: any, connection: any){
 
         // let payload = Buffer.alloc(payloadString.length, payloadString);
- 
-        // console.log("The payload is: \n " + payload);
+
          connection.send(payloadString, function ack(err){
  
              if(err){
-                  console.log("ERROR SENDING\n" + err)
+                  console.log(err);
               }
           });
     }
@@ -132,7 +131,6 @@ export class ServerEventDispatcher {
 
         function onMessageEvent(evt: MessageEvent) {
             const json = JSON.parse(evt.data);
-            console.log(json);
             MessageProcessor.serverMessageProcessor(json, connection);
         }
 
