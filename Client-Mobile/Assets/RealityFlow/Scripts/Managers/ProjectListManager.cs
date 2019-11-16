@@ -53,12 +53,27 @@ public class ProjectListManager : MonoBehaviour {
 
     public void OnEnable()
     {
-        Debug.Log("AWAAAAAKKEEEEE");
+        // let update function know that username has been previously set
         usernameSet = true;
-        SetGreeting(Config.username);
-        Debug.Log(greeting.text);
+        setGreeting(Config.username);
     }
-    public void SetGreeting(string name)
+
+    public void OnDisable()
+    {
+        // user is logging out, reset all variables
+        usernameSet = false;
+        populated = false;
+        projectListEntries.Clear();
+
+        // clear the project list items 
+        List<GameObject> list = new List<GameObject>();
+        for (int i = 0; i < content.transform.childCount; i++)
+        {
+            Destroy(content.transform.GetChild(i).gameObject);
+        }
+    }
+
+    public void setGreeting(string name)
     {
         greeting = GameObject.Find("Greeting").GetComponent<Text>();
         greeting.text = "Hello " + name + "!";
@@ -66,12 +81,13 @@ public class ProjectListManager : MonoBehaviour {
 
     private void Update()
     {
+
+        // prevents the greeting from displaying the previous logged in user's name 
         if (usernameSet && Config.username != "")
         {
-            SetGreeting(Config.username);
+            setGreeting(Config.username);
             usernameSet = false;
         }
-           
 
         if (!populated && Config.projectList != null && Config.projectList.Count > 0)
         {
@@ -94,6 +110,8 @@ public class ProjectListManager : MonoBehaviour {
                     item.index = projectListEntries.Count - 1;
                 }
             }
+        
+         
             content.transform.parent.transform.parent.gameObject.GetComponent<ScrollRect>().verticalNormalizedPosition = 1f;
             populated = true;
         }
@@ -125,6 +143,7 @@ public class ProjectListManager : MonoBehaviour {
                     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     Config.projectId = projectListEntries[i].id;
                     SceneManager.LoadScene(BUILD_SETTING_MOBILE_INTERFACE);
+                    break;
                 }
                 else if (toggle.IsPressed)
                 {

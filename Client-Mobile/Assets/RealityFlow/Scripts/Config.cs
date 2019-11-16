@@ -18,4 +18,11 @@ public static class Config {
     public static int deviceType = -1;
 	public static List<FlowProject> projectList = null;
     public static List<FlowTObject> objs;
+
+    public static void ResetConfig()
+    {
+        userId = "-9999";
+        username = "";
+        projectList = null;
+    }
 }
