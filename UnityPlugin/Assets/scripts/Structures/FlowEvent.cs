@@ -13,8 +13,6 @@ public class FlowEvent
     public string project_id;
     public string client_id;
 
-    public virtual void Send( WebSocket w ){}
-
     public virtual void Send( WebSocket w, FlowEvent evt) {
         timestamp = DateTime.UtcNow.Ticks;
         string stringCmd = JsonUtility.ToJson(evt);

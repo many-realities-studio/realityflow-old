@@ -24,16 +24,11 @@ namespace Assets.RealityFlow.Scripts.Events
         public void Send(string projectName)
         {
             project = new FlowProject();
-            project.projectName = projectName;
+            project.name = projectName;
             user = new FlowUser(Config.userId);
             client = new FlowClient(Config.deviceId);
   
             CommandProcessor.sendCommand(this);
-        }
-
-        public override void Send(WebSocket w)
-        {
-            base.Send(w, this);
         }
 
         public static string Receive()
