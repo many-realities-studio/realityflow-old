@@ -98,13 +98,14 @@ public class RealityFlowWindow : EditorWindow {
     {
         headerSection.x = 0;
         headerSection.y = 0;
-        headerSection.width = Screen.width;
+        headerSection.width = Screen.width/2;
+        Debug.Log(Screen.width);
         headerSection.height = 50;
 
         bodySection.x = 0;
         bodySection.y = 50;
-        bodySection.width = Screen.width;
-        bodySection.height = Screen.width - 50;
+        bodySection.width = Screen.width/2;
+        bodySection.height = Screen.height - 50;
 
         GUI.DrawTexture(headerSection, headerSectionTexture);
         GUI.DrawTexture(bodySection, bodySectionTexture);
@@ -123,7 +124,7 @@ public class RealityFlowWindow : EditorWindow {
     private void DrawBody()
     {
         GUILayout.BeginArea(bodySection);
-        scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(Screen.width), GUILayout.Height(Screen.height - 70));
+        scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(Screen.width/2), GUILayout.Height(Screen.height - 70));
         switch(window)
         {
             case 0: // login window
