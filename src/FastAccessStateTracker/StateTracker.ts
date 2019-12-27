@@ -7,10 +7,15 @@ import {Object, IObjectModel} from "../models/object";
 // TODO: Add logging system
 // TODO: Add checkout system check
 // Note: FAM is used to abbreviate "Fast Access Memory"
+
+/**
+ * Keeps track of the state of the project, allowing for faster access to data while
+ * storing data to the database in the
+ */
 export class StateTracker{
 
   // TODO: populate on startup with values stored in DB
-  private static _ProjectList: Array<FlowProject> = []; 
+  private static _ProjectList: Array<FlowProject> = [];
   private static _UserList: Array<FlowUser> = [];
   private static _LoggedInUsers: Array<FlowUser> = [];
   
@@ -123,9 +128,13 @@ export class StateTracker{
   // TODO: Find out what this does (or needs to do)
   public static OpenProject(projectToOpen: FlowProject)
   {
-
+    console.error("Not implemented: OpenProject in StateTracker.ts");
   }
 
+  /**
+   * Creates a user, adding the user data to the FAM and the database
+   * @param userToCreate 
+   */
   public static CreateUser(userToCreate: FlowUser)
   {
     this._UserList.push(userToCreate);
@@ -133,6 +142,10 @@ export class StateTracker{
     userToCreate.AddToDatabase();
   }
 
+  /**
+   * Logs in the desired user, this only affects the FAM and is not saved to the database
+   * @param userToLogin 
+   */
   public static LoginUser(userToLogin: FlowUser)
   {
     // Find user in the list of known users
@@ -150,6 +163,10 @@ export class StateTracker{
 
   }
 
+  /**
+   * Logs out the desired user, this only affects the FAM and is not saved to the database
+   * @param userToLogin 
+   */
   public static LogoutUser(userToLogin: FlowUser)
   {
     // Find user in the list of known users
@@ -183,6 +200,5 @@ export class StateTracker{
     {
       foundUser = this._UserList.splice(index, 1)[0]; // Deletes user from logged in users
     }
-
   }
 }

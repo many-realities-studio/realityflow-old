@@ -35,7 +35,11 @@ export class FlowProject{
     else return null;
   }
 
-  public GetObject(objectId: Number)
+  /**
+   * Returns FlowObject with the given ID number 
+   * @param objectId 
+   */
+  public GetObject(objectId: Number) : FlowObject
   {
     return this._ObjectList.find(element => element.id == objectId);
   }
@@ -59,12 +63,13 @@ export class FlowProject{
    */
   private DeleteFromDatabase()
   {
-
+    console.error("Not implemented: DeleteFromDatabase in FlowProject.ts");
+    
   }
 
   // TODO: Implement function
   public SaveToDatabase()
   {
-
+    console.error("Not implemented: SaveToDatabase in FlowProject.ts");
   }
 }

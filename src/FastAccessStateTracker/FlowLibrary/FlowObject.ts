@@ -26,14 +26,20 @@ export class FlowObject{
 
   id: number; // Added so that we can search for objects in FAM (Fast access memory)
 
+  /**
+   * Saves the current state to the database
+   */
   public SaveToDatabase()
   {
-
+    console.error("Not implemented: SaveToDatabase in FlowObject.ts");
   }
 
+  /**
+   * Deletes the current instance to the database
+   */
   public DeleteFromDatabase()
   {
-    
+    console.error("Not implemented: DeleteFromDatabase in FlowObject.ts");
   }
 
   public UpdateProperties(newObject: FlowObject)
