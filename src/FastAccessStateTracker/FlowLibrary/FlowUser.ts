@@ -1,23 +1,36 @@
-export class FlowUser
+import { IConvertToJson } from "./IConvertToJson";
+
+export class FlowUser implements IConvertToJson
 {
   // ID used by FAM for unique identification
   public id;
+  
+  ConvertToJson(): JSON 
+  {
+    throw new Error("Method not implemented.");
+  }
 
   // TODO: Add implementation
   public AddToDatabase()
   {
-    console.error("Not implemented: AddToDatabase in FlowUser.ts");
-  }  
+    throw new Error("Method not implemented.");
+  }
 
   // TODO: Add implementation
   public Login()
   {
-    console.error("Not implemented: Login in FlowUser.ts");
+    throw new Error("Method not implemented.");
   }
 
   // TODO: Add implementation
   public Logout()
   {
-    console.error("Not implemented: Logout in FlowUser.ts");
+    throw new Error("Method not implemented.");
+  }
+
+  // TODO: Add implmentation to delete from database
+  public Delete()
+  {
+
   }
 }

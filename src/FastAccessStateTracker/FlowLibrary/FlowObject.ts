@@ -1,37 +1,44 @@
 import { Color } from "./Color";
+import { IConvertToJson } from "./IConvertToJson";
 
-export class FlowObject{
-  type:           String;
-  name:           String;
-  triangles:      [];
-  x:              Number;
-  y:              Number;
-  z:              Number;
-  q_x:            Number;
-  q_y:            Number;
-  q_z:            Number;
-  q_w:            Number;
-  s_x:            Number;
-  s_y:            Number;
-  s_z:            Number;
-  color:          Color;
-  vertices:       [];
-  uv:             [];
-  texture:        [];
-  textureHeight:  Number;
-  textureWidth:   Number;
-  textureFormat:  Number;
-  mipmapCount:    Number;
-  locked:         Boolean;
+export class FlowObject implements IConvertToJson
+{
+  public type:           string;
+  public name:           string;
+  public triangles:      [];
+  public x:              Number;
+  public y:              Number;
+  public z:              Number;
+  public q_x:            Number;
+  public q_y:            Number;
+  public q_z:            Number;
+  public q_w:            Number;
+  public s_x:            Number;
+  public s_y:            Number;
+  public s_z:            Number;
+  public color:          Color;
+  public vertices:       [];
+  public uv:             [];
+  public texture:        [];
+  public textureHeight:  Number;
+  public textureWidth:   Number;
+  public textureFormat:  Number;
+  public mipmapCount:    Number;
+  public locked:         Boolean;
 
-  id: number; // Added so that we can search for objects in FAM (Fast access memory)
+  public id: number; // Added so that we can search for objects in FAM (Fast access memory)
+  public RoomNumber: number;
+
+  ConvertToJson(): JSON {
+    throw new Error("Method not implemented.");
+  }
 
   /**
    * Saves the current state to the database
    */
   public SaveToDatabase()
   {
-    console.error("Not implemented: SaveToDatabase in FlowObject.ts");
+    throw new Error("Method not implemented.");
   }
 
   /**
@@ -39,7 +46,7 @@ export class FlowObject{
    */
   public DeleteFromDatabase()
   {
-    console.error("Not implemented: DeleteFromDatabase in FlowObject.ts");
+    throw new Error("Method not implemented.");
   }
 
   public UpdateProperties(newObject: FlowObject)
