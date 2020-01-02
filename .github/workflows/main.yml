@@ -41,34 +41,6 @@ jobs:
           name: Test results (all modes)
           path: ${{ steps.testRunner.outputs.artifactsPath }}
 
-  buildForWebGL:
-    name: Build for WebGL 🕸
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        projectPath:
-          - Client-Web
-        unityVersion:
-          - 2019.2.11f1
-        targetPlatform:
-          - WebGL
-          - iOS
-    steps:
-      - uses: actions/checkout@v1
-      - uses: webbertakken/unity-activate@v1
-      - uses: webbertakken/unity-builder@v0.3
-        with:
-          projectPath: ${{ matrix.projectPath }}
-          unityVersion: ${{ matrix.unityVersion }}
-          targetPlatform: ${{ matrix.targetPlatform }}
-      - uses: webbertakken/unity-return-license@v1
-        if: always()
-      - uses: actions/upload-artifact@v1
-        with:
-          name: Build
-          path: build
-
   activateAndThenReturnLicense:
     name: returnLicense 🎈
     runs-on: ubuntu-latest
