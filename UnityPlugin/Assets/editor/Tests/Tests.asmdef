@@ -1,5 +1,9 @@
 ﻿{
     "name": "Tests",
+    "references": [
+        "MyScriptAssembly",
+        "RealityFlowScripts"
+    ],
     "optionalUnityReferences": [
         "TestAssemblies"
     ],

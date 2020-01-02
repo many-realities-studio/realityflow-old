@@ -4,11 +4,11 @@ using UnityEngine;
 using UnityEditor;
 using Assets.RealityFlow.Scripts.Events;
 using System.IO;
-
 public class RealityFlowWindow : EditorWindow {
 
     Vector2 scrollPos = Vector2.zero;
     Texture2D headerSectionTexture;
+    public static bool testBool = false;
     Texture2D bodySectionTexture;
 
     Color headerSectionColor = new Color(13f/255f, 32f/255f, 44f/255f, 1f);

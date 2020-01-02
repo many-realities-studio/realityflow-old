@@ -6,13 +6,12 @@ using UnityEngine.TestTools;
 
 namespace Tests
 {
-    public class NewTestScript
+    public class PlaymodeTestScript
     {
         // A Test behaves as an ordinary method
         [Test]
         public void NewTestScriptSimplePasses()
         {
-            Assert.IsTrue(true);
             // Use the Assert class to test conditions
         }
 
