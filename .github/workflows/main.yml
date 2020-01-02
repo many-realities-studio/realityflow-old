@@ -18,54 +18,6 @@ jobs:
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
 
-  testRunnerInEditMode:
-    name: Test in editmode 📝
-    runs-on: ubuntu-latest
-    steps:
-      # Checkout repository (required to test local actions)
-      - name: Checkout repository
-        uses: actions/checkout@v1
-
-      # Configure test runner
-      - name: Run tests
-        id: testRunner
-        uses: webbertakken/unity-test-runner@v1
-        env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-          UNITY_PROJECT_PATH: UnityPlugin
-          TEST_MODE: editmode
-
-      # Upload artifact
-      - name: Expose as artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: Test results (edit mode)
-          path: ${{ steps.testRunner.outputs.artifactsPath }}
-
-  testRunnerInPlayMode:
-    name: Test in playmode 📺
-    runs-on: ubuntu-latest
-    steps:
-      # Checkout repository (required to test local actions)
-      - name: Checkout repository
-        uses: actions/checkout@v1
-
-      # Configure test runner
-      - name: Run tests
-        id: testRunner
-        uses: webbertakken/unity-test-runner@v1
-        env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-          UNITY_PROJECT_PATH: test-project
-          TEST_MODE: playmode
-
-      # Upload artifact
-      - name: Expose as artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: Test results (play mode)
-          path: ${{ steps.testRunner.outputs.artifactsPath }}
-
   testRunnerInAllModes:
     name: Test all modes ✨
     runs-on: ubuntu-latest
@@ -80,7 +32,7 @@ jobs:
         uses: webbertakken/unity-test-runner@v1
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-          UNITY_PROJECT_PATH: test-project
+          UNITY_PROJECT_PATH: UnityPlugin
           TEST_MODE: all
 
       # Upload artifacts
@@ -104,7 +56,7 @@ jobs:
         uses: webbertakken/unity-builder@v0.1
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-          UNITY_PROJECT_PATH: test-project
+          UNITY_PROJECT_PATH: Client-Web
           BUILD_NAME: TestBuild
           BUILD_TARGET: WebGL
           BUILDS_PATH: builds
