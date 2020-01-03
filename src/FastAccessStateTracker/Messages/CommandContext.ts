@@ -6,29 +6,34 @@
  */
 
 import { FlowConversion } from "../FlowLibrary/FlowConversion";
-import { RoomManager } from "../RoomManager";
 import { StateTracker } from "../StateTracker";
+import { ConnectionManager } from "../ConnectionManager";
+import { FlowProject } from "../FlowLibrary/FlowProject";
+import { FlowUser } from "../FlowLibrary/FlowUser";
 
 interface ICommand
 {
-  ExecuteCommand(data: any) : void;
+  ExecuteCommand(data: any, connection: WebSocket) : void;
 }
 
 // Project Commands
 
 class Command_CreateProject implements ICommand
 {
-  ExecuteCommand(data: any): void 
+  ExecuteCommand(data: any, connection: WebSocket): void 
   {
-    let project = FlowConversion.ConvertToFlowProject(data);
+    let project : FlowProject= FlowConversion.ConvertToFlowProject(data);
     
     StateTracker.CreateProject(project);
+
+    let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
+    ConnectionManager.SendMessage(project.ToString(), [userConnected]);
   }
 }
 
 class Command_DeleteProject implements ICommand
 {
-  ExecuteCommand(data: any): void 
+  ExecuteCommand(data: any, connection: WebSocket): void 
   {
     let project = FlowConversion.ConvertToFlowProject(data);
     
@@ -39,7 +44,7 @@ class Command_DeleteProject implements ICommand
 // TODO: Find out what this is supposed to do
 class Command_OpenProject implements ICommand
 {
-  ExecuteCommand(data: any): void {
+  ExecuteCommand(data: any, connection: WebSocket): void {
     throw new Error("Method not implemented.");
   }
 }
@@ -48,7 +53,7 @@ class Command_OpenProject implements ICommand
 
 class Command_CreateUser implements ICommand
 {
-  ExecuteCommand(data: any): void 
+  ExecuteCommand(data: any, connection: WebSocket): void 
   {
     let user = FlowConversion.ConvertToFlowUser(data);
     
@@ -58,7 +63,7 @@ class Command_CreateUser implements ICommand
 
 class Command_DeleteUser implements ICommand
 {
-  ExecuteCommand(data: any): void 
+  ExecuteCommand(data: any, connection: WebSocket): void 
   {
     let user = FlowConversion.ConvertToFlowUser(data);
     StateTracker.DeleteUser(user);
@@ -67,16 +72,16 @@ class Command_DeleteUser implements ICommand
  
 class Command_LoginUser implements ICommand
 {
-  ExecuteCommand(data: any): void 
+  ExecuteCommand(data: any, connection: WebSocket): void 
   {
     let user = FlowConversion.ConvertToFlowUser(data);
-    StateTracker.LoginUser(user);
+    StateTracker.LoginUser(user, connection);
   }
 }
 
 class Command_LogoutUser implements ICommand
 {
-  ExecuteCommand(data: any): void 
+  ExecuteCommand(data: any, connection: WebSocket): void 
   {
     let user = FlowConversion.ConvertToFlowUser(data);
     StateTracker.LogoutUser(user);
@@ -84,25 +89,28 @@ class Command_LogoutUser implements ICommand
 }
 
 // Room Commands
+
 class Command_CreateRoom implements ICommand
 {
-  ExecuteCommand(data: any): void 
+  ExecuteCommand(data: any, connection: WebSocket): void  
   {
-    throw new Error("Method not implemented.");
+    throw new Error("Method not implemented");
   }
 }
 
 class Command_DeleteRoom implements ICommand
 {
-  ExecuteCommand(data: any): void {
+  ExecuteCommand(data: any, connection: WebSocket): void  
+  {
     throw new Error("Method not implemented.");
   }
 }
 
 // Object Commands
+
 class Command_CreateObject implements ICommand
 {
-  ExecuteCommand(data: any): void 
+  ExecuteCommand(data: any, connection: WebSocket): void  
   {
     let flowObject = FlowConversion.ConvertToFlowObject(data);
 
@@ -112,7 +120,7 @@ class Command_CreateObject implements ICommand
 
 class Command_DeleteObject implements ICommand
 {
-  ExecuteCommand(data: any): void 
+  ExecuteCommand(data: any, connection: WebSocket): void  
   {
     let flowObject = FlowConversion.ConvertToFlowObject(data);
 
@@ -122,7 +130,7 @@ class Command_DeleteObject implements ICommand
 
 class Command_UpdateObject implements ICommand
 {
-  ExecuteCommand(data: any): void 
+  ExecuteCommand(data: any, connection: WebSocket): void  
   {
     let flowObject = FlowConversion.ConvertToFlowObject(data);
 
@@ -147,7 +155,7 @@ export class CommandContext
 
     // User Commands
     this._CommandList.set("CreateUser", new Command_CreateUser());
-    this._CommandList.set("DeleteUser", new Command_DeleteUser());  
+    this._CommandList.set("DeleteUser", new Command_DeleteUser());
     this._CommandList.set("LoginUser", new Command_LoginUser());
     this._CommandList.set("LogoutUser", new Command_LogoutUser());
 
@@ -166,8 +174,8 @@ export class CommandContext
    * @param commandToExecute The command to be executed
    * @param data The data which is needed for the command to execute.
    */
-  ExecuteCommand(commandToExecute: string, data: any) : void
+  ExecuteCommand(commandToExecute: string, data: any, connection: WebSocket) : void
   {
-    this._CommandList.get(commandToExecute).ExecuteCommand(data);
+    this._CommandList.get(commandToExecute).ExecuteCommand(data, connection);
   }
 }

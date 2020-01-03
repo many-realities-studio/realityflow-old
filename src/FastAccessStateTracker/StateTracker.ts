@@ -2,7 +2,8 @@ import { FlowObject } from "./FlowLibrary/FlowObject";
 import { FlowProject } from "./FlowLibrary/FlowProject";
 import { FlowUser } from "./FlowLibrary/FlowUser"
 import { RoomManager } from "./RoomManager";
-
+import { ConnectionManager } from "./ConnectionManager";
+import { MongooseDatabase } from "./Database/MongooseDatabase"
 // TODO: Add logging system
 // TODO: Add checkout system 
 
@@ -15,11 +16,6 @@ import { RoomManager } from "./RoomManager";
 
 export class StateTracker{
 
-  // TODO: populate on startup with values stored in DB
-  private static _ProjectList: Array<FlowProject> = [];
-  private static _UserList: Array<FlowUser> = [];
-  private static _LoggedInUsers: Array<FlowUser> = [];
-  
   // Project Functions
   /**
    * Adds a project to the FAM and database
@@ -27,8 +23,6 @@ export class StateTracker{
    */
   public static CreateProject(projectToCreate: FlowProject) : void
   {
-    this._ProjectList.push(projectToCreate);
-
     projectToCreate.SaveToDatabase();
   }
 
@@ -37,16 +31,7 @@ export class StateTracker{
    * @param projectToDelete 
    */
   public static DeleteProject(projectToDelete: FlowProject) : void
-  {
-    // Remove object from FAM
-    const index = this._ProjectList.findIndex((element) => element.id == projectToDelete.id);
-
-    let foundProject : FlowProject = null;
-    if(index > -1)
-    {
-      projectToDelete = this._ProjectList.splice(index, 1)[0];
-    }
-    
+  {    
     // Remove object from database
     if(projectToDelete != null)
     {
@@ -61,10 +46,8 @@ export class StateTracker{
    * @param userToCreate 
    */
   public static CreateUser(userToCreate: FlowUser) : void
-  {
-    this._UserList.push(userToCreate);
-
-    userToCreate.AddToDatabase();
+  { 
+    userToCreate.SaveToDatabase();
   }
 
     /**
@@ -77,84 +60,52 @@ export class StateTracker{
     this.LogoutUser(userToDelete);
 
     // Delete user in the list of known users
-    let index = this._UserList.findIndex((element) => element.id == userToDelete.id);
-
-    let foundUser : FlowUser = null;
-    if(index > -1)
-    {
-      foundUser = this._UserList.splice(index, 1)[0]; // Deletes user from logged in users
-      foundUser.Delete();
-    }
+    MongooseDatabase.DeleteUser(userToDelete);
   }
 
   /**
    * Logs in the desired user, this only affects the FAM and is not saved to the database
    * @param userToLogin 
    */
-  public static LoginUser(userToLogin: FlowUser) : void
+  public static LoginUser(userToLogin: FlowUser, connectionToUser : WebSocket) : void
   {
     // Find user in the list of known users
-    let knownUser : FlowUser = this._UserList.find((element) => element.id == userToLogin.id);
+    let userFound : FlowUser = MongooseDatabase.GetUser(userToLogin.id);
 
-    if(knownUser != undefined)
-    {
-      this._LoggedInUsers.push(knownUser);
-      knownUser.Login();
-    }
-    else
-    {
-      // TODO: Implement what happens when user is not found
-    }
-
+    ConnectionManager.LoginUser(userFound, connectionToUser);
   }
 
   /**
    * Logs out the desired user, this only affects the FAM and is not saved to the database
    * @param userToLogin 
    */
-  public static LogoutUser(userToLogin: FlowUser) : void
+  public static LogoutUser(userToLogout: FlowUser) : void
   {
-    // Find user in the list of known users
-    let index = this._LoggedInUsers.findIndex((element) => element.id == userToLogin.id);
-
-    let foundUser : FlowUser = null;
-    if(index > -1)
-    {
-      foundUser = this._LoggedInUsers.splice(index, 1)[0];
-    }
-    else
-    {
-      // TODO: Implement what happens when user is not found
-    }
+    ConnectionManager.LogoutUser(userToLogout);
   }
 
   // Room Commands
-  public static CreateRoom()
+  public static CreateRoom(project: FlowProject) : void
   {
-    throw console.error("Method not implemented");
-  }
-
-  public static DeleteRoom()
-  {
-    throw console.error("Method not implemented");
+    RoomManager.CreateRoom(project);
   }
 
   // Object Commands
-  public static CreateObject(objectToCreate : FlowObject)
+  public static CreateObject(objectToCreate : FlowObject) : void
   {
     RoomManager.FindRoom(objectToCreate.RoomNumber)
                 .GetProject()
                 .AddObject(objectToCreate);
   }
 
-  public static DeleteObject(objectToDelete : FlowObject)
+  public static DeleteObject(objectToDelete : FlowObject) : void
   {
     RoomManager.FindRoom(objectToDelete.RoomNumber)
                 .GetProject()
                 .DeleteObject(objectToDelete);
   }
 
-  public static UpdateObject(objectToUpdate : FlowObject)
+  public static UpdateObject(objectToUpdate : FlowObject) : void
   {
     RoomManager.FindRoom(objectToUpdate.RoomNumber)
                 .GetProject()

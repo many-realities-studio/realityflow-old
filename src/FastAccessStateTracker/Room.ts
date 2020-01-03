@@ -1,5 +1,7 @@
 import { FlowUser } from "./FlowLibrary/FlowUser";
 import { FlowProject } from "./FlowLibrary/FlowProject";
+import { ConnectionManager } from "./ConnectionManager";
+import { MongooseDatabase } from "./Database/MongooseDatabase";
 
 // Look into Pub/Sub architecture
 export class Room
@@ -8,17 +10,16 @@ export class Room
   private _RoomCode: Number;
   private _CurrentProject: FlowProject;
 
-  public Room(roomCode : Number, project: FlowProject)
+  constructor(roomCode : Number, project: FlowProject)
   {
     this._RoomCode = roomCode;
     this._CurrentProject = project;
   }
 
   // Notifies all users in the room to a change
-  public NotifyUsersOfChange(changeType: string, data: ) : void
+  public NotifyUsersOfChange(data: string) : void
   {
-    throw console.error("Method not implemented");
-    
+    ConnectionManager.SendMessage(data, this._UsersCurrentlyInTheRoom);    
   }
 
   public JoinRoom(userJoiningTheRoom: FlowUser) : void
@@ -34,11 +35,20 @@ export class Room
     return this._RoomCode;
   }
 
-  // TODO: implement functionality
+  /**
+   * Sets the current project to the desired project from the database
+   * @param projectId 
+   */
+  public SetProject(projectId : number) : void
+  {
+    MongooseDatabase.GetProject(projectId);
+  }
+
+  /**
+   * Gets the project that is currently being used by the project
+   */
   public GetProject() : FlowProject
   {
-    console.error("Not implmented: GetProject() in Room.ts");
-    
-    return null;
+    return this._CurrentProject;
   }
 }

@@ -1,7 +1,7 @@
 import { Color } from "./Color";
-import { IConvertToJson } from "./IConvertToJson";
+import { IStringable } from "./IStringable";
 
-export class FlowObject implements IConvertToJson
+export class FlowObject implements IStringable
 {
   public type:           string;
   public name:           string;
@@ -29,7 +29,7 @@ export class FlowObject implements IConvertToJson
   public id: number; // Added so that we can search for objects in FAM (Fast access memory)
   public RoomNumber: number;
 
-  ConvertToJson(): JSON {
+  ToString() : string {
     throw new Error("Method not implemented.");
   }
 

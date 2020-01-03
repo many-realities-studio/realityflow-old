@@ -1,7 +1,7 @@
-export interface IConvertToJson
+export interface IStringable
 {
   /**
    * Converts the object into a JSON message
    */
-  ConvertToJson() : JSON;
+  ToString() : string;
 }

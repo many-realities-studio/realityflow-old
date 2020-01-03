@@ -1,36 +1,54 @@
-import { IConvertToJson } from "./IConvertToJson";
+import { IStringable } from "./IStringable";
+import { MongooseDatabase } from "../Database/MongooseDatabase";
 
-export class FlowUser implements IConvertToJson
+export class FlowUser implements IStringable
 {
   // ID used by FAM for unique identification
-  public id;
+  public id : number;
+  public connectionList : Array<WebSocket> = [];
   
-  ConvertToJson(): JSON 
+  ToString() : string 
   {
     throw new Error("Method not implemented.");
   }
 
-  // TODO: Add implementation
-  public AddToDatabase()
+  /**
+   * Saves this user to the database
+   */
+  public SaveToDatabase() : void
   {
-    throw new Error("Method not implemented.");
+    MongooseDatabase.UpdateUser(this);
   }
 
-  // TODO: Add implementation
-  public Login()
+  /**
+   * Saves the connection information
+   * @param websocketConnection 
+   */
+  public Login(websocketConnection : WebSocket) : void
   {
-    throw new Error("Method not implemented.");
+    this.connectionList.push(websocketConnection);
   }
 
-  // TODO: Add implementation
-  public Logout()
+  /**
+   * Deletes the connection information
+   * @param websocketConnection 
+   */
+  public Logout(connection : WebSocket) : void
   {
-    throw new Error("Method not implemented.");
+    const index = this.connectionList.findIndex((element) => element == connection);
+
+    var ClosedConnection : WebSocket = null;
+    if(index > -1)
+    {
+      ClosedConnection = this.connectionList.splice(index, 1)[0];
+    }
   }
 
-  // TODO: Add implmentation to delete from database
-  public Delete()
+  /**
+   * Deletes this user from the database
+   */
+  public Delete() : void
   {
-
+    MongooseDatabase.DeleteUser(this);
   }
 }

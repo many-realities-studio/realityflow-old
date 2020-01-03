@@ -2,17 +2,18 @@ import { FlowObject } from "./FlowObject";
 
 // For the database
 import {Object} from "../../models/object";
-import { IConvertToJson } from "./IConvertToJson";
+import { IStringable } from "./IStringable";
+import { MongooseDatabase } from "../Database/MongooseDatabase"
 
 // NOTE: FAM Stands for Fast Access Memory
-export class FlowProject implements IConvertToJson
+export class FlowProject implements IStringable
 {
   private _ObjectList: Array<FlowObject> = [];
   
   // Used for identification in the FAM
   public id;
  
-  ConvertToJson(): JSON {
+  ToString(): string {
     throw new Error("Method not implemented.");
   }
 
@@ -69,21 +70,18 @@ export class FlowProject implements IConvertToJson
     this.DeleteFromDatabase();
   }
 
-  // TODO: Implement function
   /**
    * Deletes the project reference from the database
    * Note: Does not delete any of the projects dependencies, including objects, textures, etc.
    */
   private DeleteFromDatabase()
   {
-    throw new Error("Method not implemented.");
-    
+    MongooseDatabase.DeleteProject(this);
   }
 
-  // TODO: Implement function
   public SaveToDatabase()
   {
-    throw new Error("Method not implemented.");
+    MongooseDatabase.UpdateProject(this);
   }
 
   /**
