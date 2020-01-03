@@ -10,6 +10,7 @@ TagManager:
   - Picker
   - NetworkManager
   - EventSystem
+  - TopCamera
   layers:
   - Default
   - TransparentFX

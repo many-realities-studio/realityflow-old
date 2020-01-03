@@ -12,7 +12,7 @@ using Assets.RealityFlow.Scripts.Events;
 // [ExecuteInEditMode]
 public class FlowNetworkManager : MonoBehaviour
 {
-    public bool LocalServer;
+    public bool LocalServer = true;
     public static bool debug = true;
 
     public bool _debug;

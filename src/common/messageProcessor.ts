@@ -226,7 +226,7 @@ public static async serverMessageProcessor(json: any, connection: any){
                     var payloadString = JSON.stringify(json);
 
                     ServerEventDispatcher.send(payloadString, connection);
-
+                  
                 }
 
                 else{
