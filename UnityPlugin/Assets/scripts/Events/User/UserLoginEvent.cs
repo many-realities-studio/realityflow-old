@@ -31,10 +31,7 @@ namespace Assets.RealityFlow.Scripts.Events
             CommandProcessor.sendCommand(this);
         }
 
-        public override void Send(WebSocket w)
-        {
-            base.Send(w, this);
-        }
+       
 
         public static string Receive()
         {
@@ -50,7 +47,7 @@ namespace Assets.RealityFlow.Scripts.Events
 
             Debug.Log("received " + Config.projectList.Count + " projects from user " + Config.userId);
             foreach (FlowProject pid in Config.projectList)
-                Debug.Log(pid.projectName);
+                Debug.Log(pid.name);
 
             return "Receiving user login update: " + FlowNetworkManager.reply;
         }
