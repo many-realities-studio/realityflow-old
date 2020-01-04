@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // [ExecuteInEditMode]
+/// <summary>
+/// Unity component, doesn't store the state of the object
+/// </summary>
 public class FlowObject : MonoBehaviour {
 
 	public bool selected = true;

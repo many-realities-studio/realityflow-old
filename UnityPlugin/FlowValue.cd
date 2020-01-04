@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Comment CommentText="id is unity id&#xD;&#xA;_id is server id&#xD;&#xA;__v = mondodb character (sent from mongo to the client) (handled by mongo) (Populated by JSONUtility)&#xD;&#xA;&#xD;&#xA;T object = texture object&#xD;&#xA;config.objs = list of all objects that exist&#xD;&#xA;&#xD;&#xA;Flowobject is a unity component">
+    <Position X="12.786" Y="1.004" Height="1.833" Width="4.4" />
+  </Comment>
+  <Class Name="FlowValue">
+    <Position X="10.75" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEABAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>Assets\scripts\Values\FlowValue.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FlowClient">
+    <Position X="2.75" Y="3.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AEBAAAACAAAEEAAAAAAAAAAAAAAgAAAEAAgAAAAAAAA=</HashCode>
+      <FileName>Assets\scripts\Entities\FlowClient.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FlowUser">
+    <Position X="5.5" Y="3.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAACEAAAAAAAAAAAAAgAAEAAAAAAAACAAAAAgAAAAA=</HashCode>
+      <FileName>Assets\scripts\Entities\FlowUser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="User">
+    <Position X="8.75" Y="3.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAACAAAAAEAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Assets\scripts\Entities\User.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FlowProject">
+    <Position X="11.75" Y="3.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAABAAAAAAIAEAAAwABQAEAAIAAAAABEAAABA=</HashCode>
+      <FileName>Assets\scripts\Structures\FlowProject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FlowTextValue">
+    <Position X="15.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\scripts\Values\FlowTextValue.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FlowTObject">
+    <Position X="17.5" Y="3.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAQAABIEAIAAAAAIgAAEAQAlAgAVAgCAgABgAQBAAgA=</HashCode>
+      <FileName>Assets\scripts\Values\FlowTObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
