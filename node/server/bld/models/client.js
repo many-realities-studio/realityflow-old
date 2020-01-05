@@ -10,3 +10,4 @@ const clientSchema = new mongoose.Schema({
     deviceType: Number
 }, { usePushEach: true });
 exports.Client = mongoose.model("Client", clientSchema);
+//# sourceMappingURL=client.js.map
