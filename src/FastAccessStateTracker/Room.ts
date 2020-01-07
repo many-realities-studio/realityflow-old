@@ -22,6 +22,10 @@ export class Room
     ConnectionManager.SendMessage(data, this._UsersCurrentlyInTheRoom);    
   }
 
+  /**
+   * Adds the desired user to the list of users in the room
+   * @param userJoiningTheRoom the user that will be joining the room
+   */
   public JoinRoom(userJoiningTheRoom: FlowUser) : void
   {
     this._UsersCurrentlyInTheRoom.push(userJoiningTheRoom);
@@ -41,7 +45,8 @@ export class Room
    */
   public SetProject(projectId : number) : void
   {
-    MongooseDatabase.GetProject(projectId);
+    // TODO: Get project from the database and set that project as the current project of the room
+    throw new console.error("Method not implemented");
   }
 
   /**
