@@ -64,6 +64,11 @@ export class ConnectionManager
     }
   }
 
+  /**
+   * Finds the user that holds the relevant websocket connection and returns said FlowUser,
+   * or undefined if no user is found.
+   * @param connectionToFind The connection which is associated with a user
+   */
   public static FindUserWithConnection(connectionToFind: WebSocket) : FlowUser
   {
     return this._LoggedInUsers.find(user => user.connectionList.find(connection => connection == connectionToFind));

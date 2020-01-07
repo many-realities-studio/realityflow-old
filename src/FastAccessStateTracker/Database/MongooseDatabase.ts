@@ -15,6 +15,7 @@ export class MongooseDatabase implements IDatabase
     this._URL = url;
   }
 
+  // Project functions
   CreateProject(projectToCreate: FlowProject): void {
     throw new Error("Method not implemented.");
   }
@@ -27,6 +28,8 @@ export class MongooseDatabase implements IDatabase
   GetProject(projectId: number): FlowProject {
     throw new Error("Method not implemented.");
   }
+
+  // User functions
   CreateUser(userToCreate: FlowUser): void {
     throw new Error("Method not implemented.");
   }
@@ -39,6 +42,8 @@ export class MongooseDatabase implements IDatabase
   GetUser(UserId: number): FlowUser {
     throw new Error("Method not implemented.");
   }
+
+  // Object functions
   CreateObject(objectToCreate: FlowObject): void {
     throw new Error("Method not implemented.");
   }
@@ -49,47 +54,6 @@ export class MongooseDatabase implements IDatabase
     throw new Error("Method not implemented.");
   }
   GetObject(ObjectId: number): FlowObject {
-    throw new Error("Method not implemented.");
-  }
-  // Project functions
-  public static CreateProject(projectToCreate: FlowProject): void {
-    throw new Error("Method not implemented.");
-  }  
-  public static DeleteProject(projectToDelete: FlowProject): void {
-    throw new Error("Method not implemented.");
-  }
-  public static UpdateProject(projectToUpdate: FlowProject): void {
-    throw new Error("Method not implemented.");
-  }
-  public static GetProject(projectId: number): FlowProject {
-    throw new Error("Method not implemented.");
-  }
-
-  // User Functions
-  public static CreateUser(userToCreate: FlowUser): void {
-    throw new Error("Method not implemented.");
-  }
-  public static DeleteUser(userToDelete: FlowUser): void {
-    throw new Error("Method not implemented.");
-  }
-  public static UpdateUser(userToUpdate: FlowUser): void {
-    throw new Error("Method not implemented.");
-  }
-  public static GetUser(UserId: number): FlowUser {
-    throw new Error("Method not implemented.");
-  }
-
-  // Object Functions
-  public static CreateObject(objectToCreate: FlowObject): void {
-    throw new Error("Method not implemented.");
-  }
-  public static DeleteObject(objectToDelete: FlowObject): void {
-    throw new Error("Method not implemented.");
-  }
-  public static UpdateObject(objectToUpdate: FlowObject): void {
-    throw new Error("Method not implemented.");
-  }
-  public static GetObject(ObjectId: number): FlowObject {
     throw new Error("Method not implemented.");
   }
 }

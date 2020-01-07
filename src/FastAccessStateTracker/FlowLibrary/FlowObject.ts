@@ -3,6 +3,7 @@ import { IStringable } from "./IStringable";
 
 export class FlowObject implements IStringable
 {
+  // Data the FlowObject stores
   public type:           string;
   public name:           string;
   public triangles:      [];
@@ -26,9 +27,13 @@ export class FlowObject implements IStringable
   public mipmapCount:    Number;
   public locked:         Boolean;
 
-  public id: number; // Added so that we can search for objects in FAM (Fast access memory)
+  // Fields used for tracking this object in the FAM
+  public id: number; 
   public RoomNumber: number;
 
+  /**
+   * Converts this instance of a FlowObject into a string.
+   */
   ToString() : string {
     throw new Error("Method not implemented.");
   }
@@ -49,6 +54,10 @@ export class FlowObject implements IStringable
     throw new Error("Method not implemented.");
   }
 
+  /**
+   * Updates the properties of this object with that of the passed in flowObject
+   * @param newObject the object with the properties that should be copied
+   */
   public UpdateProperties(newObject: FlowObject)
   {
     this.type = newObject.type;          
