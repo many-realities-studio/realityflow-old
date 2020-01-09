@@ -427,7 +427,7 @@ public class FlowNetworkManager : MonoBehaviour
             foreach (FlowEvent cmd in CommandProcessor.cmdBuffer)
             {
 //                Debug.Log(JsonUtility.ToJson(cmd));
-                cmd.Send(w, cmd);
+                cmd.Send(w);
             }
             CommandProcessor.cmdBuffer.Clear();
         }
