@@ -82,7 +82,7 @@ public class RealityFlowWindow : EditorWindow
     {
         _DrawLayouts();
         _DrawHeader();
-        _DrawBody();        
+        DrawBody();        
     }
 
     /// <summary>
@@ -121,13 +121,13 @@ public class RealityFlowWindow : EditorWindow
     {
         headerSection.x = 0;
         headerSection.y = 0;
-        headerSection.width = Screen.width/2;
+        headerSection.width = Screen.width;
         //Debug.Log(Screen.width);
         headerSection.height = 50;
 
         bodySection.x = 0;
         bodySection.y = 50;
-        bodySection.width = Screen.width/2;
+        bodySection.width = Screen.width;
         bodySection.height = Screen.height - 50;
 
         GUI.DrawTexture(headerSection, headerSectionTexture);
@@ -210,7 +210,7 @@ public class RealityFlowWindow : EditorWindow
         {
             // Send the user to the project import window
             window = EWindowView.PROJECT_IMPORT;
-            _DrawBody();
+            DrawBody();
         }
     }
 
@@ -231,7 +231,7 @@ public class RealityFlowWindow : EditorWindow
 
             // Send the user back to the login screen
             window = EWindowView.LOGIN;
-            _DrawBody();
+            DrawBody();
         }
 
         // Create "New Project" Button and define onClick action
@@ -239,7 +239,7 @@ public class RealityFlowWindow : EditorWindow
         {
             // Send the user to the project creation screen
             window = EWindowView.PROJECT_CREATION;
-            _DrawBody();
+            DrawBody();
         }
 
         // Create "Load Project" Button and define onClick action
@@ -247,7 +247,7 @@ public class RealityFlowWindow : EditorWindow
         {
             // Send the user to the load project screen
             window = EWindowView.LOAD_PROJECT;
-            _DrawBody();
+            DrawBody();
         }
     }
 
@@ -260,7 +260,7 @@ public class RealityFlowWindow : EditorWindow
 
             // Send the user to the User Hub screen
             window = EWindowView.USER_HUB;
-            _DrawBody();
+            DrawBody();
         }
 
         // Create "Create new object" Button and define onClick action
@@ -275,7 +275,7 @@ public class RealityFlowWindow : EditorWindow
         {
             // Send user to Delete Object screen
             window = EWindowView.DELETE_OBJECT;
-            _DrawBody();
+            DrawBody();
         }
 
         // This piece of code would take you to the invite user window but the functionality
@@ -306,7 +306,7 @@ public class RealityFlowWindow : EditorWindow
         {
             // Send the user to the Project Hub screen
             window = EWindowView.PROJECT_HUB;
-            _DrawBody();
+            DrawBody();
         }
         EditorGUILayout.EndHorizontal();
 
@@ -335,7 +335,7 @@ public class RealityFlowWindow : EditorWindow
         {
             // Send the user to the User Hub screen
             window = EWindowView.USER_HUB;
-            _DrawBody();
+            DrawBody();
         }
         EditorGUILayout.EndHorizontal();
 
@@ -370,7 +370,7 @@ public class RealityFlowWindow : EditorWindow
         {
             // Send the user back to the User Hub
             window = EWindowView.USER_HUB;
-            _DrawBody();
+            DrawBody();
         }
         EditorGUILayout.EndHorizontal();
 
@@ -397,7 +397,7 @@ public class RealityFlowWindow : EditorWindow
                 // Send the user to the Project Hub screen
                 window = EWindowView.PROJECT_HUB;
                 projectName = ""; // TODO: What does this do?
-                _DrawBody();
+                DrawBody();
             }
         }
     }
@@ -410,7 +410,7 @@ public class RealityFlowWindow : EditorWindow
         {
             // Send user to the Project Hub Screen
             window = EWindowView.PROJECT_HUB;
-            _DrawBody();
+            DrawBody();
         }
         EditorGUILayout.EndHorizontal();
 
@@ -436,7 +436,7 @@ public class RealityFlowWindow : EditorWindow
 
                 // Send the user to the Project Hub screen
                 window = EWindowView.PROJECT_HUB;
-                _DrawBody();
+                DrawBody();
             }
         }
     }
@@ -449,7 +449,7 @@ public class RealityFlowWindow : EditorWindow
         {
             // Send user to the Login screen
             window = EWindowView.LOGIN;
-            _DrawBody();
+            DrawBody();
         }
         EditorGUILayout.EndHorizontal();
 
@@ -527,12 +527,12 @@ public class RealityFlowWindow : EditorWindow
 
                 // Send the user to the login screen
                 window = EWindowView.LOGIN;
-                _DrawBody();
+                DrawBody();
             }
         }
     }
 
-    private void _DrawBody()
+    private void DrawBody()
     {
         GUILayout.BeginArea(bodySection);
         scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(Screen.width), GUILayout.Height(Screen.height - 70));
