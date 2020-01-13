@@ -15,10 +15,6 @@ export declare interface IProjectModel extends mongoose.Document{
     owner:          ObjectIdType;
     clients:        [ObjectIdType];
     objs:           [ObjectIdType];
-   /* currentScene:   ObjectIdType;
-    prevScene:      [ObjectIdType];
-    nextScene:      [ObjectIdType];
-    bookmarks:      [ObjectIdType]; */
     created:        Date;
     lastEdit:       Date;
     lastEditor:     ObjectIdType;

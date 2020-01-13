@@ -122,7 +122,7 @@ public class RealityFlowWindow : EditorWindow
         headerSection.x = 0;
         headerSection.y = 0;
         headerSection.width = Screen.width;
-        //Debug.Log(Screen.width);
+        // Debug.Log(Screen.width);
         headerSection.height = 50;
 
         bodySection.x = 0;
