@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using Assets.RealityFlow.Scripts.Events;
+using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
 
 
 /// <summary>
@@ -81,6 +84,14 @@ public static class Utilities
         obj.type = objectType;
         obj.name = objectName;
         obj.color = currentColor;
+    }
+
+    public static string MockServerResponse(string filename)
+    {
+        string content = File.ReadAllText("Assets/editor/Tests/ServerResponses/" + filename);
+
+        return content; 
+
     }
 
 }

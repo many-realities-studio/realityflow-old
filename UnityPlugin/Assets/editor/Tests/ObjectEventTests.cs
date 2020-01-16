@@ -21,7 +21,7 @@ namespace Tests
         /// This test verifies that an object create event is created and sent to the command processor
         /// </summary>
         [Test]
-        public void ObjectCreateEventTest()
+        public void SendObjectCreateEventTest()
         {
             // Arrange
             Config.projectId = "09876";
@@ -35,6 +35,7 @@ namespace Tests
             bool result = CommandProcessor.cmdBuffer.Contains(createEvent);
             Assert.IsTrue(result, "Command buffer does not contain the create object event");
         }
+
 
 
         /// <summary>

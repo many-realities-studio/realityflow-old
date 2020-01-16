@@ -53,6 +53,7 @@ namespace Assets.RealityFlow.Scripts.Events
             MonoBehaviour.Destroy(newObj.GetComponent<Collider>());
             newObj.AddComponent<BoxCollider>();
             newObj.name = obj.name;
+            Debug.Log("OBJECT NAME IS " + newObj.name);
 
             // Textures are currently not supported on the live server due to lag issues
             //-------------------------------------------------------------------------------------------------------------------------------
