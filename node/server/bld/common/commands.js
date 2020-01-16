@@ -8,7 +8,6 @@ Commands.object = (_a = class {
     _a.CREATE = 2000,
     _a.DELETE = 2002,
     _a.UPDATE = 2001,
-    _a.UPDATELONGTERM = 2003,
     _a);
 Commands.project = (_b = class {
     },
