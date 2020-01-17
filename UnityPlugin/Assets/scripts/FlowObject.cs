@@ -20,6 +20,7 @@ public class FlowObject : MonoBehaviour {
 	    //ft.id = "1";
 	    //ft._id = "1";
 	    fos.Add(this);
+        // Update();
 	    //ft.RegisterTransform();
 	}
 	public static void registerObject() {

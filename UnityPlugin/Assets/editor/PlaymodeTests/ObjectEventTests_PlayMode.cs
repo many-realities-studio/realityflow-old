@@ -67,5 +67,71 @@ namespace Tests
             // Use yield to skip a frame.
             yield return null;
         }
+
+
+        // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
+        // `yield return null;` to skip a frame.
+        [UnityTest]
+        public IEnumerator FetchProjectEventTestsWithEnumerator()
+        {
+            // Arrange
+            string response = Utilities.MockServerResponse("fetchproject.txt");
+            FlowNetworkManager.reply = response;
+
+            string objectName1 = "key";
+            string objectName2 = "Sphere";
+            string expectedReturnValue = "Receiving project open update: " + response;
+
+            // Act
+            string actualReturnValue = ProjectFetchEvent.Receive();
+
+            // Assert - Check return value of Receive function and check that userid is set
+            Assert.IsNotNull(GameObject.Find(objectName1), "Missing component " + objectName1);
+            Assert.IsNotNull(GameObject.Find(objectName2), "Missing component " + objectName2);
+            Assert.AreEqual(expectedReturnValue, actualReturnValue);
+
+            // Use yield to skip a frame.
+            yield return null;
+        }
+
+
+        // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
+        // `yield return null;` to skip a frame.
+        [UnityTest]
+        public IEnumerator ObjectUpdateEventTestsWithEnumerator()
+        {
+            // Arrange
+            FetchProject();
+            FlowNetworkManager.connection_established = true;
+
+            GameObject key = GameObject.Find("key");
+            key.GetComponent<FlowObject>().selected = true;
+
+            // Act
+            key.transform.position = new Vector3(0f, 1f, 0f);
+           
+            // Assert
+            Assert.IsTrue(CommandProcessor.cmdBuffer.Count == 0, "There are multiple events in the buffer");
+
+            // skip a frame
+            yield return null;
+
+            FlowEvent updateObject = CommandProcessor.cmdBuffer.Find(x => x.command == Commands.FlowObject.UPDATE);
+            Assert.IsNotNull(updateObject, "No Object Update event found in buffer");
+
+            // Use yield to skip a frame.
+            yield return null;
+        }
+
+
+        private void FetchProject()
+        {
+            // Arrange
+            string response = Utilities.MockServerResponse("fetchproject.txt");
+            FlowNetworkManager.reply = response;
+
+            // Act
+            ProjectFetchEvent.Receive();
+        }
     }
 }

@@ -84,6 +84,16 @@ namespace Assets.RealityFlow.Scripts.Events
                 newObj.GetComponent<FlowObject>().ft.flowObject = newObj.GetComponent<FlowObject>();
             }
 
+            try
+            {
+                System.IO.File.WriteAllText(@"C:\Users\Nyasha\Desktop\fetchproject.txt", FlowNetworkManager.reply);
+            }
+            catch (Exception e)
+            {
+                Debug.Log("Couldn't write to file because " + e);
+            }
+           
+
             return "Receiving project open update: " + FlowNetworkManager.reply;
         }
     }
