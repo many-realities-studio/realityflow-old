@@ -5,7 +5,10 @@ import { UserOperations } from "../commands/user"
 import { ProjectOperations } from "../commands/project";
 import { ObjectOperations } from "../commands/object"
 import * as mongoose from "mongoose";
-import { FlowClient, FlowUser, FlowProject , FlowObject} from "./FlowClasses";
+import {FlowClient} from "../flow_classes/FlowClient";
+import {FlowUser} from "../flow_classes/FlowUser";
+import {FlowProject} from "../flow_classes/FlowProject";
+import {FlowObject} from "../flow_classes/FlowObject";
 
 describe("database_testing", () => {
     let connection: any;

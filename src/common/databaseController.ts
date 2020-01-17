@@ -2,7 +2,10 @@
 import {UserOperations} from "../commands/user";
 import {ClientOperations} from "../commands/client";
 import {ProjectOperations} from "../commands/project";
-import {FlowClient, FlowObject, FlowProject, FlowUser} from "./FlowClasses";
+import {FlowClient} from "../flow_classes/FlowClient";
+import {FlowUser} from "../flow_classes/FlowUser";
+import {FlowProject} from "../flow_classes/FlowProject";
+import {FlowObject} from "../flow_classes/FlowObject";
 import {ObjectOperations} from "../commands/object";
 import e = require("express");
 

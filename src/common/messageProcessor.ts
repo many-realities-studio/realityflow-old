@@ -4,7 +4,10 @@ import {databaseController} from "./databaseController"
 
 // DB API
 import {ProjectOperations} from "../commands/project";
-import {FlowClient, FlowObject, FlowProject, FlowUser} from "./FlowClasses";
+import {FlowClient} from "../flow_classes/FlowClient";
+import {FlowUser} from "../flow_classes/FlowUser";
+import {FlowProject} from "../flow_classes/FlowProject";
+import {FlowObject} from "../flow_classes/FlowObject";
 
 export class MessageProcessor{
 
