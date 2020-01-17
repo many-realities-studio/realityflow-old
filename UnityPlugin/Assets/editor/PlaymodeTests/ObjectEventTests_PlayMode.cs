@@ -17,7 +17,6 @@ namespace Tests
             camera.AddComponent<Camera>();
             camera.tag = "MainCamera";
 
-
             GameObject manager = GameObject.FindGameObjectWithTag("ObjManager");
             if (manager == null)
             {
@@ -28,23 +27,22 @@ namespace Tests
                 manager.GetComponent<FlowNetworkManager>()._debug = false;
                 manager.GetComponent<FlowNetworkManager>().LocalServer = Config.LOCAL_HOST;
                 manager.GetComponent<FlowNetworkManager>().mainGameCamera = GameObject.FindGameObjectWithTag("MainCamera");
-               //  manager.AddComponent(typeof(DoOnMainThread));
             }
 
             yield return null;
         }
+
 
         [UnityTearDown]
         public IEnumerator Teardown()
         {
             GameObject manager = GameObject.FindGameObjectWithTag("ObjManager");
             GameObject camera = GameObject.FindGameObjectWithTag("MainCamera");
-            GameObject.Destroy(manager);
-            GameObject.Destroy(camera);
+            Object.Destroy(manager);
+            Object.Destroy(camera);
 
             yield return null;
         }
-
 
 
         // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use

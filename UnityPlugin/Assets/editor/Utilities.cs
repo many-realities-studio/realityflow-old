@@ -88,10 +88,7 @@ public static class Utilities
 
     public static string MockServerResponse(string filename)
     {
-        string content = File.ReadAllText("Assets/editor/Tests/ServerResponses/" + filename);
-
-        return content; 
-
+        return File.ReadAllText("Assets/editor/Tests/ServerResponses/" + filename);
     }
 
 }

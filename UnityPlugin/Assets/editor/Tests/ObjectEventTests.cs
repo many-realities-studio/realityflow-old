@@ -37,7 +37,6 @@ namespace Tests
         }
 
 
-
         /// <summary>
         /// This test verifies that an object delete event is created and sent to the command processor
         /// </summary>

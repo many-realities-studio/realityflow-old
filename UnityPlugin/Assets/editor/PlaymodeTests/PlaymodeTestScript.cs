@@ -8,7 +8,6 @@ namespace Tests
 {
     public class PlaymodeTestScript
     {
-
         // A Test behaves as an ordinary method
         [Test]
         public void NewTestScriptSimplePasses()
