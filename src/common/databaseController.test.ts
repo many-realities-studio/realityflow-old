@@ -107,7 +107,7 @@ describe("database_testing", () => {
 
     it('should insert a user into collection and then find that user', async () => {
 
-        createdUserOutput = await databaseController.createUser(new FlowClient(testClient), new FlowUser(testUser))
+        createdUserOutput = await databaseController.CreateUser(new FlowClient(testClient), new FlowUser(testUser))
 
         //as long as it's not null we can assume the insert happened
         expect(createdUserOutput).toEqual(expect.anything());
@@ -123,7 +123,7 @@ describe("database_testing", () => {
     it('should insert a project into a collection and then find that project', async () => {
         
         createdUserOutput.project = testProject;
-        createdProjectOutput = await databaseController.createProject(new FlowProject(testProject), new FlowUser(testUser), new FlowClient(createdUserOutput.newClientId), );
+        createdProjectOutput = await databaseController.CreateProject(new FlowProject(testProject), new FlowUser(testUser), new FlowClient(createdUserOutput.newClientId), );
         expect(createdProjectOutput).toEqual(expect.anything());
         
         var findProject = await ProjectOperations.findProject(createdProjectOutput);
@@ -135,14 +135,14 @@ describe("database_testing", () => {
 
     it('should create an object', async() => {
 
-        var createOut1 = await databaseController.createObject(new FlowObject(object1), new FlowProject(createdProjectOutput));
+        var createOut1 = await databaseController.CreateObject(new FlowObject(object1), new FlowProject(createdProjectOutput));
         expect(createOut1).toEqual(expect.anything())
     
     })
 
     it('should modify an object', async() =>{
     
-        var createOut1 = await databaseController.createObject(new FlowObject(object1), new FlowProject(createdProjectOutput));
+        var createOut1 = await databaseController.CreateObject(new FlowObject(object1), new FlowProject(createdProjectOutput));
         expect(createOut1).toEqual(expect.anything());
 
         var modified = Object.assign({}, createOut1);
@@ -151,7 +151,7 @@ describe("database_testing", () => {
         console.log(modified.object)
         let updater = new FlowObject(modified.object)
         updater._id = modified.object._id
-        await databaseController.updateObject(updater);
+        await databaseController.UpdateObject(updater);
         
         console.log(createOut1)
         var foundObj = await ObjectOperations.findObject(createOut1.object._id)
@@ -176,7 +176,7 @@ describe("database_testing", () => {
         var findProject = await ProjectOperations.findProject(new FlowProject(createdProjectOutput));
         expect(findProject).toEqual(expect.anything())
         
-        await databaseController.deleteProject(new FlowProject(createdProjectOutput));
+        await databaseController.DeleteProject(new FlowProject(createdProjectOutput));
 
         var findPostDelete = await ProjectOperations.findProject(new FlowProject(createdProjectOutput));
         expect(findPostDelete).toEqual(null)

@@ -13,7 +13,7 @@ import e = require("express");
 // another note - add error handling
 export class databaseController{ 
     
-    public static async createObject(inputObj: FlowObject, inputProject: FlowProject){
+    public static async CreateObject(inputObj: FlowObject, inputProject: FlowProject){
 
             var object = await ObjectOperations.createObject(inputObj);
             var project = await ProjectOperations.findProject(inputProject);
@@ -24,14 +24,14 @@ export class databaseController{
         return {project, object};
     }
 
-    public static async updateObject(inputObj: FlowObject){
+    public static async UpdateObject(inputObj: FlowObject){
         await ObjectOperations.updateObject(inputObj);
     }
 
     // weird type shit to beware of here. As far as I can tell it's realistically all just strings,
     // but there's some weird type specification on the mongo side that is definitely not coming from the client
     // so for now I'm going to say that obj._id is of any type. Yay type coercion!
-    public static async deleteObject(inputProject:FlowProject, inputObj:FlowObject){
+    public static async DeleteObject(inputProject:FlowProject, inputObj:FlowObject){
         var project = await ProjectOperations.findProject(project);
         
         project.objs.splice(project.objs.indexOf(inputObj._id),1);
@@ -40,7 +40,7 @@ export class databaseController{
     }
 
     
-    public static async createProject(inProj: FlowProject, inUser: FlowUser, inClient: FlowClient){
+    public static async CreateProject(inProj: FlowProject, inUser: FlowUser, inClient: FlowClient){
             var project = await ProjectOperations.createProject(inProj, inClient, inUser);
             project.clients.push(inClient._id);
             await project.save();
@@ -48,7 +48,7 @@ export class databaseController{
             return project
     }
 
-    public static async fetchObjects(json: any){
+    public static async FetchObjects(json: any){
         var project = await ProjectOperations.findProject(json.project);
         
         var objectIds = project.objs;
@@ -67,12 +67,12 @@ export class databaseController{
         return objects;
     }
 
-    public static async deleteProject(project: FlowProject){
+    public static async DeleteProject(project: FlowProject){
         await ProjectOperations.deleteProject(project)
         return;
     }
 
-    public static async logoutUser(inUser: FlowUser, inClient: FlowClient){
+    public static async LogoutUser(inUser: FlowUser, inClient: FlowClient){
         var user = await UserOperations.findUser(inUser);
 
         var clientArray = user.clients;
@@ -92,7 +92,7 @@ export class databaseController{
 
     // authenticate user and then return projects
     // and add a client
-    public static async loginUser(inUser: FlowUser, inClient: FlowClient){
+    public static async LoginUser(inUser: FlowUser, inClient: FlowClient){
         
         let returnedUser = await UserOperations.loginUser(inUser);
         
@@ -113,7 +113,7 @@ export class databaseController{
         return {projects, newClientId, newUserId};
     }
 
-    public static async createUser(inClient: FlowClient, inUser: FlowUser){
+    public static async CreateUser(inClient: FlowClient, inUser: FlowUser){
         var newUserPayload = await UserOperations.createUser(inUser);
         var newClientId = await ClientOperations.createClient(inClient, newUserPayload._id);
 
@@ -125,7 +125,7 @@ export class databaseController{
         return { newUserId , newClientId};
     }
 
-    public static async deleteUser(inUser: FlowUser){
+    public static async DeleteUser(inUser: FlowUser){
         
         var User = await UserOperations.findUser(inUser);
         var clientArray = User.clients;

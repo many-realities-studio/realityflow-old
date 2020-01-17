@@ -29,7 +29,7 @@ public static async serverMessageProcessor(json: any, connection: any){
                 var obj = new FlowObject(json.obj);
                 var proj = new FlowProject(json.project)
                 
-                var ret = await databaseController.createObject(obj, proj)
+                var ret = await databaseController.CreateObject(obj, proj)
 
                 json.project = ret.project;
                 json.obj._id = ret.object._id
@@ -50,7 +50,7 @@ public static async serverMessageProcessor(json: any, connection: any){
             case Commands.action.DELETE:{
 
                 ServerEventDispatcher.broadcast(json, true);
-                await databaseController.deleteObject(new FlowProject(json.project), new FlowObject(json.obj) )
+                await databaseController.DeleteObject(new FlowProject(json.project), new FlowObject(json.obj) )
 
                 break;
             }
@@ -70,7 +70,7 @@ public static async serverMessageProcessor(json: any, connection: any){
                 let inClient = new FlowClient(json.client);
                 let inUser = new FlowUser(json.user);
 
-                var newProject = await databaseController.createProject(inProj, inUser, inClient);
+                var newProject = await databaseController.CreateProject(inProj, inUser, inClient);
                 
                 json.project = newProject;
                 ServerEventDispatcher.send(json, connection);
@@ -116,7 +116,7 @@ public static async serverMessageProcessor(json: any, connection: any){
 
                 }
 
-                var objects = await databaseController.fetchObjects(json)
+                var objects = await databaseController.FetchObjects(json)
 
                 json.objs = objects;
                 var payloadString = JSON.stringify(json);
@@ -126,7 +126,7 @@ public static async serverMessageProcessor(json: any, connection: any){
             }
 
             case Commands.action.DELETE:{
-                await databaseController.deleteProject(new FlowProject(json.project));
+                await databaseController.DeleteProject(new FlowProject(json.project));
                 break;
             }
 
@@ -169,7 +169,7 @@ public static async serverMessageProcessor(json: any, connection: any){
             case Commands.action.CREATE: {
                 
 
-                let ids = await databaseController.createUser(new FlowClient(json.client), new FlowUser(json.user))
+                let ids = await databaseController.CreateUser(new FlowClient(json.client), new FlowUser(json.user))
                
                 var connectionTracker = {
 
@@ -197,7 +197,7 @@ public static async serverMessageProcessor(json: any, connection: any){
             //returns the client ID and project ID(s) to the logged in user
             case Commands.action.LOGIN: {
 
-                var loginData = await databaseController.loginUser(new FlowUser(json.user), new FlowClient(json.client));
+                var loginData = await databaseController.LoginUser(new FlowUser(json.user), new FlowClient(json.client));
                 
                 
                 if(loginData != null){
@@ -241,7 +241,7 @@ public static async serverMessageProcessor(json: any, connection: any){
             //client ID and connection from server connection array
             case Commands.action.LOGOUT: {
 
-                await databaseController.logoutUser(new FlowUser(json.user), new FlowClient(json.client));
+                await databaseController.LogoutUser(new FlowUser(json.user), new FlowClient(json.client));
 
                 // This is a big no-no! This should be happening in the ServerEventDispatcher code 
                 var connectionIndex = ServerEventDispatcher.connections.findIndex(x => x.clientId === json.client._id);
@@ -258,7 +258,7 @@ public static async serverMessageProcessor(json: any, connection: any){
             //Deletes user from DB
             case Commands.action.DELETE: {
 
-                await databaseController.deleteUser(json)
+                await databaseController.DeleteUser(json)
 
                 var payloadString = JSON.stringify(json);
 
