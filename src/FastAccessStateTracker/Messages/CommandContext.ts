@@ -44,8 +44,13 @@ class Command_DeleteProject implements ICommand
 // TODO: Find out what this is supposed to do
 class Command_OpenProject implements ICommand
 {
-  ExecuteCommand(data: any, connection: WebSocket): void {
-    throw new Error("Method not implemented.");
+  ExecuteCommand(data: any, connection: WebSocket): void 
+  {
+    let project = StateTracker.OpenProject(data.id)
+
+    let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
+    // send flowproject, not the string?
+    ConnectionManager.SendMessage(project.ToString(), [userConnected]);
   }
 }
 
