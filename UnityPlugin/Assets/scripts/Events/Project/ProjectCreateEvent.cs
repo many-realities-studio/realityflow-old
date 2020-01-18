@@ -31,6 +31,11 @@ namespace Assets.RealityFlow.Scripts.Events
             CommandProcessor.sendCommand(this);
         }
 
+        public override void Send(WebSocket w)
+        {
+            base.Send(w, this);
+        }
+
         public static string Receive()
         {
             ProjectCreateEvent log = JsonUtility.FromJson<ProjectCreateEvent>(FlowNetworkManager.reply); 

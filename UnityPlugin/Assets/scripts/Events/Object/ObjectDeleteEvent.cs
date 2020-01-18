@@ -35,6 +35,11 @@ namespace Assets.RealityFlow.Scripts.Events
             CommandProcessor.sendCommand(this);
         }
 
+        public override void Send(WebSocket w)
+        {
+            base.Send(w, this);
+        }
+
         public static string Receive()
         {
             ObjectDeleteEvent obj_delete_evt = JsonUtility.FromJson<ObjectDeleteEvent>(FlowNetworkManager.reply);

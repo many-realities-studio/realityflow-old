@@ -4,9 +4,6 @@ using UnityEngine;
 using UnityEditor;
 using Assets.RealityFlow.Scripts.Events;
 using System.IO;
-<<<<<<< HEAD
-public class RealityFlowWindow : EditorWindow {
-=======
 
 public class RealityFlowWindow : EditorWindow
 {
@@ -21,7 +18,6 @@ public class RealityFlowWindow : EditorWindow
         INVITE_USER = 6,
         PROJECT_IMPORT = 7
     }
->>>>>>> 78ea2ab2add49536cbb7888c919f852eb7dc1db2
 
     Vector2 scrollPos = Vector2.zero;
     Texture2D headerSectionTexture;
@@ -84,8 +80,8 @@ public class RealityFlowWindow : EditorWindow
     /// </summary>
     private void OnGUI()
     {
-        DrawLayouts();
-        DrawHeader();
+        _DrawLayouts();
+        _DrawHeader();
         DrawBody();        
     }
 
@@ -121,17 +117,17 @@ public class RealityFlowWindow : EditorWindow
     }
 
     // Define the layout of the sections
-    private void DrawLayouts()
+    private void _DrawLayouts()
     {
         headerSection.x = 0;
         headerSection.y = 0;
-        headerSection.width = Screen.width/2;
-        Debug.Log(Screen.width);
+        headerSection.width = Screen.width;
+        // Debug.Log(Screen.width);
         headerSection.height = 50;
 
         bodySection.x = 0;
         bodySection.y = 50;
-        bodySection.width = Screen.width/2;
+        bodySection.width = Screen.width;
         bodySection.height = Screen.height - 50;
 
         GUI.DrawTexture(headerSection, headerSectionTexture);
@@ -139,7 +135,7 @@ public class RealityFlowWindow : EditorWindow
 
     }
 
-    private void DrawHeader()
+    private void _DrawHeader()
     {
         GUILayout.BeginArea(headerSection);
 
@@ -148,49 +144,13 @@ public class RealityFlowWindow : EditorWindow
         GUILayout.EndArea();
     }
 
-    private void createLoginView()
+    private void _CreateLoginView()
     {
-<<<<<<< HEAD
-        GUILayout.BeginArea(bodySection);
-        scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(Screen.width/2), GUILayout.Height(Screen.height - 70));
-        switch(window)
-        {
-            case 0: // login window
-                EditorGUILayout.BeginHorizontal();
-                GUILayout.Label("User: ");
-                uName = EditorGUILayout.TextField(uName);
-                EditorGUILayout.EndHorizontal();
-                EditorGUILayout.BeginHorizontal();
-                GUILayout.Label("Password: ");
-                pWord = EditorGUILayout.PasswordField(pWord);
-                EditorGUILayout.EndHorizontal();
-
-                if (GUILayout.Button("Log in", GUILayout.Height(40)))
-                {
-					
-					GameObject manager = GameObject.FindGameObjectWithTag("ObjManager");
-					if ( manager == null)
-					{
-						manager = new GameObject("ObjManager");
-						manager.tag = "ObjManager";
-						manager.AddComponent(typeof(ObjectManager));
-						manager.AddComponent(typeof(FlowNetworkManager));
-                        manager.GetComponent<FlowNetworkManager>()._debug = false;
-						manager.GetComponent<FlowNetworkManager>().LocalServer = Config.LOCAL_HOST;
-						manager.GetComponent<FlowNetworkManager>().mainGameCamera = GameObject.FindGameObjectWithTag("MainCamera");
-						manager.AddComponent(typeof(DoOnMainThread));
-					}
-
-                    UserLoginEvent login = new UserLoginEvent();
-                    login.Send(uName, pWord, FlowClient.CLIENT_EDITOR);
-                }
-=======
         // Create UserName entry field
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("User: ");
         uName = EditorGUILayout.TextField(uName);
         EditorGUILayout.EndHorizontal();
->>>>>>> 78ea2ab2add49536cbb7888c919f852eb7dc1db2
 
         // Create Password entry field
         EditorGUILayout.BeginHorizontal();
@@ -254,7 +214,7 @@ public class RealityFlowWindow : EditorWindow
         }
     }
 
-    private void createUserHubView()
+    private void _CreateUserHubView()
     {
         // Create "Logout" Button and define onClick action
         if (GUILayout.Button("Logout", GUILayout.Height(20)))
@@ -291,7 +251,7 @@ public class RealityFlowWindow : EditorWindow
         }
     }
 
-    private void createProjectHubView()
+    private void _CreateProjectHubView()
     {
         // Create "Exit Project" Button and define onClick action
         if (GUILayout.Button("Exit Project", GUILayout.Height(20)))
@@ -336,7 +296,7 @@ public class RealityFlowWindow : EditorWindow
         }
     }
 
-    private void createDeleteObjectView()
+    private void _CreateDeleteObjectView()
     {
         GameObject objectManagerGameObject = GameObject.FindGameObjectWithTag("ObjManager");
 
@@ -367,7 +327,7 @@ public class RealityFlowWindow : EditorWindow
         }
     }
 
-    private void createLoadProjectView()
+    private void _CreateLoadProjectView()
     {
         // Create "Back" Button and define onClick action
         EditorGUILayout.BeginHorizontal();
@@ -402,7 +362,7 @@ public class RealityFlowWindow : EditorWindow
         }
     }
 
-    private void createProjectCreationView()
+    private void _CreateProjectCreationView()
     {
         // Create "Back" Button and define onClick action
         EditorGUILayout.BeginHorizontal();
@@ -442,7 +402,7 @@ public class RealityFlowWindow : EditorWindow
         }
     }
 
-    private void createInviteUserView()
+    private void _CreateInviteUserView()
     {
         // Create "Back" Button and define onClick action
         EditorGUILayout.BeginHorizontal();
@@ -481,7 +441,7 @@ public class RealityFlowWindow : EditorWindow
         }
     }
 
-    private void createProjectImportView()
+    private void _CreateProjectImportView()
     {
         // Create "Back" Button and define onClick action
         EditorGUILayout.BeginHorizontal();
@@ -582,35 +542,35 @@ public class RealityFlowWindow : EditorWindow
         {
             // login window
             case EWindowView.LOGIN:
-                createLoginView();
+                _CreateLoginView();
                 break;
 
             case EWindowView.USER_HUB:
-                createUserHubView();
+                _CreateUserHubView();
                 break;
 
             case EWindowView.PROJECT_HUB:
-                createProjectHubView();
+                _CreateProjectHubView();
                 break;
 
             case EWindowView.DELETE_OBJECT:
-                createDeleteObjectView();
+                _CreateDeleteObjectView();
                 break;
 
             case EWindowView.LOAD_PROJECT:
-                createLoadProjectView();
+                _CreateLoadProjectView();
                 break;
 
             case EWindowView.PROJECT_CREATION: 
-                createProjectCreationView();
+                _CreateProjectCreationView();
                 break;
 
             case EWindowView.INVITE_USER: 
-                createInviteUserView();
+                _CreateInviteUserView();
                 break;
 
             case EWindowView.PROJECT_IMPORT:
-                createProjectImportView();
+                _CreateProjectImportView();
                 break;
         }
         EditorGUILayout.EndScrollView();
@@ -621,13 +581,13 @@ public class RealityFlowWindow : EditorWindow
     /// Sends a Delete event to the server to delete the desired game object
     /// </summary>
     /// <param name="gameObjectToBeDeleted"></param>
-    void DeleteObject(GameObject gameObjectToBeDeleted)
+    public void DeleteObject(GameObject gameObjectToBeDeleted)
     {
         ObjectDeleteEvent delete = new ObjectDeleteEvent();
         delete.Send(gameObjectToBeDeleted.GetComponent<FlowObject>().ft._id);
     }
 
-    void ExitProject()
+    public void ExitProject()
     {
         GameObject gm = GameObject.FindGameObjectWithTag("ObjManager");
         Config.projectId = "-9999";
@@ -647,7 +607,7 @@ public class RealityFlowWindow : EditorWindow
         }
     }
 
-    void CreateTag (string s)
+    public void CreateTag (string s)
     {
         // Open tagManager
         SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
@@ -670,187 +630,5 @@ public class RealityFlowWindow : EditorWindow
             n.stringValue = s;
             tagManager.ApplyModifiedPropertiesWithoutUndo();
         }
-    }
-
-}
-
-public class ConfirmationWindow : EditorWindow
-{
-    static ConfirmationWindow window;
-
-    // TODO: What does this do?
-    public static void OpenWindow()
-    {
-        window = (ConfirmationWindow)GetWindow(typeof(ConfirmationWindow));
-        window.minSize = new Vector2(200, 50);
-        window.maxSize = new Vector2(200, 50);
-        window.Show();
-    }
-
-    private void OnGUI()
-    {
-        DrawConfirm();
-    }
-
-    void DrawConfirm()
-    {
-        GUILayout.Label("Do you want to keep a \nlocal copy of this project?");
-
-        EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button("Confirm", GUILayout.Height(20)))
-        {
-            ProjectFetchEvent project = new ProjectFetchEvent();
-            project.project = new FlowProject(Config.projectId);
-            project.objs = new List<FlowTObject>();
-            project.project.name = FlowProject.activeProject.name;
-            project.timestamp = System.DateTime.Now.Ticks;
-
-            foreach (FlowTObject obj in FlowProject.activeProject.transformsById.Values)
-            {
-                obj.Read();
-                project.objs.Add(obj);
-            }
-
-            string path2 = "Assets/resources/projects/test.txt";
-
-            StreamWriter writer = new StreamWriter(path2, true);
-            writer.WriteLine(JsonUtility.ToJson(project));
-            writer.Close();
-
-            window.Close();
-        }
-        if (GUILayout.Button("Cancel", GUILayout.Height(20)))
-        {
-            window.Close();
-        }
-        EditorGUILayout.EndHorizontal();
-    }
-}
-
-/// <summary>
-/// A new editor window to handle changing a unity object's parameters
-/// </summary>
-public class ObjectSettings : EditorWindow
-{
-    static ObjectSettings window;
-
-    // TODO: What does this do?
-    public static void OpenWindow()
-    {
-        window = (ObjectSettings)GetWindow(typeof(ObjectSettings));
-        window.minSize = new Vector2(200, 200);
-        window.Show();
-    }
-
-    private void OnGUI()
-    {
-        DrawSettings((ObjectData)RealityFlowWindow.ObjectInfo);
-    }
-
-    void DrawSettings(ObjectData objData)
-    {
-
-        EditorGUILayout.BeginHorizontal();
-        GUILayout.Label("Name");
-        objData.objectName = EditorGUILayout.TextField(objData.objectName);
-        EditorGUILayout.EndHorizontal();
-
-        EditorGUILayout.BeginHorizontal();
-        GUILayout.Label("Mesh");
-        objData.mesh = (Mesh)EditorGUILayout.ObjectField(objData.mesh, typeof(Mesh), false);
-        EditorGUILayout.EndHorizontal();
-
-        // Textures are currently not supported on the live server due to lag issues
-        //-----------------------------------------------------------------------------------------------------
-        // EditorGUILayout.BeginHorizontal();
-        // GUILayout.Label("Texture");
-        // objData.texture = (Texture2D)EditorGUILayout.ObjectField(objData.texture, typeof(Texture2D), false);
-        // EditorGUILayout.EndHorizontal();
-        //-----------------------------------------------------------------------------------------------------
-
-        objData.position = EditorGUILayout.Vector3Field("Position", objData.position);
-
-        objData.rotation = EditorGUILayout.Vector3Field("Rotation", objData.rotation);
-
-        objData.scale = EditorGUILayout.Vector3Field("Scale", objData.scale);
-
-        objData.color = EditorGUILayout.ColorField("Color", objData.color);
-
-        if (objData.mesh == null)
-        {
-            EditorGUILayout.HelpBox("This object needs a [Mesh] before it can be created.", MessageType.Warning);
-        }
-        else if (objData.objectName == null || objData.objectName.Equals(""))
-        {
-            EditorGUILayout.HelpBox("This object needs a [Name] before it can be created.", MessageType.Warning);
-        }
-        // TODO: Add extra else if case to check if the name already exists in the project
-        else
-        {
-            if (GUILayout.Button("Create", GUILayout.Height(30)))
-            {
-                SaveObjectData(objData);
-                window.Close();
-            }
-        }
-    }
-
-    void SaveObjectData(ObjectData objData)
-    {
-        string prefabPath; //path to the base prefab
-        string s = "ObjManager";
-
-        // Check if there is already an object manager
-        // if not, create one
-        GameObject manager = GameObject.FindGameObjectWithTag(s);
-        bool managerExists = true;
-
-        if (manager == null)
-        {
-            manager = new GameObject("ObjManager");
-            manager.tag = s;
-            managerExists = false;
-        }  
-
-        // If the manager was just created add the necessary components
-        if (managerExists == false)
-        {
-            manager.AddComponent(typeof(ObjectManager));
-            manager.AddComponent(typeof(FlowNetworkManager));
-            manager.GetComponent<FlowNetworkManager>().LocalServer = Config.LOCAL_HOST;
-            manager.GetComponent<FlowNetworkManager>().mainGameCamera = GameObject.FindGameObjectWithTag("MainCamera");
-            manager.AddComponent(typeof(DoOnMainThread));
-        }
-
-        FlowTObject obj = new FlowTObject();
-        obj.vertices = RealityFlowWindow.ObjectInfo.mesh.vertices;
-        obj.uv = RealityFlowWindow.ObjectInfo.mesh.uv;
-        obj.triangles = RealityFlowWindow.ObjectInfo.mesh.triangles;
-        obj.x = RealityFlowWindow.ObjectInfo.position.x;
-        obj.y = RealityFlowWindow.ObjectInfo.position.y;
-        obj.z = RealityFlowWindow.ObjectInfo.position.z;
-        Quaternion rot = Quaternion.Euler(RealityFlowWindow.ObjectInfo.rotation);
-        obj.q_x = rot.x;
-        obj.q_y = rot.y;
-        obj.q_z = rot.z;
-        obj.q_w = rot.w;
-        obj.s_x = RealityFlowWindow.ObjectInfo.scale.x;
-        obj.s_y = RealityFlowWindow.ObjectInfo.scale.y;
-        obj.s_z = RealityFlowWindow.ObjectInfo.scale.z;
-        obj.type = "BoxCollider";
-        obj.name = RealityFlowWindow.ObjectInfo.objectName;
-        obj.color = RealityFlowWindow.ObjectInfo.color;
-
-        // Textures are currently not supported on the live server due to lag
-        //-------------------------------------------------------------------------
-        // obj.texture = RealityFlowWindow.ObjectInfo.texture.GetRawTextureData();
-        // obj.textureHeight = RealityFlowWindow.ObjectInfo.texture.height;
-        // obj.textureWidth = RealityFlowWindow.ObjectInfo.texture.width;
-        // obj.textureFormat = (int)RealityFlowWindow.ObjectInfo.texture.format;
-        // obj.mipmapCount = RealityFlowWindow.ObjectInfo.texture.mipmapCount;
-        //-------------------------------------------------------------------------
-
-        ObjectCreationEvent createObject = new ObjectCreationEvent();
-        createObject.Send(obj);
     }
 }

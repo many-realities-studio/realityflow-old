@@ -26,5 +26,11 @@ namespace Assets.RealityFlow.Scripts.Events
 
             CommandProcessor.sendCommand(this);
         }
+
+        public override void Send(WebSocket w)
+        {
+            base.Send(w, this);
+        }
+
     }
 }

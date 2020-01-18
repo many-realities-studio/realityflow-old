@@ -1,9 +1,5 @@
 using UnityEngine;
 
-/// <summary>
-/// Flow transform object
-/// Send to the server as a serialized
-/// </summary>
 [System.Serializable]
 public class FlowTObject : FlowValue
 {
