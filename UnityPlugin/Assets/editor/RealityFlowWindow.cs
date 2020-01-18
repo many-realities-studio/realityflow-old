@@ -345,11 +345,11 @@ public class RealityFlowWindow : EditorWindow
             foreach (FlowProject project in Config.projectList)
             {
                 // Add a button whose name is the name of the project and define the onClick event
-                if (GUILayout.Button(project.name, GUILayout.Height(30)))
+                if (GUILayout.Button(project.projectName, GUILayout.Height(30)))
                 {
                     // Set the current project to the selected project
                     Config.projectId = project._id;
-                    FlowProject.activeProject.name = project.name;
+                    FlowProject.activeProject.projectName = project.projectName;
 
                     // Send a request to the server to fetch the desired project
                     ProjectFetchEvent fetch = new ProjectFetchEvent();
@@ -478,7 +478,7 @@ public class RealityFlowWindow : EditorWindow
             string date = new System.DateTime(log.timestamp).ToString();
 
             // Create Project Button Button and define onClick action
-            if (GUILayout.Button(log.project.name + "   " + date, GUILayout.Height(30)))
+            if (GUILayout.Button(log.project.projectName + "   " + date, GUILayout.Height(30)))
             {
                 // gather the list of objects in the previous imported project
                 GameObject[] gameObjectList = GameObject.FindGameObjectsWithTag("imported");

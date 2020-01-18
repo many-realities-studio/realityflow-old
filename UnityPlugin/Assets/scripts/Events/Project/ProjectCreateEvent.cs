@@ -24,7 +24,7 @@ namespace Assets.RealityFlow.Scripts.Events
         public void Send(string projectName)
         {
             project = new FlowProject();
-            project.name = projectName;
+            project.projectName = projectName;
             user = new FlowUser(Config.userId);
             client = new FlowClient(Config.deviceId);
   

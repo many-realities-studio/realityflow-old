@@ -50,7 +50,7 @@ namespace Assets.RealityFlow.Scripts.Events
 
             Debug.Log("received " + Config.projectList.Count + " projects from user " + Config.userId);
             foreach (FlowProject pid in Config.projectList)
-                Debug.Log(pid.name);
+                Debug.Log(pid.projectName);
 
             return "Receiving user login update: " + FlowNetworkManager.reply;
         }

@@ -32,7 +32,7 @@ public class ConfirmationWindow : EditorWindow
             ProjectFetchEvent project = new ProjectFetchEvent();
             project.project = new FlowProject(Config.projectId);
             project.objs = new List<FlowTObject>();
-            project.project.name = FlowProject.activeProject.name;
+            project.project.projectName = FlowProject.activeProject.projectName;
             project.timestamp = System.DateTime.Now.Ticks;
 
             foreach (FlowTObject obj in FlowProject.activeProject.transformsById.Values)
