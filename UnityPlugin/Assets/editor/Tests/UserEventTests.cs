@@ -95,7 +95,7 @@ namespace Tests
         /// This test verifies that the server's UserRegisterEvent response is received and the json is deserialized 
         /// </summary>
         [Test]
-        public void ReceiveRegisterLoginEventTest()
+        public void ReceiveUserRegisterEventTest()
         {
             // Arrange
             string response = Utilities.MockServerResponse("userregister.txt");
