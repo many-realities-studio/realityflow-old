@@ -37,6 +37,7 @@ namespace Tests
             Assert.IsTrue(resultAfter, "Command buffer does not contain the login event");
         }
 
+
         /// <summary>
         /// This test verifies that a login event is received and the json response is deserialized
         /// </summary>
@@ -68,8 +69,9 @@ namespace Tests
             Assert.AreEqual(project2, flowProject2.projectName, "Could not find project: {0}", project2);
         }
 
+
         /// <summary>
-        /// This test verifies that a user register event is created and sent to the command processor
+        /// This test verifies that a UserRegisterEvent is created and sent to the command processor
         /// </summary>
         [Test]
         public void SendUserRegisterEventTest()
@@ -87,6 +89,7 @@ namespace Tests
             bool resultAfter = CommandProcessor.cmdBuffer.Contains(registerEvent);
             Assert.IsTrue(resultAfter, "Command buffer does not contain the register event");
         }
+
 
         /// <summary>
         /// This test verifies that the server's UserRegisterEvent response is received and the json is deserialized 
@@ -131,6 +134,7 @@ namespace Tests
             bool resultAfter = CommandProcessor.cmdBuffer.Contains(logoutEvent);
             Assert.IsTrue(resultAfter, "Command buffer does not contain the logout event");
         }
+
 
         /// <summary>
         /// This test verifies that a logout event sets its _id member correctly

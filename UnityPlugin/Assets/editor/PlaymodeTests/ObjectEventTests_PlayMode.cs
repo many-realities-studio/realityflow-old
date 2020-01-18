@@ -13,10 +13,12 @@ namespace Tests
         [UnitySetUp]
         public IEnumerator Setup()
         {
+            // setup camera
             GameObject camera = new GameObject("MainCamera");
             camera.AddComponent<Camera>();
             camera.tag = "MainCamera";
 
+            // setup object manager
             GameObject manager = GameObject.FindGameObjectWithTag("ObjManager");
             if (manager == null)
             {
@@ -36,8 +38,10 @@ namespace Tests
         [UnityTearDown]
         public IEnumerator Teardown()
         {
+            // find and destroy the object and maincamera objects
             GameObject manager = GameObject.FindGameObjectWithTag("ObjManager");
             GameObject camera = GameObject.FindGameObjectWithTag("MainCamera");
+
             Object.Destroy(manager);
             Object.Destroy(camera);
 
@@ -45,10 +49,11 @@ namespace Tests
         }
 
 
-        // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
-        // `yield return null;` to skip a frame.
+        /// <summary>
+        /// Tests that an object is created and placed in the scene
+        /// </summary>
         [UnityTest]
-        public IEnumerator CreateObjectEventTestsWithEnumerator()
+        public IEnumerator CreateObjectEventTestWithEnumerator()
         {
             // Arrange
             string response = Utilities.MockServerResponse("createobject.txt");
@@ -69,25 +74,27 @@ namespace Tests
         }
 
 
-        // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
-        // `yield return null;` to skip a frame.
+        /// <summary>
+        /// Tests that all objects are placed in the scene on project load
+        /// </summary>
         [UnityTest]
-        public IEnumerator FetchProjectEventTestsWithEnumerator()
+        public IEnumerator FetchProjectEventTestWithEnumerator()
         {
             // Arrange
             string response = Utilities.MockServerResponse("fetchproject.txt");
             FlowNetworkManager.reply = response;
+            string expectedReturnValue = "Receiving project open update: " + response;
 
             string objectName1 = "key";
             string objectName2 = "Sphere";
-            string expectedReturnValue = "Receiving project open update: " + response;
-
+            
             // Act
             string actualReturnValue = ProjectFetchEvent.Receive();
 
-            // Assert - Check return value of Receive function and check that userid is set
+            // Assert - Check return value of Receive function and check all objects are in the scene
             Assert.IsNotNull(GameObject.Find(objectName1), "Missing component " + objectName1);
             Assert.IsNotNull(GameObject.Find(objectName2), "Missing component " + objectName2);
+
             Assert.AreEqual(expectedReturnValue, actualReturnValue);
 
             // Use yield to skip a frame.
@@ -95,8 +102,9 @@ namespace Tests
         }
 
 
-        // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
-        // `yield return null;` to skip a frame.
+        /// <summary>
+        /// Tests that an ObjectUpdate event is created after attemtpting to move an object in the scene
+        /// </summary>
         [UnityTest]
         public IEnumerator ObjectUpdateEventTestsWithEnumerator()
         {
@@ -111,9 +119,9 @@ namespace Tests
             key.transform.position = new Vector3(0f, 1f, 0f);
            
             // Assert
-            Assert.IsTrue(CommandProcessor.cmdBuffer.Count == 0, "There are multiple events in the buffer");
+            Assert.IsTrue(CommandProcessor.cmdBuffer.Count == 0, "The buffer is not empty when it should be");
 
-            // skip a frame
+            // Skip a frame
             yield return null;
 
             FlowEvent updateObject = CommandProcessor.cmdBuffer.Find(x => x.command == Commands.FlowObject.UPDATE);
@@ -124,13 +132,14 @@ namespace Tests
         }
 
 
+        /// <summary>
+        /// This function gets a FetchProject response from the server and deserializes the json 
+        /// </summary>
         private void FetchProject()
         {
-            // Arrange
             string response = Utilities.MockServerResponse("fetchproject.txt");
             FlowNetworkManager.reply = response;
 
-            // Act
             ProjectFetchEvent.Receive();
         }
     }
