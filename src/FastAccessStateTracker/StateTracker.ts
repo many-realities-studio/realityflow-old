@@ -60,7 +60,7 @@ export class StateTracker{
     this.LogoutUser(userToDelete);
 
     // Delete user in the list of known users
-    MongooseDatabase.DeleteUser(userToDelete);
+    ConfigurationSingleton.Database.DeleteUser(userToDelete);
   }
 
   /**
@@ -70,7 +70,7 @@ export class StateTracker{
   public static LoginUser(userToLogin: FlowUser, connectionToUser : WebSocket) : void
   {
     // Find user in the list of known users
-    let userFound : FlowUser = MongooseDatabase.GetUser(userToLogin.Id);
+    let userFound : FlowUser = ConfigurationSingleton.Database.GetUser(userToLogin.Id);
 
     ConnectionManager.LoginUser(userFound, connectionToUser);
   }

@@ -2,12 +2,13 @@ import { IStringable } from "./IStringable";
 import { MongooseDatabase } from "../Database/MongooseDatabase";
 import { FlowProject } from "../../temp";
 import { FlowClient } from "./FlowClient";
+import { ConfigurationSingleton } from "../ConfigurationSingleton";
 
 export class FlowUser implements IStringable
 {
   // ID used by FAM for unique identification
   public Id : number;
-  public ConnectionList : Array<WebSocket> = [];
+  public ClientList : Array<FlowClient> = [];
   
   // Data storage fields
   public Username: string;
@@ -29,7 +30,7 @@ export class FlowUser implements IStringable
    */
   public SaveToDatabase() : void
   {
-    MongooseDatabase.UpdateUser(this);
+    ConfigurationSingleton.Database.UpdateUser(this);
   }
 
   /**
@@ -38,7 +39,7 @@ export class FlowUser implements IStringable
    */
   public Login(websocketConnection : WebSocket) : void
   {
-    this.ConnectionList.push(websocketConnection);
+    this.ClientList.push(websocketConnection);
   }
 
   /**
@@ -47,12 +48,12 @@ export class FlowUser implements IStringable
    */
   public Logout(connection : WebSocket) : void
   {
-    const index = this.ConnectionList.findIndex((element) => element == connection);
+    const index = this.ClientList.findIndex((element) => element == connection);
 
     var ClosedConnection : WebSocket = null;
     if(index > -1)
     {
-      ClosedConnection = this.ConnectionList.splice(index, 1)[0];
+      ClosedConnection = this.ClientList.splice(index, 1)[0];
     }
   }
 
@@ -61,6 +62,6 @@ export class FlowUser implements IStringable
    */
   public Delete() : void
   {
-    MongooseDatabase.DeleteUser(this);
+    ConfigurationSingleton.Database.DeleteUser(this);
   }
 }

@@ -88,12 +88,12 @@ export class FlowProject implements IStringable
    */
   private DeleteFromDatabase()
   {
-    MongooseDatabase.DeleteProject(this);
+    ConfigurationSingleton.Database.DeleteProject(this);
   }
 
   public SaveToDatabase()
   {
-    MongooseDatabase.UpdateProject(this);
+    ConfigurationSingleton.Database.UpdateProject(this);
   }
 
   /**
