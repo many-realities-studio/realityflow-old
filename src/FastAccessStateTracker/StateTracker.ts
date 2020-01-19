@@ -4,6 +4,7 @@ import { FlowUser } from "./FlowLibrary/FlowUser"
 import { RoomManager } from "./RoomManager";
 import { ConnectionManager } from "./ConnectionManager";
 import { MongooseDatabase } from "./Database/MongooseDatabase"
+import { ConfigurationSingleton } from "./ConfigurationSingleton";
 // TODO: Add logging system
 // TODO: Add checkout system 
 

@@ -4,6 +4,7 @@ import { FlowObject } from "./FlowObject";
 import {Object} from "../../models/object";
 import { IStringable } from "./IStringable";
 import { MongooseDatabase } from "../Database/MongooseDatabase"
+import { ConfigurationSingleton } from "../ConfigurationSingleton";
 
 // NOTE: FAM Stands for Fast Access Memory
 export class FlowProject implements IStringable
