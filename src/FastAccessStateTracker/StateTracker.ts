@@ -38,6 +38,20 @@ export class StateTracker{
       projectToDelete.Delete();
     }
   }
+ 
+  /**
+   * Finds a project with it's id, returns(?) it to the command context
+   * ID type of flow project is "any" for now
+   * @param projectToOpenID - ID of associated project
+   * @param connectionToUser - websocket connection to user
+   */
+  public static OpenProject(projectToOpenID: any) : FlowProject
+  {
+    // find project in list of projects
+    let projectFound : FlowProject = MongooseDatabase.GetProject(projectToOpenID);
+    return projectFound;
+  }
+
 
   // User Functions
 
