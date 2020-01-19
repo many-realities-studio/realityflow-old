@@ -9,20 +9,20 @@ import { FlowObject } from "../FlowLibrary/FlowObject";
 export interface IDatabase
 { 
   // Project functions
-  CreateProject(projectToCreate : FlowProject) : void;
-  DeleteProject(projectToDelete : FlowProject) : void;
-  UpdateProject(projectToUpdate : FlowProject) : void;
+  CreateProject(projectToCreate : FlowProject) : boolean;
+  DeleteProject(projectToDelete : FlowProject) : boolean;
+  UpdateProject(projectToUpdate : FlowProject) : boolean;
   GetProject(projectId : number) : FlowProject;
 
   // User functions
-  CreateUser(userToCreate : FlowUser) : void;
-  DeleteUser(userToDelete : FlowUser) : void;
-  UpdateUser(userToUpdate : FlowUser) : void;
+  CreateUser(userToCreate : FlowUser) : boolean;
+  DeleteUser(userToDelete : FlowUser) : boolean;
+  UpdateUser(userToUpdate : FlowUser) : boolean;
   GetUser(UserId : number) : FlowUser;
 
   // Object functions
-  CreateObject(objectToCreate : FlowObject) : void;
-  DeleteObject(objectToDelete : FlowObject) : void;
-  UpdateObject(objectToUpdate : FlowObject) : void;
+  CreateObject(objectToCreate : FlowObject) : boolean;
+  DeleteObject(objectToDelete : FlowObject) : boolean;
+  UpdateObject(objectToUpdate : FlowObject) : boolean;
   GetObject(ObjectId : number) : FlowObject;
 }

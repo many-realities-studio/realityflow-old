@@ -21,9 +21,23 @@ export class StateTracker{
    * Adds a project to the FAM and database
    * @param projectToCreate 
    */
-  public static CreateProject(projectToCreate: FlowProject) : void
+  public static CreateProject(projectToCreate: FlowProject, FlowUserID, ClientID) : void
   {
-    projectToCreate.SaveToDatabase();
+    // if we can save to the database
+    const promise = new Promise(function(resolve, reject) {
+      setTimeout(function() {
+        let success = projectToCreate.SaveToDatabase();
+        resolve(success);
+      }, 1000)
+    });
+
+    promise.then(function(success) {
+      // then
+      // Find the flow user
+      // add project to the flow user
+    });
+
+    
   }
 
   /**

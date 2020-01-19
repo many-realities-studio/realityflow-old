@@ -27,7 +27,8 @@ class Command_CreateProject implements ICommand
     StateTracker.CreateProject(project);
 
     let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
-    ConnectionManager.SendMessage(project.ToString(), [userConnected]);
+    let returnMessage = MessageBuilder.createMessage();
+    ConnectionManager.SendMessage(returnMessage, [userConnected]);
   }
 }
 
