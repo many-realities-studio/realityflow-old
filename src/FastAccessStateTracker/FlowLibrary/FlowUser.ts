@@ -5,6 +5,7 @@ export class FlowUser implements IStringable
 {
   // ID used by FAM for unique identification
   public id : number;
+  public roomCode: number;
   public connectionList : Array<WebSocket> = [];
   
   ToString() : string 

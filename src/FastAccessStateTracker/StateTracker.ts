@@ -4,6 +4,8 @@ import { FlowUser } from "./FlowLibrary/FlowUser"
 import { RoomManager } from "./RoomManager";
 import { ConnectionManager } from "./ConnectionManager";
 import { MongooseDatabase } from "./Database/MongooseDatabase"
+import { Room } from "./Room";
+import { Connection } from "mongoose";
 // TODO: Add logging system
 // TODO: Add checkout system 
 
@@ -97,10 +99,30 @@ export class StateTracker{
    */
   public static LoginUser(userToLogin: FlowUser, connectionToUser : WebSocket) : void
   {
-    // Find user in the list of known users
-    let userFound : FlowUser = MongooseDatabase.GetUser(userToLogin.id);
-
-    ConnectionManager.LoginUser(userFound, connectionToUser);
+    // check if logged in on another client 
+    let userLoggedIn = ConnectionManager.GetSavedUser(userToLogin);
+    // Are they in a room already?
+    if(userLoggedIn.roomCode)
+    {
+      // add new connection to the room - by adding connection to user
+      ConnectionManager.LoginUser(userLoggedIn, connectionToUser);
+    } 
+    else 
+    {
+      // Find user in the list of known users - async 
+      // for the first time in this session a user logs in on a client
+      const promise = new Promise(function(resolve, reject) {
+        setTimeout(function() {
+          let userFound : FlowUser = MongooseDatabase.GetUser(userToLogin.id);
+          resolve(userFound);
+        }, 1000)
+        });
+        promise.then(function(userFound: FlowUser) {
+          let user : FlowUser = userFound;
+          ConnectionManager.LoginUser(user, connectionToUser);
+        });
+    }
+      
   }
 
   /**
@@ -113,9 +135,21 @@ export class StateTracker{
   }
 
   // Room Commands
-  public static CreateRoom(project: FlowProject) : void
+  public static CreateRoom(projectID: Number) : Number
   {
-    RoomManager.CreateRoom(project);
+    let roomCode = RoomManager.CreateRoom(projectID);
+    return roomCode;
+  }
+
+  /**
+   * Adds user to the room, does not worry about maintaining user connections
+   * @param roomCode - code of room they are looking to join
+   * @param user - user to be logged in
+   */
+  public static JoinRoom(roomCode: Number, user: FlowUser)
+  {
+    let room = RoomManager.FindRoom(roomCode);
+    room.JoinRoom(user);
   }
 
   // Object Commands

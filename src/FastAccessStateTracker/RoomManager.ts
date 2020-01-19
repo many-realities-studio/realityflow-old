@@ -11,11 +11,12 @@ export class RoomManager
    * Creates a new room. This room must be tied to a project.
    * @param projectToLoad The project which is associated with the room
    */
-  public static CreateRoom(projectToLoad : FlowProject) : void
+  public static CreateRoom(projectID : Number) : Number
   {
-    let newRoom = new Room(this._RoomCount, projectToLoad);
+    let newRoom = new Room(this._RoomCount, projectID);
     this._RoomList.push(newRoom);
     this._RoomCount ++;
+    return (this._RoomCount - 1);
   }
 
   /**
