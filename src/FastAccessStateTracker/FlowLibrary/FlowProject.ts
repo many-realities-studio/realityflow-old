@@ -11,8 +11,20 @@ export class FlowProject implements IStringable
   private _ObjectList: Array<FlowObject> = [];
   
   // Used for identification in the FAM
-  public id;
+  
+  // Data storage fields
+  public Id;
+  public Description: string;
+  public DateModified: number;
+  public ProjectName: string;
  
+  constructor(json:any){
+    this.Id = json.Id
+    this.Description = json.Description;
+    this.DateModified = json.DateModified;
+    this.ProjectName = json.ProjectName;
+}
+
   ToString(): string {
     throw new Error("Method not implemented.");
   }
@@ -95,28 +107,26 @@ export class FlowProject implements IStringable
 
     // Async save to database
     var databaseFlowObject = new Object({
-      type:           objectToCreate.type,
-      name:           objectToCreate.name,
-      triangles:      objectToCreate.triangles,
-      x:              objectToCreate.x,
-      y:              objectToCreate.y,
-      z:              objectToCreate.z,
-      q_x:            objectToCreate.q_x,
-      q_y:            objectToCreate.q_y,
-      q_z:            objectToCreate.q_z,
-      q_w:            objectToCreate.q_w,
-      s_x:            objectToCreate.s_x,
-      s_y:            objectToCreate.s_y,
-      s_z:            objectToCreate.s_z,
-      color:          objectToCreate.color,
-      vertices:       objectToCreate.vertices,
-      uv:             objectToCreate.uv,
-      texture:        objectToCreate.texture,
-      textureHeight:  objectToCreate.textureHeight,
-      textureWidth:   objectToCreate.textureWidth,
-      textureFormat:  objectToCreate.textureFormat,
-      mipmapCount:    objectToCreate.mipmapCount,
-      locked:         objectToCreate.locked
+      type:           objectToCreate.Type,
+      name:           objectToCreate.Name,
+      triangles:      objectToCreate.Triangles,
+      x:              objectToCreate.X,
+      y:              objectToCreate.Y,
+      z:              objectToCreate.Z,
+      q_x:            objectToCreate.Q_x,
+      q_y:            objectToCreate.Q_y,
+      q_z:            objectToCreate.Q_z,
+      q_w:            objectToCreate.Q_w,
+      s_x:            objectToCreate.S_x,
+      s_y:            objectToCreate.S_y,
+      s_z:            objectToCreate.S_z,
+      uv:             objectToCreate.Uv,
+      texture:        objectToCreate.Texture,
+      textureHeight:  objectToCreate.TextureHeight,
+      textureWidth:   objectToCreate.TextureWidth,
+      textureFormat:  objectToCreate.TextureFormat,
+      mipmapCount:    objectToCreate.MipmapCount,
+      locked:         objectToCreate.Locked
     });
 
     databaseFlowObject.save()

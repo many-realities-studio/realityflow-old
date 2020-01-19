@@ -70,7 +70,7 @@ export class StateTracker{
   public static LoginUser(userToLogin: FlowUser, connectionToUser : WebSocket) : void
   {
     // Find user in the list of known users
-    let userFound : FlowUser = MongooseDatabase.GetUser(userToLogin.id);
+    let userFound : FlowUser = MongooseDatabase.GetUser(userToLogin.Id);
 
     ConnectionManager.LoginUser(userFound, connectionToUser);
   }

@@ -15,7 +15,7 @@ export class ConnectionManager
   public static SendMessage(message : string, usersToSendTo: FlowUser[]) : void
   {
     usersToSendTo.forEach(user => {
-      user.connectionList.forEach(connection => connection.send(message));
+      user.ConnectionList.forEach(connection => connection.send(message));
     });
   }
 
@@ -26,7 +26,7 @@ export class ConnectionManager
   public static NotifyAllUsers(message : string) : void
   {
     this._LoggedInUsers.forEach(user => {
-      user.connectionList.forEach(connection => connection.send(message));
+      user.ConnectionList.forEach(connection => connection.send(message));
     });
   }
 
@@ -50,7 +50,7 @@ export class ConnectionManager
   public static LogoutUser(userToLogout : FlowUser) : void
   {
     // Find user in the list of known users
-    let index = this._LoggedInUsers.findIndex((element) => element.id == userToLogout.id);
+    let index = this._LoggedInUsers.findIndex((element) => element.Id == userToLogout.Id);
 
     let foundUser : FlowUser = null;
     if(index > -1)
@@ -71,7 +71,7 @@ export class ConnectionManager
    */
   public static FindUserWithConnection(connectionToFind: WebSocket) : FlowUser
   {
-    return this._LoggedInUsers.find(user => user.connectionList.find(connection => connection == connectionToFind));
+    return this._LoggedInUsers.find(user => user.ConnectionList.find(connection => connection == connectionToFind));
   }
 
 }

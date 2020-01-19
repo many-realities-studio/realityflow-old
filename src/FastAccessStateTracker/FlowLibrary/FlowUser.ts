@@ -1,12 +1,24 @@
 import { IStringable } from "./IStringable";
 import { MongooseDatabase } from "../Database/MongooseDatabase";
+import { FlowProject } from "../../temp";
+import { FlowClient } from "./FlowClient";
 
 export class FlowUser implements IStringable
 {
   // ID used by FAM for unique identification
-  public id : number;
-  public connectionList : Array<WebSocket> = [];
+  public Id : number;
+  public ConnectionList : Array<WebSocket> = [];
   
+  // Data storage fields
+  public Username: string;
+  public Password: string;
+  public Clients: Array<FlowClient>;
+  public Projects: Array<FlowProject>;
+
+  constructor(json:any){
+      this.Username = json.Username;
+      this.Password = json.Password;
+  }
   ToString() : string 
   {
     throw new Error("Method not implemented.");
@@ -26,7 +38,7 @@ export class FlowUser implements IStringable
    */
   public Login(websocketConnection : WebSocket) : void
   {
-    this.connectionList.push(websocketConnection);
+    this.ConnectionList.push(websocketConnection);
   }
 
   /**
@@ -35,12 +47,12 @@ export class FlowUser implements IStringable
    */
   public Logout(connection : WebSocket) : void
   {
-    const index = this.connectionList.findIndex((element) => element == connection);
+    const index = this.ConnectionList.findIndex((element) => element == connection);
 
     var ClosedConnection : WebSocket = null;
     if(index > -1)
     {
-      ClosedConnection = this.connectionList.splice(index, 1)[0];
+      ClosedConnection = this.ConnectionList.splice(index, 1)[0];
     }
   }
 
