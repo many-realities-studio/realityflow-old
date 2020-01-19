@@ -10,6 +10,7 @@ import { StateTracker } from "../StateTracker";
 import { ConnectionManager } from "../ConnectionManager";
 import { FlowProject } from "../FlowLibrary/FlowProject";
 import { FlowUser } from "../FlowLibrary/FlowUser";
+import { MessageBuilder } from "./MessageBuilder";
 
 interface ICommand
 {
@@ -27,7 +28,9 @@ class Command_CreateProject implements ICommand
     StateTracker.CreateProject(project);
 
     let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
-    ConnectionManager.SendMessage(project.ToString(), [userConnected]);
+    // TODO: Form message
+    let returnMessage = MessageBuilder.CreateMessage();
+    ConnectionManager.SendMessage(returnMessage, [userConnected]);
   }
 }
 
@@ -44,8 +47,13 @@ class Command_DeleteProject implements ICommand
 // TODO: Find out what this is supposed to do
 class Command_OpenProject implements ICommand
 {
-  ExecuteCommand(data: any, connection: WebSocket): void {
-    throw new Error("Method not implemented.");
+  ExecuteCommand(data: any, connection: WebSocket): void 
+  {
+    let project = StateTracker.OpenProject(data.id)
+
+    let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
+    // send flowproject, not the string?
+    ConnectionManager.SendMessage(project.ToString(), [userConnected]);
   }
 }
 
@@ -94,7 +102,46 @@ class Command_CreateRoom implements ICommand
 {
   ExecuteCommand(data: any, connection: WebSocket): void  
   {
-    throw new Error("Method not implemented");
+    // grab the projectID from the JSON, confirm format
+    //TODO: ensure the message json is being extracted properly 
+    let projectID = data.projectID;
+    let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection)
+    // send confirmation message & room code to client
+    let roomCode = StateTracker.CreateRoom(projectID);
+    // error catch
+    if(roomCode) 
+    {
+      let roomMessage = MessageBuilder.CreateMessage(roomCode);
+      ConnectionManager.SendMessage(roomMessage, [userConnected])
+    } else 
+    {
+      let failMessage = MessageBuilder.FailureMessage();
+      ConnectionManager.SendMessage(failMessage, [userConnected])
+    }
+
+  }
+}
+
+class Command_JoinRoom implements ICommand
+{
+  ExecuteCommand(data: any, connection: Websocket): void
+  {
+    let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
+    //TODO: Ensure proper JSON recieval
+    let roomCode = data.roomCode;
+    //error catch 
+    if(roomCode)
+    {
+      StateTracker.JoinRoom(roomCode, userConnected);
+      //send success message to user
+      let successMessage = MessageBuilder.SuccessMessage();
+      ConnectionManager.SendMessage(successMessage, [userConnected])
+    } else 
+    {      
+      //send fail message to user
+      let failMessage = MessageBuilder.FailMessage();
+      ConnectionManager.SendMessage(failMessage, [userConnected])
+    }
   }
 }
 
@@ -162,6 +209,7 @@ export class CommandContext
     // Room Commands
     this._CommandList.set("CreateRoom", new Command_CreateRoom());
     this._CommandList.set("DeleteRoom", new Command_DeleteRoom());
+    this._CommandList.set("JoinRoom", new Command_JoinRoom());
 
     // Object Commands
     this._CommandList.set("CreateObject", new Command_CreateObject());

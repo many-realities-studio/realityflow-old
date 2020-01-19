@@ -9,6 +9,7 @@ export class FlowUser implements IStringable
   // ID used by FAM for unique identification
   public Id : number;
   public ClientList : Array<FlowClient> = [];
+  public roomCode: number;
   
   // Data storage fields
   public Username: string;

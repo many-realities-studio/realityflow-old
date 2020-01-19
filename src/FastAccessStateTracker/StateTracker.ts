@@ -5,6 +5,8 @@ import { RoomManager } from "./RoomManager";
 import { ConnectionManager } from "./ConnectionManager";
 import { MongooseDatabase } from "./Database/MongooseDatabase"
 import { ConfigurationSingleton } from "./ConfigurationSingleton";
+import { Room } from "./Room";
+import { Connection } from "mongoose";
 // TODO: Add logging system
 // TODO: Add checkout system 
 
@@ -22,9 +24,23 @@ export class StateTracker{
    * Adds a project to the FAM and database
    * @param projectToCreate 
    */
-  public static CreateProject(projectToCreate: FlowProject) : void
+  public static CreateProject(projectToCreate: FlowProject, FlowUserID, ClientID) : void
   {
-    projectToCreate.SaveToDatabase();
+    // if we can save to the database
+    const promise = new Promise(function(resolve, reject) {
+      setTimeout(function() {
+        let success = projectToCreate.SaveToDatabase();
+        resolve(success);
+      }, 1000)
+    });
+
+    promise.then(function(success) {
+      // then
+      // Find the flow user
+      // add project to the flow user
+    });
+
+    
   }
 
   /**
@@ -39,6 +55,20 @@ export class StateTracker{
       projectToDelete.Delete();
     }
   }
+ 
+  /**
+   * Finds a project with it's id, returns(?) it to the command context
+   * ID type of flow project is "any" for now
+   * @param projectToOpenID - ID of associated project
+   * @param connectionToUser - websocket connection to user
+   */
+  public static OpenProject(projectToOpenID: any) : FlowProject
+  {
+    // find project in list of projects
+    let projectFound : FlowProject = MongooseDatabase.GetProject(projectToOpenID);
+    return projectFound;
+  }
+
 
   // User Functions
 
@@ -70,10 +100,29 @@ export class StateTracker{
    */
   public static LoginUser(userToLogin: FlowUser, connectionToUser : WebSocket) : void
   {
-    // Find user in the list of known users
-    let userFound : FlowUser = ConfigurationSingleton.Database.GetUser(userToLogin.Id);
-
-    ConnectionManager.LoginUser(userFound, connectionToUser);
+    // check if logged in on another client 
+    let userLoggedIn = ConnectionManager.GetSavedUser(userToLogin);
+    // Are they in a room already?
+    if(userLoggedIn.roomCode)
+    {
+      // add new connection to the room - by adding connection to user
+      ConnectionManager.LoginUser(userLoggedIn, connectionToUser);
+    } 
+    else 
+    {
+      // Find user in the list of known users - async 
+      // for the first time in this session a user logs in on a client
+      const promise = new Promise(function(resolve, reject) {
+        setTimeout(function() {
+          let userFound : FlowUser = MongooseDatabase.GetUser(userToLogin.id);
+          resolve(userFound);
+        }, 1000)
+        });
+        promise.then(function(userFound: FlowUser) {
+          let user : FlowUser = userFound;
+          ConnectionManager.LoginUser(user, connectionToUser);
+        });
+    }
   }
 
   /**
@@ -86,9 +135,21 @@ export class StateTracker{
   }
 
   // Room Commands
-  public static CreateRoom(project: FlowProject) : void
+  public static CreateRoom(projectID: Number) : Number
   {
-    RoomManager.CreateRoom(project);
+    let roomCode = RoomManager.CreateRoom(projectID);
+    return roomCode;
+  }
+
+  /**
+   * Adds user to the room, does not worry about maintaining user connections
+   * @param roomCode - code of room they are looking to join
+   * @param user - user to be logged in
+   */
+  public static JoinRoom(roomCode: Number, user: FlowUser)
+  {
+    let room = RoomManager.FindRoom(roomCode);
+    room.JoinRoom(user);
   }
 
   // Object Commands

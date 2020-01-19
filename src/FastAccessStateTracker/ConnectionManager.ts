@@ -5,6 +5,7 @@ import { FlowUser } from "./FlowLibrary/FlowUser";
  */
 export class ConnectionManager
 {
+  //potentially upgrade to map for larger user base
   private static _LoggedInUsers: Array<FlowUser> = [];
 
   /**
@@ -39,7 +40,10 @@ export class ConnectionManager
   public static LoginUser(userToLogin : FlowUser, connectionToUser : WebSocket) : void
   {
     userToLogin.Login(connectionToUser);
-    this._LoggedInUsers.push(userToLogin);
+    if(!this.GetSavedUser(userToLogin))
+    {
+      this._LoggedInUsers.push(userToLogin);
+    }
   }
 
   /**
@@ -72,6 +76,14 @@ export class ConnectionManager
   public static FindUserWithConnection(connectionToFind: WebSocket) : FlowUser
   {
     return this._LoggedInUsers.find(user => user.ConnectionList.find(connection => connection == connectionToFind));
+  }
+
+  public static GetSavedUser(user: FlowUser) : FlowUser
+  {
+    let val = this._LoggedInUsers.find((temp) => temp.id == user.id);
+
+    return val;
+
   }
 
 }
