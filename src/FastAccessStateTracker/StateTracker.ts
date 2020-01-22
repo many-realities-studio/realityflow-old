@@ -4,6 +4,7 @@ import { FlowUser } from "./FlowLibrary/FlowUser"
 import { RoomManager } from "./RoomManager";
 import { ConnectionManager } from "./ConnectionManager";
 import { MongooseDatabase } from "./Database/MongooseDatabase"
+import { ConfigurationSingleton } from "./ConfigurationSingleton";
 import { Room } from "./Room";
 import { Connection } from "mongoose";
 // TODO: Add logging system
@@ -90,7 +91,7 @@ export class StateTracker{
     this.LogoutUser(userToDelete);
 
     // Delete user in the list of known users
-    MongooseDatabase.DeleteUser(userToDelete);
+    ConfigurationSingleton.Database.DeleteUser(userToDelete);
   }
 
   /**
@@ -122,7 +123,6 @@ export class StateTracker{
           ConnectionManager.LoginUser(user, connectionToUser);
         });
     }
-      
   }
 
   /**
