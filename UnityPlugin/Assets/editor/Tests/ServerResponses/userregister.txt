@@ -1,0 +1,114 @@
+{
+  "command": 10000,
+  "value": {
+    "data": "",
+    "_from": ""
+  },
+  "timestamp": 637125831180737900,
+  "project_id": "",
+  "client_id": "",
+  "user": {
+    "__v": "",
+    "_id": "5dfee6ce4c65f0208cbc9bed",
+    "id": "",
+    "username": "mickey",
+    "password": "mouse",
+    "active_project_id": "",
+    "client_ids": [],
+    "project_ids": [],
+    "friend_ids": []
+  },
+  "client": {
+    "__v": "",
+    "_id": "5dfee6ce4c65f0208cbc9bee",
+    "id": "",
+    "uid": "",
+    "activeConnecitonId": "",
+    "device": {
+      "_id": "",
+      "cameraOffset": {
+        "__v": "",
+        "_id": "",
+        "id": "",
+        "triangles": [],
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "q_x": 0,
+        "q_y": 0,
+        "q_z": 0,
+        "q_w": 0,
+        "s_x": 0,
+        "s_y": 0,
+        "s_z": 0,
+        "type": "",
+        "name": "",
+        "vertices": [],
+        "uv": [],
+        "texture": [],
+        "textureHeight": 0,
+        "textureWidth": 0,
+        "textureFormat": 0,
+        "mipmapCount": 0,
+        "color": {
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "a": 0
+        },
+        "material": {
+          "instanceID": 0
+        },
+        "flowObject": {
+          "instanceID": 0
+        }
+      },
+      "cameraRotation": {
+        "__v": "",
+        "_id": "",
+        "id": "",
+        "triangles": [],
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "q_x": 0,
+        "q_y": 0,
+        "q_z": 0,
+        "q_w": 0,
+        "s_x": 0,
+        "s_y": 0,
+        "s_z": 0,
+        "type": "",
+        "name": "",
+        "vertices": [],
+        "uv": [],
+        "texture": [],
+        "textureHeight": 0,
+        "textureWidth": 0,
+        "textureFormat": 0,
+        "mipmapCount": 0,
+        "color": {
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "a": 0
+        },
+        "material": {
+          "instanceID": 0
+        },
+        "flowObject": {
+          "instanceID": 0
+        }
+      },
+      "resolutionX": 0,
+      "resolutionY": 0,
+      "dpi": 0,
+      "deviceModel": "",
+      "deviceType": 0,
+      "description": "",
+      "uid": ""
+    },
+    "deviceType": 0,
+    "state": 0
+  }
+}

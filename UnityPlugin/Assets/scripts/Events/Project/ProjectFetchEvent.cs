@@ -82,7 +82,7 @@ namespace Assets.RealityFlow.Scripts.Events
                 newObj.GetComponent<FlowObject>().pastState.Copy(newObj.GetComponent<FlowObject>().ft);
 
                 newObj.GetComponent<FlowObject>().ft.flowObject = newObj.GetComponent<FlowObject>();
-            }
+            }           
 
             return "Receiving project open update: " + FlowNetworkManager.reply;
         }

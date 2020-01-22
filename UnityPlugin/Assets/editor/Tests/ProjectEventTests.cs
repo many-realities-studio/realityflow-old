@@ -12,14 +12,14 @@ namespace Tests
         public void Setup()
         {
             CommandProcessor.cmdBuffer.Clear();
+            Config.ResetValues();
         }
-
 
         /// <summary>
         /// This test verifies that a project create event is created and sent to the command processor
         /// </summary>
         [Test]
-        public void ProjectCreateEventTest()
+        public void SendProjectCreateEventTest()
         {
             // Arrange
             string projectName = "My First Projejct";
@@ -34,6 +34,32 @@ namespace Tests
             // Assert - Check buffer for create event
             bool result = CommandProcessor.cmdBuffer.Contains(createEvent);
             Assert.IsTrue(result, "Command buffer does not contain the create event");
+        }
+
+
+        /// <summary>
+        /// This test verifies that a project create event is received and the json response is deserialized
+        /// </summary>
+        [Test]
+        public void ReceiveProjectCreateEventTest()
+        {
+
+            // Arrange
+            string projectName = "pencil";
+            string response = Utilities.MockServerResponse("createproject.txt");
+            FlowNetworkManager.reply = response;
+
+            string expectedReturnValue = "Receiving project create update: " + response;
+            Config.projectList = new List<FlowProject>();
+
+            // Act
+            string actualReturnValue = ProjectCreateEvent.Receive();
+
+            // Assert - Check return value of Receive function and check that the new project is added to the project list
+            FlowProject addedProject = Config.projectList.Find(x => x.projectName.Equals(projectName));
+
+            Assert.AreEqual(projectName, addedProject.projectName, "Did not set the name for the new project correctly");
+            Assert.AreEqual(expectedReturnValue, actualReturnValue);
         }
 
 

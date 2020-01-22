@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using Assets.RealityFlow.Scripts.Events;
+using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
 
 
 /// <summary>
@@ -81,6 +84,17 @@ public static class Utilities
         obj.type = objectType;
         obj.name = objectName;
         obj.color = currentColor;
+    }
+
+
+    /// <summary>
+    /// This function returns a json response from the server
+    /// </summary>
+    /// <param name="filename">The name of the files that holds the desired response</param>
+    /// <returns></returns>
+    public static string MockServerResponse(string filename)
+    {
+        return File.ReadAllText("Assets/editor/Tests/ServerResponses/" + filename);
     }
 
 }

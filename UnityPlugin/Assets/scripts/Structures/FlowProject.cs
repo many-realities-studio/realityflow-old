@@ -9,7 +9,7 @@ public class FlowProject : FlowValue
     public string description;
     public int created;
     public int dateModified;
-    public string name;
+    public string projectName;
     public List<FlowTObject> transforms;
     [System.NonSerialized]
     public Dictionary<string, FlowTObject> transformsById;
