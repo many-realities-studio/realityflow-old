@@ -152,6 +152,20 @@ export class FlowProject implements IStringable
     oldObject.SaveToDatabase();
   }
 
+  /**
+   * Updates the object in the FAM without saving to the database
+   * @param newObject 
+   */
+  public UpdateFAMObject(newObject: FlowObject) : void
+  {
+    // Get the object that we are changing from the specified project
+    var oldObject: FlowObject = this.GetObject(newObject.id);
+
+    // Update all properties of the old object to the new object.
+    oldObject.UpdateProperties(newObject);
+
+  }
+
   // TODO: Find out what this does (or needs to do)
   public static OpenProject(projectToOpen: FlowProject) : void
   {

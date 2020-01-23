@@ -185,6 +185,15 @@ class Command_UpdateObject implements ICommand
   }
 }
 
+class Command_FinalizedUpdateObject implements ICommand
+{
+  ExecuteCommand(data: any, connection: Websocket): void
+  {
+    let flowObject = FlowConversion.ConvertToFlowObject(data);
+    StateTracker.FinalizedUpdateObject(flowObject);
+  }
+}
+
 /**
  * Holds the set of commands that can be executed and executes said commands 
  * with the provided data (JSON)
@@ -215,6 +224,7 @@ export class CommandContext
     this._CommandList.set("CreateObject", new Command_CreateObject());
     this._CommandList.set("DeleteObject", new Command_DeleteObject());
     this._CommandList.set("UpdateObject", new Command_UpdateObject());
+    this._CommandList.set("FinalizedUpdateObject", new Command_FinalizedUpdateObject());
   }
 
   /**

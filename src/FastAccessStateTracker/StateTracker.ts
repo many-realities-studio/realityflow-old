@@ -122,7 +122,7 @@ export class StateTracker{
           let user : FlowUser = userFound;
           ConnectionManager.LoginUser(user, connectionToUser);
         });
-    }
+    }    
   }
 
   /**
@@ -171,6 +171,20 @@ export class StateTracker{
   {
     RoomManager.FindRoom(objectToUpdate.RoomNumber)
                 .GetProject()
+                .UpdateFAMObject(objectToUpdate);
+  }
+
+  /**
+   * The final update to be sent to clients and saved in the database
+   * @param objectToUpdate - object which holds the final truth of position for the databsse
+   */
+  public static FinalizedUpdateObject(objectToUpdate : FlowObject) : void
+  {
+    RoomManager.FindRoom(objectToUpdate.RoomNumber)
+                .GetProject()
                 .UpdateObject(objectToUpdate);
+    //Send message to all clients notifying object change
+
+    
   }
 }
