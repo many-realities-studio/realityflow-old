@@ -40,8 +40,8 @@ export class databaseController{
     }
 
     
-    public static async CreateProject(inProj: FlowProject, inUser: FlowUser, inClient: FlowClient){
-            var project = await ProjectOperations.createProject(inProj, inClient, inUser);
+    public static async CreateProject(inProject: FlowProject, inUser: FlowUser, inClient: FlowClient){
+            var project = await ProjectOperations.createProject(inProject, inClient, inUser);
             project.clients.push(inClient._id);
             await project.save();
 

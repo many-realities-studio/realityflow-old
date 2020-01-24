@@ -9,6 +9,9 @@ import {FlowClient} from "../flow_classes/FlowClient";
 import {FlowUser} from "../flow_classes/FlowUser";
 import {FlowProject} from "../flow_classes/FlowProject";
 import {FlowObject} from "../flow_classes/FlowObject";
+import { User } from "../models/user";
+import { Project } from "../models/project";
+import { ClientOperations } from "../commands/client";
 
 describe("database_testing", () => {
     let connection: any;
@@ -105,15 +108,27 @@ describe("database_testing", () => {
     var createdUserOutput;
     var createdProjectOutput;
 
+    //testing the databaseController functions.
     it('should insert a user into collection and then find that user', async () => {
 
-        createdUserOutput = await databaseController.CreateUser(new FlowClient(testClient), new FlowUser(testUser))
-
-        //as long as it's not null we can assume the insert happened
-        expect(createdUserOutput).toEqual(expect.anything());
+        // arrange
+        var testUser = {
+            username: "Yash",
+            password: "test"
+        };
         
-        var findOut = await UserOperations.findUser({_id: createdUserOutput.newUserId})
+        var testClient = {
+            _id: "",
+            user:"",
+            deviceType: 1
+        }
 
+        // act
+        createdUserOutput = await databaseController.CreateUser(new FlowClient(testClient), new FlowUser(testUser))
+        
+        //assert
+        expect(createdUserOutput).toEqual(expect.anything());
+        var findOut = await UserOperations.findUser({_id: createdUserOutput.newUserId})
         expect(findOut._id).toEqual(createdUserOutput.newUserId);
         
     });
@@ -122,10 +137,35 @@ describe("database_testing", () => {
 
     it('should insert a project into a collection and then find that project', async () => {
         
+        // arrange
+        var testProject = new FlowProject({
+            _id: "",
+            projectName: "TestProject1",
+            created: Date.now(),
+    
+            lastEdit: Date.now(),
+            lastEditor: null
+        });
+
+        var testUser = new FlowUser({
+            username: "Yash",
+            password: "test"
+        });
+
+        var mongoUser = await UserOperations.createUser(testUser)
+        testUser._id = mongoUser._id
+
+        var testClient = new FlowClient({
+            user: testUser._id,
+            deviceType: 1
+        })
+
+        // act
         createdUserOutput.project = testProject;
-        createdProjectOutput = await databaseController.CreateProject(new FlowProject(testProject), new FlowUser(testUser), new FlowClient(createdUserOutput.newClientId), );
-        expect(createdProjectOutput).toEqual(expect.anything());
+        createdProjectOutput = await databaseController.CreateProject(testProject, testUser, testClient);
         
+        // assert
+        expect(createdProjectOutput).toEqual(expect.anything());
         var findProject = await ProjectOperations.findProject(createdProjectOutput);
         expect(findProject).toEqual(expect.anything())
     
@@ -135,16 +175,119 @@ describe("database_testing", () => {
 
     it('should create an object', async() => {
 
-        var createOut1 = await databaseController.CreateObject(new FlowObject(object1), new FlowProject(createdProjectOutput));
+        // arrange
+        var testUser = new FlowUser({
+            username: "Yash",
+            password: "test"
+        });
+
+        var mongoUser = await UserOperations.createUser(testUser)
+        testUser._id = mongoUser._id
+
+        var testClient = await ClientOperations.createClient({
+            user: testUser._id,
+            deviceType: 1
+        }, testUser._id)
+
+       
+        var testProject = await ProjectOperations.createProject( {
+            projectName: "TestProject1",
+            created: Date.now(),
+    
+            lastEdit: Date.now(),
+            lastEditor: null
+        }, testClient, testUser);
+
+        var object1 = {
+        
+            type:           "string",
+            name:           "object1",
+            triangles:      [1,2,3],
+            x:              3,
+            y:              1,
+            z:              1,
+            q_x:            1,
+            q_y:            1,
+            q_z:            1,
+            q_w:            1,
+            s_x:            1,
+            s_y:            1,
+            s_z:            1,
+            color:          {},
+            vertices:       [1,2],
+            uv:             [2,34],
+            texture:        [1,3],
+            textureHeight:  1,
+            textureWidth:   1,
+            textureFormat:  1,
+            mipmapCount:    1,
+            locked:         false,
+            path:           "here"
+        }
+        // act
+        var createOut1 = await databaseController.CreateObject(new FlowObject(object1), new FlowProject(testProject));
+        
+        // assert
         expect(createOut1).toEqual(expect.anything())
     
     })
 
     it('should modify an object', async() =>{
     
+        // arrange
+        var testUser = new FlowUser({
+            username: "Yash",
+            password: "test"
+        });
+
+        var mongoUser = await UserOperations.createUser(testUser)
+        testUser._id = mongoUser._id
+
+        var testClient = await ClientOperations.createClient({
+            user: testUser._id,
+            deviceType: 1
+        }, testUser._id)
+
+       
+        var testProject = await ProjectOperations.createProject( {
+            projectName: "TestProject1",
+            created: Date.now(),
+    
+            lastEdit: Date.now(),
+            lastEditor: null
+        }, testClient, testUser);
+
+        var object1 = {
+        
+            type:           "string",
+            name:           "object1",
+            triangles:      [1,2,3],
+            x:              3,
+            y:              1,
+            z:              1,
+            q_x:            1,
+            q_y:            1,
+            q_z:            1,
+            q_w:            1,
+            s_x:            1,
+            s_y:            1,
+            s_z:            1,
+            color:          {},
+            vertices:       [1,2],
+            uv:             [2,34],
+            texture:        [1,3],
+            textureHeight:  1,
+            textureWidth:   1,
+            textureFormat:  1,
+            mipmapCount:    1,
+            locked:         false,
+            path:           "here"
+        }
+
         var createOut1 = await databaseController.CreateObject(new FlowObject(object1), new FlowProject(createdProjectOutput));
         expect(createOut1).toEqual(expect.anything());
 
+        // act
         var modified = Object.assign({}, createOut1);
         modified.object.x = -1;
 
@@ -156,28 +299,71 @@ describe("database_testing", () => {
         console.log(createOut1)
         var foundObj = await ObjectOperations.findObject(createOut1.object._id)
         
+        // assert
         expect(foundObj.x).toEqual(-1);
 
     })
 
     it('should delete a user from a collection', async () => {
         
-        var findPreDelete = await UserOperations.findUser({_id: createdUserOutput.newUserId})
-        expect(findPreDelete._id).toEqual(createdUserOutput.newUserId);
+        // arrange
+        var testUser = {
+            username: "Yash",
+            password: "test"
+        };
         
+        var testClient = {
+            _id: "",
+            user:"",
+            deviceType: 1
+        }
+
+        
+        createdUserOutput = await databaseController.CreateUser(new FlowClient(testClient), new FlowUser(testUser))
+        
+        // act
         await UserOperations.deleteUser( {_id: createdUserOutput.newUserId} );
         
+        // assert
         var findPostDelete = await UserOperations.findUser({_id: createdUserOutput.newUserId});
         expect(findPostDelete).toEqual(null)
-
     });
 
     it('should delete a project from a collection', async () => {
+
+        // arrange
+        var testProject = new FlowProject({
+            _id: "",
+            projectName: "TestProject1",
+            created: Date.now(),
+    
+            lastEdit: Date.now(),
+            lastEditor: null
+        });
+
+        var testUser = new FlowUser({
+            username: "Yash",
+            password: "test"
+        });
+
+        var mongoUser = await UserOperations.createUser(testUser)
+        testUser._id = mongoUser._id
+
+        var testClient = new FlowClient({
+            user: testUser._id,
+            deviceType: 1
+        })
+
+        createdUserOutput.project = testProject;
+        createdProjectOutput = await databaseController.CreateProject(testProject, testUser, testClient);
+
         var findProject = await ProjectOperations.findProject(new FlowProject(createdProjectOutput));
         expect(findProject).toEqual(expect.anything())
         
+        // act
         await databaseController.DeleteProject(new FlowProject(createdProjectOutput));
-
+        
+        // assert
         var findPostDelete = await ProjectOperations.findProject(new FlowProject(createdProjectOutput));
         expect(findPostDelete).toEqual(null)
     })
