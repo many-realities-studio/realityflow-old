@@ -11,10 +11,6 @@ class ProjectOperations {
             owner: userInfo._id,
             clients: [clientInfo._id],
             objs: undefined,
-            currentScene: undefined,
-            prevScene: undefined,
-            nextScene: undefined,
-            bookmarks: undefined,
             created: projectInfo.created,
             lastEdit: projectInfo.lastEdit,
             lastEditor: projectInfo.lastEditor
@@ -52,7 +48,12 @@ class ProjectOperations {
         return promise;
     }
     static deleteProject(projectInfo) {
-        project_1.Project.findByIdAndRemove(projectInfo._id);
+        console.log("deleting project " + projectInfo._id);
+        project_1.Project.findByIdAndRemove({ _id: projectInfo._id }, function (err, doc) {
+            if (err)
+                console.log(err);
+        });
     }
 }
 exports.ProjectOperations = ProjectOperations;
+//# sourceMappingURL=project.js.map

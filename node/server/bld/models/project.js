@@ -17,3 +17,4 @@ const projectSchema = new mongoose.Schema({
     lastEditor: { type: ObjectId, ref: user_1.User },
 }, { usePushEach: true });
 exports.Project = mongoose.model("Project", projectSchema);
+//# sourceMappingURL=project.js.map

@@ -28,3 +28,4 @@ const objectSchema = new mongoose.Schema({
     locked: Boolean
 }, { usePushEach: true });
 exports.Object = mongoose.model("Object", objectSchema);
+//# sourceMappingURL=object.js.map
