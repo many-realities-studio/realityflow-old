@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Assets.RealityFlow.Scripts.Events;
+using System;
 
 public class MainMenuManager : MonoBehaviour {
 
@@ -33,6 +34,8 @@ public class MainMenuManager : MonoBehaviour {
     public InputField username;
     public InputField password;
     public InputField confirm;
+
+  
 
     public void Start()
     {
@@ -78,8 +81,14 @@ public class MainMenuManager : MonoBehaviour {
         }
     }
 
+    
+
     public void setActivePanel(int panel)
     {
+        //user is logging out
+        if (activePanel == PROJECT_PANEL && panel == 0)
+            Logout();
+
         panels[panel].SetActive(true);
         panels[activePanel].SetActive(false);
         activePanel = panel;
@@ -104,6 +113,12 @@ public class MainMenuManager : MonoBehaviour {
             case (PROJECT_PANEL):
                 break;
         }
+    }
+
+    private void Logout()
+    {
+        // clear the username and projectList so the next user to login will have a newly populated list
+        Config.ResetConfig();
     }
 
     public void login()

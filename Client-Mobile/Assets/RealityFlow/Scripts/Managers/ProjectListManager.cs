@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Assets.RealityFlow.Scripts.Events;
+using System;
 
 
 // This file contains the functions used to populate and maintain the projects list.
@@ -39,6 +40,9 @@ public class ProjectListManager : MonoBehaviour {
     //private Text entry;
     private GameObject activePanel;
 
+    public Text greeting;
+    public bool usernameSet = false;
+
     private void Start()
     {
         ProjectDataList projects = new ProjectDataList();
@@ -47,8 +51,43 @@ public class ProjectListManager : MonoBehaviour {
         Config.projectId = PROJECT_UNSET;
     }
 
+    public void OnEnable()
+    {
+        // let update function know that username has been previously set
+        usernameSet = true;
+        setGreeting(Config.username);
+    }
+
+    public void OnDisable()
+    {
+        // user is logging out, reset all variables
+        usernameSet = false;
+        populated = false;
+        projectListEntries.Clear();
+
+        // clear the project list items 
+        List<GameObject> list = new List<GameObject>();
+        for (int i = 0; i < content.transform.childCount; i++)
+        {
+            Destroy(content.transform.GetChild(i).gameObject);
+        }
+    }
+
+    public void setGreeting(string name)
+    {
+        greeting = GameObject.Find("Greeting").GetComponent<Text>();
+        greeting.text = "Hello " + name + "!";
+    }
+
     private void Update()
     {
+
+        // prevents the greeting from displaying the previous logged in user's name 
+        if (usernameSet && Config.username != "")
+        {
+            setGreeting(Config.username);
+            usernameSet = false;
+        }
 
         if (!populated && Config.projectList != null && Config.projectList.Count > 0)
         {
@@ -71,6 +110,8 @@ public class ProjectListManager : MonoBehaviour {
                     item.index = projectListEntries.Count - 1;
                 }
             }
+        
+         
             content.transform.parent.transform.parent.gameObject.GetComponent<ScrollRect>().verticalNormalizedPosition = 1f;
             populated = true;
         }
@@ -102,6 +143,7 @@ public class ProjectListManager : MonoBehaviour {
                     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     Config.projectId = projectListEntries[i].id;
                     SceneManager.LoadScene(BUILD_SETTING_MOBILE_INTERFACE);
+                    break;
                 }
                 else if (toggle.IsPressed)
                 {

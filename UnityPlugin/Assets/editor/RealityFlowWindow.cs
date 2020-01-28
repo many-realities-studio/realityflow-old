@@ -4,11 +4,11 @@ using UnityEngine;
 using UnityEditor;
 using Assets.RealityFlow.Scripts.Events;
 using System.IO;
-
 public class RealityFlowWindow : EditorWindow {
 
     Vector2 scrollPos = Vector2.zero;
     Texture2D headerSectionTexture;
+    public static bool testBool = false;
     Texture2D bodySectionTexture;
 
     Color headerSectionColor = new Color(13f/255f, 32f/255f, 44f/255f, 1f);
@@ -99,7 +99,7 @@ public class RealityFlowWindow : EditorWindow {
         headerSection.x = 0;
         headerSection.y = 0;
         headerSection.width = Screen.width/2;
-        Debug.Log(Screen.width);
+        // Debug.Log(Screen.width);
         headerSection.height = 50;
 
         bodySection.x = 0;
@@ -583,15 +583,16 @@ public class ObjectSettings : EditorWindow
         {
             if (GUILayout.Button("Create", GUILayout.Height(30)))
             {
+                SetupObjectManager();
                 SaveObjectData(objData);
                 window.Close();
             }
         }
     }
 
-    void SaveObjectData(ObjectData objData)
+    void SetupObjectManager()
     {
-        string prefabPath; //path to the base prefab
+        // string prefabPath; //path to the base prefab
         string s = "ObjManager";
 
         // Check if there is already an object manager
@@ -604,7 +605,7 @@ public class ObjectSettings : EditorWindow
             manager = new GameObject("ObjManager");
             manager.tag = s;
             managerExists = false;
-        }  
+        }
 
         // If the manager was just created add the necessary components
         if (managerExists == false)
@@ -615,25 +616,34 @@ public class ObjectSettings : EditorWindow
             manager.GetComponent<FlowNetworkManager>().mainGameCamera = GameObject.FindGameObjectWithTag("MainCamera");
             manager.AddComponent(typeof(DoOnMainThread));
         }
+    }
+
+    public static void SaveObjectData(ObjectData objectData)
+    {
 
         FlowTObject obj = new FlowTObject();
-        obj.vertices = RealityFlowWindow.ObjectInfo.mesh.vertices;
-        obj.uv = RealityFlowWindow.ObjectInfo.mesh.uv;
-        obj.triangles = RealityFlowWindow.ObjectInfo.mesh.triangles;
-        obj.x = RealityFlowWindow.ObjectInfo.position.x;
-        obj.y = RealityFlowWindow.ObjectInfo.position.y;
-        obj.z = RealityFlowWindow.ObjectInfo.position.z;
-        Quaternion rot = Quaternion.Euler(RealityFlowWindow.ObjectInfo.rotation);
+
+        obj.vertices = objectData.mesh.vertices;
+        obj.uv = objectData.mesh.uv;
+        obj.triangles = objectData.mesh.triangles;
+        obj.x = objectData.position.x;
+        obj.y = objectData.position.y;
+        obj.z = objectData.position.z;
+
+
+        Quaternion rot = Quaternion.Euler(objectData.rotation);
         obj.q_x = rot.x;
         obj.q_y = rot.y;
         obj.q_z = rot.z;
         obj.q_w = rot.w;
-        obj.s_x = RealityFlowWindow.ObjectInfo.scale.x;
-        obj.s_y = RealityFlowWindow.ObjectInfo.scale.y;
-        obj.s_z = RealityFlowWindow.ObjectInfo.scale.z;
+
+        obj.s_x = objectData.scale.x;
+        obj.s_y = objectData.scale.y;
+        obj.s_z = objectData.scale.z;
+
         obj.type = "BoxCollider";
-        obj.name = RealityFlowWindow.ObjectInfo.objectName;
-        obj.color = RealityFlowWindow.ObjectInfo.color;
+        obj.name = objectData.objectName;
+        obj.color = objectData.color;
 
         // Textures are currently not supported on the live server due to lag
         //-------------------------------------------------------------------------

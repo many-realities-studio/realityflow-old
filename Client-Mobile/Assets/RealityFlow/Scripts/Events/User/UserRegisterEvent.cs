@@ -38,7 +38,9 @@ namespace Assets.RealityFlow.Scripts.Events
         {
             UserRegisterEvent log = JsonUtility.FromJson<UserRegisterEvent>(FlowNetworkManager.reply);
             Config.userId = log.user._id;
+            Config.username = log.user.username;
             Config.deviceId = log.client._id;
+            Config.deviceType = log.client.deviceType;
 
 
             return "Receiving user create update: " + FlowNetworkManager.reply;

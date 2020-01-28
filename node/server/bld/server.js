@@ -12,6 +12,7 @@ const express = require("express");
 const http = require("http");
 const ws_1 = require("ws");
 const mongoose = require("mongoose");
+mongoose.Promise = Promise;
 const messageProcessor_1 = require("./common/messageProcessor");
 const project_1 = require("./commands/project");
 var database;
@@ -65,9 +66,9 @@ class ServerEventDispatcher {
         });
     }
     static send(payloadString, connection) {
-        let payload = Buffer.alloc(payloadString.length, payloadString);
-        connection.send(payload, function ack(err) {
-            if (err == undefined) {
+        connection.send(payloadString, function ack(err) {
+            if (err) {
+                console.log(err);
             }
         });
     }

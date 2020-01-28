@@ -2,6 +2,7 @@ import * as express from "express";
 import * as http from "http";
 import { Server } from "ws";
 import * as mongoose from "mongoose";
+(<any>mongoose).Promise = Promise;
 import {MessageProcessor} from "./common/messageProcessor";
 
 // DB API
@@ -87,16 +88,14 @@ export class ServerEventDispatcher {
     //This function simply takes in whatever JSON payload and sends it to the connection
     public static send(payloadString: any, connection: any){
 
-        let payload = Buffer.alloc(payloadString.length, payloadString);
+        // let payload = Buffer.alloc(payloadString.length, payloadString);
 
-        connection.send(payload, function ack(err){
-
-            if(err==undefined){
-
-            }
-
-        });
-
+         connection.send(payloadString, function ack(err){
+ 
+             if(err){
+                  console.log(err);
+              }
+          });
     }
 
     constructor(server: http.Server) {

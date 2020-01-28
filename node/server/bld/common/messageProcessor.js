@@ -121,6 +121,7 @@ class MessageProcessor {
                             json.projects = loginData.projects;
                             var payloadString = JSON.stringify(json);
                             server_1.ServerEventDispatcher.send(payloadString, connection);
+
                         }
                         else {
                             var payloadString = JSON.stringify(json);

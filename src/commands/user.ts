@@ -36,20 +36,23 @@ export class UserOperations {
     // Why are we lookin at users by their internal IDs?
     public static findUser(userInfo: any){
 
-        var returnedUser;
+        var returnedUser = null;
 
-        var promise = User.findById(userInfo._id).exec();
+        var promise = User.find({ username: userInfo.username}).exec();
         
-        promise.then(function(err, doc){
+        promise.catch(function(err) {
+            console.log(err);
+        });
+        
+        promise.then(function(doc){
 
-            returnedUser = doc;
+            if(doc)
+                returnedUser = doc;
 
             return returnedUser;
-        
         });
 
         return promise;
-
     }
 
     // This just... returns the user based on their username??
@@ -64,7 +67,6 @@ export class UserOperations {
         });
 
         return promise;
-
     }
 
 

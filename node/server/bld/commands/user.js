@@ -22,10 +22,14 @@ class UserOperations {
         return promise;
     }
     static findUser(userInfo) {
-        var returnedUser;
-        var promise = user_1.User.findById(userInfo._id).exec();
-        promise.then(function (err, doc) {
-            returnedUser = doc;
+        var returnedUser = null;
+        var promise = user_1.User.find({ username: userInfo.username }).exec();
+        promise.catch(function (err) {
+            console.log(err);
+        });
+        promise.then(function (doc) {
+            if (doc)
+                returnedUser = doc;
             return returnedUser;
         });
         return promise;
