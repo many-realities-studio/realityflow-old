@@ -14,13 +14,13 @@ export class MessageBuilder
     });
   }
 
-  public SuccessMessage() : string
+  public SuccessMessage(operation: string) : string
   {
-    return "Message successful";
+    return operation + " was successful";
   }
 
-  public FailureMessage() : string
+  public FailureMessage(operation: string) : string
   {
-    return "Message failed";
+    return operation + " was a failure";
   }
 }

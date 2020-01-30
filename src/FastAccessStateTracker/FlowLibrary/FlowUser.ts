@@ -3,6 +3,8 @@ import { MongooseDatabase } from "../Database/MongooseDatabase";
 import { FlowProject } from "../../temp";
 import { FlowClient } from "./FlowClient";
 import { ConfigurationSingleton } from "../ConfigurationSingleton";
+import { Project } from "../../models/project";
+import { FlowProject } from "./FlowProject";
 
 export class FlowUser implements IStringable
 {
@@ -56,6 +58,14 @@ export class FlowUser implements IStringable
     {
       ClosedConnection = this.ClientList.splice(index, 1)[0];
     }
+  }
+
+  /**
+   * @projectToAdd : Flow Project to include in user array
+   */
+  public addProject(projectToAdd: FlowProject) : void 
+  {
+    this.Projects.push(projectToAdd);
   }
 
   /**

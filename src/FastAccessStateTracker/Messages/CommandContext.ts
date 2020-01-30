@@ -10,6 +10,7 @@ import { StateTracker } from "../StateTracker";
 import { ConnectionManager } from "../ConnectionManager";
 import { FlowProject } from "../FlowLibrary/FlowProject";
 import { FlowUser } from "../FlowLibrary/FlowUser";
+import { FlowObject } from "../FlowLibrary/FlowObject";
 import { MessageBuilder } from "./MessageBuilder";
 
 interface ICommand
@@ -25,11 +26,13 @@ class Command_CreateProject implements ICommand
   {
     let project : FlowProject= FlowConversion.ConvertToFlowProject(data);
     
-    StateTracker.CreateProject(project);
-
     let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
-    // TODO: Form message
-    let returnMessage = MessageBuilder.CreateMessage();
+    
+    StateTracker.CreateProject(project, userConnected);
+
+    // Create Project only requires a success message being sent
+    //TODO: Ensure success before sending success message
+    let returnMessage = MessageBuilder.SuccessMessage("CreateProject");
     ConnectionManager.SendMessage(returnMessage, [userConnected]);
   }
 }
@@ -39,8 +42,12 @@ class Command_DeleteProject implements ICommand
   ExecuteCommand(data: any, connection: WebSocket): void 
   {
     let project = FlowConversion.ConvertToFlowProject(data);
+    let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
+    let returnMessage = MessageBuilder.SuccessMessage("DeleteProject");
     
+    ConnectionManager.SendMessage(returnMessage, [userConnected]);
     StateTracker.DeleteProject(project);
+    
   }
 }
 
@@ -52,7 +59,7 @@ class Command_OpenProject implements ICommand
     let project = StateTracker.OpenProject(data.id)
 
     let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
-    // send flowproject, not the string?
+
     ConnectionManager.SendMessage(project.ToString(), [userConnected]);
   }
 }
@@ -63,9 +70,22 @@ class Command_CreateUser implements ICommand
 {
   ExecuteCommand(data: any, connection: WebSocket): void 
   {
-    let user = FlowConversion.ConvertToFlowUser(data);
+    let user = FlowUser.constructor(data);
+    // create boolean if message was sent
+    let success = StateTracker.CreateUser(user);
+    let returnMessage = ""
     
-    StateTracker.CreateUser(user);
+    if(success)
+    {
+      returnMessage = MessageBuilder.SuccessMessage("CreateUser");
+    } else 
+    {
+      returnMessage = MessageBuilder.FailureMessage("CreateUser");
+    }
+    
+    ConnectionManager.SendMessage(returnMessage, [user]);
+
+
   }
 }
 
@@ -83,7 +103,18 @@ class Command_LoginUser implements ICommand
   ExecuteCommand(data: any, connection: WebSocket): void 
   {
     let user = FlowConversion.ConvertToFlowUser(data);
-    StateTracker.LoginUser(user, connection);
+    let success = StateTracker.LoginUser(user, connection);
+    let returnMessage = ""
+
+    if(success)
+    {
+      returnMessage = MessageBuilder.SuccessMessage("LoginUser");
+    } else 
+    {
+      returnMessage = MessageBuilder.FailureMessage("LoginUser");
+    }
+    
+    ConnectionManager.SendMessage(returnMessage, [user]);
   }
 }
 
@@ -93,6 +124,9 @@ class Command_LogoutUser implements ICommand
   {
     let user = FlowConversion.ConvertToFlowUser(data);
     StateTracker.LogoutUser(user);
+    let returnMessage = MessageBuilder.SuccessMessage("LogoutUser");
+    
+    ConnectionManager.SendMessage(returnMessage, [user]);
   }
 }
 
@@ -115,7 +149,7 @@ class Command_CreateRoom implements ICommand
       ConnectionManager.SendMessage(roomMessage, [userConnected])
     } else 
     {
-      let failMessage = MessageBuilder.FailureMessage();
+      let failMessage = MessageBuilder.FailureMessage("CreateRoom");
       ConnectionManager.SendMessage(failMessage, [userConnected])
     }
 
@@ -129,17 +163,22 @@ class Command_JoinRoom implements ICommand
     let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
     //TODO: Ensure proper JSON recieval
     let roomCode = data.roomCode;
+    let messages: string[];
+    let finalMessage; 
     //error catch 
     if(roomCode)
     {
-      StateTracker.JoinRoom(roomCode, userConnected);
+      let project = StateTracker.JoinRoom(roomCode, userConnected);
       //send success message to user
-      let successMessage = MessageBuilder.SuccessMessage();
+      let successMessage = MessageBuilder.SuccessMessage("JoinRoom");
+      
+      messages.push(successMessage, project.ToString());
+      finalMessage = MessageBuilder.CreateMessage(messages);
       ConnectionManager.SendMessage(successMessage, [userConnected])
     } else 
     {      
       //send fail message to user
-      let failMessage = MessageBuilder.FailMessage();
+      let failMessage = MessageBuilder.FailMessage("JoinRoom");
       ConnectionManager.SendMessage(failMessage, [userConnected])
     }
   }
@@ -159,9 +198,15 @@ class Command_CreateObject implements ICommand
 {
   ExecuteCommand(data: any, connection: WebSocket): void  
   {
-    let flowObject = FlowConversion.ConvertToFlowObject(data);
-
+    let flowObject = FlowObject.constructor(data);
+    let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
+    let successMessage = MessageBuilder.SuccessMessage("CreateObject");
+    //TODO: Add failure check and message
+    
     StateTracker.CreateObject(flowObject);
+    ConnectionManager.SendMessage(successMessage, [userConnected]);
+
+
   }
 }
 
@@ -170,8 +215,12 @@ class Command_DeleteObject implements ICommand
   ExecuteCommand(data: any, connection: WebSocket): void  
   {
     let flowObject = FlowConversion.ConvertToFlowObject(data);
-
     StateTracker.DeleteObject(flowObject);
+    let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
+    let successMessage = MessageBuilder.SuccessMessage("DeleteObject");
+    
+    //TODO: Add failure check and message
+    ConnectionManager.SendMessage(successMessage, [userConnected]);
   }
 }
 
@@ -180,8 +229,12 @@ class Command_UpdateObject implements ICommand
   ExecuteCommand(data: any, connection: WebSocket): void  
   {
     let flowObject = FlowConversion.ConvertToFlowObject(data);
-
     StateTracker.UpdateObject(flowObject);
+    let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
+    let successMessage = MessageBuilder.SuccessMessage("UpdateObject");
+    
+    //TODO: Add failure check and message
+    ConnectionManager.SendMessage(successMessage, [userConnected]);
   }
 }
 
@@ -191,6 +244,13 @@ class Command_FinalizedUpdateObject implements ICommand
   {
     let flowObject = FlowConversion.ConvertToFlowObject(data);
     StateTracker.FinalizedUpdateObject(flowObject);
+    
+    let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
+    let successMessage = MessageBuilder.SuccessMessage("FinalizedObjectUpdate");
+    
+    //TODO: Add failure check and message
+    ConnectionManager.SendMessage(successMessage, [userConnected]);
+
   }
 }
 

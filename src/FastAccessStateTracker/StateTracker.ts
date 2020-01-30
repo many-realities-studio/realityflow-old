@@ -24,7 +24,7 @@ export class StateTracker{
    * Adds a project to the FAM and database
    * @param projectToCreate 
    */
-  public static CreateProject(projectToCreate: FlowProject, FlowUserID, ClientID) : void
+  public static CreateProject(projectToCreate: FlowProject, user: FlowUser) : void
   {
     // if we can save to the database
     const promise = new Promise(function(resolve, reject) {
@@ -35,9 +35,10 @@ export class StateTracker{
     });
 
     promise.then(function(success) {
-      // then
-      // Find the flow user
-      // add project to the flow user
+      
+      // add project to user array
+      user.addProject(projectToCreate);
+
     });
 
     
@@ -76,9 +77,25 @@ export class StateTracker{
    * Creates a user, adding the user data to the FAM and the database
    * @param userToCreate 
    */
-  public static CreateUser(userToCreate: FlowUser) : void
+  public static CreateUser(userToCreate: FlowUser) : boolean
   { 
     userToCreate.SaveToDatabase();
+    let success = true;
+
+    const promise = new Promise(function(resolve, reject) {
+      setTimeout(function() {
+        let success = userToCreate.SaveToDatabase();
+        resolve(success);
+      }, 1000)
+    });
+
+    promise.then(function(success) {
+      
+      return success;
+
+    });
+
+    return !success;
   }
 
     /**
@@ -98,15 +115,18 @@ export class StateTracker{
    * Logs in the desired user, this only affects the FAM and is not saved to the database
    * @param userToLogin 
    */
-  public static LoginUser(userToLogin: FlowUser, connectionToUser : WebSocket) : void
+  public static LoginUser(userToLogin: FlowUser, connectionToUser : WebSocket) : boolean
   {
     // check if logged in on another client 
     let userLoggedIn = ConnectionManager.GetSavedUser(userToLogin);
+    // boolean to send back to Command Context
+    let result = false;
     // Are they in a room already?
     if(userLoggedIn.roomCode)
     {
       // add new connection to the room - by adding connection to user
       ConnectionManager.LoginUser(userLoggedIn, connectionToUser);
+      result = true;
     } 
     else 
     {
@@ -121,8 +141,10 @@ export class StateTracker{
         promise.then(function(userFound: FlowUser) {
           let user : FlowUser = userFound;
           ConnectionManager.LoginUser(user, connectionToUser);
+          result = true;
         });
-    }    
+    }
+    return result;    
   }
 
   /**
@@ -146,10 +168,14 @@ export class StateTracker{
    * @param roomCode - code of room they are looking to join
    * @param user - user to be logged in
    */
-  public static JoinRoom(roomCode: Number, user: FlowUser)
+  public static JoinRoom(roomCode: Number, user: FlowUser) : FlowProject
   {
     let room = RoomManager.FindRoom(roomCode);
     room.JoinRoom(user);
+    // Pray this works
+    //haha jk.. unless
+    return room.GetProject();
+
   }
 
   // Object Commands
