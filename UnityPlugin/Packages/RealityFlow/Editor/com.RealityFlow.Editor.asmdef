@@ -1,0 +1,17 @@
+{
+    "name": "com.RealityFlow.Editor",
+    "references": [
+        "RealityFlowScripts",
+        "RealityFlowObjectData",
+        "com.RealityFlow.Resources",
+        "com.RealityFlow"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": []
+}
