@@ -997,7 +997,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 100372371}
   m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb346f41f3e3d8b4d94cb1e6f4acc2bc, type: 3}
+  m_Script: {fileID: 11500000, guid: 81690743fbaf1b846be091bef94f892a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   selected: 1
@@ -1020,6 +1020,11 @@ MonoBehaviour:
     name: 
     vertices: []
     uv: []
+    texture: 
+    textureHeight: 0
+    textureWidth: 0
+    textureFormat: 0
+    mipmapCount: 0
     color: {r: 0, g: 0, b: 0, a: 0}
     material: {fileID: 0}
     flowObject: {fileID: 0}
@@ -1042,6 +1047,11 @@ MonoBehaviour:
     name: 
     vertices: []
     uv: []
+    texture: 
+    textureHeight: 0
+    textureWidth: 0
+    textureFormat: 0
+    mipmapCount: 0
     color: {r: 0, g: 0, b: 0, a: 0}
     material: {fileID: 0}
     flowObject: {fileID: 0}
@@ -5039,7 +5049,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 850352791}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b92b707d7e7145b4286a1c16074da173, type: 3}
+  m_Script: {fileID: 11500000, guid: 644968c9a08adaf49a6a398dc9075c00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   LocalServer: 0
