@@ -1,8 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using RuntimeGizmos;
-using Assets.RealityFlow.Scripts.Events;
+using RealityFlow.Plugin.Scripts.Events;
 
 public class doDelete : MonoBehaviour {
 
