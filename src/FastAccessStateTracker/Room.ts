@@ -46,6 +46,6 @@ export class Room
    */
   public GetProject() : FlowProject
   {
-    return MongooseDatabase.GetProject(this._CurrentProjectID); 
+    return ConfigurationSingleton.Database.GetProject(this._CurrentProjectID); 
   }
 }

@@ -66,7 +66,7 @@ export class StateTracker{
   public static OpenProject(projectToOpenID: any) : FlowProject
   {
     // find project in list of projects
-    let projectFound : FlowProject = MongooseDatabase.GetProject(projectToOpenID);
+    let projectFound : FlowProject = ConfigurationSingleton.Database.GetProject(projectToOpenID);
     return projectFound;
   }
 
@@ -134,7 +134,7 @@ export class StateTracker{
       // for the first time in this session a user logs in on a client
       const promise = new Promise(function(resolve, reject) {
         setTimeout(function() {
-          let userFound : FlowUser = MongooseDatabase.GetUser(userToLogin.id);
+          let userFound : FlowUser = ConfigurationSingleton.Database.GetUser(userToLogin.id);
           resolve(userFound);
         }, 1000)
         });

@@ -4,14 +4,13 @@
  * each of which has a single method allowing said command to 
  * be executed with the JSON data provided.
  */
-
-import { FlowConversion } from "../FlowLibrary/FlowConversion";
 import { StateTracker } from "../StateTracker";
 import { ConnectionManager } from "../ConnectionManager";
 import { FlowProject } from "../FlowLibrary/FlowProject";
 import { FlowUser } from "../FlowLibrary/FlowUser";
 import { FlowObject } from "../FlowLibrary/FlowObject";
 import { MessageBuilder } from "./MessageBuilder";
+import { IStringable } from "../FlowLibrary/IStringable";
 
 interface ICommand
 {
@@ -24,7 +23,7 @@ class Command_CreateProject implements ICommand
 {
   ExecuteCommand(data: any, connection: WebSocket): void 
   {
-    let project : FlowProject= FlowConversion.ConvertToFlowProject(data);
+    let project : FlowProject= FlowProject.constructor(data);
     
     let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
     
@@ -41,7 +40,7 @@ class Command_DeleteProject implements ICommand
 {
   ExecuteCommand(data: any, connection: WebSocket): void 
   {
-    let project = FlowConversion.ConvertToFlowProject(data);
+    let project = FlowProject.constructor(data);
     let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
     let returnMessage = MessageBuilder.SuccessMessage("DeleteProject");
     
@@ -93,7 +92,7 @@ class Command_DeleteUser implements ICommand
 {
   ExecuteCommand(data: any, connection: WebSocket): void 
   {
-    let user = FlowConversion.ConvertToFlowUser(data);
+    let user = FlowUser.constructor(data);
     StateTracker.DeleteUser(user);
   }
 }
@@ -102,7 +101,7 @@ class Command_LoginUser implements ICommand
 {
   ExecuteCommand(data: any, connection: WebSocket): void 
   {
-    let user = FlowConversion.ConvertToFlowUser(data);
+    let user = FlowUser.constructor(data);
     let success = StateTracker.LoginUser(user, connection);
     let returnMessage = ""
 
@@ -122,7 +121,7 @@ class Command_LogoutUser implements ICommand
 {
   ExecuteCommand(data: any, connection: WebSocket): void 
   {
-    let user = FlowConversion.ConvertToFlowUser(data);
+    let user = FlowUser.constructor(data);
     StateTracker.LogoutUser(user);
     let returnMessage = MessageBuilder.SuccessMessage("LogoutUser");
     
@@ -163,7 +162,7 @@ class Command_JoinRoom implements ICommand
     let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
     //TODO: Ensure proper JSON recieval
     let roomCode = data.roomCode;
-    let messages: string[];
+    let messages: IStringable[];
     let finalMessage; 
     //error catch 
     if(roomCode)
@@ -178,7 +177,7 @@ class Command_JoinRoom implements ICommand
     } else 
     {      
       //send fail message to user
-      let failMessage = MessageBuilder.FailMessage("JoinRoom");
+      let failMessage = MessageBuilder.FailureMessage("JoinRoom");
       ConnectionManager.SendMessage(failMessage, [userConnected])
     }
   }
@@ -214,7 +213,7 @@ class Command_DeleteObject implements ICommand
 {
   ExecuteCommand(data: any, connection: WebSocket): void  
   {
-    let flowObject = FlowConversion.ConvertToFlowObject(data);
+    let flowObject = FlowObject.constructor(data);
     StateTracker.DeleteObject(flowObject);
     let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
     let successMessage = MessageBuilder.SuccessMessage("DeleteObject");
@@ -228,7 +227,7 @@ class Command_UpdateObject implements ICommand
 {
   ExecuteCommand(data: any, connection: WebSocket): void  
   {
-    let flowObject = FlowConversion.ConvertToFlowObject(data);
+    let flowObject = FlowObject.constructor(data);
     StateTracker.UpdateObject(flowObject);
     let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
     let successMessage = MessageBuilder.SuccessMessage("UpdateObject");
@@ -242,7 +241,7 @@ class Command_FinalizedUpdateObject implements ICommand
 {
   ExecuteCommand(data: any, connection: Websocket): void
   {
-    let flowObject = FlowConversion.ConvertToFlowObject(data);
+    let flowObject = FlowObject.constructor(data);
     StateTracker.FinalizedUpdateObject(flowObject);
     
     let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
