@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RealityFlow.Plugin.Scripts;
 using RealityFlow.Plugin.Scripts.Events;
 
 // This script contains functions necessary for adding new objects to the scene. 

@@ -119,7 +119,7 @@ public class MainMenuManager : MonoBehaviour {
     private void Logout()
     {
         // clear the username and projectList so the next user to login will have a newly populated list
-        Config.ResetConfig();
+        Config.ResetValues();
     }
 
     public void login()
