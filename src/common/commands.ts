@@ -4,6 +4,7 @@ export class Commands {
         public static CREATE = 2000;
         public static DELETE = 2002;
         public static UPDATE = 2001;
+        public static UPDATELONGTERM = 2003
     };
 
     public static project = class {

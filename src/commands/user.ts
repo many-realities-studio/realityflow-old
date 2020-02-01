@@ -1,10 +1,8 @@
 import * as mongoose from "mongoose";
 import { User, IUserModel } from "../models/user";
-import { AssertionError } from "assert";
 
 var objectId = mongoose.Types.ObjectId();
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
+
 
 export class UserOperations {
 
@@ -12,12 +10,10 @@ export class UserOperations {
 
         var newUser;
 
-        var hashedUserInfo = this.hashUserInfo(userInfo.username, userInfo.password);
-
         var newUser = new User({
 
             username: userInfo.username,
-            password: hashedUserInfo.password,
+            password: userInfo.password,
             clients: undefined,
             activeProject: undefined,
             projects: undefined,
@@ -37,49 +33,49 @@ export class UserOperations {
         return promise;
 
     }
-
+    // Why are we lookin at users by their internal IDs?
     public static findUser(userInfo: any){
 
-        var returnedUser;
+        var returnedUser = null;
 
-        var promise = User.findById(userInfo._id).exec();
+        var promise = User.find({ username: userInfo.username}).exec();
         
-        promise.then(function(err, doc){
+        promise.catch(function(err) {
+            console.log(err);
+        });
+        
+        promise.then(function(doc){
 
-            returnedUser = doc;
+            if(doc)
+                returnedUser = doc;
 
             return returnedUser;
-        
         });
 
         return promise;
-
     }
 
+    // This just... returns the user based on their username??
     public static loginUser(userInfo: any){
 
-       var hashedUserInfo = this.hashUserInfo(userInfo.username, userInfo.password);
+        var promise = User.findOne({username: userInfo.username}).exec();
 
-         var promise = User.findOne({username: userInfo.username}).exec();
-
-         promise.then(function(doc){
+        promise.then(function(doc){
 
             return doc;
             
         });
 
         return promise;
-
     }
 
 
     public static updateUser(userInfo: any){
 
-        var hashedUserInfo = this.hashUserInfo(userInfo.username, userInfo.password);
         User.findOneAndUpdate({_id: userInfo._id}, {
 
             username: userInfo.username,
-            password: hashedUserInfo.password,
+            password: userInfo.password,
             clients: userInfo.clients,
             activeProject: userInfo.activeProject,
             projects: userInfo.projects,
@@ -102,23 +98,13 @@ export class UserOperations {
     }
 
     public static deleteUser(userInfo: any){
-
-        User.findByIdAndDelete(userInfo._id);
+        console.log("attempting to delete user " + userInfo._id)
+        User.findByIdAndRemove({_id: userInfo._id}, function(err, doc){
+            if(err){
+                console.log(err);
+            }
+        });
     }
 
-    public static hashUserInfo(username: String, password: String){
-
-        var hashedUserName = bcrypt.hashSync(username, saltRounds);
-        var hashedPassword = bcrypt.hashSync(password, saltRounds);
-
-        var hashedUserInfo = {
-
-            username: hashedUserName,
-            password: hashedPassword
-
-        }
-
-        return hashedUserInfo;
-
-    }
+    
 }

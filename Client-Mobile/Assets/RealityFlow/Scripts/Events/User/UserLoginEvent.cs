@@ -38,6 +38,7 @@ namespace Assets.RealityFlow.Scripts.Events
         {
             UserLoginEvent log = JsonUtility.FromJson<UserLoginEvent>(FlowNetworkManager.reply);
             Config.userId = log.user._id;
+            Config.username = log.user.username;
             Config.deviceId = log.client._id;
             Config.projectList = log.projects;
             Config.deviceType = log.client.deviceType;
