@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
+using RealityFlow.Plugin.Scripts;
 
 //[ExecuteInEditMode]
 public class DebugPanel : MonoBehaviour

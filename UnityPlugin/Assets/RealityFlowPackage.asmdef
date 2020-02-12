@@ -1,0 +1,19 @@
+{
+    "name": "RealityFlowPackage",
+    "references": [
+        "GUID:e17503c5970822145b5a209830bea58c",
+        "GUID:bdb69e86781d2754094dc2948e0e76e8",
+        "GUID:89c5b62ba1e7dc848928ad4f52372038",
+        "GUID:8efbda679fc833a41b98c59b684bbb58",
+        "GUID:48e157a8428092e4a86a37102846e0e2",
+        ""
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": []
+}
