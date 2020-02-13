@@ -3,7 +3,7 @@ import { IStringable } from "../FlowLibrary/IStringable";
 export class MessageBuilder
 {
   
-  public CreateMessage(...param : IStringable[]) : string
+  public static CreateMessage(...param : IStringable[]) : string
   {
     let stringArray = param.map(function(currentVal) {
       return currentVal.ToString();
@@ -14,13 +14,13 @@ export class MessageBuilder
     });
   }
 
-  public SuccessMessage() : string
+  public static SuccessMessage(operation: string) : string
   {
-    return "Message successful";
+    return operation + " was successful";
   }
 
-  public FailureMessage() : string
+  public static FailureMessage(operation: string) : string
   {
-    return "Message failed";
+    return operation + " was a failure";
   }
 }

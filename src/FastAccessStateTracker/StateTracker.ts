@@ -4,6 +4,9 @@ import { FlowUser } from "./FlowLibrary/FlowUser"
 import { RoomManager } from "./RoomManager";
 import { ConnectionManager } from "./ConnectionManager";
 import { MongooseDatabase } from "./Database/MongooseDatabase"
+import { ConfigurationSingleton } from "./ConfigurationSingleton";
+import { Room } from "./Room";
+import { Connection } from "mongoose";
 // TODO: Add logging system
 // TODO: Add checkout system 
 
@@ -21,7 +24,7 @@ export class StateTracker{
    * Adds a project to the FAM and database
    * @param projectToCreate 
    */
-  public static CreateProject(projectToCreate: FlowProject, FlowUserID, ClientID) : void
+  public static CreateProject(projectToCreate: FlowProject, user: FlowUser) : void
   {
     // if we can save to the database
     const promise = new Promise(function(resolve, reject) {
@@ -32,9 +35,10 @@ export class StateTracker{
     });
 
     promise.then(function(success) {
-      // then
-      // Find the flow user
-      // add project to the flow user
+      
+      // add project to user array
+      user.addProject(projectToCreate);
+
     });
 
     
@@ -62,7 +66,7 @@ export class StateTracker{
   public static OpenProject(projectToOpenID: any) : FlowProject
   {
     // find project in list of projects
-    let projectFound : FlowProject = MongooseDatabase.GetProject(projectToOpenID);
+    let projectFound : FlowProject = ConfigurationSingleton.Database.GetProject(projectToOpenID);
     return projectFound;
   }
 
@@ -73,9 +77,25 @@ export class StateTracker{
    * Creates a user, adding the user data to the FAM and the database
    * @param userToCreate 
    */
-  public static CreateUser(userToCreate: FlowUser) : void
+  public static CreateUser(userToCreate: FlowUser) : boolean
   { 
     userToCreate.SaveToDatabase();
+    let success = true;
+
+    const promise = new Promise(function(resolve, reject) {
+      setTimeout(function() {
+        let success = userToCreate.SaveToDatabase();
+        resolve(success);
+      }, 1000)
+    });
+
+    promise.then(function(success) {
+      
+      return success;
+
+    });
+
+    return !success;
   }
 
     /**
@@ -88,19 +108,43 @@ export class StateTracker{
     this.LogoutUser(userToDelete);
 
     // Delete user in the list of known users
-    MongooseDatabase.DeleteUser(userToDelete);
+    ConfigurationSingleton.Database.DeleteUser(userToDelete);
   }
 
   /**
    * Logs in the desired user, this only affects the FAM and is not saved to the database
    * @param userToLogin 
    */
-  public static LoginUser(userToLogin: FlowUser, connectionToUser : WebSocket) : void
+  public static LoginUser(userToLogin: FlowUser, connectionToUser : WebSocket) : boolean
   {
-    // Find user in the list of known users
-    let userFound : FlowUser = MongooseDatabase.GetUser(userToLogin.id);
-
-    ConnectionManager.LoginUser(userFound, connectionToUser);
+    // check if logged in on another client 
+    let userLoggedIn = ConnectionManager.GetSavedUser(userToLogin);
+    // boolean to send back to Command Context
+    let result = false;
+    // Are they in a room already?
+    if(userLoggedIn.roomCode)
+    {
+      // add new connection to the room - by adding connection to user
+      ConnectionManager.LoginUser(userLoggedIn, connectionToUser);
+      result = true;
+    } 
+    else 
+    {
+      // Find user in the list of known users - async 
+      // for the first time in this session a user logs in on a client
+      const promise = new Promise(function(resolve, reject) {
+        setTimeout(function() {
+          let userFound : FlowUser = ConfigurationSingleton.Database.GetUser(userToLogin.id);
+          resolve(userFound);
+        }, 1000)
+        });
+        promise.then(function(userFound: FlowUser) {
+          let user : FlowUser = userFound;
+          ConnectionManager.LoginUser(user, connectionToUser);
+          result = true;
+        });
+    }
+    return result;    
   }
 
   /**
@@ -113,9 +157,25 @@ export class StateTracker{
   }
 
   // Room Commands
-  public static CreateRoom(project: FlowProject) : void
+  public static CreateRoom(projectID: Number) : Number
   {
-    RoomManager.CreateRoom(project);
+    let roomCode = RoomManager.CreateRoom(projectID);
+    return roomCode;
+  }
+
+  /**
+   * Adds user to the room, does not worry about maintaining user connections
+   * @param roomCode - code of room they are looking to join
+   * @param user - user to be logged in
+   */
+  public static JoinRoom(roomCode: Number, user: FlowUser) : FlowProject
+  {
+    let room = RoomManager.FindRoom(roomCode);
+    room.JoinRoom(user);
+    // Pray this works
+    //haha jk.. unless
+    return room.GetProject();
+
   }
 
   // Object Commands
@@ -137,6 +197,20 @@ export class StateTracker{
   {
     RoomManager.FindRoom(objectToUpdate.RoomNumber)
                 .GetProject()
+                .UpdateFAMObject(objectToUpdate);
+  }
+
+  /**
+   * The final update to be sent to clients and saved in the database
+   * @param objectToUpdate - object which holds the final truth of position for the databsse
+   */
+  public static FinalizedUpdateObject(objectToUpdate : FlowObject) : void
+  {
+    RoomManager.FindRoom(objectToUpdate.RoomNumber)
+                .GetProject()
                 .UpdateObject(objectToUpdate);
+    //Send message to all clients notifying object change
+
+    
   }
 }

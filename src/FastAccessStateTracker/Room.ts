@@ -8,12 +8,12 @@ export class Room
 {
   private _UsersCurrentlyInTheRoom: Array<FlowUser> = [];
   private _RoomCode: Number;
-  private _CurrentProject: FlowProject;
+  private _CurrentProjectID: Number;
 
-  constructor(roomCode : Number, project: FlowProject)
+  constructor(roomCode : Number, projectID: Number)
   {
     this._RoomCode = roomCode;
-    this._CurrentProject = project;
+    this._CurrentProjectID = projectID;
   }
 
   // Notifies all users in the room to a change
@@ -28,6 +28,7 @@ export class Room
    */
   public JoinRoom(userJoiningTheRoom: FlowUser) : void
   {
+
     this._UsersCurrentlyInTheRoom.push(userJoiningTheRoom);
   }
 
@@ -40,20 +41,11 @@ export class Room
   }
 
   /**
-   * Sets the current project to the desired project from the database
-   * @param projectId 
-   */
-  public SetProject(projectId : number) : void
-  {
-    // TODO: Get project from the database and set that project as the current project of the room
-    throw new console.error("Method not implemented");
-  }
-
-  /**
    * Gets the project that is currently being used by the project
+   * Calls to database, use in Async manner
    */
   public GetProject() : FlowProject
   {
-    return this._CurrentProject;
+    return ConfigurationSingleton.Database.GetProject(this._CurrentProjectID); 
   }
 }
