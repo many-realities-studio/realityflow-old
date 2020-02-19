@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Assets.RealityFlow.Scripts.Events;
+using RealityFlow.Plugin.Scripts.Events;
+using RealityFlow.Plugin.Scripts;
 using System;
 
 public class MainMenuManager : MonoBehaviour {
@@ -118,7 +119,7 @@ public class MainMenuManager : MonoBehaviour {
     private void Logout()
     {
         // clear the username and projectList so the next user to login will have a newly populated list
-        Config.ResetConfig();
+        Config.ResetValues();
     }
 
     public void login()
