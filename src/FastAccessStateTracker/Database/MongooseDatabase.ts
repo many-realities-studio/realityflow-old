@@ -2,6 +2,11 @@ import { IDatabase } from "./IDatabase";
 import { FlowProject } from "../FlowLibrary/FlowProject";
 import { FlowUser } from "../FlowLibrary/FlowUser";
 import { FlowObject } from "../FlowLibrary/FlowObject";
+import {Project, IProjectModel} from "../../models/project";
+import {User, IUserModel} from "../../models/User";
+
+// DB API
+
 
 /**
  * Implementation of Mongoose Database
@@ -9,10 +14,33 @@ import { FlowObject } from "../FlowLibrary/FlowObject";
 export class MongooseDatabase implements IDatabase
 {
   CreateProject(projectToCreate: FlowProject): boolean {
-    throw new Error("Method not implemented.");
+    
+    var success = false;
+
+    //object list will be null upon creation of project
+    var newProject = new Project({
+      ProjectName: projectToCreate.ProjectName,
+      Id: projectToCreate.Id,
+      Description: projectToCreate.Description,
+      dateModified: projectToCreate.DateModified,
+    })
+
+    var promise = newProject.save();
+
+    promise.then(function(doc){
+      success = true;
+    });
+
+    return success;
+    
   }
   DeleteProject(projectToDelete: FlowProject): boolean {
-    throw new Error("Method not implemented.");
+    console.log("deleting project " + projectToDelete.Id);
+    Project.findByIdAndRemove({_id: projectToDelete.Id}, function(err, doc){
+        if(err)
+            console.log(err)
+    });
+    return true;
   }
   UpdateProject(projectToUpdate: FlowProject): boolean {
     throw new Error("Method not implemented.");
@@ -21,10 +49,31 @@ export class MongooseDatabase implements IDatabase
     throw new Error("Method not implemented.");
   }
   CreateUser(userToCreate: FlowUser): boolean {
-    throw new Error("Method not implemented.");
+    var success = false;
+
+    //object list will be null upon creation of project
+    var newUser = new User({
+      Username: userToCreate.Username,
+      Password: userToCreate.Password,
+      Clients: userToCreate.Clients,
+      Projects: userToCreate.Projects,
+    })
+
+    var promise = newUser.save();
+
+    promise.then(function(doc){
+      success = true;
+    });
+
+    return success;
   }
   DeleteUser(userToDelete: FlowUser): boolean {
-    throw new Error("Method not implemented.");
+    console.log("attempting to delete user " + userToDelete.Id)
+    User.findByIdAndRemove({_id: userToDelete.Id}, function(err, doc){
+        if(err){
+            console.log(err);
+        }
+    });
   }
   UpdateUser(userToUpdate: FlowUser): boolean {
     throw new Error("Method not implemented.");
