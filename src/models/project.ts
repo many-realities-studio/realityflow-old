@@ -11,13 +11,11 @@ import { Client } from "./client";
 export declare interface IProjectModel extends mongoose.Document{
     [x: string]: any;
 
-    projectName:    String;
-    owner:          ObjectIdType;
-    clients:        [ObjectIdType];
-    objs:           [ObjectIdType];
-    created:        Date;
-    lastEdit:       Date;
-    lastEditor:     ObjectIdType;
+    Id: String;
+    Description: String;
+    DateModified: Number;
+    ProjectName: Number;
+    ObjectList: [ObjectIdType];
 
 
 }
@@ -27,17 +25,11 @@ export declare interface IProjectModel extends mongoose.Document{
 //arrays stored in the DB
 const projectSchema = new mongoose.Schema({
 
-    projectName:    String,
-    owner:          {type: ObjectId, ref: User},
-    clients:        [{type: ObjectId, ref: Client}],
-    objs:        [{type: ObjectId, ref: Object}],
-   /* currentScene:   {type: ObjectId, ref: Scene},
-    prevScene:      [{type: ObjectId, ref: Scene}],
-    nextScene:      [{type: ObjectId, ref: Scene}],
-    bookmarks:      [{type: ObjectId, ref: Scene}], */
-    created:        Date,
-    lastEdit:       Date,
-    lastEditor:     {type: ObjectId, ref: User},
+    Id: String,
+    Description: String,
+    DateModified: Number,
+    ProjectName: Number,
+    ObjectList: [ObjectIdType]
 
 },{usePushEach: true});
 

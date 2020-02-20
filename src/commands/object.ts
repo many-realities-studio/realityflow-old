@@ -5,70 +5,52 @@ var objectId = mongoose.Types.ObjectId();
 
 export class ObjectOperations {
 
-    public static createObject(objectInfo: any)
+    public static async createObject(objectInfo: any)
     {
         var object;
 
         var newObject = new Object({
 
-            type:           objectInfo.type,
-            name:           objectInfo.name,
-            triangles:      objectInfo.triangles,
-            x:              objectInfo.x,
-            y:              objectInfo.y,
-            z:              objectInfo.z,
-            q_x:            objectInfo.q_x,
-            q_y:            objectInfo.q_y,
-            q_z:            objectInfo.q_z,
-            q_w:            objectInfo.q_w,
-            s_x:            objectInfo.s_x,
-            s_y:            objectInfo.s_y,
-            s_z:            objectInfo.s_z,
-            color:          objectInfo.color,
-            vertices:       objectInfo.vertices,
-            uv:             objectInfo.uv,
-            texture:        objectInfo.texture,
-            textureHeight:  objectInfo.textureHeight,
-            textureWidth:   objectInfo.textureWidth,
-            textureFormat:  objectInfo.textureFormat,
-            mipmapCount:    objectInfo.mipmapCount,
-            locked:         objectInfo.locked
+            Type:           objectInfo.type,
+            Name:           objectInfo.name,
+            Triangles:      objectInfo.triangles,
+            X:              objectInfo.x,
+            Y:              objectInfo.y,
+            Z:              objectInfo.z,
+            Q_x:            objectInfo.q_x,
+            Q_y:            objectInfo.q_y,
+            Q_z:            objectInfo.q_z,
+            Q_w:            objectInfo.q_w,
+            S_x:            objectInfo.s_x,
+            S_y:            objectInfo.s_y,
+            S_z:            objectInfo.s_z,
+            Color:          objectInfo.color,
+            Vertices:       objectInfo.vertices,
+            Uv:             objectInfo.uv,
+            Texture:        objectInfo.texture,
+            TextureHeight:  objectInfo.textureHeight,
+            TextureWidth:   objectInfo.textureWidth,
+            TextureFormat:  objectInfo.textureFormat,
+            MipmapCount:    objectInfo.mipmapCount,
+            Locked:         objectInfo.locked
 
         });
 
-        var promise = newObject.save();
-
-        promise.then(function(doc){
-
-                object = doc;
-
-                return object;
-
-        });
-
+        var promise = await newObject.save();
         return promise;
     }
 
-    public static findObject(objectInfoId: any)
+    public static async findObject(objectInfoId: any)
     {
-        var object;
+        var object = await Object.findById(objectInfoId).exec();
 
-        var promise = Object.findById(objectInfoId).exec();
-
-        promise.then(function(doc){
-
-                object = doc;
-                return object;
-
-        });
-
-        return promise;
+        return object;
         
     }
 
-    public static updateObject(objectInfo: any)
+    public static async updateObject(objectInfo: any) : Promise<void>
     {
-        var promise = Object.findOneAndUpdate({_id: objectInfo._id}, {
+        var promise = await Object.findOneAndUpdate({_id: objectInfo._id}, {
 
             x:          objectInfo.x,
             y:          objectInfo.y,
@@ -82,17 +64,16 @@ export class ObjectOperations {
             s_z:        objectInfo.s_z,
             color:      objectInfo.color
 
-        }).exec();
-
-        promise.then(function(doc){
-
+        }).exec(function(err){
+            if(err){
+                console.error(err)
+            }
         });
 
-        return promise;
     }
 
-    public static deleteObject(objectInfo: any)
+    public static async deleteObject(objectInfo: any)
     {
-        Object.findByIdAndRemove(objectInfo._id).exec();
+        await Object.findByIdAndRemove(objectInfo._id).exec();
     }
 }

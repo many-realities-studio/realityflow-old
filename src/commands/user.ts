@@ -6,102 +6,84 @@ var objectId = mongoose.Types.ObjectId();
 
 export class UserOperations {
 
-    public static createUser(userInfo: any){
-
-        var newUser;
+    public static async createUser(userInfo: any){
 
         var newUser = new User({
-
-            username: userInfo.username,
-            password: userInfo.password,
-            clients: undefined,
-            activeProject: undefined,
-            projects: undefined,
-            friends: undefined
+            
+            ID: userInfo.Id,
+            RoomCode: undefined,
+            ClientList: undefined,
+            
+            Username: userInfo.Username,
+            Password: userInfo.Password,
+            Clients: undefined,
+            Projects: undefined,
 
         });
 
-        var promise = newUser.save();
+        await newUser.save();
 
-        promise.then(function(err, doc){
-
-                newUser = doc;
-
-            return newUser;    
-        });
-
-        return promise;
-
+        return newUser;
     }
+
     // Why are we lookin at users by their internal IDs?
-    public static findUser(userInfo: any){
+    public static async findUser(userInfo: any){
 
         var returnedUser = null;
 
-        var promise = User.find({ username: userInfo.username}).exec();
-        
-        promise.catch(function(err) {
-            console.log(err);
-        });
-        
-        promise.then(function(doc){
+        const foundUser = await User.findOne({ Username: userInfo.Username})
 
-            if(doc)
-                returnedUser = doc;
-
-            return returnedUser;
-        });
-
-        return promise;
+        return foundUser;
     }
 
-    // This just... returns the user based on their username??
-    public static loginUser(userInfo: any){
+    // This just... returns the user based on their Username??
+    public static async loginUser(userInfo: any){
 
-        var promise = User.findOne({username: userInfo.username}).exec();
+        var foundUser = await User.findOne({Username: userInfo.Username}).exec(function(err){
+            if (err)
+                console.error(err);
+        });
 
-        promise.then(function(doc){
+        
 
-            return doc;
+        return foundUser;
+    }
+
+
+    public static async updateUser(userInfo: any){
+
+        await User.findOneAndUpdate({Username: userInfo.Username}, {
+
+            ID: userInfo.Id,
+            RoomCode: undefined,
+            ClientList: undefined,
             
-        });
+            Username: userInfo.Username,
+            Password: userInfo.Password,
+            Clients: undefined,
+            Projects: undefined,
 
-        return promise;
-    }
-
-
-    public static updateUser(userInfo: any){
-
-        User.findOneAndUpdate({_id: userInfo._id}, {
-
-            username: userInfo.username,
-            password: userInfo.password,
-            clients: userInfo.clients,
-            activeProject: userInfo.activeProject,
-            projects: userInfo.projects,
-            friends: userInfo.friends
-
-        }, function(err){
+        }).exec(function(err){
 
             if(err){
 
-                console.log('ERROR: Failed to update user: ' + userInfo.username);
+                console.error(err);
 
             }
             else{
 
-                console.log('User ' + userInfo.username + ' updated successfully.');
+                console.log('User ' + userInfo.Username + ' updated successfully.');
 
             }
 
         });
     }
 
-    public static deleteUser(userInfo: any){
-        console.log("attempting to delete user " + userInfo._id)
-        User.findByIdAndRemove({_id: userInfo._id}, function(err, doc){
+    public static async deleteUser(userInfo: any){
+        console.log("attempting to delete user " + userInfo.Username)
+        await User.findByIdAndRemove({Username: userInfo.Username}).exec(function(err, doc){
             if(err){
-                console.log(err);
+                console.error(err);
             }
         });
     }

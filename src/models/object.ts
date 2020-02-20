@@ -7,28 +7,28 @@ import ObjectIdType = mongoose.Types.ObjectId;
 
 export declare interface IObjectModel extends mongoose.Document{
 
-    type:           string;
-    name:           string;
-    triangles:      Number[];
-    x:              Number;
-    y:              Number;
-    z:              Number;
-    q_x:            Number;
-    q_y:            Number;
-    q_z:            Number;
-    q_w:            Number;
-    s_x:            Number;
-    s_y:            Number;
-    s_z:            Number;
-    color:          Object;
-    vertices:       Number[];
-    uv:             Number[];
-    texture:        Number[];
-    textureHeight:  Number;
-    textureWidth:   Number;
-    textureFormat:  Number;
-    mipmapCount:    Number;
-    locked:         Boolean;
+    Type:           string;
+    Name:           string;
+    Triangles:      Number[];
+    X:              Number;
+    Y:              Number;
+    Z:              Number;
+    Q_x:            Number;
+    Q_y:            Number;
+    Q_z:            Number;
+    Q_w:            Number;
+    S_x:            Number;
+    S_y:            Number;
+    S_z:            Number;
+    Color:          Object;
+    Vertices:       Number[];
+    Uv:             Number[];
+    Texture:        Number[];
+    TextureHeight:  Number;
+    TextureWidth:   Number;
+    TextureFormat:  Number;
+    MipmapCount:    Number;
+    Locked:         Boolean;
 
 }
 

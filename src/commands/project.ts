@@ -6,31 +6,18 @@ var objectId = mongoose.Types.ObjectId();
 export class ProjectOperations
 {
 
-    public static createProject(projectInfo: any, clientInfo: any, userInfo: any){
-
-        var newProjectDoc;
+    public static async createProject(projectInfo: any){
 
         var newProject = new Project({
 
-            projectName: projectInfo.projectName,
-            owner: userInfo._id,
-            clients: [clientInfo._id],
-            objs: undefined,
-            created: projectInfo.created,
-            lastEdit: projectInfo.lastEdit,
-            lastEditor: projectInfo.lastEditor
+            Id : projectInfo.Id,
+            Description : projectInfo.Description,
+            DateModified : projectInfo.DateModified,
+            ProjectName : projectInfo.ProjectName,
 
         });
 
-        var promise = newProject.save();
-
-        promise.then(function(doc){
-            newProjectDoc = doc;
-            return newProjectDoc;
-        });
-        
-        return promise;
-
+        return await newProject.save();
     }
 
     public static saveProject(project: any){
@@ -48,43 +35,24 @@ export class ProjectOperations
     }
 
     //Project fetch for when a user logs in
-    public static fetchProjects(userInfo: any){
-
-        var projects = [];
-
-        var promise = Project.find({owner: userInfo._id}, '_id projectName').exec();
+    public static async fetchProjects(userInfo: any){
         
-        promise.then(function(docs){
+        var projects = await Project.find({owner: userInfo._id}, '_id projectName').exec();
 
-                projects.push(docs);
-
-            return projects;
-
-        });
-
-        return promise;
+        return projects;
     }
 
-    public static findProject(projectInfo: any){
+    public static async findProject(projectInfo: any){
 
-        var project;
-        var promise = Project.findById(projectInfo._id).exec();
+        var project = await Project.findById(projectInfo._id).exec();
 
-
-        promise.then(function(doc){
-
-                project = doc;
-                return project;
-
-        });
-        
-        return promise;
+        return project;
 
     }
 
-    public static deleteProject(projectInfo: any){
+    public static async deleteProject(projectInfo: any){
         console.log("deleting project " + projectInfo._id)
-        Project.findByIdAndRemove({_id: projectInfo._id}, function(err, doc){
+        await Project.findByIdAndRemove({_id: projectInfo._id}, function(err, doc){
             if(err)
                 console.log(err)
         });
