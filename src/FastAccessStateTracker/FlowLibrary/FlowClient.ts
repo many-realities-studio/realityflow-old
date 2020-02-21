@@ -10,7 +10,7 @@ export class FlowClient
   constructor(clientJson: any, connection: WebSocket)
   {
     this.Connection = connection;
-    this.UserId = clientJson.user.UserId;
+    this.UserId = clientJson.user.Id;
     this.DeviceType = clientJson.DeviceType;
   }
 }

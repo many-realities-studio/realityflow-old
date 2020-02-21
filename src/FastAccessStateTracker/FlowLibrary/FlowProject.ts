@@ -47,7 +47,7 @@ export class FlowProject implements IStringable
    */
   public DeleteObject(objectToRemove: FlowObject): void
   {
-    const index = this._ObjectList.findIndex((element) => element.id == objectToRemove.id);
+    const index = this._ObjectList.findIndex((element) => element.Id == objectToRemove.Id);
 
     var DeletedObject : FlowObject = null;
     if(index > -1)
@@ -68,7 +68,7 @@ export class FlowProject implements IStringable
    */
   public GetObject(objectId: Number) : FlowObject
   {
-    return this._ObjectList.find(element => element.id == objectId);
+    return this._ObjectList.find(element => element.Id == objectId);
   }
 
   /**
@@ -108,26 +108,26 @@ export class FlowProject implements IStringable
 
     // Async save to database
     var databaseFlowObject = new Object({
-      type:           objectToCreate.Type,
-      name:           objectToCreate.Name,
-      triangles:      objectToCreate.Triangles,
-      x:              objectToCreate.X,
-      y:              objectToCreate.Y,
-      z:              objectToCreate.Z,
-      q_x:            objectToCreate.Q_x,
-      q_y:            objectToCreate.Q_y,
-      q_z:            objectToCreate.Q_z,
-      q_w:            objectToCreate.Q_w,
-      s_x:            objectToCreate.S_x,
-      s_y:            objectToCreate.S_y,
-      s_z:            objectToCreate.S_z,
-      uv:             objectToCreate.Uv,
-      texture:        objectToCreate.Texture,
-      textureHeight:  objectToCreate.TextureHeight,
-      textureWidth:   objectToCreate.TextureWidth,
-      textureFormat:  objectToCreate.TextureFormat,
-      mipmapCount:    objectToCreate.MipmapCount,
-      locked:         objectToCreate.Locked
+      Type:           objectToCreate.Type,
+      Name:           objectToCreate.Name,
+      Triangles:      objectToCreate.Triangles,
+      X:              objectToCreate.X,
+      Y:              objectToCreate.Y,
+      Z:              objectToCreate.Z,
+      Q_x:            objectToCreate.Q_x,
+      Q_y:            objectToCreate.Q_y,
+      Q_z:            objectToCreate.Q_z,
+      Q_w:            objectToCreate.Q_w,
+      S_x:            objectToCreate.S_x,
+      S_y:            objectToCreate.S_y,
+      S_z:            objectToCreate.S_z,
+      Uv:             objectToCreate.Uv,
+      Texture:        objectToCreate.Texture,
+      TextureHeight:  objectToCreate.TextureHeight,
+      TextureWidth:   objectToCreate.TextureWidth,
+      TextureFormat:  objectToCreate.TextureFormat,
+      MipmapCount:    objectToCreate.MipmapCount,
+      Locked:         objectToCreate.Locked
     });
 
     databaseFlowObject.save()
@@ -143,7 +143,7 @@ export class FlowProject implements IStringable
   public UpdateObject(newObject: FlowObject) : void
   {
     // Get the object that we are changing from the specified project
-    var oldObject: FlowObject = this.GetObject(newObject.id);
+    var oldObject: FlowObject = this.GetObject(newObject.Id);
 
     // Update all properties of the old object to the new object.
     oldObject.UpdateProperties(newObject);
@@ -159,7 +159,7 @@ export class FlowProject implements IStringable
   public UpdateFAMObject(newObject: FlowObject) : void
   {
     // Get the object that we are changing from the specified project
-    var oldObject: FlowObject = this.GetObject(newObject.id);
+    var oldObject: FlowObject = this.GetObject(newObject.Id);
 
     // Update all properties of the old object to the new object.
     oldObject.UpdateProperties(newObject);

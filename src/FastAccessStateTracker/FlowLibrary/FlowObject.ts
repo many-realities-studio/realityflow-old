@@ -1,5 +1,6 @@
 import { Color } from "./Color";
 import { IStringable } from "./IStringable";
+const uuidv4 = require('uuid/v4');
 
 export class FlowObject implements IStringable
 {
@@ -26,11 +27,12 @@ export class FlowObject implements IStringable
   public Locked:         Boolean;
 
   // Fields used for tracking this object in the FAM
-  public id: number; 
+  public Id: number; 
   public RoomNumber: number;
 
   constructor(json: any)
   {    
+    this.Id = uuidv4;
     this.Type = json.Type;
     this.Name = json.Name;
     this.Triangles = json.Triangles;
@@ -94,8 +96,6 @@ export class FlowObject implements IStringable
     this.S_x = newObject.S_x;
     this.S_y = newObject.S_y;
     this.S_z = newObject.S_z;
-    this.color = newObject.color;
-    this.vertices = newObject.vertices;
     this.Uv = newObject.Uv;
     this.Texture = newObject.Texture;
     this.TextureHeight = newObject.TextureHeight;

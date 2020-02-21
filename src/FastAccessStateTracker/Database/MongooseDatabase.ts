@@ -12,45 +12,48 @@ import { UserOperations } from "../../commands/user"
 /**
  * Implementation of Mongoose Database
  */
-export class MongooseDatabase implements IDatabase
+export default class MongooseDatabase implements IDatabase
 {
-  private _URL: string;
+    static CreateUser(arg0: FlowUser): any {
+        throw new Error("Method not implemented.");
+    }
+    private _URL: string;
 
-  constructor(url : string)
-  {
-    this._URL = url;
-  }
+    public constructor(url : string)
+    {
+      this._URL = url;
+    }
 
   // Project functions
-  async CreateProject(projectToCreate: FlowProject) {
+  public async CreateProject(projectToCreate: FlowProject) {
     var project = await ProjectOperations.createProject(projectToCreate);
     await project.save();
 
     return project
   }
 
-  async DeleteProject(projectToDelete: FlowProject): Promise<void> {
+  public async DeleteProject(projectToDelete: FlowProject): Promise<void> {
     await ProjectOperations.deleteProject(projectToDelete);
     return;
   }
 
-  async UpdateProject(projectToUpdate: FlowProject): Promise<void> {
+  public async UpdateProject(projectToUpdate: FlowProject): Promise<void> {
     throw new Error("Method not implemented.");
   }
-  async GetProject(projectId: number): Promise<FlowProject> {
+  public async GetProject(projectId: number): Promise<FlowProject> {
     throw new Error("Method not implemented.");
   }
 
   // User functions
 
   // This returns type any because mongoose is written in javascript so I literally don't know the return type here
-  async CreateUser(userToCreate: FlowUser): Promise<void> {
+  public async CreateUser(userToCreate: FlowUser): Promise<void> {
     var newUser = await UserOperations.createUser(userToCreate);
   
     await newUser.save();
   }
 
-  async DeleteUser(userToDelete: FlowUser): Promise<void> {
+  public async DeleteUser(userToDelete: FlowUser): Promise<void> {
     var User = await UserOperations.findUser(userToDelete);
     var clientArray = User.Clients;
 
@@ -63,17 +66,17 @@ export class MongooseDatabase implements IDatabase
     await UserOperations.deleteUser(userToDelete);
   }
 
-  async UpdateUser(userToUpdate: FlowUser): Promise<void> {
+  public async UpdateUser(userToUpdate: FlowUser): Promise<void> {
     await UserOperations.updateUser(userToUpdate);
   }
 
-  async GetUser(UserId: number): Promise<FlowUser> {
+  public async GetUser(UserId: number): Promise<FlowUser> {
     let userToReturn = await UserOperations.findUser({username: UserId})
     return new FlowUser(userToReturn) 
   }
 
   // Object functions
-  async CreateObject(objectToCreate: FlowObject, objectProject: FlowProject): Promise<Object> {
+  public async CreateObject(objectToCreate: FlowObject, objectProject: FlowProject): Promise<Object> {
     var object = await ObjectOperations.createObject(objectToCreate);
     var project = await ProjectOperations.findProject(objectProject);
 
@@ -83,17 +86,18 @@ export class MongooseDatabase implements IDatabase
     return object;
   }
 
-  async DeleteObject(projectToDelete:FlowProject, projectObject:FlowObject): Promise<void> {
-    var project = await ProjectOperations.findProject(project);
+  public async DeleteObject(projectToDelete:FlowProject, projectObject:FlowObject): Promise<void> {
+    var project: any = await ProjectOperations.findProject(project);
 
     await project.save();
     await ObjectOperations.deleteObject(projectObject);
   }
-  async UpdateObject(objectToUpdate: FlowObject): Promise<void> {
+  public async UpdateObject(objectToUpdate: FlowObject): Promise<void> {
     await ObjectOperations.updateObject(objectToUpdate);
   }
-  async GetObject(ObjectId: number): Promise<FlowObject> {
+  public async GetObject(ObjectId: number): Promise<FlowObject> {
     return new FlowObject(await ObjectOperations.findObject(ObjectId))
   }
 
 }
+export {MongooseDatabase};
