@@ -79,4 +79,13 @@
     "url": "https://github.com/lucidbard/flow/issues"
   },
   "homepage": "https://github.com/lucidbard/flow#readme"
+  ,
+  "jest": {
+    "globals": {
+      "ts-jest" : {
+        "diagnostics": false
+      }
+  }
+}
+
 }
