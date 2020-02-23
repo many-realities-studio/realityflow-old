@@ -14,21 +14,17 @@ import { UserOperations } from "../../commands/user"
  */
 export default class MongooseDatabase implements IDatabase
 {
+    
+    public constructor(url: string){}
     static CreateUser(arg0: FlowUser): any {
         throw new Error("Method not implemented.");
-    }
-    private _URL: string;
-
-    public constructor(url : string)
-    {
-      this._URL = url;
     }
 
   // Project functions
   public async CreateProject(projectToCreate: FlowProject) {
     var project = await ProjectOperations.createProject(projectToCreate);
     await project.save();
-
+    
     return project
   }
 

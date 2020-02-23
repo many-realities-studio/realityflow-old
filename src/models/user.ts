@@ -13,12 +13,12 @@ export declare interface IUserModel extends mongoose.Document {
     // in the FlowUser class
     ID: String;
     RoomCode: Number;
-    ClientList: [ObjectIdType];
+    ClientList: ObjectIdType[];
 
     Username: String;
     Password: String;
-    Clients: [ObjectIdType];
-    Projects: [ObjectIdType];
+    Clients: ObjectIdType[];
+    Projects: ObjectIdType[];
     
 }
 

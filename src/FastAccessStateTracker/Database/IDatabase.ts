@@ -10,20 +10,21 @@ import {FlowClient} from "../FlowLibrary/FlowClient";
 export interface IDatabase
 { 
 // Project functions
-CreateProject(projectToCreate: FlowProject, projectUser: FlowUser, projectClient: FlowClient) : void;
-DeleteProject(projectToDelete : FlowProject) : void;
-UpdateProject(projectToUpdate : FlowProject) : void;
+CreateProject(projectToCreate: FlowProject) : Promise<Object>;
+DeleteProject(projectToDelete : FlowProject) : Promise<void>;
+UpdateProject(projectToUpdate : FlowProject) : Promise<void>;
 GetProject(projectId : number) : Promise<FlowProject>;
 
 // User functions
-CreateUser(userToCreate: FlowUser, userClient: FlowClient): void;
-DeleteUser(userToDelete : FlowUser) : void;
-UpdateUser(userToUpdate : FlowUser) : void;
-GetUser(UserId: number): Promise<FlowUser> ;
+CreateUser(userToCreate: FlowUser): Promise<void>;
+DeleteUser(userToDelete : FlowUser) : Promise<void>;
+UpdateUser(userToUpdate : FlowUser) : Promise<void>;
+GetUser(UserId: number): Promise<FlowUser>;
 
 // Object functions
 CreateObject(objectToCreate: FlowObject, objectProject: FlowProject): Promise<Object>;
 DeleteObject(projectToDelete : FlowProject, projectObject:FlowObject): Promise<void>;
-UpdateObject(objectToUpdate : FlowObject) : void;
+UpdateObject(objectToUpdate : FlowObject) : Promise<void>;
 GetObject(ObjectId : number): Promise<FlowObject>;
+
 }
