@@ -27,7 +27,7 @@ class Command_CreateProject implements ICommand
     
     let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
     
-    StateTracker.CreateProject(project, userConnected);
+    let success = StateTracker.CreateProject(project, userConnected);
 
     // Create Project only requires a success message being sent
     //TODO: Ensure success before sending success message

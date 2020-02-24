@@ -16,7 +16,7 @@ export class FlowProject implements IStringable
   // Data storage fields
   public Id;
   public Description: string;
-  public DateModified: number;
+  public DateModified: Date;
   public ProjectName: string;
  
   constructor(json:any){
@@ -24,6 +24,9 @@ export class FlowProject implements IStringable
     this.Description = json.Description;
     this.DateModified = json.DateModified;
     this.ProjectName = json.ProjectName;
+
+    // TODO: Save to Database in constructor and generate/attach ID
+    // Async measure
 }
 
   ToString(): string {

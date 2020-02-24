@@ -24,7 +24,7 @@ export class StateTracker{
    * Adds a project to the FAM and database
    * @param projectToCreate 
    */
-  public static CreateProject(projectToCreate: FlowProject, user: FlowUser) : void
+  public static CreateProject(projectToCreate: FlowProject, user: FlowUser) : boolean
   {
     // if we can save to the database
     const promise = new Promise(function(resolve, reject) {
@@ -38,9 +38,10 @@ export class StateTracker{
       
       // add project to user array
       user.addProject(projectToCreate);
+      return true;
 
     });
-
+    return false;
     
   }
 
@@ -65,6 +66,8 @@ export class StateTracker{
    */
   public static OpenProject(projectToOpenID: any) : FlowProject
   {
+    //TODO: Make this Async
+    
     // find project in list of projects
     let projectFound : FlowProject = ConfigurationSingleton.Database.GetProject(projectToOpenID);
     return projectFound;
