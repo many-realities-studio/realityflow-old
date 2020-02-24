@@ -1,6 +1,6 @@
 import { IStringable } from "./IStringable";
-import { MongooseDatabase } from "../Database/MongooseDatabase";
-import { FlowProject } from "../../temp";
+import  MongooseDatabase  from "../Database/MongooseDatabase";
+
 import { FlowClient } from "./FlowClient";
 import { ConfigurationSingleton } from "../ConfigurationSingleton";
 import { Project } from "../../models/project";
@@ -36,29 +36,29 @@ export class FlowUser implements IStringable
     ConfigurationSingleton.Database.UpdateUser(this);
   }
 
-  /**
-   * Saves the connection information
-   * @param websocketConnection 
-   */
-  public Login(websocketConnection : WebSocket) : void
-  {
-    this.ClientList.push(websocketConnection);
-  }
+  // /**
+  //  * Saves the connection information
+  //  * @param websocketConnection 
+  //  */
+  // public Login(websocketConnection : WebSocket) : void
+  // {
+  //   this.ClientList.push(websocketConnection);
+  // }
 
-  /**
-   * Deletes the connection information
-   * @param websocketConnection 
-   */
-  public Logout(connection : WebSocket) : void
-  {
-    const index = this.ClientList.findIndex((element) => element == connection);
+  // /**
+  //  * Deletes the connection information
+  //  * @param websocketConnection 
+  //  */
+  // public Logout(connection : WebSocket) : void
+  // {
+  //   const index = this.ClientList.findIndex((element) => element == connection);
 
-    var ClosedConnection : WebSocket = null;
-    if(index > -1)
-    {
-      ClosedConnection = this.ClientList.splice(index, 1)[0];
-    }
-  }
+  //   var ClosedConnection : WebSocket = null;
+  //   if(index > -1)
+  //   {
+  //     ClosedConnection = this.ClientList.splice(index, 1)[0];
+  //   }
+  // }
 
   /**
    * @projectToAdd : Flow Project to include in user array

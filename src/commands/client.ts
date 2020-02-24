@@ -1,35 +1,35 @@
 import * as mongoose from "mongoose";
 import { Client, IClientModel } from "../models/client";
+import { UserOperations } from "./user"
+import { User, IUserModel } from "../models/user";
+
 
 var objectId = mongoose.Types.ObjectId();
 
 export class ClientOperations{
 
-    public static createClient(clientInfo: any, userId: String){
+    public static async createClient(clientInfo: any, username: String) : Promise<IClientModel>{
 
-        var createdClient;
-
+        var foundUser = await UserOperations.findUser(username);
         var newClient = new Client({
 
-            user:           userId,
-            deviceType:     clientInfo.deviceType,
+            User:           foundUser._id,
+            Id:             clientInfo.Id,
+            DeviceType:     clientInfo.DeviceType,
 
         });
 
-        var promise = newClient.save(function(err, doc){
-
-            createdClient = doc;
-        
-           // return createdClient._id;
-        });
-
-        return promise;
+        return await newClient.save()
 
     }
 
-    public static deleteClient(clientInfoId: any){
+    public static async findClient(clientId: String) : Promise<IClientModel>{
+        return await Client.findOne({Id: clientId})
+    }
 
-        Client.findByIdAndRemove(clientInfoId);
+    public static async deleteClient(clientInfoId: String) : Promise<void>{
+
+        await Client.findByIdAndRemove({Id: clientInfoId});
 
     }
 
