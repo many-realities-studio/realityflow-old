@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import {Project, IProjectModel} from "../models/project";
+import {Project} from "../models/project";
 
 var objectId = mongoose.Types.ObjectId();
 
@@ -20,15 +20,9 @@ export class ProjectOperations
         return await newProject.save();
     }
 
-    public static saveProject(project: any){
+    public static async saveProject(project: any){
 
-        var promise = project.save();
-
-        promise.then(function(doc){
-
-            return doc;
-
-        });
+        var promise = await project.save();
 
         return promise;
 
@@ -52,6 +46,7 @@ export class ProjectOperations
 
     public static async deleteProject(projectInfo: any){
         console.log("deleting project " + projectInfo._id)
+
         await Project.findByIdAndRemove({_id: projectInfo._id}, function(err, doc){
             if(err)
                 console.log(err)

@@ -3,7 +3,7 @@ import Schema = mongoose.Schema;
 import Types = Schema.Types;
 import ObjectId = Types.ObjectId;
 import ObjectIdType = mongoose.Types.ObjectId;
-import { User, IUserModel } from "./user";
+import { User } from "./user";
 
 export declare interface IClientModel extends mongoose.Document {
     Id:             String;
@@ -16,7 +16,7 @@ export declare interface IClientModel extends mongoose.Document {
 //arrays stored in the DB
 const clientSchema = new mongoose.Schema({
     Id:             String,
-    UserId:         ObjectIdType,
+    User:           {type: ObjectId, ref: User},
     DeviceType:     Number
 },{usePushEach: true} );
 

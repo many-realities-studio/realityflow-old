@@ -6,11 +6,16 @@
  */
 import { StateTracker } from "../StateTracker";
 import { ConnectionManager } from "../ConnectionManager";
+
 import { FlowProject } from "../FlowLibrary/FlowProject";
 import { FlowUser } from "../FlowLibrary/FlowUser";
 import { FlowObject } from "../FlowLibrary/FlowObject";
+
 import { MessageBuilder } from "./MessageBuilder";
-import { IStringable } from "../FlowLibrary/IStringable";
+
+import WebSocket = require("ws");
+import MongooseDatabase from "../Database/MongooseDatabase";
+
 
 interface ICommand
 {
@@ -21,9 +26,9 @@ interface ICommand
 
 class Command_CreateProject implements ICommand
 {
-  ExecuteCommand(data: any, connection: WebSocket): void 
+  ExecuteCommand(data: any, connection: WebSocket): string 
   {
-    let project : FlowProject= FlowProject.constructor(data);
+    let project : FlowProject = new FlowProject(data);
     
     let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
     
@@ -32,34 +37,34 @@ class Command_CreateProject implements ICommand
     // Create Project only requires a success message being sent
     //TODO: Ensure success before sending success message
     let returnMessage = MessageBuilder.SuccessMessage("CreateProject");
-    ConnectionManager.SendMessage(returnMessage, [userConnected]);
+    
+    return returnMessage;
   }
 }
 
 class Command_DeleteProject implements ICommand
 {
-  ExecuteCommand(data: any, connection: WebSocket): void 
+  ExecuteCommand(data: any, connection: WebSocket): string 
   {
-    let project = FlowProject.constructor(data);
+    let project = new FlowProject(data);
     let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
-    let returnMessage = MessageBuilder.SuccessMessage("DeleteProject");
-    
-    ConnectionManager.SendMessage(returnMessage, [userConnected]);
     StateTracker.DeleteProject(project);
     
+    let returnMessage = MessageBuilder.SuccessMessage("DeleteProject");
+
+    return returnMessage;
   }
 }
 
 // TODO: Find out what this is supposed to do
 class Command_OpenProject implements ICommand
 {
-  ExecuteCommand(data: any, connection: WebSocket): void 
+  async ExecuteCommand(data: any, connection: WebSocket): Promise<string>
   {
-    let project = StateTracker.OpenProject(data.id)
+    
+    let project = await StateTracker.OpenProject(data.ProjectId, data.UserId)
 
-    let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
-
-    ConnectionManager.SendMessage(project.ToString(), [userConnected]);
+    return project.toString()
   }
 }
 
@@ -67,11 +72,12 @@ class Command_OpenProject implements ICommand
 
 class Command_CreateUser implements ICommand
 {
-  ExecuteCommand(data: any, connection: WebSocket): void 
+  async ExecuteCommand(data: any, connection: WebSocket): Promise<string> 
   {
-    let user = FlowUser.constructor(data);
+    let user = new FlowUser(data);
+
     // create boolean if message was sent
-    let success = StateTracker.CreateUser(user);
+    let success = await StateTracker.CreateUser(user);
     let returnMessage = ""
     
     if(success)
@@ -82,7 +88,7 @@ class Command_CreateUser implements ICommand
       returnMessage = MessageBuilder.FailureMessage("CreateUser");
     }
     
-    ConnectionManager.SendMessage(returnMessage, [user]);
+    return returnMessage;
 
 
   }
@@ -90,19 +96,19 @@ class Command_CreateUser implements ICommand
 
 class Command_DeleteUser implements ICommand
 {
-  ExecuteCommand(data: any, connection: WebSocket): void 
+  async ExecuteCommand(data: any, connection: WebSocket): Promise<void> 
   {
-    let user = FlowUser.constructor(data);
-    StateTracker.DeleteUser(user);
+    let user = new FlowUser(data);
+    await StateTracker.DeleteUser(user);
   }
 }
  
 class Command_LoginUser implements ICommand
 {
-  ExecuteCommand(data: any, connection: WebSocket): void 
+  async ExecuteCommand(data: any, connection: WebSocket): Promise<string> 
   {
-    let user = FlowUser.constructor(data);
-    let success = StateTracker.LoginUser(user, connection);
+    let user = new FlowUser(data);
+    let success = await StateTracker.LoginUser(user, connection);
     let returnMessage = ""
 
     if(success)
@@ -113,19 +119,19 @@ class Command_LoginUser implements ICommand
       returnMessage = MessageBuilder.FailureMessage("LoginUser");
     }
     
-    ConnectionManager.SendMessage(returnMessage, [user]);
+    return returnMessage;
   }
 }
 
 class Command_LogoutUser implements ICommand
 {
-  ExecuteCommand(data: any, connection: WebSocket): void 
+  async ExecuteCommand(data: any, connection: WebSocket): Promise<string> 
   {
-    let user = FlowUser.constructor(data);
+    let user = new FlowUser(data);
     StateTracker.LogoutUser(user);
     let returnMessage = MessageBuilder.SuccessMessage("LogoutUser");
     
-    ConnectionManager.SendMessage(returnMessage, [user]);
+    return returnMessage;
   }
 }
 
@@ -136,34 +142,37 @@ class Command_CreateRoom implements ICommand
   ExecuteCommand(data: any, connection: WebSocket): void  
   {
     // grab the projectID from the JSON, confirm format
-    //TODO: ensure the message json is being extracted properly 
+    // TODO: ensure the message json is being extracted properly 
     let projectID = data.projectID;
     let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection)
+
     // send confirmation message & room code to client
     let roomCode = StateTracker.CreateRoom(projectID);
+    let returnMessage;
+
     // error catch
     if(roomCode) 
     {
-      let roomMessage = MessageBuilder.CreateMessage(roomCode);
-      ConnectionManager.SendMessage(roomMessage, [userConnected])
+      let returnMessage = MessageBuilder.CreateMessage(roomCode.toString());
+      
     } else 
     {
-      let failMessage = MessageBuilder.FailureMessage("CreateRoom");
-      ConnectionManager.SendMessage(failMessage, [userConnected])
+      let returnMessage = MessageBuilder.FailureMessage("CreateRoom");
+      
     }
-
+    return returnMessage;
   }
 }
 
 class Command_JoinRoom implements ICommand
 {
-  ExecuteCommand(data: any, connection: Websocket): void
+  async ExecuteCommand(data: any, connection: WebSocket): Promise<string>
   {
     let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
     //TODO: Ensure proper JSON recieval
     let roomCode = data.roomCode;
-    let messages: IStringable[];
-    let finalMessage; 
+    let messages: String[];
+    let returnMessage; 
     //error catch 
     if(roomCode)
     {
@@ -171,15 +180,18 @@ class Command_JoinRoom implements ICommand
       //send success message to user
       let successMessage = MessageBuilder.SuccessMessage("JoinRoom");
       
-      messages.push(successMessage, project.ToString());
-      finalMessage = MessageBuilder.CreateMessage(messages);
-      ConnectionManager.SendMessage(successMessage, [userConnected])
+      messages.push(successMessage, project.toString());
+
+      returnMessage = MessageBuilder.CreateMessage(messages);
+      
     } else 
     {      
       //send fail message to user
-      let failMessage = MessageBuilder.FailureMessage("JoinRoom");
-      ConnectionManager.SendMessage(failMessage, [userConnected])
+      returnMessage = MessageBuilder.FailureMessage("JoinRoom");
+      
     }
+
+    return returnMessage;
   }
 }
 
@@ -195,60 +207,60 @@ class Command_DeleteRoom implements ICommand
 
 class Command_CreateObject implements ICommand
 {
-  ExecuteCommand(data: any, connection: WebSocket): void  
+  ExecuteCommand(data: any, connection: WebSocket): string  
   {
-    let flowObject = FlowObject.constructor(data);
+    let flowObject = new FlowObject(data);
     let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
     let successMessage = MessageBuilder.SuccessMessage("CreateObject");
-    //TODO: Add failure check and message
     
+    //TODO: Add failure check and message
     StateTracker.CreateObject(flowObject);
-    ConnectionManager.SendMessage(successMessage, [userConnected]);
-
-
+    
+    return successMessage;
   }
 }
 
 class Command_DeleteObject implements ICommand
 {
-  ExecuteCommand(data: any, connection: WebSocket): void  
+  ExecuteCommand(data: any, connection: WebSocket): string  
   {
-    let flowObject = FlowObject.constructor(data);
+    let flowObject = new FlowObject(data);
     StateTracker.DeleteObject(flowObject);
+
     let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
     let successMessage = MessageBuilder.SuccessMessage("DeleteObject");
     
     //TODO: Add failure check and message
-    ConnectionManager.SendMessage(successMessage, [userConnected]);
+    return successMessage;
   }
 }
 
 class Command_UpdateObject implements ICommand
 {
-  ExecuteCommand(data: any, connection: WebSocket): void  
+  ExecuteCommand(data: any, connection: WebSocket): string  
   {
-    let flowObject = FlowObject.constructor(data);
+    let flowObject = new FlowObject(data);
     StateTracker.UpdateObject(flowObject);
     let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
     let successMessage = MessageBuilder.SuccessMessage("UpdateObject");
     
     //TODO: Add failure check and message
-    ConnectionManager.SendMessage(successMessage, [userConnected]);
+    return successMessage;
   }
 }
 
 class Command_FinalizedUpdateObject implements ICommand
 {
-  ExecuteCommand(data: any, connection: Websocket): void
+  ExecuteCommand(data: any, connection: WebSocket): string
   {
-    let flowObject = FlowObject.constructor(data);
+    let flowObject = new FlowObject(data);
     StateTracker.FinalizedUpdateObject(flowObject);
     
     let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
     let successMessage = MessageBuilder.SuccessMessage("FinalizedObjectUpdate");
     
     //TODO: Add failure check and message
-    ConnectionManager.SendMessage(successMessage, [userConnected]);
+    return successMessage;
 
   }
 }
@@ -291,8 +303,8 @@ export class CommandContext
    * @param commandToExecute The command to be executed
    * @param data The data which is needed for the command to execute.
    */
-  ExecuteCommand(commandToExecute: string, data: any, connection: WebSocket) : void
+  ExecuteCommand(commandToExecute: string, data: any, connection: WebSocket) : any
   {
-    this._CommandList.get(commandToExecute).ExecuteCommand(data, connection);
+    return this._CommandList.get(commandToExecute).ExecuteCommand(data, connection);
   }
 }

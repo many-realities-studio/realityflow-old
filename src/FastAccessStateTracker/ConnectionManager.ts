@@ -1,4 +1,6 @@
 import { FlowUser } from "./FlowLibrary/FlowUser";
+import WebSocket = require("ws");
+
 
 /**
  * Handles the connections of all active users
@@ -80,7 +82,7 @@ export class ConnectionManager
 
   public static GetSavedUser(user: FlowUser) : FlowUser
   {
-    let val = this._LoggedInUsers.find((temp) => temp.id == user.id);
+    let val = this._LoggedInUsers.find((temp) => temp.Id == user.Id);
 
     return val;
 

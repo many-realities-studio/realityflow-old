@@ -1,17 +1,17 @@
 import { IStringable } from "./IStringable";
-import  MongooseDatabase  from "../Database/MongooseDatabase";
+
 
 import { FlowClient } from "./FlowClient";
-import { ConfigurationSingleton } from "../ConfigurationSingleton";
-import { Project } from "../../models/project";
 import { FlowProject } from "./FlowProject";
+import WebSocket = require("ws");
+
 
 export class FlowUser implements IStringable
 {
   // ID used by FAM for unique identification
   public Id : number;
-  public ClientList : Array<FlowClient> = [];
-  public roomCode: number;
+  public ActiveClients : Array<FlowClient> = [];
+  public RoomCode: number;
   
   // Data storage fields
   public Username: string;
@@ -28,37 +28,40 @@ export class FlowUser implements IStringable
     throw new Error("Method not implemented.");
   }
 
-  /**
-   * Saves this user to the database
-   */
-  public SaveToDatabase() : void
-  {
-    ConfigurationSingleton.Database.UpdateUser(this);
+  public toString(){
+    return JSON.stringify({
+      Id: this.Id,
+      ClientList: this.ClientList,
+      RoomCode: this.RoomCode,
+      Username: this.Username,
+      Clients: this.Clients,
+      Projects: this.Projects
+    })
   }
 
-  // /**
-  //  * Saves the connection information
-  //  * @param websocketConnection 
-  //  */
-  // public Login(websocketConnection : WebSocket) : void
-  // {
-  //   this.ClientList.push(websocketConnection);
-  // }
+  /**
+   * Saves the connection information
+   * @param websocketConnection 
+   */
+  public Login(websocketConnection : WebSocket) : void
+  {
+    this.ClientList.push(websocketConnection);
+  }
 
-  // /**
-  //  * Deletes the connection information
-  //  * @param websocketConnection 
-  //  */
-  // public Logout(connection : WebSocket) : void
-  // {
-  //   const index = this.ClientList.findIndex((element) => element == connection);
+  /**
+   * Deletes the connection information
+   * @param websocketConnection 
+   */
+  public Logout(connection : WebSocket) : void
+  {
+    const index = this.ClientList.findIndex((element) => element == connection);
 
-  //   var ClosedConnection : WebSocket = null;
-  //   if(index > -1)
-  //   {
-  //     ClosedConnection = this.ClientList.splice(index, 1)[0];
-  //   }
-  // }
+    var ClosedConnection : WebSocket = null;
+    if(index > -1)
+    {
+      ClosedConnection = this.ClientList.splice(index, 1)[0];
+    }
+  }
 
   /**
    * @projectToAdd : Flow Project to include in user array
@@ -68,11 +71,5 @@ export class FlowUser implements IStringable
     this.Projects.push(projectToAdd);
   }
 
-  /**
-   * Deletes this user from the database
-   */
-  public Delete() : void
-  {
-    ConfigurationSingleton.Database.DeleteUser(this);
-  }
+
 }

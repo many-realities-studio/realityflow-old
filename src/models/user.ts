@@ -13,27 +13,27 @@ export declare interface IUserModel extends mongoose.Document {
     // in the FlowUser class
     ID: String;
     RoomCode: Number;
-    ClientList: ObjectIdType[];
+    ClientList: [ObjectIdType];
 
     Username: String;
     Password: String;
-    Clients: ObjectIdType[];
-    Projects: ObjectIdType[];
+    Clients: [ObjectIdType];
+    Projects: [ObjectIdType];
     
 }
 
 //The usePushEach property is a workaround for a
 //known Mongo issue that prohibits modifying
 //arrays stored in the DB
-const userSchema = new mongoose.Schema({
+const userSchema: mongoose.Schema = new mongoose.Schema({
     ID: String,
     RoomCode: Number,
-    ClientList: [ObjectIdType],
+    ClientList: [{type: ObjectId, ref: Client}],
 
     Username: String,
     Password: String,
-    Clients: [ObjectIdType],
-    projects: [ObjectIdType],
+    Clients: [{type: ObjectId, ref: Client}],
+    projects: [{type: ObjectId, ref: Project}],
     
 },{usePushEach: true});
 
@@ -45,7 +45,7 @@ userSchema.pre('save', function(next){
     next();
 });
 
-userSchema.methods.comparePassword = function(plaintext, callback) {
+userSchema.methods.comparePassword = function(plaintext: any, callback: any) {
     return callback(null, bcrypt.compareSync(plaintext, this.password));
 };
 

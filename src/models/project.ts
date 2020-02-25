@@ -29,7 +29,7 @@ const projectSchema = new mongoose.Schema({
     Description: String,
     DateModified: Number,
     ProjectName: Number,
-    ObjectList: [ObjectIdType]
+    ObjectList: [{type: ObjectId, ref: Object}]
 
 },{usePushEach: true});
 

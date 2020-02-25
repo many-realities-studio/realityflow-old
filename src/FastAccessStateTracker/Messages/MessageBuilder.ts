@@ -3,13 +3,13 @@ import { IStringable } from "../FlowLibrary/IStringable";
 export class MessageBuilder
 {
   
-  public static CreateMessage(...param : IStringable[]) : string
+  public static CreateMessage(...param : any) : string
   {
-    let stringArray = param.map(function(currentVal) {
-      return currentVal.ToString();
+    let stringArray = param.map(function(currentVal: any) {
+      return currentVal.toString();
     });
     
-    return stringArray.reduce( function(previousVal, currentVal) {
+    return stringArray.reduce( function(previousVal: any, currentVal: any) {
       return previousVal + "\n" + currentVal;
     });
   }

@@ -13,10 +13,12 @@ export class RoomManager
    */
   public static CreateRoom(projectID : Number) : Number
   {
-    let newRoom = new Room(this._RoomCount, projectID);
+    let newRoom = new Room(projectID);
+
     this._RoomList.push(newRoom);
-    this._RoomCount ++;
-    return (this._RoomCount - 1);
+    this._RoomCount++;
+    
+    return projectID;
   }
 
   /**

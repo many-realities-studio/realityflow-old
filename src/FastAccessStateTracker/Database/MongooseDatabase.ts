@@ -1,4 +1,4 @@
-import { IDatabase } from "./IDatabase";
+
 
 import { FlowProject } from "../FlowLibrary/FlowProject";
 import { FlowUser } from "../FlowLibrary/FlowUser";
@@ -9,47 +9,59 @@ import { ProjectOperations } from "../../commands/project"
 import { ClientOperations } from "../../commands/client"
 import { ObjectOperations } from "../../commands/object"
 import { UserOperations } from "../../commands/user"
+import { IObjectModel } from "../../models/object";
+import { ObjectID, ObjectId } from "mongodb";
 /**
  * Implementation of Mongoose Database
  */
-export default class MongooseDatabase implements IDatabase
+export default class MongooseDatabase
 {
     
     public constructor(url: string){}
-    static CreateUser(arg0: FlowUser): any {
-        throw new Error("Method not implemented.");
-    }
+    
 
   // Project functions
-  public async CreateProject(projectToCreate: FlowProject) {
+  public static async CreateProject(projectToCreate: FlowProject) {
     var project = await ProjectOperations.createProject(projectToCreate);
     await project.save();
     
     return project
   }
 
-  public async DeleteProject(projectToDelete: FlowProject): Promise<void> {
+  /**
+  * Deletes the project and all its objects from the database
+  */
+  public static async DeleteProject(projectToDelete: FlowProject): Promise<void> {
+    var project = await ProjectOperations.findProject(projectToDelete)
+    var objects = project.ObjectList
+    objects.forEach(async element => {
+      await ObjectOperations.deleteObject(element)
+    }); 
     await ProjectOperations.deleteProject(projectToDelete);
     return;
   }
 
-  public async UpdateProject(projectToUpdate: FlowProject): Promise<void> {
+  public static async UpdateProject(projectToUpdate: FlowProject): Promise<void> {
     throw new Error("Method not implemented.");
   }
-  public async GetProject(projectId: number): Promise<FlowProject> {
+  public static async GetProject(projectId: Number): Promise<FlowProject> {
     throw new Error("Method not implemented.");
   }
 
   // User functions
-
-  // This returns type any because mongoose is written in javascript so I literally don't know the return type here
-  public async CreateUser(userToCreate: FlowUser): Promise<void> {
+  /** 
+  * Create a User in the database
+  */
+  public static async CreateUser(userToCreate: FlowUser): Promise<void> {
     var newUser = await UserOperations.createUser(userToCreate);
   
     await newUser.save();
   }
 
-  public async DeleteUser(userToDelete: FlowUser): Promise<void> {
+  /** 
+  * Delete a User from the database
+  */
+  public static async DeleteUser(userToDelete: FlowUser): Promise<void> {
     var User = await UserOperations.findUser(userToDelete);
     var clientArray = User.Clients;
 
@@ -62,17 +74,26 @@ export default class MongooseDatabase implements IDatabase
     await UserOperations.deleteUser(userToDelete);
   }
 
-  public async UpdateUser(userToUpdate: FlowUser): Promise<void> {
+  /** 
+  * Update a User in the database
+  */ 
+  public static async UpdateUser(userToUpdate: FlowUser): Promise<void> {
     await UserOperations.updateUser(userToUpdate);
   }
 
-  public async GetUser(UserId: number): Promise<FlowUser> {
-    let userToReturn = await UserOperations.findUser({username: UserId})
+  /**
+  * Get a user based on their username 
+  */
+  public static async GetUser(Username: String): Promise<FlowUser> {
+    let userToReturn = await UserOperations.findUser({Username: Username})
     return new FlowUser(userToReturn) 
   }
 
   // Object functions
-  public async CreateObject(objectToCreate: FlowObject, objectProject: FlowProject): Promise<Object> {
+  /**
+  *  Create an object and add it to a pre-existing project in the database
+  */
+  public static async CreateObject(objectToCreate: FlowObject, objectProject: FlowProject): Promise<Object> {
     var object = await ObjectOperations.createObject(objectToCreate);
     var project = await ProjectOperations.findProject(objectProject);
 
@@ -82,16 +103,20 @@ export default class MongooseDatabase implements IDatabase
     return object;
   }
 
-  public async DeleteObject(projectToDelete:FlowProject, projectObject:FlowObject): Promise<void> {
+  /** Delete an object from a project in the database*/
+
+  public static async DeleteObject(projectToDelete:FlowProject, projectObject:FlowObject): Promise<void> {
     var project: any = await ProjectOperations.findProject(project);
 
     await project.save();
     await ObjectOperations.deleteObject(projectObject);
   }
-  public async UpdateObject(objectToUpdate: FlowObject): Promise<void> {
+  /**Update a given object */
+  public static async UpdateObject(objectToUpdate: FlowObject): Promise<void> {
     await ObjectOperations.updateObject(objectToUpdate);
   }
-  public async GetObject(ObjectId: number): Promise<FlowObject> {
+  /**Get an object from the database */
+  public static async GetObject(ObjectId: number): Promise<FlowObject> {
     return new FlowObject(await ObjectOperations.findObject(ObjectId))
   }
 

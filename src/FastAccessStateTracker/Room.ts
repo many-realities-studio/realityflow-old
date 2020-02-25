@@ -7,13 +7,16 @@ import { MongooseDatabase } from "./Database/MongooseDatabase";
 export class Room
 {
   private _UsersCurrentlyInTheRoom: Array<FlowUser> = [];
-  private _RoomCode: Number;
-  private _CurrentProjectID: Number;
+  private _CurrentProject: FlowProject;
+  private _CurrentProjectId: Number;
 
-  constructor(roomCode : Number, projectID: Number)
+  constructor(projectID: Number)
   {
-    this._RoomCode = roomCode;
-    this._CurrentProjectID = projectID;
+    this._CurrentProjectId = projectID;
+    
+    MongooseDatabase.GetProject(this._CurrentProjectId).then((project) =>{
+      this._CurrentProject = project;
+    })
   }
 
   // Notifies all users in the room to a change
@@ -37,8 +40,9 @@ export class Room
    */
   public GetRoomCode() : Number
   {
-    return this._RoomCode;
+    return this._CurrentProjectId;
   }
+
 
   /**
    * Gets the project that is currently being used by the project
@@ -46,6 +50,6 @@ export class Room
    */
   public GetProject() : FlowProject
   {
-    return ConfigurationSingleton.Database.GetProject(this._CurrentProjectID); 
+    return this._CurrentProject; 
   }
 }

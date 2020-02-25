@@ -4,7 +4,7 @@
 
 import  MongooseDatabase  from "./MongooseDatabase"
 import * as mongoose from 'mongoose';
-import { UserOperations } from "../../commands/user"
+import { User } from "../../models/user"
 import { ProjectOperations } from "../../commands/project";
 import { ObjectOperations } from "../../commands/object";
 import { ClientOperations } from "../../commands/client";
@@ -115,8 +115,8 @@ describe("database_testing", () => {
 
         // arrange
         var testUser = {
-            username: "Yash",
-            password: "test"
+            Username: "Yash",
+            Password: "test"
         };
         
         var testClient = {
@@ -129,9 +129,8 @@ describe("database_testing", () => {
         createdUserOutput = await MongooseDatabase.CreateUser(new FlowUser(testUser))
         
         //assert
-        expect(createdUserOutput).toEqual(expect.anything());
-        var findOut = await UserOperations.findUser({_id: createdUserOutput.newUserId})
-        expect(findOut._id).toEqual(createdUserOutput.newUserId);
+        var findOut = await User.findOne({Username: testUser.Username})
+        expect(findOut).toEqual(expect.anything());
         
     });
 

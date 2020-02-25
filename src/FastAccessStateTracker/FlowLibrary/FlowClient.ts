@@ -1,3 +1,5 @@
+import WebSocket = require("ws");
+
 export class FlowClient
 {
   public Connection : WebSocket;

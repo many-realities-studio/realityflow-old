@@ -7,7 +7,7 @@ export class FlowObject implements IStringable
   // Data the FlowObject stores
   public Type:           string;
   public Name:           string;
-  public Triangles:      [];
+  public Triangles:      Number[];
   public X:              Number;
   public Y:              Number;
   public Z:              Number;
@@ -18,8 +18,8 @@ export class FlowObject implements IStringable
   public S_x:            Number;
   public S_y:            Number;
   public S_z:            Number;
-  public Uv:             [];
-  public Texture:        [];
+  public Uv:             Number[];
+  public Texture:        Number[];
   public TextureHeight:  Number;
   public TextureWidth:   Number;
   public TextureFormat:  Number;
@@ -61,21 +61,6 @@ export class FlowObject implements IStringable
     throw new Error("Method not implemented.");
   }
 
-  /**
-   * Saves the current state to the database
-   */
-  public SaveToDatabase()
-  {
-    throw new Error("Method not implemented.");
-  }
-
-  /**
-   * Deletes the current instance to the database
-   */
-  public DeleteFromDatabase()
-  {
-    throw new Error("Method not implemented.");
-  }
 
   /**
    * Updates the properties of this object with that of the passed in flowObject

@@ -8,9 +8,11 @@ export class UserOperations {
 
     public static async createUser(userInfo: any){
 
+        
+
         var newUser = new User({
             
-            ID: userInfo.Id,
+            
             RoomCode: undefined,
             ClientList: undefined,
             
@@ -20,6 +22,8 @@ export class UserOperations {
             Projects: undefined,
 
         });
+        console.log(userInfo)
+        console.log(newUser)
 
         await newUser.save();
 

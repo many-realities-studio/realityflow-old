@@ -1,12 +1,16 @@
 import { FlowObject } from "./FlowLibrary/FlowObject";
 import { FlowProject } from "./FlowLibrary/FlowProject";
 import { FlowUser } from "./FlowLibrary/FlowUser"
+
 import { RoomManager } from "./RoomManager";
+
 import { ConnectionManager } from "./ConnectionManager";
 import { MongooseDatabase } from "./Database/MongooseDatabase"
-import { ConfigurationSingleton } from "./ConfigurationSingleton";
+
 import { Room } from "./Room";
-import { Connection } from "mongoose";
+
+import WebSocket = require("ws");
+
 // TODO: Add logging system
 // TODO: Add checkout system 
 
@@ -19,29 +23,23 @@ import { Connection } from "mongoose";
 
 export class StateTracker{
 
+  // <projectId: Project>
+  public static currentProjects: RoomManager = new RoomManager();
+  
+  // {username: ProjectId}
+  public static currentUsers: Map<String, String> = new Map()
+  
+
+
   // Project Functions
   /**
    * Adds a project to the FAM and database
    * @param projectToCreate 
    */
-  public static CreateProject(projectToCreate: FlowProject, user: FlowUser) : void
+  public static async CreateProject(projectToCreate: FlowProject, user: FlowUser) : Promise<void>
   {
     // if we can save to the database
-    const promise = new Promise(function(resolve, reject) {
-      setTimeout(function() {
-        let success = projectToCreate.SaveToDatabase();
-        resolve(success);
-      }, 1000)
-    });
-
-    promise.then(function(success) {
-      
-      // add project to user array
-      user.addProject(projectToCreate);
-
-    });
-
-    
+    await MongooseDatabase.CreateProject(projectToCreate)    
   }
 
   /**
@@ -53,7 +51,7 @@ export class StateTracker{
     // Remove object from database
     if(projectToDelete != null)
     {
-      projectToDelete.Delete();
+      MongooseDatabase.DeleteProject(projectToDelete);
     }
   }
  
@@ -61,12 +59,19 @@ export class StateTracker{
    * Finds a project with it's id, returns(?) it to the command context
    * ID type of flow project is "any" for now
    * @param projectToOpenID - ID of associated project
-   * @param connectionToUser - websocket connection to user
    */
-  public static OpenProject(projectToOpenID: any) : FlowProject
+  public static async  OpenProject(projectToOpenID: any, openingUser: FlowUser) : Promise<FlowProject>
   {
-    // find project in list of projects
-    let projectFound : FlowProject = ConfigurationSingleton.Database.GetProject(projectToOpenID);
+    // find project in list of projects so that we can return it
+    let projectFound : FlowProject = await MongooseDatabase.GetProject(projectToOpenID);
+    
+    // start keeping track of current project in the FAST
+    if(RoomManager.FindRoom(projectToOpenID) == undefined)
+      RoomManager.CreateRoom(projectToOpenID)
+
+    RoomManager.FindRoom(projectToOpenID).JoinRoom(openingUser)
+    
+    // send the data back to the client
     return projectFound;
   }
 
@@ -77,72 +82,51 @@ export class StateTracker{
    * Creates a user, adding the user data to the FAM and the database
    * @param userToCreate 
    */
-  public static CreateUser(userToCreate: FlowUser) : boolean
+  public static async CreateUser(userToCreate: FlowUser) : Promise<boolean>
   { 
-    userToCreate.SaveToDatabase();
-    let success = true;
+    let success = false;
 
-    const promise = new Promise(function(resolve, reject) {
-      setTimeout(function() {
-        let success = userToCreate.SaveToDatabase();
-        resolve(success);
-      }, 1000)
-    });
-
-    promise.then(function(success) {
-      
-      return success;
-
-    });
+    await MongooseDatabase.CreateUser(userToCreate)
 
     return !success;
   }
 
-    /**
-   * Deletes the user from the FAM and the database
-   * @param userToDelete 
-   */
-  public static DeleteUser(userToDelete: FlowUser) : void
+  /**
+  * Deletes the user from the FAM and the database
+  * @param userToDelete 
+  */
+  public static async DeleteUser(userToDelete: FlowUser) : Promise<void>
   {
     // Logout the user
     this.LogoutUser(userToDelete);
 
     // Delete user in the list of known users
-    ConfigurationSingleton.Database.DeleteUser(userToDelete);
+    await MongooseDatabase.DeleteUser(userToDelete);
   }
 
   /**
    * Logs in the desired user, this only affects the FAM and is not saved to the database
    * @param userToLogin 
    */
-  public static LoginUser(userToLogin: FlowUser, connectionToUser : WebSocket) : boolean
+  public static async LoginUser(userToLogin: FlowUser, connectionToUser : WebSocket) : Promise<boolean>
   {
-    // check if logged in on another client 
-    let userLoggedIn = ConnectionManager.GetSavedUser(userToLogin);
-    // boolean to send back to Command Context
-    let result = false;
-    // Are they in a room already?
-    if(userLoggedIn.roomCode)
+    // check if user is already logged in - 
+    // user could be logged in on another client
+    let userLoggedIn = this.currentUsers.has(userToLogin.Username);
+
+    // If there are multiple clients
+    if(userLoggedIn)
     {
       // add new connection to the room - by adding connection to user
       ConnectionManager.LoginUser(userLoggedIn, connectionToUser);
-      result = true;
+      
     } 
     else 
     {
       // Find user in the list of known users - async 
       // for the first time in this session a user logs in on a client
-      const promise = new Promise(function(resolve, reject) {
-        setTimeout(function() {
-          let userFound : FlowUser = ConfigurationSingleton.Database.GetUser(userToLogin.id);
-          resolve(userFound);
-        }, 1000)
-        });
-        promise.then(function(userFound: FlowUser) {
-          let user : FlowUser = userFound;
-          ConnectionManager.LoginUser(user, connectionToUser);
-          result = true;
-        });
+      let userFound : FlowUser = await MongooseDatabase.GetUser(userToLogin.Username);
+      ConnectionManager.LoginUser(userFound, connectionToUser);
     }
     return result;    
   }
@@ -155,6 +139,8 @@ export class StateTracker{
   {
     ConnectionManager.LogoutUser(userToLogout);
   }
+
+
 
   // Room Commands
   public static CreateRoom(projectID: Number) : Number
@@ -172,6 +158,7 @@ export class StateTracker{
   {
     let room = RoomManager.FindRoom(roomCode);
     room.JoinRoom(user);
+
     // Pray this works
     //haha jk.. unless
     return room.GetProject();
@@ -208,7 +195,8 @@ export class StateTracker{
   {
     RoomManager.FindRoom(objectToUpdate.RoomNumber)
                 .GetProject()
-                .UpdateObject(objectToUpdate);
+                .UpdateFAMObject(objectToUpdate);
+    
     //Send message to all clients notifying object change
 
     
