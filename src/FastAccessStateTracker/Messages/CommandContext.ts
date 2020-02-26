@@ -99,7 +99,7 @@ class Command_DeleteUser implements ICommand
   async ExecuteCommand(data: any, connection: WebSocket): Promise<void> 
   {
     let user = new FlowUser(data);
-    await StateTracker.DeleteUser(user);
+    await StateTracker.DeleteUser(user, connection);
   }
 }
  
@@ -128,7 +128,7 @@ class Command_LogoutUser implements ICommand
   async ExecuteCommand(data: any, connection: WebSocket): Promise<string> 
   {
     let user = new FlowUser(data);
-    StateTracker.LogoutUser(user);
+    StateTracker.LogoutUser(user, connection);
     let returnMessage = MessageBuilder.SuccessMessage("LogoutUser");
     
     return returnMessage;

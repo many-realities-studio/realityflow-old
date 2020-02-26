@@ -1,5 +1,6 @@
 import { FlowUser } from "./FlowLibrary/FlowUser";
 import WebSocket = require("ws");
+import { connect } from "net";
 
 
 /**
@@ -53,7 +54,7 @@ export class ConnectionManager
    * using the server
    * @param userToLogout 
    */
-  public static LogoutUser(userToLogout : FlowUser) : void
+  public static LogoutUser(userToLogout : FlowUser, connectionToUser : WebSocket) : void
   {
     // Find user in the list of known users
     let index = this._LoggedInUsers.findIndex((element) => element.Id == userToLogout.Id);
@@ -62,7 +63,7 @@ export class ConnectionManager
     if(index > -1)
     {
       foundUser = this._LoggedInUsers.splice(index, 1)[0];
-      foundUser.Logout();
+      foundUser.Logout(connectionToUser);
     }
     else
     {

@@ -95,10 +95,10 @@ export class StateTracker{
   * Deletes the user from the FAM and the database
   * @param userToDelete 
   */
-  public static async DeleteUser(userToDelete: FlowUser) : Promise<void>
+  public static async DeleteUser(userToDelete: FlowUser, connectionToUser : WebSocket) : Promise<void>
   {
     // Logout the user
-    this.LogoutUser(userToDelete);
+    this.LogoutUser(userToDelete, connectionToUser);
 
     // Delete user in the list of known users
     await MongooseDatabase.DeleteUser(userToDelete);
@@ -128,16 +128,18 @@ export class StateTracker{
       let userFound : FlowUser = await MongooseDatabase.GetUser(userToLogin.Username);
       ConnectionManager.LoginUser(userFound, connectionToUser);
     }
-    return result;    
+    return true;    
   }
 
   /**
    * Logs out the desired user, this only affects the FAM and is not saved to the database
    * @param userToLogin 
    */
-  public static LogoutUser(userToLogout: FlowUser) : void
+  public static LogoutUser(userToLogout: FlowUser, connectionToUser: Websocket) : void
   {
-    ConnectionManager.LogoutUser(userToLogout);
+    ConnectionManager.LogoutUser(userToLogout, connectionToUser);
+    this.currentUsers.delete(userToLogout.Username);
+
   }
 
 

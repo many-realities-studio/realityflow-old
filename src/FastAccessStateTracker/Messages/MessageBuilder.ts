@@ -3,7 +3,7 @@ import { IStringable } from "../FlowLibrary/IStringable";
 export class MessageBuilder
 {
   
-  public static CreateMessage(...param : any) : string
+  public static CreateMessage(...param : any[]) : string
   {
     let stringArray = param.map(function(currentVal: any) {
       return currentVal.toString();
