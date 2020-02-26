@@ -18,7 +18,7 @@ export class ConnectionManager
   public static SendMessage(message : string, usersToSendTo: FlowUser[]) : void
   {
     usersToSendTo.forEach(user => {
-      user.ConnectionList.forEach(connection => connection.send(message));
+      user.ActiveClients.forEach(connection => connection.send(message));
     });
   }
 
@@ -29,7 +29,7 @@ export class ConnectionManager
   public static NotifyAllUsers(message : string) : void
   {
     this._LoggedInUsers.forEach(user => {
-      user.ConnectionList.forEach(connection => connection.send(message));
+      user.ActiveClients.forEach(connection => connection.send(message));
     });
   }
 
@@ -77,7 +77,7 @@ export class ConnectionManager
    */
   public static FindUserWithConnection(connectionToFind: WebSocket) : FlowUser
   {
-    return this._LoggedInUsers.find(user => user.ConnectionList.find(connection => connection == connectionToFind));
+    return this._LoggedInUsers.find(user => user.ActiveClients.find(connection => connection == connectionToFind));
   }
 
   public static GetSavedUser(user: FlowUser) : FlowUser

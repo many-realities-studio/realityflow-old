@@ -10,7 +10,7 @@ export class FlowUser implements IStringable
 {
   // ID used by FAM for unique identification
   public Id : number;
-  public ActiveClients : Array<FlowClient> = [];
+  public ActiveClients : Array<WebSocket> = [];
   public RoomCode: number;
   
   // Data storage fields
@@ -31,7 +31,7 @@ export class FlowUser implements IStringable
   public toString(){
     return JSON.stringify({
       Id: this.Id,
-      ClientList: this.ClientList,
+      ClientList: this.ActiveClients,
       RoomCode: this.RoomCode,
       Username: this.Username,
       Clients: this.Clients,
@@ -45,7 +45,7 @@ export class FlowUser implements IStringable
    */
   public Login(websocketConnection : WebSocket) : void
   {
-    this.ClientList.push(websocketConnection);
+    this.ActiveClients.push(websocketConnection);
   }
 
   /**
@@ -54,12 +54,12 @@ export class FlowUser implements IStringable
    */
   public Logout(connection : WebSocket) : void
   {
-    const index = this.ClientList.findIndex((element) => element == connection);
+    const index = this.ActiveClients.findIndex((element) => element == connection);
 
     var ClosedConnection : WebSocket = null;
     if(index > -1)
     {
-      ClosedConnection = this.ClientList.splice(index, 1)[0];
+      ClosedConnection = this.ActiveClients.splice(index, 1)[0];
     }
   }
 

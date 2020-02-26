@@ -118,7 +118,7 @@ export class StateTracker{
     if(userLoggedIn)
     {
       // add new connection to the room - by adding connection to user
-      ConnectionManager.LoginUser(userLoggedIn, connectionToUser);
+      ConnectionManager.LoginUser(userToLogin, connectionToUser);
       
     } 
     else 
