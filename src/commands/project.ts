@@ -38,7 +38,7 @@ export class ProjectOperations
 
     public static async findProject(projectInfo: any){
 
-        var project = await Project.findById(projectInfo._id).exec();
+        var project = await Project.findOne({Id: projectInfo.Id}).exec();
 
         return project;
 

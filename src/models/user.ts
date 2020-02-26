@@ -9,8 +9,10 @@ import bcrypt = require("bcrypt");
 let SALT_WORK_FACTOR = 10
 
 export declare interface IUserModel extends mongoose.Document {
-    // TODO: ask why there's two redundant-seeming fields 
-    // in the FlowUser class
+    /* TODO: ask why there's two redundant-seeming fields 
+    * in the FlowUser class
+    */
+
     ID: String;
     RoomCode: Number;
     ClientList: [ObjectIdType];
@@ -33,7 +35,7 @@ const userSchema: mongoose.Schema = new mongoose.Schema({
     Username: String,
     Password: String,
     Clients: [{type: ObjectId, ref: Client}],
-    projects: [{type: ObjectId, ref: Project}],
+    Projects: [{type: ObjectId, ref: Project}],
     
 },{usePushEach: true});
 
