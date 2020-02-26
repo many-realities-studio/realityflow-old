@@ -113,7 +113,7 @@ describe("database_testing", () => {
 
     //testing the MongooseDatabase functions.
     it('should insert a user into collection and then find that user', async () => {
-
+        let val: Boolean = true;
         // arrange
         var testUser = {
             Username: "Yesh",
@@ -122,10 +122,16 @@ describe("database_testing", () => {
 
         // act
         await MongooseDatabase.CreateUser(new FlowUser(testUser))
-        let lol = await MongooseDatabase.AuthenticateUser(testUser.Username, testUser.Password)
         
+        let correctAuth = await MongooseDatabase.AuthenticateUser(testUser.Username, testUser.Password)
+        let incorrectAuth = await MongooseDatabase.AuthenticateUser(testUser.Username, "incorrect")
+
+         console.log(val)
+
         //assert
-        expect(lol).toEqual(true)
+        expect(correctAuth).toEqual(true)
+        expect(incorrectAuth).toEqual(false)
+
         var findOut = await User.findOne({Username: testUser.Username})
         expect(findOut).toEqual(expect.anything());
         expect(findOut.Username).toEqual(testUser.Username)

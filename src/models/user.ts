@@ -38,9 +38,9 @@ userSchema.pre('save', async function(next){
 });
 
 
-userSchema.methods.comparePassword = function (candidatePassword: any, cb: any) {
-    console.log(this)
-    bcrypt.compareSync(candidatePassword, this.Password);
+userSchema.methods.comparePassword = function (candidatePassword: any, callback: any) {
+
+    callback(null, bcrypt.compareSync(candidatePassword, this.Password));
 };
 
 

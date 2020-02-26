@@ -92,10 +92,12 @@ export default class MongooseDatabase
     return new FlowUser(userToReturn) 
   }
 
-  public static async AuthenticateUser(Username: String, Password: String){
+  public static async AuthenticateUser(Username: String, Password: String): Promise<Boolean>{
     let user = await UserOperations.authenticateUser(Username, Password)
+    
     if(!user)
       return false
+
     return true
   }
 

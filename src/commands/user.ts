@@ -82,15 +82,15 @@ export class UserOperations {
         });
     }
 
-    public static async authenticateUser(Username: String, Password: String){
-        let user = await User.findOne({Username: Username}, function(err, user){
-            user.schema.methods.comparePassword.call(user, Password, function(err: any, isMatch: boolean) {
-                if (err) throw err;
-                return isMatch
-            });
+    public static async authenticateUser(Username: String, Password: String): Promise<Boolean>{
+        let user = await User.findOne({Username: Username})
+        let retval: Boolean = false;
+
+        user.schema.methods.comparePassword.call(user, Password, function(error: any, match: any) {
+            retval = match
         })
 
-        return user
+        return retval
         
     }
     
