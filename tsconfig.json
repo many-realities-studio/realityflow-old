@@ -3,19 +3,18 @@
         "target": "ES6",
         "module": "commonjs",
         "moduleResolution": "node",
-        "noImplicitAny": true,
+        "noImplicitAny": false,
         "removeComments": true,
         "preserveConstEnums": true,
         "noEmitOnError": true,
         "sourceMap": true,
-        "outDir": "../node/editor/server/bld",
-        "lib": [ "es2015" ]
+        "outDir": "../node/server/bld"
     },
     "exclude": [
+        "**/*.spec.ts",
         "**/node_modules",
-        "**web-client"
-    ],
-    "include": [
-        "**/*.spec.ts"
+        "**web-client",
+        "src/FastAccessStateTracker/**",
+        "src/FastAccessStateTracker/Messages/*.ts"
     ]
 }
