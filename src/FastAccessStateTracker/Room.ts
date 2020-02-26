@@ -1,6 +1,6 @@
 import { FlowUser } from "./FlowLibrary/FlowUser";
 import { FlowProject } from "./FlowLibrary/FlowProject";
-import { ConnectionManager } from "./ConnectionManager";
+
 import { MongooseDatabase } from "./Database/MongooseDatabase";
 
 // Look into Pub/Sub architecture
@@ -19,10 +19,11 @@ export class Room
     })
   }
 
+  // FIXME: code to notify Users of change should be happening somewhere else, probably
   // Notifies all users in the room to a change
   public NotifyUsersOfChange(data: string) : void
   {
-    ConnectionManager.SendMessage(data, this._UsersCurrentlyInTheRoom);    
+    // ConnectionManager.SendMessage(data, this._UsersCurrentlyInTheRoom);    
   }
 
   /**

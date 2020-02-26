@@ -1,12 +1,8 @@
-import { IStringable } from "./IStringable";
 
 
 import { FlowClient } from "./FlowClient";
-import { FlowProject } from "./FlowProject";
-import WebSocket = require("ws");
 
-
-export class FlowUser implements IStringable
+export class FlowUser
 {
   // ID used by FAM for unique identification
   public Id : number;
@@ -17,22 +13,18 @@ export class FlowUser implements IStringable
   public Username: string;
   public Password: string;
   public Clients: Array<FlowClient>;
-  public Projects: Array<FlowProject>;
+  public Projects: Array<String>;
 
   constructor(json:any){
       this.Username = json.Username;
       this.Password = json.Password;
   }
-  ToString() : string 
-  {
-    throw new Error("Method not implemented.");
-  }
-
   public toString(){
     return JSON.stringify({
       Id: this.Id,
-      ClientList: this.ClientList,
+      ActiveClients: this.ActiveClients,
       RoomCode: this.RoomCode,
+
       Username: this.Username,
       Clients: this.Clients,
       Projects: this.Projects
@@ -43,32 +35,32 @@ export class FlowUser implements IStringable
    * Saves the connection information
    * @param websocketConnection 
    */
-  public Login(websocketConnection : WebSocket) : void
+  public Login(newClientLogin : FlowClient) : void
   {
-    this.ClientList.push(websocketConnection);
+    this.ActiveClients.push(newClientLogin);
   }
 
   /**
    * Deletes the connection information
    * @param websocketConnection 
    */
-  public Logout(connection : WebSocket) : void
+  public Logout(connection : FlowClient) : void
   {
-    const index = this.ClientList.findIndex((element) => element == connection);
+    const index = this.ActiveClients.findIndex((element) => element == connection);
 
-    var ClosedConnection : WebSocket = null;
+    var ClosedConnection : FlowClient = null;
     if(index > -1)
     {
-      ClosedConnection = this.ClientList.splice(index, 1)[0];
+      ClosedConnection = this.ActiveClients.splice(index, 1)[0];
     }
   }
 
   /**
    * @projectToAdd : Flow Project to include in user array
    */
-  public addProject(projectToAdd: FlowProject) : void 
+  public addProject(projectIdToAdd: String) : void 
   {
-    this.Projects.push(projectToAdd);
+    this.Projects.push(projectIdToAdd);
   }
 
 
