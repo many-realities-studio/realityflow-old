@@ -46,6 +46,26 @@ export class Room
     }
   }
 
+  public LeaveRoom(userLeavingTheRoom: FlowUser, clientLeavingTheRoom: FlowClient){
+    let userIndex = this._UsersCurrentlyInTheRoom.findIndex(element => element.Id == userLeavingTheRoom.Id)
+
+    //user is already not in this room
+    if(userIndex == -1){
+      return;
+    }
+    // user is already in this room
+    else{
+      let clientIndex = this._UsersCurrentlyInTheRoom[userIndex].ActiveClients.findIndex(element => element.Id == clientLeavingTheRoom.Id)
+      this._UsersCurrentlyInTheRoom[userIndex].ActiveClients.splice(clientIndex, 1)
+      
+      //if the user doesn't have any more active clients, then remove user from the room
+      if(this._UsersCurrentlyInTheRoom[userIndex].ActiveClients.length == 0)
+        this._UsersCurrentlyInTheRoom.splice(userIndex, 1)
+      
+    }
+
+  }
+
   /**
    * Gets the room code of this room
    */
