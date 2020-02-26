@@ -122,8 +122,10 @@ describe("database_testing", () => {
 
         // act
         await MongooseDatabase.CreateUser(new FlowUser(testUser))
+        let lol = await MongooseDatabase.AuthenticateUser(testUser.Username, testUser.Password)
         
         //assert
+        expect(lol).toEqual(true)
         var findOut = await User.findOne({Username: testUser.Username})
         expect(findOut).toEqual(expect.anything());
         expect(findOut.Username).toEqual(testUser.Username)
@@ -147,7 +149,7 @@ describe("database_testing", () => {
         
         // assert
         expect(createdProjectOutput).toEqual(expect.anything());
-        var findProject = await ProjectOperations.findProject(createdProjectOutput);
+        var findProject = await ProjectOperations.findProject(testProject1.Id);
         expect(findProject).toEqual(expect.anything())
     
     })
@@ -158,7 +160,7 @@ describe("database_testing", () => {
 
         // arrange
         var testProject2 = {
-            projectId: "TestProject2",
+            Id: "TestProject2",
             Description: "This is a project",
             ProjectName: "TestProject2",
             DateModified: Date.now(),
@@ -194,7 +196,7 @@ describe("database_testing", () => {
         createdProjectOutput = await MongooseDatabase.CreateProject(new FlowProject(testProject2));
 
         // act
-        var createOut1 = await MongooseDatabase.CreateObject(new FlowObject(object1), new FlowProject(testProject2));
+        var createOut1 = await MongooseDatabase.CreateObject(new FlowObject(object1), testProject2.Id);
         
         // assert
         expect(createOut1).toEqual(expect.anything())

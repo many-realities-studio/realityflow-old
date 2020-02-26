@@ -2,15 +2,16 @@ import { FlowUser } from "./FlowLibrary/FlowUser";
 import { FlowProject } from "./FlowLibrary/FlowProject";
 
 import { MongooseDatabase } from "./Database/MongooseDatabase";
+import { FlowClient } from "./FlowLibrary/FlowClient";
 
 // Look into Pub/Sub architecture
 export class Room
 {
   private _UsersCurrentlyInTheRoom: Array<FlowUser> = [];
   private _CurrentProject: FlowProject;
-  private _CurrentProjectId: Number;
+  private _CurrentProjectId: String;
 
-  constructor(projectID: Number)
+  constructor(projectID: String)
   {
     this._CurrentProjectId = projectID;
     
@@ -29,17 +30,26 @@ export class Room
   /**
    * Adds the desired user to the list of users in the room
    * @param userJoiningTheRoom the user that will be joining the room
+   * @param clientJoiningTheRoom the client that the user is using
    */
-  public JoinRoom(userJoiningTheRoom: FlowUser) : void
+  public JoinRoom(userJoiningTheRoom: FlowUser, clientJoiningTheRoom: FlowClient) : void
   {
+    let user = this._UsersCurrentlyInTheRoom.find(element => element.Id == userJoiningTheRoom.Id)
 
-    this._UsersCurrentlyInTheRoom.push(userJoiningTheRoom);
+    //user is not already in this room
+    if(user == undefined){
+      this._UsersCurrentlyInTheRoom.push(userJoiningTheRoom);
+    }
+    // user is already in this room
+    else{
+      user.ActiveClients.push(clientJoiningTheRoom)
+    }
   }
 
   /**
    * Gets the room code of this room
    */
-  public GetRoomCode() : Number
+  public GetRoomCode() : String
   {
     return this._CurrentProjectId;
   }

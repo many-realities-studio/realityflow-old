@@ -1,5 +1,7 @@
 import * as mongoose from "mongoose";
-import {Project} from "../models/project";
+import { Project } from "../models/project";
+import { User } from "../models/user"
+import { FlowProject } from "../FastAccessStateTracker/FlowLibrary/FlowProject";
 
 var objectId = mongoose.Types.ObjectId();
 
@@ -28,26 +30,36 @@ export class ProjectOperations
 
     }
 
-    //Project fetch for when a user logs in
-    public static async fetchProjects(userInfo: any){
+    // TODO: test this
+
+    //Fetch all of the projects for a given user
+    public static async fetchProjects(Username: String) : Promise<Array<FlowProject>>{
+        // get a user
+        var user = await User.findOne({Username: Username})
         
-        var projects = await Project.find({owner: userInfo._id}, '_id projectName').exec();
+        //get user's projects as FlowProjects
+        var projectsRaw = user.Projects
+        let projects: Array<FlowProject> = []
+
+        projectsRaw.forEach(async (element : mongoose.Types.ObjectId)  => {
+            projects.push(new FlowProject(await Project.findById(element)))
+        });
 
         return projects;
     }
 
-    public static async findProject(projectInfo: any){
+    public static async findProject(projectId: String){
 
-        var project = await Project.findOne({Id: projectInfo.Id}).exec();
+        var project = await Project.findOne({Id: projectId}).exec();
 
         return project;
 
     }
 
-    public static async deleteProject(projectInfo: any){
-        console.log("deleting project " + projectInfo._id)
+    public static async deleteProject(projectId: String){
+        console.log("deleting project " + projectId)
 
-        await Project.findByIdAndRemove({_id: projectInfo._id}, function(err, doc){
+        await Project.findOneAndRemove({Id: projectId}, function(err, doc){
             if(err)
                 console.log(err)
         });
