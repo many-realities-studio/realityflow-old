@@ -12,10 +12,10 @@ export class FlowProject implements IStringable
   // Used for identification in the FAM
   
   // Data storage fields
-  public Id: string;
-  public Description: string;
-  public DateModified: number;
-  public ProjectName: string;
+  public Id: String;
+  public Description: String;
+  public DateModified: Number;
+  public ProjectName: String;
  
   constructor(json:any){
     this.Id = json.Id

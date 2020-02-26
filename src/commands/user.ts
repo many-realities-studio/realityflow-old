@@ -22,8 +22,8 @@ export class UserOperations {
             Projects: undefined,
 
         });
-        console.log(userInfo)
-        console.log(newUser)
+        // console.log(userInfo)
+        // console.log(newUser)
 
         await newUser.save();
 
