@@ -28,134 +28,148 @@ export class StateTracker{
   // {username: ProjectId}
   public static currentUsers: Map<String, String> = new Map()
   
-}
 
-  // // Project Functions
-  // /**
-  //  * Adds a project to the FAM and database
-  //  * @param projectToCreate 
-  //  */
-  // public static async CreateProject(projectToCreate: FlowProject, user: FlowUser) : Promise<void>
-  // {
-  //   // Create the project in the database
-  //   let newProject = await MongooseDatabase.CreateProject(projectToCreate)
 
-  //   // Give the user who created the project ownership of the project and update
-  //   user.addProject(newProject.Id)
+  // Project Functions
+  /**
+   * Adds a project to the FAM and database
+   * @param projectToCreate 
+   */
+  public static async CreateProject(projectToCreate: FlowProject, user: FlowUser) : Promise<void>
+  {
+    // Create the project in the database
+    let newProject = await MongooseDatabase.CreateProject(projectToCreate)
+
+    // Give the user who created the project ownership of the project and update
+    user.addProject(newProject.Id)
     
-  //   await MongooseDatabase.UpdateUser(user)
+    await MongooseDatabase.UpdateUser(user)
 
-  // }
+  }
 
-  // /**
-  //  * Deletes the project from the FAM and the database
-  //  * @param projectToDelete 
-  //  */
-  // public static async  DeleteProject(projectToDeleteId: String) : Promise<void>
-  // {    
-  //   // Remove object from database
-  //   if(projectToDeleteId != null )
-  //   {
-  //     MongooseDatabase.DeleteProject(projectToDeleteId);
-  //   }
-  // }
+  /**
+   * Deletes the project from the FAM and the database
+   * @param projectToDelete 
+   */
+  public static async  DeleteProject(projectToDeleteId: String) : Promise<void>
+  {    
+    // Remove object from database
+    if(projectToDeleteId != null )
+    {
+      MongooseDatabase.DeleteProject(projectToDeleteId);
+    }
+  }
  
-  // /**
-  //  * Finds a project with it's id, returns(?) it to the command context
-  //  * ID type of flow project is "any" for now
-  //  * @param projectToOpenID - ID of associated project
-  //  */
-  // public static async  OpenProject(projectToOpenID: any, openingUser: FlowUser) : Promise<FlowProject>
-  // {
-  //   // find project in list of projects so that we can return it
-  //   let projectFound : FlowProject = await MongooseDatabase.GetProject(projectToOpenID);
+  // TODO: incomplete
+  /**
+   * Finds a project with it's id, returns(?) it to the command context
+   * ID type of flow project is "any" for now
+   * @param projectToOpenID - ID of associated project
+   * @param openingUser - the user that's opening
+   * @param openingClient - the client that's opening
+   */
+  public static async  OpenProject(projectToOpenID: any, openingUser: FlowUser, openingClient: FlowClient) : Promise<FlowProject>
+  {
+    // find project in list of projects so that we can return it
+    let projectFound : FlowProject = await MongooseDatabase.GetProject(projectToOpenID);
     
-  //   // start keeping track of current project in the FAST
-  //   if(RoomManager.FindRoom(projectToOpenID) == undefined)
-  //     RoomManager.CreateRoom(projectToOpenID)
+    // start keeping track of current project in the FAST
+    if(RoomManager.FindRoom(projectToOpenID) == undefined)
+      RoomManager.CreateRoom(projectToOpenID)
 
-  //   RoomManager.FindRoom(projectToOpenID).JoinRoom(openingUser)
+    RoomManager.FindRoom(projectToOpenID).JoinRoom(openingUser, openingClient)
     
-  //   // send the data back to the client
-  //   return projectFound;
-  // }
+    // send the data back to the client
+    return projectFound;
+  }
 
 
-  // // User Functions
+  // User Functions
+
+  /**
+   * Creates a user, adding the user data to the FAM and the database
+   * @param userToCreate 
+   */
+  public static async CreateUser(userToCreate: FlowUser) : Promise<boolean>
+  { 
+    let success = false;
+
+    await MongooseDatabase.CreateUser(userToCreate)
+
+    return !success;
+  }
+
 
   // /**
-  //  * Creates a user, adding the user data to the FAM and the database
-  //  * @param userToCreate 
-  //  */
-  // public static async CreateUser(userToCreate: FlowUser) : Promise<boolean>
-  // { 
-  //   let success = false;
+  // * Deletes the user from the FAM and the database
+  // * @param userToDelete 
+  // */
+  public static async DeleteUser(userToDelete: FlowUser) : Promise<void>
+  {
+    // Logout the user
+    this.LogoutUser(userToDelete);
 
-  //   await MongooseDatabase.CreateUser(userToCreate)
-
-  //   return !success;
-  // }
-
-
-  // // /**
-  // // * Deletes the user from the FAM and the database
-  // // * @param userToDelete 
-  // // */
-  // public static async DeleteUser(userToDelete: FlowUser) : Promise<void>
-  // {
-  //   // Logout the user
-  //   this.LogoutUser(userToDelete);
-
-  //   // Delete user in the list of known users
-  //   await MongooseDatabase.DeleteUser(userToDelete);
-  // }
+    // Delete user in the list of known users
+    await MongooseDatabase.DeleteUser(userToDelete);
+  }
 
 
   /**
    * Logs in the desired user, this only affects the FAM and is not saved to the database
    * @param userToLogin 
    */
-//   public static async LoginUser(Username:String, password: String, ClientId : String) : Promise<boolean>
-//   {
-//     //Authenticate user
+  public static async LoginUser(userName:String, password: String, ClientId : String) : Promise<boolean>
+  {
+    //Authenticate user
+    if(!MongooseDatabase.AuthenticateUser(userName, password))
+      return false;
+
+    // check if user is already logged in - 
+    // user could be logged in on another client
+    let userLoggedIn = this.currentUsers.has(userName);
+    
+    let client: FlowClient = await MongooseDatabase.GetClient(ClientId)
+    let user: FlowUser = await  MongooseDatabase.GetUser(userName)
 
 
-//     // check if user is already logged in - 
-//     // user could be logged in on another client
-//     let userLoggedIn = this.currentUsers.has(Username);
-//     let client = MongooseDatabase.GetClient(ClientId)
-
-
-//     // If there are multiple clients
-//     if(userLoggedIn)
-//     {
-//       // find what room the user is currently in
-//       let userRoomId = this.currentUsers.get(Username)
-
-//       RoomManager.FindRoom(userRoomId).JoinRoom()
+    // If the user is already logged in, this is from a different client
+    if(userLoggedIn)
+    {
+      // find what room the user is currently in
+      let userRoomId = this.currentUsers.get(userName)
+      RoomManager.FindRoom(userRoomId).JoinRoom(user, client)
       
-//     } 
-//     else 
-//     {
-//       // Find user in the list of known users - async 
-//       // for the first time in this session a user logs in on a client
-//       let userFound : FlowUser = await MongooseDatabase.GetUser(userToLogin.Username);
-//       ConnectionManager.LoginUser(userFound, connectionToUser);
-//     }
-//     return result;    
-//   }
+    } 
+    else 
+    {
+      // put the user in limbo, aka a fake room
+      this.currentUsers.set(userName, "noRoom")
+      RoomManager.FindRoom("noRoom").JoinRoom(user, client)
 
-//   /**
-//    * Logs out the desired user, this only affects the FAM and is not saved to the database
-//    * @param userToLogin 
-//    */
-//   public static LogoutUser(userToLogout: FlowUser) : void
-//   {
-//     ConnectionManager.LogoutUser(userToLogout);
-//   }
+    }
+    return true;    
+  }
 
-// }
+  /**
+   * Logs out the desired user, this only affects the FAM and is not saved to the database
+   * @param userToLogin 
+   */
+  public static LogoutUser(Username: String, password: String,  ClientId: String) : void
+  {
+        //Authenticate user
+        if(!MongooseDatabase.AuthenticateUser(Username, password))
+          return;
+  
+      // check if user is already logged in - 
+      // user could be logged in on another client
+      let userLoggedIn = this.currentUsers.has(Username);
+      
+      let client: FlowClient = await MongooseDatabase.GetClient(ClientId)
+      let user: FlowUser = await  MongooseDatabase.GetUser(Username)
+  }
 
+}
+}
 
 //   // Room Commands
 //   public static CreateRoom(projectID: Number) : Number
