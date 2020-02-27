@@ -5,8 +5,8 @@ import { FlowProject } from "./FlowLibrary/FlowProject";
 export class RoomManager
 {
   // TODO: Why is this static
-  private static _RoomList : Array<Room> = [];
-  private static _RoomCount : number = 0;
+  public static _RoomList : Array<Room> = [];
+  public static _RoomCount : number = 0;
 
   // TODO: finished: yes Tested: no
   /**
@@ -42,8 +42,11 @@ export class RoomManager
   public static DestroyRoom(roomCode: String): void {
     let roomIndex = this._RoomList.findIndex(element => element.GetRoomCode() == roomCode)
 
-    if(roomIndex > 0)
-      this._RoomList.splice(roomIndex, 1)
+    if(roomIndex > 0) {
+      this._RoomList.splice(roomIndex, 1);
+      this._RoomCount--;
+    }
+      
 
   }
 }
