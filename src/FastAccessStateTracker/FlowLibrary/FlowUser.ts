@@ -6,7 +6,7 @@ export class FlowUser
 {
   // ID used by FAM for unique identification
   public Id : number;
-  public ActiveClients : Array<FlowClient> = [];
+  public ActiveClients : Array<String> = [];
   public RoomCode: number;
   
   // Data storage fields
@@ -33,9 +33,9 @@ export class FlowUser
 
   /**
    * Saves the connection information
-   * @param websocketConnection 
+   * @param newClientLogin 
    */
-  public Login(newClientLogin : FlowClient) : void
+  public Login(newClientLogin : String) : void
   {
     this.ActiveClients.push(newClientLogin);
   }
@@ -44,11 +44,11 @@ export class FlowUser
    * Deletes the connection information
    * @param websocketConnection 
    */
-  public Logout(connection : FlowClient) : void
+  public Logout(connection : String) : void
   {
     const index = this.ActiveClients.findIndex((element) => element == connection);
 
-    var ClosedConnection : FlowClient = null;
+    var ClosedConnection : String = null;
     if(index > -1)
     {
       ClosedConnection = this.ActiveClients.splice(index, 1)[0];
