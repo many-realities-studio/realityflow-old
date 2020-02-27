@@ -125,7 +125,7 @@ export class StateTracker{
   }
 
 
-  // TODO: Finished: ..Yes? Tested: no
+  // TODO: Finished: ..kinda? Tested: no
   /**
    * Logs in the desired client using the given credentials 
    * this only affects the FAM and is not saved to the database
