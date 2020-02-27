@@ -8,6 +8,7 @@ import { User } from "../../models/user"
 import { ProjectOperations } from "../../commands/project";
 import { ObjectOperations } from "../../commands/object";
 import { ClientOperations } from "../../commands/client";
+import { UserOperations } from "../../commands/user"
 
 import {FlowClient} from "../FlowLibrary/FlowClient";
 import {FlowUser} from "../FlowLibrary/FlowUser";
@@ -47,29 +48,29 @@ describe("database_testing", () => {
 
     var object1 = {
         
-        type:           "string",
-        name:           "object1",
-        triangles:      [1,2,3],
-        x:              3,
-        y:              1,
-        z:              1,
-        q_x:            1,
-        q_y:            1,
-        q_z:            1,
-        q_w:            1,
-        s_x:            1,
-        s_y:            1,
-        s_z:            1,
-        color:          {},
-        vertices:       [1,2],
-        uv:             [2,34],
-        texture:        [1,3],
-        textureHeight:  1,
-        textureWidth:   1,
-        textureFormat:  1,
-        mipmapCount:    1,
-        locked:         false,
-        path:           "here"
+        Type:           "string",
+        Name:           "object1",
+        Triangles:      [1,2,3],
+        X:              3,
+        Y:              1,
+        Z:              1,
+        Q_x:            1,
+        Q_y:            1,
+        Q_z:            1,
+        Q_w:            1,
+        S_x:            1,
+        S_y:            1,
+        S_z:            1,
+        Color:          {},
+        Vertices:       [1,2],
+        Uv:             [2,34],
+        Texture:        [1,3],
+        TextureHeight:  1,
+        TextureWidth:   1,
+        TextureFormat:  1,
+        MipmapCount:    1,
+        Locked:         false,
+        Path:           "here"
     }
 
     var object2 = {
@@ -107,131 +108,106 @@ describe("database_testing", () => {
     console.log('Database connection successful at ' + dburl);
     });
 
-    var createdUserOutput;
+    
     var createdProjectOutput;
 
     //testing the MongooseDatabase functions.
     it('should insert a user into collection and then find that user', async () => {
-
+        let val: Boolean = true;
         // arrange
         var testUser = {
-            Username: "Yash",
+            Username: "Yesh",
             Password: "test"
         };
-        
-        var testClient = {
-            _id: "",
-            user:"",
-            deviceType: 1
-        }
 
         // act
-        createdUserOutput = await MongooseDatabase.CreateUser(new FlowUser(testUser))
+        await MongooseDatabase.CreateUser(new FlowUser(testUser))
         
+        let correctAuth = await MongooseDatabase.AuthenticateUser(testUser.Username, testUser.Password)
+        let incorrectAuth = await MongooseDatabase.AuthenticateUser(testUser.Username, "incorrect")
+
+         console.log(val)
+
         //assert
+        expect(correctAuth).toEqual(true)
+        expect(incorrectAuth).toEqual(false)
+
         var findOut = await User.findOne({Username: testUser.Username})
         expect(findOut).toEqual(expect.anything());
+        expect(findOut.Username).toEqual(testUser.Username)
         
     });
 
     
 
-    // it('should insert a project into a collection and then find that project', async () => {
+    it('should insert a project into a collection and then find that project', async () => {
         
-    //     // arrange
-    //     var testProject = new FlowProject({
-    //         _id: "",
-    //         projectName: "TestProject1",
-    //         created: Date.now(),
-    
-    //         lastEdit: Date.now(),
-    //         lastEditor: null
-    //     });
+        // arrange
+        var testProject1 = new FlowProject({
+            Id: "TestProjectId",
+            Description: "This is a project",
+            ProjectName: "TestProject1",
+            DateModified: Date.now(),
+        });
 
-    //     var testUser = new FlowUser({
-    //         username: "Yash",
-    //         password: "test"
-    //     });
-
-    //     var mongoUser = await UserOperations.createUser(testUser)
-    //     testUser._id = mongoUser._id
-
-    //     var testClient = new FlowClient({
-    //         user: testUser._id,
-    //         deviceType: 1
-    //     })
-
-    //     // act
-    //     createdUserOutput.project = testProject;
-    //     createdProjectOutput = await MongooseDatabase.CreateProject(testProject, testUser, testClient);
+        // act
+        createdProjectOutput = await MongooseDatabase.CreateProject(testProject1);
         
-    //     // assert
-    //     expect(createdProjectOutput).toEqual(expect.anything());
-    //     var findProject = await ProjectOperations.findProject(createdProjectOutput);
-    //     expect(findProject).toEqual(expect.anything())
+        // assert
+        expect(createdProjectOutput).toEqual(expect.anything());
+        var findProject = await ProjectOperations.findProject(testProject1.Id);
+        expect(findProject).toEqual(expect.anything())
     
-    // })
+    })
 
     
 
-    // it('should create an object', async() => {
+    it('should create an object', async() => {
 
-    //     // arrange
-    //     var testUser = new FlowUser({
-    //         username: "Yash",
-    //         password: "test"
-    //     });
+        // arrange
+        var testProject2 = {
+            Id: "TestProject2",
+            Description: "This is a project",
+            ProjectName: "TestProject2",
+            DateModified: Date.now(),
+        };
 
-    //     var mongoUser = await UserOperations.createUser(testUser)
-    //     testUser._id = mongoUser._id
-
-    //     var testClient = await ClientOperations.createClient({
-    //         user: testUser._id,
-    //         deviceType: 1
-    //     }, testUser._id)
-
-       
-    //     var testProject = await ProjectOperations.createProject( {
-    //         projectName: "TestProject1",
-    //         created: Date.now(),
-    
-    //         lastEdit: Date.now(),
-    //         lastEditor: null
-    //     }, testClient, testUser);
-
-    //     var object1 = {
+        var object1 = {
         
-    //         type:           "string",
-    //         name:           "object1",
-    //         triangles:      [1,2,3],
-    //         x:              3,
-    //         y:              1,
-    //         z:              1,
-    //         q_x:            1,
-    //         q_y:            1,
-    //         q_z:            1,
-    //         q_w:            1,
-    //         s_x:            1,
-    //         s_y:            1,
-    //         s_z:            1,
-    //         color:          {},
-    //         vertices:       [1,2],
-    //         uv:             [2,34],
-    //         texture:        [1,3],
-    //         textureHeight:  1,
-    //         textureWidth:   1,
-    //         textureFormat:  1,
-    //         mipmapCount:    1,
-    //         locked:         false,
-    //         path:           "here"
-    //     }
-    //     // act
-    //     var createOut1 = await MongooseDatabase.CreateObject(new FlowObject(object1), new FlowProject(testProject));
+            type:           "string",
+            name:           "object1",
+            triangles:      [1,2,3],
+            x:              3,
+            y:              1,
+            z:              1,
+            q_x:            1,
+            q_y:            1,
+            q_z:            1,
+            q_w:            1,
+            s_x:            1,
+            s_y:            1,
+            s_z:            1,
+            color:          {},
+            vertices:       [1,2],
+            uv:             [2,34],
+            texture:        [1,3],
+            textureHeight:  1,
+            textureWidth:   1,
+            textureFormat:  1,
+            mipmapCount:    1,
+            locked:         false,
+            path:           "here"
+        }
+
+        createdProjectOutput = await MongooseDatabase.CreateProject(new FlowProject(testProject2));
+
+        // act
+        var createOut1 = await MongooseDatabase.CreateObject(new FlowObject(object1), testProject2.Id);
         
-    //     // assert
-    //     expect(createOut1).toEqual(expect.anything())
+        // assert
+        expect(createOut1).toEqual(expect.anything())
     
-    // })
+    })
 
     // it('should modify an object', async() =>{
     

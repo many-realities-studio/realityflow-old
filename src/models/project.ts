@@ -14,7 +14,7 @@ export declare interface IProjectModel extends mongoose.Document{
     Id: String;
     Description: String;
     DateModified: Number;
-    ProjectName: Number;
+    ProjectName: String;
     ObjectList: [ObjectIdType];
 
 
@@ -28,12 +28,16 @@ const projectSchema = new mongoose.Schema({
     Id: String,
     Description: String,
     DateModified: Number,
-    ProjectName: Number,
+    ProjectName: String,
     ObjectList: [{type: ObjectId, ref: Object}]
 
 },{usePushEach: true});
 
-
+// TODO: finished: yes? tested: no 
+projectSchema.post("remove", async (err, document) =>{
+    const projectId = document._id;
+    User.updateMany({Projects: {$in: projectId}}, {$pull: {Projects: projectId}})
+});
 
 
 export const Project = mongoose.model<IProjectModel>("Project", projectSchema);

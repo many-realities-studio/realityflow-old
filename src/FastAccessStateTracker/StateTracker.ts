@@ -4,12 +4,10 @@ import { FlowUser } from "./FlowLibrary/FlowUser"
 
 import { RoomManager } from "./RoomManager";
 
-import { ConnectionManager } from "./ConnectionManager";
 import { MongooseDatabase } from "./Database/MongooseDatabase"
+import { FlowClient } from "./FlowLibrary/FlowClient";
 
-import { Room } from "./Room";
-
-import WebSocket = require("ws");
+  
 
 // TODO: Add logging system
 // TODO: Add checkout system 
@@ -23,53 +21,70 @@ import WebSocket = require("ws");
 
 export class StateTracker{
 
-  // <projectId: Project>
+  /* 
+  * <projectId: Project>
+  */
   public static currentProjects: RoomManager = new RoomManager();
   
-  // {username: ProjectId}
-  public static currentUsers: Map<String, String> = new Map()
+  // I feel like I've used this data structure before
+  // <username: <client: projectId>>
+  public static currentUsers: Map<String, Map<String, String> > = new Map()
   
 
 
   // Project Functions
+
+  // TODO: finished: yes? Tested: no 
   /**
    * Adds a project to the FAM and database
    * @param projectToCreate 
    */
   public static async CreateProject(projectToCreate: FlowProject, user: FlowUser) : Promise<void>
   {
-    // if we can save to the database
-    await MongooseDatabase.CreateProject(projectToCreate)    
+    // Create the project in the database
+    let newProject = await MongooseDatabase.CreateProject(projectToCreate)
+    let owner = await MongooseDatabase.GetUser(user.Username)
+
+    // Give the user who created the project ownership of the project and update
+    owner.addProject(newProject.Id)
+    
+    await MongooseDatabase.UpdateUser(owner)
+
   }
 
+
+  // TODO: finished: no tested: no
   /**
    * Deletes the project from the FAM and the database
    * @param projectToDelete 
    */
-  public static DeleteProject(projectToDelete: FlowProject) : void
+  public static async DeleteProject(projectToDeleteId: String) : Promise<void>
   {    
-    // Remove object from database
-    if(projectToDelete != null)
+
+    //kick everyone out of the room of the project if it's open
+
+    //remove project from the FAM
+
+    // Remove object from database - Mongoose database should have it set up such that 
+    // deleting a project also cascades in such a way that it's removed from every user's 
+    // project list that owns it. that has yet to be tested
+    if(projectToDeleteId != null )
     {
-      MongooseDatabase.DeleteProject(projectToDelete);
+      MongooseDatabase.DeleteProject(projectToDeleteId);
     }
+
+
   }
  
+  // TODO: finished: yes? tested: no
   /**
-   * Finds a project with it's id, returns(?) it to the command context
-   * ID type of flow project is "any" for now
+   * Finds a project with id projectToOpenId, returns it to the command context
    * @param projectToOpenID - ID of associated project
    */
-  public static async  OpenProject(projectToOpenID: any, openingUser: FlowUser) : Promise<FlowProject>
+  public static async OpenProject(projectToOpenID: any) : Promise<FlowProject>
   {
     // find project in list of projects so that we can return it
     let projectFound : FlowProject = await MongooseDatabase.GetProject(projectToOpenID);
-    
-    // start keeping track of current project in the FAST
-    if(RoomManager.FindRoom(projectToOpenID) == undefined)
-      RoomManager.CreateRoom(projectToOpenID)
-
-    RoomManager.FindRoom(projectToOpenID).JoinRoom(openingUser)
     
     // send the data back to the client
     return projectFound;
@@ -78,6 +93,7 @@ export class StateTracker{
 
   // User Functions
 
+  // TODO: Finished: yes tested: no
   /**
    * Creates a user, adding the user data to the FAM and the database
    * @param userToCreate 
@@ -91,116 +107,147 @@ export class StateTracker{
     return !success;
   }
 
+  // TODO: finished: Yes? tested: no
   /**
-  * Deletes the user from the FAM and the database
+  * Kicks out all clients logged in under the user and
+  * deletes the user from the FAM and the database
   * @param userToDelete 
   */
-  public static async DeleteUser(userToDelete: FlowUser, connectionToUser : WebSocket) : Promise<void>
+  public static async DeleteUser(userName: String, password: String) : Promise<void>
   {
-    // Logout the user
-    this.LogoutUser(userToDelete, connectionToUser);
-
-    // Delete user in the list of known users
+    //force kick every client that's logged in with these credentials to out of the FAM
+    let clients = this.currentUsers.get(userName)
+    clients.forEach( (roomCode, clientId, map) => this.LogoutUser(userName, password, clientId))
+    
+    //remove user from the database too
+    let userToDelete = await MongooseDatabase.GetUser(userName)
     await MongooseDatabase.DeleteUser(userToDelete);
   }
 
+
+  // TODO: Finished: ..kinda? Tested: no
   /**
-   * Logs in the desired user, this only affects the FAM and is not saved to the database
+   * Logs in the desired client using the given credentials 
+   * this only affects the FAM and is not saved to the database
    * @param userToLogin 
    */
-  public static async LoginUser(userToLogin: FlowUser, connectionToUser : WebSocket) : Promise<boolean>
+  public static async LoginUser(userName:String, password: String, ClientId : String) : Promise<boolean>
   {
+    //Authenticate user
+    if(!MongooseDatabase.AuthenticateUser(userName, password))
+      return false;
+
     // check if user is already logged in - 
     // user could be logged in on another client
-    let userLoggedIn = this.currentUsers.has(userToLogin.Username);
+    let userLoggedIn = this.currentUsers.has(userName);
 
-    // If there are multiple clients
-    if(userLoggedIn)
-    {
-      // add new connection to the room - by adding connection to user
-      ConnectionManager.LoginUser(userToLogin, connectionToUser);
-      
-    } 
-    else 
-    {
-      // Find user in the list of known users - async 
-      // for the first time in this session a user logs in on a client
-      let userFound : FlowUser = await MongooseDatabase.GetUser(userToLogin.Username);
-      ConnectionManager.LoginUser(userFound, connectionToUser);
-    }
+    let user: FlowUser = await MongooseDatabase.GetUser(userName)
+
+    // If the user is not already logged in, then we need to start keeping track of them.
+    if(!userLoggedIn)
+      this.currentUsers.set(userName, new Map<String, String>())
+    
+    
+    // put the client in limbo - aka, an empty room
+    // TODO: figure out noRoom situation
+    this.currentUsers.get(userName).set(ClientId, "noRoom") 
+    RoomManager.FindRoom("noRoom").JoinRoom(user, ClientId)
+    
     return true;    
   }
 
+    // TODO: Finished: ...Yes? Tested: no
   /**
-   * Logs out the desired user, this only affects the FAM and is not saved to the database
+   * Logs out the desired client using the specified credentials, this only affects the FAM and is not saved to the database
    * @param userToLogin 
-   */
-  public static LogoutUser(userToLogout: FlowUser, connectionToUser: Websocket) : void
+  */
+  public static async LogoutUser(Username: String, password: String,  ClientId: String) : Promise<void>
   {
-    ConnectionManager.LogoutUser(userToLogout, connectionToUser);
-    this.currentUsers.delete(userToLogout.Username);
+      //Authenticate user, I guess. Don't want someone trying to log someone else out
+      if(!MongooseDatabase.AuthenticateUser(Username, password))
+        return;
+  
+      // check if user is already logged in - 
+      // user could be logged in on another client
+      let userLoggedIn = this.currentUsers.has(Username);
 
+      if(userLoggedIn)
+      {
+        // find what room the client is currently in and leave it
+        let userRoomId = this.currentUsers.get(Username).get(ClientId)
+        RoomManager.FindRoom(userRoomId).LeaveRoom(Username, ClientId)
+        
+        // kick the client out of currentUsers (a misnomer, I know) 
+        this.currentUsers.get(Username).delete(ClientId)
+
+        //if the current user doesn't have any more active clients, then stop keeping track of that user
+        if(this.currentUsers.get(Username).size == 0)
+          this.currentUsers.delete(Username)
+      } 
+      // If the user wasn't logged in in the first place, then ??
+      else 
+      {
+        return;
+      }
   }
 
 
 
+  // TODO: Finished: yes? Tested: no
   // Room Commands
-  public static CreateRoom(projectID: Number) : Number
+  public static CreateRoom(projectID: String) : String
   {
     let roomCode = RoomManager.CreateRoom(projectID);
+    
     return roomCode;
   }
 
+  // TODO: Finished: No Tested: no
   /**
    * Adds user to the room, does not worry about maintaining user connections
    * @param roomCode - code of room they are looking to join
    * @param user - user to be logged in
    */
-  public static JoinRoom(roomCode: Number, user: FlowUser) : FlowProject
+  public static async JoinRoom(roomCode: String, user: FlowUser, client: FlowClient) : Promise<FlowProject>
   {
-    let room = RoomManager.FindRoom(roomCode);
-    room.JoinRoom(user);
-
-    // Pray this works
-    //haha jk.. unless
-    return room.GetProject();
-
+   throw new Error("not implemented yet");
   }
 
-  // Object Commands
-  public static CreateObject(objectToCreate : FlowObject) : void
-  {
-    RoomManager.FindRoom(objectToCreate.RoomNumber)
-                .GetProject()
-                .AddObject(objectToCreate);
-  }
-
-  public static DeleteObject(objectToDelete : FlowObject) : void
-  {
-    RoomManager.FindRoom(objectToDelete.RoomNumber)
-                .GetProject()
-                .DeleteObject(objectToDelete);
-  }
-
-  public static UpdateObject(objectToUpdate : FlowObject) : void
-  {
-    RoomManager.FindRoom(objectToUpdate.RoomNumber)
-                .GetProject()
-                .UpdateFAMObject(objectToUpdate);
-  }
-
-  /**
-   * The final update to be sent to clients and saved in the database
-   * @param objectToUpdate - object which holds the final truth of position for the databsse
-   */
-  public static FinalizedUpdateObject(objectToUpdate : FlowObject) : void
-  {
-    RoomManager.FindRoom(objectToUpdate.RoomNumber)
-                .GetProject()
-                .UpdateFAMObject(objectToUpdate);
-    
-    //Send message to all clients notifying object change
-
-    
-  }
 }
+//   // Object Commands
+//   public static CreateObject(objectToCreate : FlowObject) : void
+//   {
+//     RoomManager.FindRoom(objectToCreate.RoomNumber)
+//                 .GetProject()
+//                 .AddObject(objectToCreate);
+//   }
+
+//   public static DeleteObject(objectToDelete : FlowObject) : void
+//   {
+//     RoomManager.FindRoom(objectToDelete.RoomNumber)
+//                 .GetProject()
+//                 .DeleteObject(objectToDelete);
+//   }
+
+//   public static UpdateObject(objectToUpdate : FlowObject) : void
+//   {
+//     RoomManager.FindRoom(objectToUpdate.RoomNumber)
+//                 .GetProject()
+//                 .UpdateFAMObject(objectToUpdate);
+//   }
+
+//   /**
+//    * The final update to be sent to clients and saved in the database
+//    * @param objectToUpdate - object which holds the final truth of position for the databsse
+//    */
+//   public static FinalizedUpdateObject(objectToUpdate : FlowObject) : void
+//   {
+//     RoomManager.FindRoom(objectToUpdate.RoomNumber)
+//                 .GetProject()
+//                 .UpdateFAMObject(objectToUpdate);
+    
+//     //Send message to all clients notifying object change
+
+    
+//   }
+// }

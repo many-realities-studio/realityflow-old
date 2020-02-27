@@ -9,16 +9,11 @@ import bcrypt = require("bcrypt");
 let SALT_WORK_FACTOR = 10
 
 export declare interface IUserModel extends mongoose.Document {
-    // TODO: ask why there's two redundant-seeming fields 
-    // in the FlowUser class
-    ID: String;
-    RoomCode: Number;
-    ClientList: [ObjectIdType];
-
     Username: String;
     Password: String;
     Clients: [ObjectIdType];
     Projects: [ObjectIdType];
+    compare: Function
     
 }
 
@@ -26,27 +21,27 @@ export declare interface IUserModel extends mongoose.Document {
 //known Mongo issue that prohibits modifying
 //arrays stored in the DB
 const userSchema: mongoose.Schema = new mongoose.Schema({
-    ID: String,
-    RoomCode: Number,
-    ClientList: [{type: ObjectId, ref: Client}],
-
-    Username: String,
-    Password: String,
+    Username:  {type: String, required: true},
+    Password: {type: String, required: true},
     Clients: [{type: ObjectId, ref: Client}],
-    projects: [{type: ObjectId, ref: Project}],
+    Projects: [{type: ObjectId, ref: Project}],
     
 },{usePushEach: true});
 
-userSchema.pre('save', function(next){
+userSchema.pre('save', async function(next){
     if(!this.isModified("Password"))
         return next();
     
-    this.password = bcrypt.hashSync(this.Password, SALT_WORK_FACTOR);
+    this.Password = await bcrypt.hash(this.Password, SALT_WORK_FACTOR);
+    console.log(this.Password)
     next();
 });
 
-userSchema.methods.comparePassword = function(plaintext: any, callback: any) {
-    return callback(null, bcrypt.compareSync(plaintext, this.password));
+
+userSchema.methods.comparePassword = function (candidatePassword: any, callback: any) {
+
+    callback(null, bcrypt.compareSync(candidatePassword, this.Password));
 };
+
 
 export const User = mongoose.model<IUserModel>("User", userSchema);

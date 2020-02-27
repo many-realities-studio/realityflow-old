@@ -11,19 +11,13 @@ export class UserOperations {
         
 
         var newUser = new User({
-            
-            
-            RoomCode: undefined,
-            ClientList: undefined,
-            
             Username: userInfo.Username,
             Password: userInfo.Password,
             Clients: undefined,
             Projects: undefined,
 
         });
-        console.log(userInfo)
-        console.log(newUser)
+        
 
         await newUser.save();
 
@@ -57,10 +51,6 @@ export class UserOperations {
     public static async updateUser(userInfo: any){
 
         await User.findOneAndUpdate({Username: userInfo.Username}, {
-
-            ID: userInfo.Id,
-            RoomCode: undefined,
-            ClientList: undefined,
             
             Username: userInfo.Username,
             Password: userInfo.Password,
@@ -92,5 +82,16 @@ export class UserOperations {
         });
     }
 
+    public static async authenticateUser(Username: String, Password: String): Promise<Boolean>{
+        let user = await User.findOne({Username: Username})
+        let retval: Boolean = false;
+
+        user.schema.methods.comparePassword.call(user, Password, function(error: any, match: any) {
+            retval = match
+        })
+
+        return retval
+        
+    }
     
 }

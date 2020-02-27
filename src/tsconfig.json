@@ -9,12 +9,13 @@
         "noEmitOnError": true,
         "sourceMap": true,
         "outDir": "../node/editor/server/bld",
-        "lib": [ "es2015" ]
+        "lib": [ "es6" ]
     },
     "exclude": [
         "**/node_modules",
-        "**web-client",
-        "**/src/FastAccessStateTracker/ConnectionManager.ts"
+        "**web-client"
     ],
-    
+    "include": [
+        "./**/*"
+    ]
 }
