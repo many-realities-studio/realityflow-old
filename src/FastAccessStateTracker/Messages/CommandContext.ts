@@ -6,7 +6,6 @@
  */
 import { StateTracker } from "../StateTracker";
 
-import { MongooseDatabase } from "../Database/MongooseDatabase" 
 
 import { FlowProject } from "../FlowLibrary/FlowProject";
 import { FlowUser } from "../FlowLibrary/FlowUser";
@@ -28,16 +27,18 @@ interface ICommand
 //   async ExecuteCommand(data: any): Promise<[String, Array<String>]>
 //   {
 //     let project : FlowProject = new FlowProject(data);
-
-//     let user = await MongooseDatabase.GetUser(data.user.Username)
     
-//     StateTracker.CreateProject(project, user);
+//     // let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
+    
+//     let user : FlowUser = 
+
+//     StateTracker.CreateProject(project, userConnected);
 
 //     // Create Project only requires a success message being sent
 //     //TODO: Ensure success before sending success message
 //     let returnMessage = MessageBuilder.SuccessMessage("CreateProject");
     
-//     return [returnMessage, []];
+//     return returnMessage;
 //   }
 // }
 

@@ -115,14 +115,9 @@ export class StateTracker{
   */
   public static async DeleteUser(userName: String, password: String) : Promise<void>
   {
-    let clients = this.currentUsers.get(userName)
-    
     //force kick every client that's logged in with these credentials to out of the FAM
-    clients.forEach( (roomCode, clientId, map) => 
-      {
-        this.LogoutUser(userName, password, clientId)
-      }
-    )
+    let clients = this.currentUsers.get(userName)
+    clients.forEach( (roomCode, clientId, map) => this.LogoutUser(userName, password, clientId))
     
     //remove user from the database too
     let userToDelete = await MongooseDatabase.GetUser(userName)
@@ -178,7 +173,7 @@ export class StateTracker{
 
       if(userLoggedIn)
       {
-        // find what room the client is currently in and
+        // find what room the client is currently in and leave it
         let userRoomId = this.currentUsers.get(Username).get(ClientId)
         RoomManager.FindRoom(userRoomId).LeaveRoom(Username, ClientId)
         
