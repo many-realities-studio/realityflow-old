@@ -36,7 +36,15 @@ public class MainMenuManager : MonoBehaviour {
     public InputField password;
     public InputField confirm;
 
-  
+
+    public void Awake()
+    {
+        if (Config.leftProject)
+        {
+            setActivePanel(PROJECT_PANEL);
+            Config.leftProject = false;
+        }
+    }
 
     public void Start()
     {
@@ -120,6 +128,8 @@ public class MainMenuManager : MonoBehaviour {
     {
         // clear the username and projectList so the next user to login will have a newly populated list
         Config.ResetValues();
+        
+        // SEND Logout event to server maybe
     }
 
     public void login()

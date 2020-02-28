@@ -23,14 +23,14 @@ class ScrollAndPinch : MonoBehaviour
     {
 
         //Update Plane
-        if (Input.touchCount >= 1)
+        if (Input.touchCount >= 2)
             Plane.SetNormalAndPosition(transform.up, transform.position);
 
         var Delta1 = Vector3.zero;
         var Delta2 = Vector3.zero;
 
         //Scroll
-        if (Input.touchCount >= 1)
+        if (Input.touchCount >= 2)
         {
             Delta1 = PlanePositionDelta(Input.GetTouch(0));
             if (Input.GetTouch(0).phase == TouchPhase.Moved)
@@ -88,7 +88,7 @@ class ScrollAndPinch : MonoBehaviour
         return Vector3.zero;
     }
 
-    private void OnDrawGizmos()
+    private void OnDrawGizmosSelected()
     {
         Gizmos.DrawLine(transform.position, transform.position + transform.up);
     }

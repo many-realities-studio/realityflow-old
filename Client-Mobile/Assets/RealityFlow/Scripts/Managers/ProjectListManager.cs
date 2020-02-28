@@ -44,6 +44,11 @@ public class ProjectListManager : MonoBehaviour {
     public Text greeting;
     public bool usernameSet = false;
 
+    public void Awake()
+    {
+        Start();    
+    }
+
     private void Start()
     {
         ProjectDataList projects = new ProjectDataList();

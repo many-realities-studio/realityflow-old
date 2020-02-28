@@ -18,6 +18,8 @@ namespace RuntimeGizmos
         // Support for outliner
         OutlinerManager outlinerManager;
 
+		public SlideMenuManager slideMenuManager;
+
 		public TransformSpace space = TransformSpace.Local;
 		public TransformType transformType = TransformType.Move;
 		public TransformPivot pivot = TransformPivot.Pivot;
@@ -130,8 +132,9 @@ namespace RuntimeGizmos
 
             // Initialize outlinerManager
             outlinerManager = GameObject.FindGameObjectWithTag("Outliner").GetComponent<OutlinerManager>();
+			slideMenuManager = GameObject.FindGameObjectWithTag("SlideMenuButtons").GetComponent<SlideMenuManager>();
 
-        }
+		}
 
 		void OnEnable()
 		{
@@ -531,9 +534,11 @@ namespace RuntimeGizmos
 
 				AddTargetRoot(target);
 				AddTargetHighlightedRenderers(target);
-                outlinerManager.selectedInWorld(target);
 
-                SetPivotPoint();
+                outlinerManager.selectedInWorld(target);
+				slideMenuManager.ToggleMenuButtons(true);
+
+				SetPivotPoint();
 			}
 		}
 
@@ -547,6 +552,7 @@ namespace RuntimeGizmos
 
 				RemoveTargetHighlightedRenderers(target);
 				RemoveTargetRoot(target);
+
                 outlinerManager.selectedInWorld(target);
 
 				SetPivotPoint();
@@ -557,6 +563,7 @@ namespace RuntimeGizmos
 		{
 			if(addCommand) UndoRedoManager.Insert(new ClearTargetsCommand(this, targetRootsOrdered));
 
+			slideMenuManager.ToggleMenuButtons(false);
 			ClearAllHighlightedRenderers();
 			targetRoots.Clear();
 			targetRootsOrdered.Clear();
