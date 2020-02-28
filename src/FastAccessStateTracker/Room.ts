@@ -20,14 +20,7 @@ export class Room
     })
   }
 
-  // FIXME: code to notify Users of change should be happening somewhere else, probably
-  // Notifies all users in the room to a change
-  public NotifyUsersOfChange(data: string) : void
-  {
-    // ConnectionManager.SendMessage(data, this._UsersCurrentlyInTheRoom);    
-  }
-
-  // TODO: finished: no tested: no
+  // TODO: finished: yes tested: yes
   // I think I want to have strings passed to these
  
   /**
@@ -76,7 +69,7 @@ export class Room
 
   }
 
-  // TODO: finished: yes? tested: yes
+  // TODO: finished: yes tested: yes
   /**
    * returns whether or not any client using this given username is in here
    * @param username username to search for
