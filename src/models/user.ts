@@ -9,8 +9,8 @@ import bcrypt = require("bcrypt");
 let SALT_WORK_FACTOR = 10
 
 export declare interface IUserModel extends mongoose.Document {
-    Username: String;
-    Password: String;
+    Username: string;
+    Password: string;
     Clients: [ObjectIdType];
     Projects: [ObjectIdType];
     compare: Function

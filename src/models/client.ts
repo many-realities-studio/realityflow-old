@@ -6,7 +6,7 @@ import ObjectIdType = mongoose.Types.ObjectId;
 import { User } from "./user";
 
 export declare interface IClientModel extends mongoose.Document {
-    Id:             String;
+    Id:             string;
     User:           ObjectIdType;
     DeviceType:     Number;
 }
@@ -15,7 +15,7 @@ export declare interface IClientModel extends mongoose.Document {
 //known Mongo issue that prohibits modifying
 //arrays stored in the DB
 const clientSchema = new mongoose.Schema({
-    Id:             String,
+    Id:             {type: String},
     User:           {type: ObjectId, ref: User},
     DeviceType:     Number
 },{usePushEach: true} );

@@ -1,8 +1,8 @@
 import { Color } from "./Color";
-import { IStringable } from "./IStringable";
+
 const uuidv4 = require('uuid/v4');
 
-export class FlowObject implements IStringable
+export class FlowObject
 {
   // Data the FlowObject stores
   public Type:           string;
@@ -53,14 +53,6 @@ export class FlowObject implements IStringable
     this.TextureFormat = json.TextureFormat;
     this.MipmapCount = json.MipmapCount;
 }
-
-  /**
-   * Converts this instance of a FlowObject into a string.
-   */
-  ToString() : string {
-    throw new Error("Method not implemented.");
-  }
-
 
   /**
    * Updates the properties of this object with that of the passed in flowObject

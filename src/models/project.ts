@@ -11,10 +11,10 @@ import { Client } from "./client";
 export declare interface IProjectModel extends mongoose.Document{
     [x: string]: any;
 
-    Id: String;
-    Description: String;
+    Id: string;
+    Description: string;
     DateModified: Number;
-    ProjectName: String;
+    ProjectName: string;
     ObjectList: [ObjectIdType];
 
 

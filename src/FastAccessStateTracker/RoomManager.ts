@@ -13,7 +13,7 @@ export class RoomManager
    * Creates a new room. This room must be tied to a project.
    * @param projectId aka the room code
    */
-  public static CreateRoom(projectID : String) : String
+  public static CreateRoom(projectID : string) : string
   {
     let newRoom = new Room(projectID);
 
@@ -30,7 +30,7 @@ export class RoomManager
    * FindRoom returns undefined
    * @param roomCode 
    */
-  public static FindRoom(roomCode: String) : Room
+  public static FindRoom(roomCode: string) : Room
   {
     return this._RoomList.find(element => element.GetRoomCode() == roomCode);
   }
@@ -39,7 +39,7 @@ export class RoomManager
   /**
    * @param roomCode the code of the room to destroy
    */
-  public static DestroyRoom(roomCode: String): void {
+  public static DestroyRoom(roomCode: string): void {
     let roomIndex = this._RoomList.findIndex(element => element.GetRoomCode() == roomCode)
 
     if(roomIndex > 0) {
