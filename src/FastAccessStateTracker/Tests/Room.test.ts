@@ -52,6 +52,7 @@ describe("Rooms", () => {
 
         expect(returnUser).toHaveBeenCalled()
         expect(room.hasUser(userName)).toBeTruthy()
+        expect(room.hasClient(userName, clientId)).toBeTruthy()
     })
 
     it("can tell when a user is not in the room", async () =>{
@@ -81,7 +82,7 @@ describe("Rooms", () => {
         expect(room.hasClient(userName,clientId2)).toBeTruthy()
     })
 
-    it("Can allow client(s) to leave the room", async () => {
+    it("Can allow client(s) to leave the room and stops keeping track of user if all its clients have left", async () => {
         let room: Room = await new Room("testProjectId")
         let userName : string = "Yash"
 
