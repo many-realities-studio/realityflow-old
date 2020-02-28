@@ -7,7 +7,7 @@ import { FlowUser } from "../FlowLibrary/FlowUser"
 
 jest.mock('../Database/MongooseDatabase')
  
-const returnProject = jest.fn( async (projectId: String) => {
+const returnProject = jest.fn( async (projectId: string) => {
     return new FlowProject({
         Id : projectId,
         Description : "This is a test Project",
@@ -16,7 +16,7 @@ const returnProject = jest.fn( async (projectId: String) => {
     })
 })
 
-const returnUser = jest.fn( async (userName: String) => {
+const returnUser = jest.fn( async (userName: string) => {
     return new FlowUser({
         Username : userName
     })
@@ -45,28 +45,33 @@ describe("Rooms", () => {
 
     it("Can allow a user to join the room", async () => {
         let room: Room = await new Room("testProjectId")
-        let userName : String = "Yash"
-        let clientId : String = "YashClient"
+        let userName : string = "Yash"
+        let clientId : string = "YashClient"
 
         await room.JoinRoom(userName, clientId)
 
         expect(returnUser).toHaveBeenCalled()
         expect(room.hasUser(userName)).toBeTruthy()
-
     })
 
     it("can tell when a user is not in the room", async () =>{
         let room: Room = await new Room("testProjectId")
-        let userName : String = "Yash"
+        let userName : string = "Yash"
         expect(room.hasUser(userName)).toBeFalsy()
+    })
 
+    it("can tell when a user is not in the room", async () =>{
+        let room: Room = await new Room("testProjectId")
+        let userName : string = "Yash"
+        let clientId: string = "testClient"
+        expect(room.hasClient(userName, clientId)).toBeFalsy()
     })
 
     it("can allow multiple clients to join the room under the same username", async () => {
         let room: Room = await new Room("testProjectId")
-        let userName : String = "Yash"
-        let clientId1 : String = "YashClient"
-        let clientId2 : String = "YashClient2"
+        let userName : string = "Yash"
+        let clientId1 : string = "YashClient"
+        let clientId2 : string = "YashClient2"
 
         await room.JoinRoom(userName, clientId1)
         await room.JoinRoom(userName, clientId2)
@@ -74,6 +79,28 @@ describe("Rooms", () => {
         expect(returnUser).toHaveBeenCalled()
         expect(room.hasClient(userName, clientId1)).toBeTruthy()
         expect(room.hasClient(userName,clientId2)).toBeTruthy()
+    })
+
+    it("Can allow client(s) to leave the room", async () => {
+        let room: Room = await new Room("testProjectId")
+        let userName : string = "Yash"
+
+        let clientId1 : string = "YashClient"
+        let clientId2 : string = "YashClient2"
+
+        await room.JoinRoom(userName, clientId1)
+        await room.JoinRoom(userName, clientId2)
+        expect(room.hasClient(userName, clientId1)).toBeTruthy()
+        expect(room.hasClient(userName,clientId2)).toBeTruthy()
+        expect(room.hasUser(userName)).toBeTruthy()
+
+        await room.LeaveRoom(userName, clientId1)
+        expect(room.hasClient(userName, clientId1)).toBeFalsy()
+
+        await room.LeaveRoom(userName, clientId2)
+        expect(room.hasClient(userName, clientId2)).toBeFalsy()
+        expect(room.hasUser(userName)).toBeFalsy()
+
     })
 
     it("Can return its room code", async () => {
