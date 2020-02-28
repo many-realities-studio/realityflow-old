@@ -27,7 +27,7 @@ export class FlowObject implements IStringable
   public Locked:         Boolean;
 
   // Fields used for tracking this object in the FAM
-  public Id: number; 
+  public Id: string; 
   public RoomNumber: number;
 
   constructor(json: any)
