@@ -32,7 +32,7 @@ export default class MongooseDatabase
   /**
   * Deletes the project and all its objects from the database
   */
-  public static async DeleteProject(projectToDeleteId: String): Promise<void> {
+  public static async DeleteProject(projectToDeleteId: string): Promise<void> {
     var project = await ProjectOperations.findProject(projectToDeleteId)
     var objects = project.ObjectList
     
@@ -47,7 +47,7 @@ export default class MongooseDatabase
   public static async UpdateProject(projectToUpdate: FlowProject): Promise<void> {
     throw new Error("Method not implemented.");
   }
-  public static async GetProject(projectId: String): Promise<FlowProject> {
+  public static async GetProject(projectId: string): Promise<FlowProject> {
     return new FlowProject(ProjectOperations.findProject(projectId))
   }
 
@@ -55,8 +55,8 @@ export default class MongooseDatabase
   /** 
   * Create a User in the database
   */
-  public static async CreateUser(userToCreate: FlowUser): Promise<void> {
-    var newUser = await UserOperations.createUser(userToCreate);
+  public static async CreateUser(username: string, password: string): Promise<void> {
+    var newUser = await UserOperations.createUser(username, password);
   
     await newUser.save();
   }
@@ -64,16 +64,7 @@ export default class MongooseDatabase
   /** 
   * Delete a User from the database
   */
-  public static async DeleteUser(userToDelete: FlowUser): Promise<void> {
-    var User = await UserOperations.findUser(userToDelete);
-    var clientArray = User.Clients;
-
-    for(var arr in clientArray){
-
-        await ClientOperations.deleteClient(arr);
-
-    }
-
+  public static async DeleteUser(userToDelete: string): Promise<void> {
     await UserOperations.deleteUser(userToDelete);
   }
 
@@ -87,12 +78,14 @@ export default class MongooseDatabase
   /**
   * Get a user based on their username 
   */
-  public static async GetUser(Username: String): Promise<FlowUser> {
-    let userToReturn = await UserOperations.findUser({Username: Username})
-    return new FlowUser(userToReturn) 
+  public static async GetUser(Username: string): Promise<FlowUser> {
+    let userToReturn = await UserOperations.findUser(Username)
+    let UserProjects = await ProjectOperations.fetchProjects(Username)
+    
+    return new FlowUser(userToReturn.Username, undefined, UserProjects ) 
   }
 
-  public static async AuthenticateUser(Username: String, Password: String): Promise<Boolean>{
+  public static async AuthenticateUser(Username: string, Password: string): Promise<Boolean>{
     let user = await UserOperations.authenticateUser(Username, Password)
     
     if(!user)
@@ -101,12 +94,13 @@ export default class MongooseDatabase
     return true
   }
 
+
   // Object functions
   /**
   *  Create an object and add it to a pre-existing project in the database
   *  Assumes that the project already exists
   */
-  public static async CreateObject(objectToCreate: FlowObject, projectId: String): Promise<Object> {
+  public static async CreateObject(objectToCreate: FlowObject, projectId: string): Promise<Object> {
     var object = await ObjectOperations.createObject(objectToCreate);
 
     var project: IProjectModel = await ProjectOperations.findProject(projectId);
@@ -119,22 +113,26 @@ export default class MongooseDatabase
 
   /** Delete an object from a project in the database*/
 
-  public static async DeleteObject(projectToDelete:FlowProject, projectObject:FlowObject): Promise<void> {
-    var project: any = await ProjectOperations.findProject(project);
-
-    await project.save();
-    await ObjectOperations.deleteObject(projectObject);
+  public static async DeleteObject(projectToDelete:string, ObjectId: string): Promise<void> {
+    
+    await ProjectOperations.deleteObject(projectToDelete, ObjectId)
+    
   }
+
   /**Update a given object */
   public static async UpdateObject(objectToUpdate: FlowObject): Promise<void> {
     await ObjectOperations.updateObject(objectToUpdate);
   }
+  
   /**Get an object from the database */
-  public static async GetObject(ObjectId: number): Promise<FlowObject> {
+  public static async GetObject(ObjectId: string): Promise<FlowObject> {
     return new FlowObject(await ObjectOperations.findObject(ObjectId))
   }
 
-  public static async GetClient(ClientId: String): Promise<FlowClient>{
+
+
+  /**Get a client */
+  public static async GetClient(ClientId: string): Promise<FlowClient>{
     return new FlowClient(await ClientOperations.findClient(ClientId))
 
   } 

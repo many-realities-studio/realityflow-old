@@ -3,17 +3,15 @@ import Schema = mongoose.Schema;
 import Types = Schema.Types;
 import ObjectId = Types.ObjectId;
 import ObjectIdType = mongoose.Types.ObjectId;
-import { Project } from "./project"
-import { Client } from "./client"
+import { Project, IProjectModel } from "./project"
+import { Client, IClientModel } from "./client"
 import bcrypt = require("bcrypt");
 let SALT_WORK_FACTOR = 10
 
 export declare interface IUserModel extends mongoose.Document {
     Username: string;
     Password: string;
-    Clients: [ObjectIdType];
-    Projects: [ObjectIdType];
-    compare: Function
+    Projects: Array<ObjectId>;
     
 }
 
@@ -23,8 +21,7 @@ export declare interface IUserModel extends mongoose.Document {
 const userSchema: mongoose.Schema = new mongoose.Schema({
     Username:  {type: String, required: true},
     Password: {type: String, required: true},
-    Clients: [{type: ObjectId, ref: Client}],
-    Projects: [{type: ObjectId, ref: Project}],
+    Projects: [Project],
     
 },{usePushEach: true});
 

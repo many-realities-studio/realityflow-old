@@ -1,20 +1,18 @@
 import * as mongoose from "mongoose";
 import { User, IUserModel } from "../models/user";
+import { Project } from "../models/project";
 
 var objectId = mongoose.Types.ObjectId();
 
 
 export class UserOperations {
 
-    public static async createUser(userInfo: any){
-
-        
+    public static async createUser(username: string, password: string){
 
         var newUser = new User({
-            Username: userInfo.Username,
-            Password: userInfo.Password,
-            Clients: undefined,
-            Projects: undefined,
+            Username: username,
+            Password: password,
+            Projects: [],
 
         });
         
@@ -25,11 +23,11 @@ export class UserOperations {
     }
 
     // Why are we lookin at users by their internal IDs?
-    public static async findUser(userInfo: any){
+    public static async findUser(Username: string){
 
         var returnedUser = null;
 
-        const foundUser = await User.findOne({ Username: userInfo.Username})
+        const foundUser = await User.findOne({ Username: Username})
 
         return foundUser;
     }
@@ -51,31 +49,28 @@ export class UserOperations {
     public static async updateUser(userInfo: any){
 
         await User.findOneAndUpdate({Username: userInfo.Username}, {
-            
             Username: userInfo.Username,
             Password: userInfo.Password,
-            Clients: undefined,
-            Projects: undefined,
-
         }).exec(function(err){
-
             if(err){
-
                 console.error(err);
-
             }
             else{
-
                 console.log('User ' + userInfo.Username + ' updated successfully.');
-
             }
 
         });
     }
 
-    public static async deleteUser(userInfo: any){
-        console.log("attempting to delete user " + userInfo.Username)
-        await User.findByIdAndRemove({Username: userInfo.Username}).exec(function(err, doc){
+    public static async addProjectToUser(Username: string, projectId: string){
+        let project = await Project.findOne({Id: projectId})
+        
+        await User.findOneAndUpdate({Username: Username}, {$push: {Projects: project._id}}).exec()
+    }
+
+    public static async deleteUser(Username: string){
+        console.log("attempting to delete user " + Username)
+        await User.findByIdAndRemove({Username: Username}).exec(function(err, doc){
             if(err){
                 console.error(err);
             }
