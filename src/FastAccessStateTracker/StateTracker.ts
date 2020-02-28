@@ -28,10 +28,8 @@ export class StateTracker{
   
   // I feel like I've used this data structure before
   // <username: <client: projectId>>
-  public static currentUsers: Map<String, Map<String, String> > = new Map()
+  public static currentUsers: Map<string, Map<string, string> > = new Map()
   
-
-
   // Project Functions
 
   // TODO: finished: yes? Tested: no 
@@ -58,7 +56,7 @@ export class StateTracker{
    * Deletes the project from the FAM and the database
    * @param projectToDelete 
    */
-  public static async DeleteProject(projectToDeleteId: String) : Promise<void>
+  public static async DeleteProject(projectToDeleteId: string) : Promise<void>
   {    
 
     //kick everyone out of the room of the project if it's open
@@ -98,11 +96,11 @@ export class StateTracker{
    * Creates a user, adding the user data to the FAM and the database
    * @param userToCreate 
    */
-  public static async CreateUser(userToCreate: FlowUser) : Promise<boolean>
+  public static async CreateUser(username: string, password: string) : Promise<boolean>
   { 
     let success = false;
 
-    await MongooseDatabase.CreateUser(userToCreate)
+    await MongooseDatabase.CreateUser(username, password)
 
     return !success;
   }
@@ -113,15 +111,14 @@ export class StateTracker{
   * deletes the user from the FAM and the database
   * @param userToDelete 
   */
-  public static async DeleteUser(userName: String, password: String) : Promise<void>
+  public static async DeleteUser(userName: string, password: string) : Promise<void>
   {
     //force kick every client that's logged in with these credentials to out of the FAM
     let clients = this.currentUsers.get(userName)
     clients.forEach( (roomCode, clientId, map) => this.LogoutUser(userName, password, clientId))
     
-    //remove user from the database too
-    let userToDelete = await MongooseDatabase.GetUser(userName)
-    await MongooseDatabase.DeleteUser(userToDelete);
+    //remove user from the database to0
+    await MongooseDatabase.DeleteUser(userName);
   }
 
 
@@ -131,7 +128,7 @@ export class StateTracker{
    * this only affects the FAM and is not saved to the database
    * @param userToLogin 
    */
-  public static async LoginUser(userName:String, password: String, ClientId : String) : Promise<boolean>
+  public static async LoginUser(userName:string, password: string, ClientId : string) : Promise<boolean>
   {
     //Authenticate user
     if(!MongooseDatabase.AuthenticateUser(userName, password))
@@ -145,13 +142,13 @@ export class StateTracker{
 
     // If the user is not already logged in, then we need to start keeping track of them.
     if(!userLoggedIn)
-      this.currentUsers.set(userName, new Map<String, String>())
+      this.currentUsers.set(userName, new Map<string, string>())
     
     
     // put the client in limbo - aka, an empty room
     // TODO: figure out noRoom situation
     this.currentUsers.get(userName).set(ClientId, "noRoom") 
-    RoomManager.FindRoom("noRoom").JoinRoom(user, ClientId)
+    RoomManager.FindRoom("noRoom").JoinRoom(userName, ClientId)
     
     return true;    
   }
@@ -161,7 +158,7 @@ export class StateTracker{
    * Logs out the desired client using the specified credentials, this only affects the FAM and is not saved to the database
    * @param userToLogin 
   */
-  public static async LogoutUser(Username: String, password: String,  ClientId: String) : Promise<void>
+  public static async LogoutUser(Username: string, password: string,  ClientId: string) : Promise<void>
   {
       //Authenticate user, I guess. Don't want someone trying to log someone else out
       if(!MongooseDatabase.AuthenticateUser(Username, password))
@@ -195,7 +192,7 @@ export class StateTracker{
 
   // TODO: Finished: yes? Tested: no
   // Room Commands
-  public static CreateRoom(projectID: String) : String
+  public static CreateRoom(projectID: string) : string
   {
     let roomCode = RoomManager.CreateRoom(projectID);
     
@@ -208,7 +205,7 @@ export class StateTracker{
    * @param roomCode - code of room they are looking to join
    * @param user - user to be logged in
    */
-  public static async JoinRoom(roomCode: String, user: FlowUser, client: FlowClient) : Promise<FlowProject>
+  public static async JoinRoom(roomCode: string, user: FlowUser, client: FlowClient) : Promise<FlowProject>
   {
    throw new Error("not implemented yet");
   }
