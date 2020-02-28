@@ -8,7 +8,7 @@ var objectId = mongoose.Types.ObjectId();
 
 export class ClientOperations{
 
-    public static async createClient(clientInfo: any, username: String) : Promise<IClientModel>{
+    public static async createClient(clientInfo: any, username: string) : Promise<IClientModel>{
 
         var foundUser = await UserOperations.findUser(username);
         var newClient = new Client({
