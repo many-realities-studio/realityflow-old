@@ -9,13 +9,13 @@ export class Room
 {
   private _UsersCurrentlyInTheRoom: Array<FlowUser> = [];
   private _CurrentProject: FlowProject;
-  private _CurrentProjectId: String;
+  private _CurrentProjectId: string;
 
-  constructor(projectID: String)
+  constructor(projectID: string)
   {
     this._CurrentProjectId = projectID;
     
-    MongooseDatabase.GetProject(this._CurrentProjectId).then((project) =>{
+    MongooseDatabase.GetProject(this._CurrentProjectId).then((project: FlowProject) =>{
       this._CurrentProject = project;
     })
   }
@@ -35,27 +35,28 @@ export class Room
    * @param userJoiningTheRoom the user that will be joining the room
    * @param clientJoiningTheRoom the client that the user is using
    */
-  public JoinRoom(userJoiningTheRoom: FlowUser, clientJoiningTheRoom: String) : void
+  public async JoinRoom(userJoiningTheRoom: string, clientJoiningTheRoom: string) : Promise<void>
   {
-    let user = this._UsersCurrentlyInTheRoom.find(element => element.Username == userJoiningTheRoom.Username)
+    let user = this._UsersCurrentlyInTheRoom.find(element => element.Username == userJoiningTheRoom)
 
     //user is not already in this room
     if(user == undefined){
-      this._UsersCurrentlyInTheRoom.push(userJoiningTheRoom);
+      user = await MongooseDatabase.GetUser(userJoiningTheRoom)
+      this._UsersCurrentlyInTheRoom.push(user);
     }
     
     user.ActiveClients.push(clientJoiningTheRoom)
     
   }
 
-  // TODO: finished: yes? tested: no
+  // TODO: finished: yes tested: Yes
   /**
    * removes a client from a room - if that client was the only one using those credentials,
    * the room stops keeping track of that username
    * @param UserName username of the client leaving the room
    * @param ClientId client id of the client leaving the room
    */
-  public LeaveRoom(UserName: String, ClientId: String){
+  public LeaveRoom(UserName: string, ClientId: string){
     let userIndex = this._UsersCurrentlyInTheRoom.findIndex(element => element.Username == UserName)
 
     //user is already not in this room
@@ -75,27 +76,32 @@ export class Room
 
   }
 
-  // TODO: finished: yes? tested: no
+  // TODO: finished: yes? tested: yes
   /**
    * returns whether or not any client using this given username is in here
    * @param username username to search for
    */
-  public hasUser(username: String){
+  public hasUser(username: string){
     let retval = (this._UsersCurrentlyInTheRoom.find(element => element.Username == username) != undefined)
     return retval
   }
 
 
-  // TODO: finished: yes tested: no
+  public hasClient(username: string, ClientId: string){
+    let user = this._UsersCurrentlyInTheRoom.find(element => element.Username == username)
+    return (this.hasUser(username) && user.ActiveClients.find(element => element == ClientId) != undefined)
+  }
+
+  // TODO: finished: yes tested: yes
   /**
    * Gets the room code of this room
    */
-  public GetRoomCode() : String
+  public GetRoomCode() : string
   {
     return this._CurrentProjectId;
   }
 
-  // TODO: finished: yes tested: no
+  // TODO: finished: yes tested: yes
   /**
    * Gets the project that is currently being used by the project
    * Calls to database, use in Async manner

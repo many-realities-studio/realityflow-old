@@ -6,20 +6,19 @@ export class FlowUser
 {
   // ID used by FAM for unique identification
   public Id : number;
-  public ActiveClients : Array<String> = [];
+  public ActiveClients : Array<string> = [];
   public RoomCode: number;
   
   // Data storage fields
   public Username: string;
-  public Password: string;
   public Clients: Array<FlowClient>;
-  public Projects: Array<String>;
+  public Projects: Array<string>;
 
   constructor(json:any){
       this.Username = json.Username;
-      this.Password = json.Password;
+
   }
-  public toString(){
+  public tostring(){
     return JSON.stringify({
       Id: this.Id,
       ActiveClients: this.ActiveClients,
@@ -35,20 +34,20 @@ export class FlowUser
    * Saves the connection information
    * @param newClientLogin 
    */
-  public Login(newClientLogin : String) : void
+  public Login(newClientLogin : string) : void
   {
     this.ActiveClients.push(newClientLogin);
   }
 
   /**
    * Deletes the connection information
-   * @param websocketConnection 
+   * @param client 
    */
-  public Logout(connection : String) : void
+  public Logout(client : string) : void
   {
-    const index = this.ActiveClients.findIndex((element) => element == connection);
+    const index = this.ActiveClients.findIndex((element) => element == client);
 
-    var ClosedConnection : String = null;
+    var ClosedConnection : string = null;
     if(index > -1)
     {
       ClosedConnection = this.ActiveClients.splice(index, 1)[0];
@@ -58,7 +57,7 @@ export class FlowUser
   /**
    * @projectToAdd : Flow Project to include in user array
    */
-  public addProject(projectIdToAdd: String) : void 
+  public addProject(projectIdToAdd: string) : void 
   {
     this.Projects.push(projectIdToAdd);
   }

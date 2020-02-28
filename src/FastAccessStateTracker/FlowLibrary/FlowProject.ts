@@ -1,21 +1,20 @@
 import { FlowObject } from "./FlowObject";
 
-import { IStringable } from "./IStringable";
 
 
 
 // NOTE: FAM Stands for Fast Access Memory
-export class FlowProject implements IStringable
+export class FlowProject 
 {
   private _ObjectList: Array<FlowObject> = [];
   
   // Used for identification in the FAM
   
   // Data storage fields
-  public Id: String;
-  public Description: String;
+  public Id: string;
+  public Description: string;
   public DateModified: Number;
-  public ProjectName: String;
+  public ProjectName: string;
  
   constructor(json:any){
     this.Id = json.Id
@@ -23,10 +22,6 @@ export class FlowProject implements IStringable
     this.DateModified = json.DateModified;
     this.ProjectName = json.ProjectName;
 }
-
-  ToString(): string {
-    throw new Error("Method not implemented.");
-  }
 
   /**
    * Adds an object to a project, saving it to both FAM and the database
