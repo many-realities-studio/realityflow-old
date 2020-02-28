@@ -54,7 +54,7 @@ export class StateTracker{
   // TODO: finished: no tested: no
   /**
    * Deletes the project from the FAM and the database
-   * @param projectToDelete 
+   * @param projectToDeleteId
    */
   public static async DeleteProject(projectToDeleteId: string) : Promise<void>
   {    
@@ -91,11 +91,12 @@ export class StateTracker{
 
   // User Functions
 
-  // TODO: Finished: yes tested: no
-  /**
-   * Creates a user, adding the user data to the FAM and the database
-   * @param userToCreate 
-   */
+  // TODO: Finished: yes tested: yes
+/**
+ * Creates a user, adding the user data to the FAM and the database
+ * @param username 
+ * @param password 
+ */
   public static async CreateUser(username: string, password: string) : Promise<boolean>
   { 
     let success = false;
@@ -105,28 +106,33 @@ export class StateTracker{
     return !success;
   }
 
-  // TODO: finished: Yes? tested: no
+  // TODO: finished: Yes? tested: partially
   /**
   * Kicks out all clients logged in under the user and
   * deletes the user from the FAM and the database
-  * @param userToDelete 
+  * @param userName 
+  * @param password 
   */
   public static async DeleteUser(userName: string, password: string) : Promise<void>
   {
-    //force kick every client that's logged in with these credentials to out of the FAM
-    let clients = this.currentUsers.get(userName)
-    clients.forEach( (roomCode, clientId, map) => this.LogoutUser(userName, password, clientId))
+    //find every client that's currently logged in with these credentials
+    let clients = StateTracker.currentUsers.get(userName)
     
-    //remove user from the database to0
+    // if there's any client that is logged in with these credentials, log them out 
+    if(clients != undefined)
+      clients.forEach( (roomCode, clientId, map) => this.LogoutUser(userName, password, clientId))
+    
+    //remove user from the database too
     await MongooseDatabase.DeleteUser(userName);
   }
 
 
-  // TODO: Finished: ..kinda? Tested: no
+  // TODO: Finished: yes Tested: yes
   /**
-   * Logs in the desired client using the given credentials 
-   * this only affects the FAM and is not saved to the database
-   * @param userToLogin 
+   * 
+   * @param userName 
+   * @param password 
+   * @param ClientId 
    */
   public static async LoginUser(userName:string, password: string, ClientId : string) : Promise<boolean>
   {
@@ -138,26 +144,26 @@ export class StateTracker{
     // user could be logged in on another client
     let userLoggedIn = this.currentUsers.has(userName);
 
-    let user: FlowUser = await MongooseDatabase.GetUser(userName)
-
     // If the user is not already logged in, then we need to start keeping track of them.
     if(!userLoggedIn)
       this.currentUsers.set(userName, new Map<string, string>())
     
-    
     // put the client in limbo - aka, an empty room
     // TODO: figure out noRoom situation
     this.currentUsers.get(userName).set(ClientId, "noRoom") 
-    RoomManager.FindRoom("noRoom").JoinRoom(userName, ClientId)
+
+    RoomManager.JoinRoom("noRoom", userName, ClientId)
     
     return true;    
   }
 
-    // TODO: Finished: ...Yes? Tested: no
+  // TODO: Finished: Yes Tested: Yes
   /**
-   * Logs out the desired client using the specified credentials, this only affects the FAM and is not saved to the database
-   * @param userToLogin 
-  */
+   * 
+   * @param Username 
+   * @param password 
+   * @param ClientId 
+   */
   public static async LogoutUser(Username: string, password: string,  ClientId: string) : Promise<void>
   {
       //Authenticate user, I guess. Don't want someone trying to log someone else out
@@ -172,7 +178,7 @@ export class StateTracker{
       {
         // find what room the client is currently in and leave it
         let userRoomId = this.currentUsers.get(Username).get(ClientId)
-        RoomManager.FindRoom(userRoomId).LeaveRoom(Username, ClientId)
+        RoomManager.LeaveRoom(userRoomId, Username, ClientId)
         
         // kick the client out of currentUsers (a misnomer, I know) 
         this.currentUsers.get(Username).delete(ClientId)
