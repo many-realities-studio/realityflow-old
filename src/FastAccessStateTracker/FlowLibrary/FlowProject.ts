@@ -52,7 +52,7 @@ export class FlowProject implements IStringable
    * Returns FlowObject with the given ID number 
    * @param objectId 
    */
-  public GetObject(objectId: Number) : FlowObject
+  public GetObject(objectId: string) : FlowObject
   {
     return this._ObjectList.find(element => element.Id == objectId);
   }

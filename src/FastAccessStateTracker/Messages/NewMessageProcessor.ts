@@ -1,4 +1,5 @@
 import { CommandContext } from "./CommandContext";
+import WebSocket = require("ws");
 
 export class NewMessageProcessor
 {
@@ -8,6 +9,7 @@ export class NewMessageProcessor
   {    
     let commandToExecute : string = json.command;
     //EDIT THIS TO RETURN JSON
-    this._CommandContext.ExecuteCommand(commandToExecute, json, connection);
+    //ignore command to execute
+    this._CommandContext.ExecuteCommand(commandToExecute, json);
   }
 }

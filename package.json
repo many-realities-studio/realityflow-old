@@ -49,7 +49,7 @@
   "devDependencies": {
     "@types/mongodb": "^2.1.37",
     "@types/mongoose": "^4.7.2",
-    "@types/node": "^6.0.58",
+    "@types/node": "^6.14.9",
     "@types/ws": "0.0.37",
     "del": "^3.0.0",
     "gulp": "^3.9.1",

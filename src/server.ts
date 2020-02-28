@@ -3,7 +3,7 @@ import * as http from "http";
 import { Server } from "ws";
 import * as mongoose from "mongoose";
 (<any>mongoose).Promise = Promise;
-import {MessageProcessor} from "./common/messageProcessor";
+import {NewMessageProcessor} from "./FastAccessStateTracker/Messages/NewmessageProcessor";
 
 // DB API
 import {ClientOperations} from "./commands/client";
@@ -90,7 +90,7 @@ export class ServerEventDispatcher {
 
         // let payload = Buffer.alloc(payloadString.length, payloadString);
 
-         connection.send(payloadString, function ack(err){
+         connection.send(payloadString, function ack(err: any){
  
              if(err){
                   console.log(err);
@@ -136,7 +136,7 @@ export class ServerEventDispatcher {
             console.log(evt.data);
             console.log(ws);
             // Change connection to clients
-            MessageProcessor.serverMessageProcessor(json, connection);
+            NewMessageProcessor.ParseMessage(json, connection);
         }
 
         function onCloseEvent(evt: CloseEvent): any {
