@@ -17,6 +17,9 @@ const messageProcessor_1 = require("./common/messageProcessor");
 const project_1 = require("./commands/project");
 var database;
 const dburl = "mongodb://127.0.0.1:27017/realityflowdb";
+
+var socketconnections = new Array();
+var i = 0;
 class ServerEventDispatcher {
     constructor(server) {
         mongoose.connect(dburl);
@@ -74,7 +77,13 @@ class ServerEventDispatcher {
     }
     connection(ws, arg) {
         var connection = ws;
+        socketconnections[i++] = ws;
+        console.log("WEBSOCKET!!!!: ");
+        //console.log(ws);
+
+        compare();
         function onMessageEvent(evt) {
+            //console.log(evt.data);
             const json = JSON.parse(evt.data);
             messageProcessor_1.MessageProcessor.serverMessageProcessor(json, connection);
         }
@@ -82,6 +91,24 @@ class ServerEventDispatcher {
             var clientId;
         }
         function onErrorEvent(evt) {
+        }
+
+        function compare() {
+            if( i == 1){
+                console.log("nothing to compare");
+            }
+
+            else {
+
+                if(socketconnections[0] == socketconnections[0]){
+                    console.log("These two connections are the same");
+                }
+                if(socketconnections[0] == socketconnections[1])
+                    console.log("They are the same" + i);
+                    else{
+                       console.log("They are NOT the same @phil" + i); 
+                    }
+            }
         }
         ws.onmessage = onMessageEvent;
         ws.onclose = onCloseEvent;
