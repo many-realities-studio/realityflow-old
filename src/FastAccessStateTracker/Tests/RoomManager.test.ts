@@ -17,6 +17,8 @@ describe("RoomManager,", () => {
 
         MongooseDatabase.GetProject = mongooseGetProjectMock
         
+        expect(RoomManager._RoomCount).toBe(0);
+
         //act
         RoomManager.CreateRoom(projectID);
 
@@ -42,7 +44,7 @@ describe("RoomManager,", () => {
 
     })
 
-    it("can destroy rooms", async() => {
+    it("can destroy rooms", async () => {
         const projectID = "1234";
         
         const mongooseGetProjectMock = jest.fn(async (projectID: string) => {return new FlowProject({})})
@@ -53,11 +55,17 @@ describe("RoomManager,", () => {
         RoomManager._RoomList = [];
         RoomManager._RoomCount = 0;
         RoomManager.CreateRoom(projectID);
+        
+        // assert 
+        expect(RoomManager.FindRoom(projectID)).toBeTruthy()
+
+        // act
         let count = RoomManager._RoomCount;
         RoomManager.DestroyRoom(projectID);
 
         //assert
         expect(RoomManager._RoomCount).toBe((count-1));
+        expect(RoomManager.FindRoom(projectID)).toBeFalsy()
 
 
     })
