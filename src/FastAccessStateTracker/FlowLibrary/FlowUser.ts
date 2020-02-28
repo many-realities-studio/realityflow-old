@@ -4,28 +4,24 @@ import { FlowClient } from "./FlowClient";
 
 export class FlowUser
 {
-  // ID used by FAM for unique identification
-  public Id : number;
+  // used by FAM
   public ActiveClients : Array<string> = [];
-  public RoomCode: number;
   
   // Data storage fields
   public Username: string;
-  public Clients: Array<FlowClient>;
   public Projects: Array<string>;
 
-  constructor(json:any){
-      this.Username = json.Username;
+  constructor(username: string, ActiveClients: Array<string> = [], Projects: Array<string> = [] ){
+      this.Username = username;
+      this.ActiveClients = ActiveClients;
+      this.Projects = Projects
 
   }
   public tostring(){
     return JSON.stringify({
-      Id: this.Id,
       ActiveClients: this.ActiveClients,
-      RoomCode: this.RoomCode,
 
       Username: this.Username,
-      Clients: this.Clients,
       Projects: this.Projects
     })
   }
