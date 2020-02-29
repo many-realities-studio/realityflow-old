@@ -32,7 +32,7 @@ export class StateTracker{
   
   // Project Functions
 
-  // TODO: finished: yes? Tested: no 
+  // TODO: finished: yes? Tested: yes 
   /**
    * Adds a project to the FAM and database
    * @param projectToCreate 
@@ -44,27 +44,24 @@ export class StateTracker{
   }
 
 
-  // TODO: finished: no tested: no
+  // TODO: finished: yes tested: yes
   /**
    * Deletes the project from the FAM and the database
    * @param projectToDeleteId
    */
-  public static async DeleteProject(projectToDeleteId: string) : Promise<void>
+  public static async DeleteProject(projectToDeleteId: string)
   {    
 
-    //kick everyone out of the room of the project if it's open
+    if(!projectToDeleteId)
+      return
 
-    //remove project from the FAM
+    // remove project from the FAM
+    let clients = RoomManager.DestroyRoom(projectToDeleteId)
 
-    // Remove object from database - Mongoose database should have it set up such that 
-    // deleting a project also cascades in such a way that it's removed from every user's 
-    // project list that owns it. that has yet to be tested
-    if(projectToDeleteId != null )
-    {
-      MongooseDatabase.DeleteProject(projectToDeleteId);
-    }
+    // Remove project from database 
+    await MongooseDatabase.DeleteProject(projectToDeleteId);
 
-
+    return clients
   }
  
   // TODO: finished: yes? tested: no
@@ -189,7 +186,7 @@ export class StateTracker{
 
 
 
-  // TODO: Finished: yes? Tested: no
+  // TODO: Finished: yes Tested: yes
   // Room Commands
   public static CreateRoom(projectID: string) : string
   {
@@ -198,7 +195,7 @@ export class StateTracker{
     return roomCode;
   }
 
-  // TODO: Finished: No Tested: no
+  // TODO: Finished: Yes Tested: Yes
   /**
    * Adds user to the room, does not worry about maintaining user connections
    * @param roomCode - code of room they are looking to join
