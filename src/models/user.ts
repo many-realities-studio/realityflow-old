@@ -21,7 +21,7 @@ export declare interface IUserModel extends mongoose.Document {
 const userSchema: mongoose.Schema = new mongoose.Schema({
     Username:  {type: String, required: true},
     Password: {type: String, required: true},
-    Projects: [Project],
+    Projects: [{type: ObjectId, ref: Project}],
     
 },{usePushEach: true});
 

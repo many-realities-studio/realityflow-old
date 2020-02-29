@@ -17,9 +17,7 @@ const returnProject = jest.fn( async (projectId: string) => {
 })
 
 const returnUser = jest.fn( async (userName: string) => {
-    return new FlowUser({
-        Username : userName
-    })
+    return new FlowUser(userName)
 
     
 })

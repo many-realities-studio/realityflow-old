@@ -9,8 +9,7 @@ import { ProjectOperations } from "../../commands/project"
 import { ClientOperations } from "../../commands/client"
 import { ObjectOperations } from "../../commands/object"
 import { UserOperations } from "../../commands/user"
-import { IObjectModel } from "../../models/object";
-import { ObjectID, ObjectId } from "mongodb";
+
 import { IProjectModel } from "../../models/project";
 /**
  * Implementation of Mongoose Database
@@ -22,11 +21,10 @@ export default class MongooseDatabase
     
 
   // Project functions
-  public static async CreateProject(projectToCreate: FlowProject) {
-    var project = await ProjectOperations.createProject(projectToCreate);
-    await project.save();
-    
-    return project
+  public static async CreateProject(projectToCreate: FlowProject, user: string) {
+    let newProject = await ProjectOperations.createProject(projectToCreate);
+    let gottenUser = await UserOperations.findUser(user)
+    gottenUser.Projects.push(newProject._id)
   }
 
   /**
@@ -58,7 +56,6 @@ export default class MongooseDatabase
   public static async CreateUser(username: string, password: string): Promise<void> {
     var newUser = await UserOperations.createUser(username, password);
   
-    await newUser.save();
   }
 
   /** 

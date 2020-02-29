@@ -23,8 +23,8 @@ describe("database_testing", () => {
     const dburl = "mongodb://127.0.0.1:27017/rftest";
 
     var testUser = {
-        username: "Yash",
-        password: "test"
+        Username: "Yash",
+        Password: "test"
     };
     
     var testClient = {
@@ -40,10 +40,10 @@ describe("database_testing", () => {
 
     var testProject = {
         projectName: "TestProject1",
-        created: Date.now(),
+        Description: "this is a project",
 
-        lastEdit: Date.now(),
-        lastEditor: ""
+        datemodified: Date.now(),
+        Id: "testId"
     }
 
     var object1 = {
@@ -121,7 +121,7 @@ describe("database_testing", () => {
         };
 
         // act
-        await MongooseDatabase.CreateUser(new FlowUser(testUser))
+        await MongooseDatabase.CreateUser(testUser.Username, testUser.Password)
         
         let correctAuth = await MongooseDatabase.AuthenticateUser(testUser.Username, testUser.Password)
         let incorrectAuth = await MongooseDatabase.AuthenticateUser(testUser.Username, "incorrect")
@@ -150,8 +150,13 @@ describe("database_testing", () => {
             DateModified: Date.now(),
         });
 
+        var testUser = {
+            Username: "Yash",
+            Password: "test"
+        };
+
         // act
-        createdProjectOutput = await MongooseDatabase.CreateProject(testProject1);
+        createdProjectOutput = await MongooseDatabase.CreateProject(testProject1, testUser.Username);
         
         // assert
         expect(createdProjectOutput).toEqual(expect.anything());
@@ -199,7 +204,12 @@ describe("database_testing", () => {
             path:           "here"
         }
 
-        createdProjectOutput = await MongooseDatabase.CreateProject(new FlowProject(testProject2));
+        var testUser = {
+            Username: "Yash",
+            Password: "test"
+        };
+
+        createdProjectOutput = await MongooseDatabase.CreateProject(new FlowProject(testProject2), testUser.Username);
 
         // act
         var createOut1 = await MongooseDatabase.CreateObject(new FlowObject(object1), testProject2.Id);

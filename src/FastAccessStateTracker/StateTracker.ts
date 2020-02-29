@@ -37,17 +37,10 @@ export class StateTracker{
    * Adds a project to the FAM and database
    * @param projectToCreate 
    */
-  public static async CreateProject(projectToCreate: FlowProject, user: FlowUser) : Promise<void>
+  public static async CreateProject(projectToCreate: FlowProject, user: string) : Promise<void>
   {
-    // Create the project in the database
-    let newProject = await MongooseDatabase.CreateProject(projectToCreate)
-    let owner = await MongooseDatabase.GetUser(user.Username)
-
-    // Give the user who created the project ownership of the project and update
-    owner.addProject(newProject.Id)
-    
-    await MongooseDatabase.UpdateUser(owner)
-
+    // Create the project in the database and give a specific user ownership
+    await MongooseDatabase.CreateProject(projectToCreate, user)
   }
 
 
@@ -211,9 +204,13 @@ export class StateTracker{
    * @param roomCode - code of room they are looking to join
    * @param user - user to be logged in
    */
-  public static async JoinRoom(roomCode: string, user: FlowUser, client: FlowClient) : Promise<FlowProject>
+  public static async JoinRoom(roomCode: string, user: string, client: string) : Promise<void>
   {
-   throw new Error("not implemented yet");
+    let oldRoom = this.currentUsers.get(user).get(client)
+    await RoomManager.LeaveRoom(oldRoom, user, client)
+
+    await RoomManager.JoinRoom(roomCode, user, client)
+    this.currentUsers.get(user).set(client, roomCode)
   }
 
 }
