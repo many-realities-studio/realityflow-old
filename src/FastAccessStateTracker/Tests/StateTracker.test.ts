@@ -18,15 +18,17 @@ RoomManager.JoinRoom = fakeJoinRoom
 const fakeLeaveRoom = jest.fn(async(roomCode: string, username:string, client: string) => {})
 RoomManager.LeaveRoom = fakeLeaveRoom 
 
+const fakeDestroyRoom = jest.fn((roomCode:string) => new Map<string, Array<string>>())
+RoomManager.DestroyRoom = fakeDestroyRoom
+
 const fakeAuthentication = jest.fn(async (username:string, password:string) => true)
 MongooseDatabase.AuthenticateUser = fakeAuthentication
 
+const mongooseProjectDeleteMock = jest.fn(async (projectToDelete: string) => {})
+MongooseDatabase.DeleteProject = mongooseProjectDeleteMock
+
 const mongooseUserDeleteMock = jest.fn(async (userToDelete: string) => {})
 MongooseDatabase.DeleteUser = mongooseUserDeleteMock
-
-const mongooseUserGetMock = jest.fn(async (userToGet: string) => {
-    return new FlowUser(userToGet)
-})
 
 const mongooseProjectCreateMock = jest.fn( async (projectToCreate: FlowProject) => {} )  
 MongooseDatabase.CreateProject = mongooseProjectCreateMock
@@ -158,7 +160,7 @@ describe("User", () => {
 })
 
 describe("Project", () => {
-    it("can be created", ()=>{
+    it("can be created", async ()=>{
         // arrange
         var testProject = {
             projectName: "TestProject1",
@@ -167,14 +169,27 @@ describe("Project", () => {
             datemodified: Date.now(),
             Id: "testId"
         }
-        
+        const testUser = {
+            Username: "YashStateTracker",
+            Password: "StateTrackerYash"
+        }
+        var testFlowProject = new FlowProject(testProject)
+
         // act
+        await StateTracker.CreateProject(testFlowProject, testUser.Username)
 
         // assert
+        expect(mongooseProjectCreateMock).toHaveBeenCalled()
     })
 
-    it("can be deleted", () => {
-        // throw new Error("not yet implemented")
+    it("can be deleted", async () => {
+
+        await StateTracker.DeleteProject("testProject")
+
+        // ngl this kinda feels stupid but woo bottom-up testing
+        expect(fakeDestroyRoom).toBeCalledWith("testProject")
+        expect(mongooseProjectDeleteMock).toBeCalledWith("testProject")
+
     })
 
     it("can be opened", () => {

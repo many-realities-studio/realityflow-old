@@ -35,17 +35,25 @@ export class RoomManager
     return this._RoomList.find(element => element.GetRoomCode() == roomCode);
   }
 
-  // TODO: Finished: Yes Tested: Yes 
+  // TODO: Finished: Yes Tested: No 
   /**
    * @param roomCode the code of the room to destroy
    */
-  public static DestroyRoom(roomCode: string): void {
+  public static DestroyRoom(roomCode: string): Map<string, Array<string>> {
+    let clients = RoomManager.getClients(roomCode)
+
+    clients.forEach((clientList, userName, map)=> clientList.forEach( (client, index, arr) => {
+      this.LeaveRoom(roomCode, userName, client)
+      this.JoinRoom("noRoom", userName, client)
+    }))
+    
     let roomIndex = this._RoomList.findIndex(element => element.GetRoomCode() == roomCode)
 
     if(roomIndex > -1) {
       this._RoomList.splice(roomIndex, 1);
       this._RoomCount--;
     }
+    return clients
   }
 
   // TODO: Finished: Yes Tested: No
@@ -73,4 +81,12 @@ export class RoomManager
     roomToLogin.LeaveRoom(user, clientId)
   }
 
+  //TODO: finished: yes tested: no
+  /**
+   * given a room, return a map of usernames with all of the users
+   * @param roomCode 
+   */
+  public static getClients(roomCode: string){
+      return this.FindRoom(roomCode).getClients()
+  }
 }
