@@ -103,4 +103,14 @@ export class Room
   {
     return this._CurrentProject; 
   }
+
+  // TODO: finished: yes tested: yes
+  public getClients() : Map<string, Array<string> >{
+    let clients: Map<string, Array<string> > = new Map()
+
+    this._UsersCurrentlyInTheRoom.forEach( (user, index, arr) => clients.set(user.Username, user.ActiveClients))
+    // console.log(clients.get("Yash"))
+    return clients
+  }
+
 }
