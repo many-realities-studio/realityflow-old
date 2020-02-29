@@ -48,6 +48,8 @@ describe("Rooms", () => {
 
         await room.JoinRoom(userName, clientId)
 
+        
+
         expect(returnUser).toHaveBeenCalled()
         expect(room.hasUser(userName)).toBeTruthy()
         expect(room.hasClient(userName, clientId)).toBeTruthy()
@@ -108,9 +110,22 @@ describe("Rooms", () => {
         expect(room.GetRoomCode()).toEqual("testProjectId")
     })
 
-    // it("Can be deleted", () => {
-    //     let room : Room = new Room("testProjectId")
-    //     expect(returnProject).toHaveBeenCalledWith("testProjectId")
-    //     expect
-    // })
+    it("Can return all of the clients that are inside it", async () => {
+        // arrange
+        let room : Room = new Room("testProjectId")
+
+        await room.JoinRoom("Yash",  "client1")
+        await room.JoinRoom("Yash",  "client2")
+        await room.JoinRoom("Nyasha","client1")
+
+        // act
+        let clients = room.getClients()
+        
+        // assert
+        expect(clients.get("Yash").find(element => element == "client1")).toBeTruthy()
+        expect(clients.get("Yash").find(element => element == "client2")).toBeTruthy()
+        expect(clients.get("Nyasha").find(element => element == "client1")).toBeTruthy()
+    
+    
+    })
 })
