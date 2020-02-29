@@ -520,9 +520,11 @@ namespace RuntimeGizmos
         // NOTE (Jon): This is the function that is called when an object is selected. 
 		public void AddTarget(Transform target, bool addCommand = true)
 		{
-            // Target should be the GameObject selected. Use this to reference the object and reverse look up
-            // its ID.
-			if(target != null)
+			
+
+			// Target should be the GameObject selected. Use this to reference the object and reverse look up
+			// its ID.
+			if (target != null)
 			{
                 //Debug.Log(target.root.name);
 				if(targetRoots.ContainsKey(target)) return;
@@ -535,7 +537,10 @@ namespace RuntimeGizmos
 				AddTargetRoot(target);
 				AddTargetHighlightedRenderers(target);
 
-                outlinerManager.selectedInWorld(target);
+
+				
+
+				outlinerManager.selectedInWorld(target);
 				slideMenuManager.ToggleMenuButtons(true);
 
 				SetPivotPoint();
