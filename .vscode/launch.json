@@ -11,7 +11,9 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/gulpfile.js"
+            "program": "${workspaceFolder}/node/server/bld/server.js",
+            "outFiles": ["${workspaceRoot}/node/server/bld/*/*/.js"],
+            "sourceMaps":  true
         }
     ]
 }
