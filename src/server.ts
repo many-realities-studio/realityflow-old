@@ -1,9 +1,14 @@
 import * as express from "express";
 import * as http from "http";
 import { Server } from "ws";
+import { v4 as uuidv4 } from 'uuid';
 import * as mongoose from "mongoose";
 (<any>mongoose).Promise = Promise;
-import {NewMessageProcessor} from "./FastAccessStateTracker/Messages/NewmessageProcessor";
+import {NewMessageProcessor} from "./FastAccessStateTracker/Messages/NewMessageProcessor";
+// import { passport } from 'passport';
+// import { LocalStrategy } from 'passport-local';
+// import { MongooseDatabase } from './FastAccessStateTracker/Database/MongooseDatabase';
+// import { User } from './models/user';
 
 // DB API
 import {ClientOperations} from "./commands/client";
@@ -14,11 +19,13 @@ const dburl = "mongodb://127.0.0.1:27017/realityflowdb";
 
 //The main Server class
 export class ServerEventDispatcher {
-    //This array contains objects that have the client ID and corresponding 
+    //This array contains objects that have the client ID and corresponding
     //connection object, so something like [{clientId:whatever, connection: connectionObject }]
     public static connections: any[] = [];
     public static wss: Server;
     public static callbacks: Function[][];
+
+    public static SocketConnections = {};
 
 //Broadcasts to all clients and may or may not include original sender
     public static async broadcast(json: any, newFlag: boolean){
@@ -59,7 +66,7 @@ export class ServerEventDispatcher {
                 }
 
              }
-    
+
         }
         else{
 
@@ -91,12 +98,13 @@ export class ServerEventDispatcher {
         // let payload = Buffer.alloc(payloadString.length, payloadString);
 
          connection.send(payloadString, function ack(err: any){
- 
+
              if(err){
                   console.log(err);
               }
           });
     }
+
 
     constructor(server: http.Server) {
 
@@ -126,26 +134,42 @@ export class ServerEventDispatcher {
 
     }
 
+
     private connection(ws: any, arg?: any): void {
-        var connection = ws;
-        console.log("We in here");
+
+        // Assign this connection an ID and store it
+        ws.ID = uuidv4();
+        ServerEventDispatcher.SocketConnections[ws.ID] = ws;
+
+
 
         function onMessageEvent(evt: MessageEvent) {
-            const json = JSON.parse(evt.data);
-            // Swap out for new message processor
+
+            const json = JSON.parse(evt.data);            
+
             console.log(evt.data);
-            console.log(ws);
-            // Change connection to clients
-            NewMessageProcessor.ParseMessage(json, connection);
+
+
+            let response = NewMessageProcessor.ParseMessage(ws.ID, json);
+            
+
+            for(var i = 0; i < response.affectedClients.length; i++)
+            {
+                ServerEventDispatcher.SocketConnections[i].send(response.payload);
+            }
         }
+
 
         function onCloseEvent(evt: CloseEvent): any {
 
            var clientId;
-           
+
+           delete ServerEventDispatcher.SocketConnections[ws.ID];
+
         }
 
         function onErrorEvent(evt: ErrorEvent) {
+
         }
 
         ws.onmessage = onMessageEvent;
@@ -156,10 +180,37 @@ export class ServerEventDispatcher {
 };
 
 
-    const app = express();
-    app.use(express.static("./static"));
-    const server = http.createServer(app);
-    const sockServ = new ServerEventDispatcher(server);
-    server.listen(process.env.PORT || 8999, () => {
-    });
+const app = express();
+
+
+
+
+// Use Passport with express
+// app.use(passport.initialize());
+// app.use(passport.session());
+
+
+// const initializePassport = require('./passport-config')
+// initializePassport(
+//   passport,
+//   username => User.find(user => user.Username === username),
+//   password => User.find(user => user.Password === password)
+// );
+
+
+
+// passport.serializeUser(User.serializeUser());
+// Responsible for reading the session, taking data from the session and unencoding it
+// passport.deserializeUser(User.deserializeUser());
+
+
+
+
+app.use(express.static("./static"));
+
+const server = http.createServer(app);
+const sockServ = new ServerEventDispatcher(server);
+
+server.listen(process.env.PORT || 8999, () => {
+});
 
