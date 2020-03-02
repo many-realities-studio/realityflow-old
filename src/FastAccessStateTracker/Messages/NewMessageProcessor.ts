@@ -1,6 +1,4 @@
 import { CommandContext } from "./CommandContext";
-import WebSocket = require("ws");
-import { ServerEventDispatcher } from '../../server';
 
 export class NewMessageProcessor
 {
