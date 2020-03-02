@@ -137,26 +137,23 @@ export class ServerEventDispatcher {
 
     private connection(ws: any, arg?: any): void {
 
-        // Assign this connection an ID
+        // Assign this connection an ID and store it
         ws.ID = uuidv4();
+        ServerEventDispatcher.SocketConnections[ws.ID] = ws;
+
 
 
         function onMessageEvent(evt: MessageEvent) {
 
-            const json = JSON.parse(evt.data);
+            const json = JSON.parse(evt.data);            
 
-            ServerEventDispatcher.SocketConnections[ws.ID] = ws;
-
-            console.log("The ID is ");
-            console.log(ws.ID);
-
-            // Swap out for new message processor
             console.log(evt.data);
 
 
             let response = NewMessageProcessor.ParseMessage(ws.ID, json);
+            
 
-            for(var i = 0; i < response.affectedClients.length(); i++)
+            for(var i = 0; i < response.affectedClients.length; i++)
             {
                 ServerEventDispatcher.SocketConnections[i].send(response.payload);
             }
