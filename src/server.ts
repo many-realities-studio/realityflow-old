@@ -147,6 +147,8 @@ export class ServerEventDispatcher {
 
             ServerEventDispatcher.SocketConnections[ws.ID] = ws;
 
+            console.log("The ID is ");
+            console.log(ws.ID);
 
             // Swap out for new message processor
             console.log(evt.data);
@@ -154,7 +156,7 @@ export class ServerEventDispatcher {
 
             let response = NewMessageProcessor.ParseMessage(ws.ID, json);
 
-            for(var i = 0; i < response.affectedClients.length)
+            for(var i = 0; i < response.affectedClients.length(); i++)
             {
                 ServerEventDispatcher.SocketConnections[i].send(response.payload);
             }
