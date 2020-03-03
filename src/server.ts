@@ -25,7 +25,7 @@ export class ServerEventDispatcher {
     public static wss: Server;
     public static callbacks: Function[][];
 
-    public static SocketConnections = {};
+    public static SocketConnections = new Map<String, any>();
 
 //Broadcasts to all clients and may or may not include original sender
     public static async broadcast(json: any, newFlag: boolean){
@@ -139,8 +139,8 @@ export class ServerEventDispatcher {
 
         // Assign this connection an ID and store it
         ws.ID = uuidv4();
-        ServerEventDispatcher.SocketConnections[ws.ID] = ws;
 
+        ServerEventDispatcher.SocketConnections.set(ws.ID, ws);
 
 
         function onMessageEvent(evt: MessageEvent) {
@@ -151,21 +151,18 @@ export class ServerEventDispatcher {
 
 
             let response = NewMessageProcessor.ParseMessage(ws.ID, json);
-            
 
             for(var i = 0; i < response.affectedClients.length; i++)
             {
-                ServerEventDispatcher.SocketConnections[i].send(response.payload);
+                let key = response.affectedClients[i];
+                ServerEventDispatcher.SocketConnections.get(key).send(response.payload);
             }
         }
 
 
         function onCloseEvent(evt: CloseEvent): any {
 
-           var clientId;
-
-           delete ServerEventDispatcher.SocketConnections[ws.ID];
-
+           ServerEventDispatcher.SocketConnections.delete(ws.ID);
         }
 
         function onErrorEvent(evt: ErrorEvent) {
