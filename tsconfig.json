@@ -8,13 +8,11 @@
         "preserveConstEnums": true,
         "noEmitOnError": true,
         "sourceMap": true,
-        "outDir": "../node/server/bld"
+        "outDir": "./node/server/bld"
     },
     "exclude": [
         "**/*.spec.ts",
         "**/node_modules",
-        "**web-client",
-        "src/FastAccessStateTracker/**",
-        "src/FastAccessStateTracker/Messages/*.ts"
+        "**web-client"
     ]
 }
