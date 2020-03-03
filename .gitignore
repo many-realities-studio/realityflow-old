@@ -84,3 +84,4 @@ typings/
 package-lock.json
 
 node/editor/server/bld
+node/server/bld/*
