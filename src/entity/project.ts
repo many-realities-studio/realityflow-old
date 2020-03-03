@@ -5,16 +5,15 @@ import {
     Column,
     ManyToOne,
     OneToMany,
+    PrimaryColumn,
   } from 'typeorm';
 import { User } from './user';
 import { DBObject } from './object'
 
 @Entity()
 export class Project extends BaseEntity{
-    @PrimaryGeneratedColumn()
-    _id: number;
 
-    @Column()
+    @PrimaryColumn({unique: true})
     Id: string;
 
     @Column()

@@ -1,9 +1,9 @@
 import {
     BaseEntity,
     Entity,
-    PrimaryGeneratedColumn,
     Column,
     ManyToOne,
+    PrimaryColumn,
   } from 'typeorm';
 
   import {Project} from './project'
@@ -11,10 +11,8 @@ import {
 @Entity()
 export class DBObject extends BaseEntity{
 
-    @PrimaryGeneratedColumn()
-    _id: number;
     
-    @Column()
+    @PrimaryColumn()
     Id: string;
 
     @Column()
@@ -51,9 +49,18 @@ export class DBObject extends BaseEntity{
     S_z: number;
     
     @Column()
-    Color: Object;
+    R: number;
 
-    @ManyToOne(type=>Project, proj => proj.ObjectList, {onDelete: 'CASCADE'})
+    @Column()
+    G: number
+
+    @Column()
+    B: number
+
+    @Column()
+    A: number
+
+    @ManyToOne(type=>Project, proj => proj.ObjectList, {onUpdate: 'CASCADE'})
     Project: Project;
     
 }

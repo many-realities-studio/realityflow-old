@@ -1,10 +1,11 @@
 import {
     BaseEntity,
     Entity,
-    PrimaryGeneratedColumn,
     Column,
     BeforeInsert,
     OneToMany,
+    PrimaryColumn,
+    BeforeUpdate,
   } from 'typeorm';
   
   
@@ -15,10 +16,8 @@ import {
 
   @Entity()
   export class User extends BaseEntity{
-      @PrimaryGeneratedColumn()
-      _id: number;
 
-      @Column({unique: true})
+      @PrimaryColumn({unique: true})
       Username: string;
 
       @Column()
@@ -27,8 +26,4 @@ import {
       @OneToMany(type => Project, project => project.Owner)
       Projects: Project[]
       
-      @BeforeInsert()
-      async beforeInsert(){
-        this.Password = await bcrypt.hash(this.Password, SALT_WORK_FACTOR) 
-      } 
   }
