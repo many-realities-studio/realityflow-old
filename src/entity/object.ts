@@ -4,6 +4,7 @@ import {
     Column,
     ManyToOne,
     PrimaryColumn,
+    PrimaryGeneratedColumn,
   } from 'typeorm';
 
   import {Project} from './project'
@@ -11,7 +12,9 @@ import {
 @Entity()
 export class DBObject extends BaseEntity{
 
-    
+    @PrimaryGeneratedColumn()
+    _id: number;  
+
     @PrimaryColumn()
     Id: string;
 
@@ -60,7 +63,7 @@ export class DBObject extends BaseEntity{
     @Column()
     A: number
 
-    @ManyToOne(type=>Project, proj => proj.ObjectList, {onUpdate: 'CASCADE'})
+    @ManyToOne(type=>Project, proj => proj.ObjectList, {cascade: true})
     Project: Project;
     
 }
