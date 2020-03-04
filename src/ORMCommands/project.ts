@@ -1,11 +1,9 @@
 import {getConnection} from 'typeorm'
 
-import { Project } from "../ORMModels/project";
-import { User } from "../ORMModels/user"
-import { DBObject } from "../ORMModels/object"
-
-import { FlowProject } from "../FastAccessStateTracker/FlowLibrary/FlowProject";
-
+import { Project } from "../entity/project";
+import { User } from "../entity/user"
+import { DBObject } from "../entity/object"
+import { getCiphers } from 'crypto';
 
 export class ProjectOperations
 {
@@ -24,49 +22,42 @@ export class ProjectOperations
         newProject.ProjectName = projectInfo.ProjectName,
         newProject.Owner = user
 
-        return await newProject.save();
+        return await getConnection().manager.save(newProject);
     }
-
-    public static async saveProject(project: Project){
-
-        var promise = await project.save();
-
-        return promise;
-
-    }
-
-    // TODO: test this
 
     //Fetch all of the projects for a given user
-    public static async fetchProjects(usernameToFetch: string) : Promise<Array<string>>{
+    public static async fetchProjects(usernameToFetch: string) : Promise<Array<Project>>{
         
-        // get a user
-        let projects = await getConnection().createQueryBuilder().
-            relation(User, "projects").
-            of({Username: usernameToFetch}).
-            loadMany()
+        // TODO: Make sure this works
+        let projects = await getConnection().createQueryBuilder()
+            .select("project")
+            .from(Project, "project")
+            .where("project.ownerUsername = :username", {username: usernameToFetch})
+            .getMany()
 
         return projects;
     }
 
+    // this hasn't been tested but it's in the entity.test.ts file
     public static async findProject(projectId: string){
 
-        var project = await Project.findOne({Id: projectId});
+        let project = await getConnection().createQueryBuilder().
+            select("project").
+            from(Project, "project").
+            where("Id = :id", {id: projectId}).
+            getOne();
 
         return project;
 
     }
 
     public static async deleteProject(projectId: string){
-        console.log("deleting project " + projectId)
+        await getConnection()
+                .createQueryBuilder()
+                .delete()
+                .from(Project)
+                .where("Id = :id", { id: projectId })
+                .execute();
 
-        await Project.delete({Id: projectId})
-
-    }
-
-    // written this way for laziness' sake
-    public static async deleteObject(projectId: string, objectId: string){
-        let project = await this.findProject(projectId) 
-        await DBObject.delete({Id: objectId, Project: project})
     }
 }

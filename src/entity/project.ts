@@ -25,9 +25,9 @@ export class Project extends BaseEntity{
     @Column()
     ProjectName: string;
 
-    @OneToMany(type=>DBObject, object => object.Project)
+    @OneToMany(type => DBObject, object => object.Project)
     ObjectList: DBObject[]
 
-    @ManyToOne(type=>User, user=>user.Projects, {onDelete: 'CASCADE'})
+    @ManyToOne(type => User, user => user.Projects, {cascade: ["insert", "update", "remove", "soft-remove", "recover"]})
     Owner: User
 }

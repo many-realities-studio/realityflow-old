@@ -1,5 +1,5 @@
-import { User } from "../ORMModels/user";
-import { Project } from "../ORMModels/project";
+import { User } from "../entity/user";
+import { Project } from "../entity/project";
 
 import { getConnection } from "typeorm";
   
@@ -60,9 +60,7 @@ export class UserOperations {
     public static async authenticateUser(Username: String, Password: String): Promise<Boolean>{
         let passwordObject: any = await getConnection().
             createQueryBuilder().
-            select(
-                "User.Password"
-            ).
+            select("User.Password").
             from(User, "User").
             where("Username = :username", {username: Username}).
             execute()

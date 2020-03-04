@@ -243,15 +243,96 @@ describe('Project', () => {
 describe ('Object', () => {
     it("can be created", async () => {
         let conn = getConnection("test")
+
         let newObject = new DBObject();
+        newObject.Id = "newObjectId"
+        newObject.Name = "newObjectName"
+        newObject.X = 1;
+        newObject.Y = 1;
+        newObject.Z = 1;
+        newObject.Q_w = 1;
+        newObject.Q_x = 1;
+        newObject.Q_y = 1;
+        newObject.Q_z = 1;
+        newObject.S_x = 1;
+        newObject.S_y = 1;
+        newObject.S_z = 1;
+        newObject.R = 1;
+        newObject.G = 1;
+        newObject.B = 1;
+        newObject.A = 1;
+
+        let returnedObject = await conn.manager.save(newObject)
+
+        expect(returnedObject.Id).toEqual("newObjectId")
+        expect(returnedObject.Name).toEqual("newObjectName")
 
     })
 
     it("can be found", async () => {
+        let conn = getConnection("test")
 
+        let foundObject = new DBObject();
+        foundObject.Id = "foundObjectId"
+        foundObject.Name = "foundObjectName"
+        foundObject.X = 1;
+        foundObject.Y = 1;
+        foundObject.Z = 1;
+        foundObject.Q_w = 1;
+        foundObject.Q_x = 1;
+        foundObject.Q_y = 1;
+        foundObject.Q_z = 1;
+        foundObject.S_x = 1;
+        foundObject.S_y = 1;
+        foundObject.S_z = 1;
+        foundObject.R = 1;
+        foundObject.G = 1;
+        foundObject.B = 1;
+        foundObject.A = 1;
+
+        let returnedObject = await conn.manager.save(foundObject)
+
+        expect(returnedObject.Id).toEqual("foundObjectId")
+        expect(returnedObject.Name).toEqual("foundObjectName")
+
+        let check = await conn.createQueryBuilder().select("object").from(DBObject, "object").where("object.Id = :id", {id: "foundObjectId"}).getOne();
+        expect(check.Name).toEqual("foundObjectName");
     })
 
     it("can be updated", async () => {
+
+        let conn = getConnection("test")
+
+        let updatedObject = new DBObject();
+        updatedObject.Id = "updatedObjectId"
+        updatedObject.Name = "updatedObjectName"
+        updatedObject.X = 1;
+        updatedObject.Y = 1;
+        updatedObject.Z = 1;
+        updatedObject.Q_w = 1;
+        updatedObject.Q_x = 1;
+        updatedObject.Q_y = 1;
+        updatedObject.Q_z = 1;
+        updatedObject.S_x = 1;
+        updatedObject.S_y = 1;
+        updatedObject.S_z = 1;
+        updatedObject.R = 1;
+        updatedObject.G = 1;
+        updatedObject.B = 1;
+        updatedObject.A = 1;
+
+        let returnedObject = await conn.manager.save(updatedObject)
+
+        expect(returnedObject.Id).toEqual("updatedObjectId")
+        expect(returnedObject.Name).toEqual("updatedObjectName")
+
+        let check = await conn.createQueryBuilder().select("object").from(DBObject, "object").where("object.Id = :id", {id: "updatedObjectId"}).getOne();
+        expect(check.Name).toEqual("updatedObjectName");
+
+        await conn.createQueryBuilder().update(DBObject).set({Name: "newName"}).where("Id = :id", {id: "updatedObjectId"}).execute()
+
+        let check_Updated = await conn.createQueryBuilder().select("object").from(DBObject, "object").where("object.Id = :id", {id: "updatedObjectId"}).getOne();
+        expect(check_Updated.Name).toEqual("newName");
 
     })
 
