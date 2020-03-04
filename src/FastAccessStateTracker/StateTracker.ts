@@ -6,6 +6,7 @@ import { RoomManager } from "./RoomManager";
 
 import { MongooseDatabase } from "./Database/MongooseDatabase"
 import { FlowClient } from "./FlowLibrary/FlowClient";
+import { Room } from "./Room";
 
   
 
@@ -37,10 +38,18 @@ export class StateTracker{
    * Adds a project to the FAM and database
    * @param projectToCreate 
    */
-  public static async CreateProject(projectToCreate: FlowProject, user: string) : Promise<void>
+  public static async CreateProject(projectToCreate: FlowProject, user: string) : Promise<[any, Array<string>]>
   {
     // Create the project in the database and give a specific user ownership
     await MongooseDatabase.CreateProject(projectToCreate, user)
+    let userClients = this.currentUsers.get(user);
+    let affectedClients = []
+    for (let key of userClients.keys()) {
+      affectedClients.push(key);
+    }
+
+    return ["Success", affectedClients];
+
   }
 
 
@@ -49,7 +58,7 @@ export class StateTracker{
    * Deletes the project from the FAM and the database
    * @param projectToDeleteId
    */
-  public static async DeleteProject(projectToDeleteId: string)
+  public static async DeleteProject(projectToDeleteId: string) : Promise<[any, Array<string>]>
   {    
 
     if(!projectToDeleteId)
@@ -61,7 +70,13 @@ export class StateTracker{
     // Remove project from database 
     await MongooseDatabase.DeleteProject(projectToDeleteId);
 
-    return clients
+    let clientId = []
+
+    for( let key of clients.keys()) {
+      clientId.push(key);
+    }
+
+    return ['Success', clientId];
   }
  
   // TODO: finished: yes? tested: no
@@ -69,13 +84,24 @@ export class StateTracker{
    * Finds a project with id projectToOpenId, returns it to the command context
    * @param projectToOpenID - ID of associated project
    */
-  public static async OpenProject(projectToOpenID: any) : Promise<FlowProject>
+  public static async OpenProject(projectToOpenID: any) : Promise<[any, Array<string>]>
   {
     // find project in list of projects so that we can return it
     let projectFound : FlowProject = await MongooseDatabase.GetProject(projectToOpenID);
     
+    // grabs all the clients from the room manager
+    let affectedClients: string[] = []
+    
+    let clients = RoomManager.getClients(projectToOpenID);
+    clients.forEach((value: string[], key: string) => {
+      value.forEach((client: string) => {
+        affectedClients.push(client);
+      })
+  });
+    
+
     // send the data back to the client
-    return projectFound;
+    return [projectFound, affectedClients];
   }
 
 
@@ -87,33 +113,40 @@ export class StateTracker{
  * @param username 
  * @param password 
  */
-  public static async CreateUser(username: string, password: string) : Promise<boolean>
+  public static async CreateUser(username: string, password: string) : Promise<[any, Array<string>]>
   { 
     let success = false;
 
     await MongooseDatabase.CreateUser(username, password)
+    
+    let userClients = this.currentUsers.get(username);
+    let affectedClients = []
+    for (let key of userClients.keys()) {
+      affectedClients.push(key);
+    }
 
-    return !success;
+    return [!success, affectedClients];
   }
 
   // TODO: finished: Yes? tested: partially
   /**
+  * TODO: Finish delete user method 
   * Kicks out all clients logged in under the user and
   * deletes the user from the FAM and the database
   * @param userName 
   * @param password 
   */
-  public static async DeleteUser(userName: string, password: string) : Promise<void>
+  public static async DeleteUser(userName: string, password: string) : Promise<[any, Array<string>]>
   {
     //find every client that's currently logged in with these credentials
     let clients = StateTracker.currentUsers.get(userName)
-    
     // if there's any client that is logged in with these credentials, log them out 
     if(clients != undefined)
       clients.forEach( (roomCode, clientId, map) => this.LogoutUser(userName, password, clientId))
     
     //remove user from the database too
     await MongooseDatabase.DeleteUser(userName);
+    return ['Success', undefined];
   }
 
 
@@ -124,11 +157,14 @@ export class StateTracker{
    * @param password 
    * @param ClientId 
    */
-  public static async LoginUser(userName:string, password: string, ClientId : string) : Promise<boolean>
+  public static async LoginUser(userName:string, password: string, ClientId : string) : Promise<[any, Array<string>]>
   {
+
+    let affectedClients = [];
+    affectedClients.push(ClientId);
     //Authenticate user
     if(!MongooseDatabase.AuthenticateUser(userName, password))
-      return false;
+      return ['Failure', affectedClients];
 
     // check if user is already logged in - 
     // user could be logged in on another client
@@ -144,7 +180,7 @@ export class StateTracker{
 
     RoomManager.JoinRoom("noRoom", userName, ClientId)
     
-    return true;    
+    return ['Success', affectedClients];    
   }
 
   // TODO: Finished: Yes Tested: Yes
@@ -154,45 +190,50 @@ export class StateTracker{
    * @param password 
    * @param ClientId 
    */
-  public static async LogoutUser(Username: string, password: string,  ClientId: string) : Promise<void>
+  public static async LogoutUser(Username: string, password: string,  ClientId: string) : Promise<[any, Array<string>]>
   {
-      //Authenticate user, I guess. Don't want someone trying to log someone else out
-      if(!MongooseDatabase.AuthenticateUser(Username, password))
-        return;
-  
-      // check if user is already logged in - 
-      // user could be logged in on another client
-      let userLoggedIn = this.currentUsers.has(Username);
+    let affectedClients = [];
+    affectedClients.push(ClientId);
+    //Authenticate user, I guess. Don't want someone trying to log someone else out
+    if(!MongooseDatabase.AuthenticateUser(Username, password))
+      return ['Failure', affectedClients];
 
-      if(userLoggedIn)
-      {
-        // find what room the client is currently in and leave it
-        let userRoomId = this.currentUsers.get(Username).get(ClientId)
-        RoomManager.LeaveRoom(userRoomId, Username, ClientId)
-        
-        // kick the client out of currentUsers (a misnomer, I know) 
-        this.currentUsers.get(Username).delete(ClientId)
+    // check if user is already logged in - 
+    // user could be logged in on another client
+    let userLoggedIn = this.currentUsers.has(Username);
 
-        //if the current user doesn't have any more active clients, then stop keeping track of that user
-        if(this.currentUsers.get(Username).size == 0)
-          this.currentUsers.delete(Username)
-      } 
-      // If the user wasn't logged in in the first place, then ??
-      else 
-      {
-        return;
-      }
+    if(userLoggedIn)
+    {
+      // find what room the client is currently in and leave it
+      let userRoomId = this.currentUsers.get(Username).get(ClientId)
+      RoomManager.LeaveRoom(userRoomId, Username, ClientId)
+      
+      // kick the client out of currentUsers (a misnomer, I know) 
+      this.currentUsers.get(Username).delete(ClientId)
+
+      //if the current user doesn't have any more active clients, then stop keeping track of that user
+      if(this.currentUsers.get(Username).size == 0)
+        this.currentUsers.delete(Username)
+    } 
+    // If the user wasn't logged in in the first place, then ??
+    else 
+    {
+      return ['Failure', affectedClients];;
+    }
+    return ['Success', affectedClients];
   }
 
 
 
   // TODO: Finished: yes Tested: yes
   // Room Commands
-  public static CreateRoom(projectID: string) : string
+  public static CreateRoom(projectID: string) : Promise<[any, Array<string>]>
   {
     let roomCode = RoomManager.CreateRoom(projectID);
-    
-    return roomCode;
+    let affectedClients = [];
+    affectedClients.push(roomCode);
+
+    return ['Success', affectedClients];
   }
 
   // TODO: Finished: Yes Tested: Yes
@@ -201,13 +242,18 @@ export class StateTracker{
    * @param roomCode - code of room they are looking to join
    * @param user - user to be logged in
    */
-  public static async JoinRoom(roomCode: string, user: string, client: string) : Promise<void>
+  public static async JoinRoom(roomCode: string, user: string, client: string) :  Promise<[any, Array<string>]>
   {
     let oldRoom = this.currentUsers.get(user).get(client)
     await RoomManager.LeaveRoom(oldRoom, user, client)
 
     await RoomManager.JoinRoom(roomCode, user, client)
     this.currentUsers.get(user).set(client, roomCode)
+
+    let affectedClients = [];
+    affectedClients.push(client);
+
+    return ['Success', affectedClients];
   }
 
 }
