@@ -120,7 +120,6 @@ describe('User', () => {
             getOne();
 
         expect(check).toBeTruthy();
-        console.log(check.Password)
         expect(bcrypt.compareSync('Password', check.Password)).toEqual(false)
         expect(bcrypt.compareSync('newPassword', check.Password)).toEqual(true)
     })
@@ -238,6 +237,36 @@ describe('Project', () => {
         expect(check_again).toBeFalsy()
     })
 
+    it("Can be owned by a user", async () => {
+        
+        // arrange
+        let conn = getConnection("test")
+
+        let newUser = new User();
+        newUser.Username = 'CanBeOwner'
+        newUser.Password = 'Password'
+        newUser.Projects = []
+
+        let returnedUser = await conn.manager.save(newUser);
+
+        expect(returnedUser).toBeTruthy()
+        expect(bcrypt.compareSync('Password', returnedUser.Password)).toEqual(true)
+
+        let createdProject = new Project();
+        createdProject.Id = "ownedProjectId";
+        createdProject.ProjectName = "ownedProjectName"
+        createdProject.Description = "ownedProjectDescription"
+        createdProject.DateModified = Date.now()
+        createdProject.ObjectList = []
+        createdProject.Owner = newUser
+
+        let returnedProject = await conn.manager.save(createdProject)
+        
+        let check = await conn.createQueryBuilder().select("project").from(Project, "project").where("Id = :id", {id: "ownedProjectId"}).getOne()
+
+        expect(returnedProject.Owner).toBeTruthy()
+    })
+
 })
 
 describe ('Object', () => {
@@ -336,7 +365,52 @@ describe ('Object', () => {
 
     })
 
-    it("can be deleted", () => {
+    it("can be deleted", async () => {
+        let conn = getConnection("test")
+
+        let deletedObject = new DBObject();
+        deletedObject.Id = "deletedObjectId"
+        deletedObject.Name = "deletedObjectName"
+        deletedObject.X = 1;
+        deletedObject.Y = 1;
+        deletedObject.Z = 1;
+        deletedObject.Q_w = 1;
+        deletedObject.Q_x = 1;
+        deletedObject.Q_y = 1;
+        deletedObject.Q_z = 1;
+        deletedObject.S_x = 1;
+        deletedObject.S_y = 1;
+        deletedObject.S_z = 1;
+        deletedObject.R = 1;
+        deletedObject.G = 1;
+        deletedObject.B = 1;
+        deletedObject.A = 1;
+
+        let returnedObject = await conn.manager.save(deletedObject)
+
+        expect(returnedObject.Id).toEqual("deletedObjectId")
+        expect(returnedObject.Name).toEqual("deletedObjectName")
+
+        let check = await conn.createQueryBuilder().select("object").from(DBObject, "object").where("object.Id = :id", {id: "deletedObjectId"}).getOne();
+        expect(check.Name).toEqual("deletedObjectName");
+
+        let result = await conn
+            .createQueryBuilder()
+            .delete()
+            .from(DBObject)
+            .where("Id = :id", {id: "deletedObjectId"})
+            .execute()
+
+        console.log(result)
+
+        let check_deleted = await conn.createQueryBuilder().select("object").from(DBObject, "object").where("object.Id = :id", {id: "deletedObjectId"}).getOne();
+        expect(check_deleted).toBeFalsy();
 
     })
+
+    it("can be owned by a project", () => {
+        // throw new Error("not yet implemented")
+    })
+
+
 })
