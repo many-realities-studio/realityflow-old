@@ -4,7 +4,7 @@ export class NewMessageProcessor
 {
   private static _CommandContext : CommandContext = new CommandContext();
 
-  public static ParseMessage(socketId : String, json: any) : any
+  public static ParseMessage(socketId : string, json: any) : any
   {    
     let response = this._CommandContext.ExecuteCommand(socketId, json);
 
