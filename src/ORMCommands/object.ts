@@ -6,6 +6,10 @@ import { DBObject } from "../entity/object";
 import {ProjectOperations} from "./project"
 export class ObjectOperations {
 
+    /** create an object, and associate it with a specific project
+     *  @param objectInfo new object information (which also contains project Id)
+     *  @param projectId project to associate it with
+    */
     public static async createObject(objectInfo: any, projectId: string)
     {
         
@@ -14,7 +18,7 @@ export class ObjectOperations {
             .select("Project")
             .from(Project, "Project")
             .where("Project.Id = :id", {id: projectId})
-            .getOne()
+            .getOne();
 
 
         var newObject = new DBObject();
@@ -34,10 +38,14 @@ export class ObjectOperations {
             newObject.Project =        project;
             
 
-        let promise = await newObject.save();
-        return promise;
+        await getConnection().manager.save(newObject);
     }
 
+    /**
+     * get an object given its id and its containing project Id 
+     * @param objectInfoId 
+     * @param projectId 
+     */
     public static async findObject(objectInfoId: any, projectId: string)
     {
         var project = ProjectOperations.findProject(projectId)
@@ -52,7 +60,13 @@ export class ObjectOperations {
         
     }
 
-    public static async updateObject(objectInfo: any) : Promise<void>
+
+    /**
+     * update a project given its new information (and Id) and the id of the project that it's in
+     * @param objectInfo 
+     * @param projectId 
+     */
+    public static async updateObject(objectInfo: any, projectId: string) : Promise<void>
     {
         await getConnection()
             .createQueryBuilder()
@@ -74,10 +88,16 @@ export class ObjectOperations {
                 A:          objectInfo.A
             })
             .where("Id = :id", {id: objectInfo.id})
+            .andWhere("projectId = :projId", {projId: projectId})
             .execute();
 
     }
 
+    /**
+     * delete an object given its object Id and its project Id
+     * @param objectId 
+     * @param projectId 
+     */
     public static async deleteObject(objectId: string, projectId: string)
     {
         await getConnection()

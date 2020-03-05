@@ -15,7 +15,7 @@ export class DBObject extends BaseEntity{
     @PrimaryGeneratedColumn()
     _id: number;  
 
-    @PrimaryColumn()
+    @Column()
     Id: string;
 
     @Column()
@@ -63,7 +63,7 @@ export class DBObject extends BaseEntity{
     @Column()
     A: number
 
-    @ManyToOne(type=>Project, proj => proj.ObjectList, {cascade: true})
+    @ManyToOne(type=>Project, proj => proj.ObjectList, {onDelete: "CASCADE", onUpdate: "CASCADE"})
     Project: Project;
     
 }

@@ -3,11 +3,15 @@ import {getConnection} from 'typeorm'
 import { Project } from "../entity/project";
 import { User } from "../entity/user"
 import { DBObject } from "../entity/object"
-import { getCiphers } from 'crypto';
+import { FlowProject } from '../FastAccessStateTracker/FlowLibrary/FlowProject';
 
 export class ProjectOperations
 {
-
+    /**
+     * Given a project and a user, create a project and give the user ownership
+     * @param projectInfo Data for the new project
+     * @param Username Username of the owner of the project
+     */
     public static async createProject(projectInfo: any, Username: string){
         let user = await getConnection().createQueryBuilder().
             select("User").
@@ -22,10 +26,13 @@ export class ProjectOperations
         newProject.ProjectName = projectInfo.ProjectName,
         newProject.Owner = user
 
-        return await getConnection().manager.save(newProject);
+        await getConnection().manager.save(newProject);
     }
 
-    //Fetch all of the projects for a given user
+    /**
+     * Fetch all of the projects for a given user
+     * @param usernameToFetch Username whose projects we want to fetch
+     */
     public static async fetchProjects(usernameToFetch: string) : Promise<Array<Project>>{
         
         // TODO: Make sure this works
@@ -38,9 +45,11 @@ export class ProjectOperations
         return projects;
     }
 
-    // this hasn't been tested but it's in the entity.test.ts file
+    /**
+     * Find a specfic project as a flowproject given its ID
+     * @param projectId
+     */
     public static async findProject(projectId: string){
-
         let project = await getConnection().createQueryBuilder().
             select("project").
             from(Project, "project").
@@ -51,6 +60,11 @@ export class ProjectOperations
 
     }
 
+    /**
+     * Delete a project given its ID.
+     * This will also auto-delete the objects associated with the project
+     * @param projectId projectId to delete
+     */
     public static async deleteProject(projectId: string){
         await getConnection()
                 .createQueryBuilder()
