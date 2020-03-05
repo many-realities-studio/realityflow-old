@@ -16,10 +16,8 @@ export class UserOperations {
 
         });
         
-
         await newUser.save();
 
-        return newUser;
     }
 
     // Why are we lookin at users by their internal IDs?

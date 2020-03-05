@@ -33,14 +33,13 @@ export class FlowProject
   }
 
   /**
-   * Removes an object from the list of available objects and returns the object removed
-   * Also deletes object from the database
+   * Removes an object from the list of available objects
    * @param objectToRemove 
    */
   public DeleteObject(objectToRemove: FlowObject): void
   {
     const index = this._ObjectList.findIndex((element) => element.Id == objectToRemove.Id);
-
+    this._ObjectList.splice(index)
   }
 
   /**

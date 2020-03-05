@@ -33,11 +33,23 @@ MongooseDatabase.DeleteUser = mongooseUserDeleteMock
 const mongooseProjectCreateMock = jest.fn( async (projectToCreate: FlowProject) => {} )  
 MongooseDatabase.CreateProject = mongooseProjectCreateMock
 
+const mongooseProjectGetMock = jest.fn( async (projectToGet: string) => {
+    return new FlowProject({
+        Id: projectToGet,
+        Description: "TestDescription",
+        DateModified: Date.now(),
+        ProjectName: "hello"
+    })
+})
+MongooseDatabase.GetProject = mongooseProjectGetMock
+
+
 describe("User", () => {
     it("can be created", async () => {
         const testUser = {
             Username: "YashStateTracker",
-            Password: "StateTrackerYash"
+            Password: "StateTrackerYash",
+            Client: "yashsClient"
         }
         
         const mongooseUserCreateMock = jest.fn(async (userName:string, Password: string) => {}) 
@@ -45,7 +57,7 @@ describe("User", () => {
         MongooseDatabase.CreateUser = mongooseUserCreateMock
 
         //act
-        await StateTracker.CreateUser(testUser.Username, testUser.Password)
+        await StateTracker.CreateUser(testUser.Username, testUser.Password, testUser.Client)
 
         //assert
         expect(mongooseUserCreateMock).toHaveBeenCalledWith(testUser.Username, testUser.Password)
@@ -171,12 +183,13 @@ describe("Project", () => {
         }
         const testUser = {
             Username: "YashStateTracker",
-            Password: "StateTrackerYash"
+            Password: "StateTrackerYash",
+            Client: "yashsClient"
         }
         var testFlowProject = new FlowProject(testProject)
 
         // act
-        await StateTracker.CreateProject(testFlowProject, testUser.Username)
+        await StateTracker.CreateProject(testFlowProject, testUser.Username, testUser.Client)
 
         // assert
         expect(mongooseProjectCreateMock).toHaveBeenCalled()
@@ -192,8 +205,13 @@ describe("Project", () => {
 
     })
 
-    it("can be opened", () => {
-        // throw new Error("not yet implemented")
+    it("can be opened", async () => {
+        // arrange
+
+        // act
+        await StateTracker.OpenProject("newProject")
+        // assert
+        expect(mongooseProjectGetMock).toBeCalledWith("newProject")
     })
 
 })

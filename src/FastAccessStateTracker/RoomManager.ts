@@ -83,7 +83,7 @@ export class RoomManager
 
   //TODO: finished: yes tested: no
   /**
-   * given a room, return a map of usernames with all of the users
+   * given a room, return a map of usernames with all of the users and their clients
    * @param roomCode 
    */
   public static getClients(roomCode: string){

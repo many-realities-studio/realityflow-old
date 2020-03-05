@@ -1,12 +1,11 @@
 import { FlowObject } from "./FlowLibrary/FlowObject";
 import { FlowProject } from "./FlowLibrary/FlowProject";
-import { FlowUser } from "./FlowLibrary/FlowUser"
+
 
 import { RoomManager } from "./RoomManager";
 
 import { MongooseDatabase } from "./Database/MongooseDatabase"
-import { FlowClient } from "./FlowLibrary/FlowClient";
-import { Room } from "./Room";
+
 
   
 
@@ -27,28 +26,24 @@ export class StateTracker{
   */
   public static currentProjects: RoomManager = new RoomManager();
   
-  // I feel like I've used this data structure before
-  // <username: <client: projectId>>
+  /** 
+   * Map< username: Map<client: projectId> >
+   */
   public static currentUsers: Map<string, Map<string, string> > = new Map()
   
   // Project Functions
 
   // TODO: finished: yes? Tested: yes 
   /**
-   * Adds a project to the FAM and database
+   * Adds a project to the database
    * @param projectToCreate 
    */
-  public static async CreateProject(projectToCreate: FlowProject, user: string) : Promise<[any, Array<string>]>
+  public static async CreateProject(projectToCreate: FlowProject, user: string, client: string) : Promise<[any, Array<string>]>
   {
     // Create the project in the database and give a specific user ownership
     await MongooseDatabase.CreateProject(projectToCreate, user)
-    let userClients = this.currentUsers.get(user);
-    let affectedClients = []
-    for (let key of userClients.keys()) {
-      affectedClients.push(key);
-    }
 
-    return ["Success", affectedClients];
+    return ["Success", [client] ];
 
   }
 
@@ -64,19 +59,27 @@ export class StateTracker{
     if(!projectToDeleteId)
       return
 
-    // remove project from the FAM
+    // remove roomManager, get the list of all affected users/clients
     let clients = RoomManager.DestroyRoom(projectToDeleteId)
 
     // Remove project from database 
     await MongooseDatabase.DeleteProject(projectToDeleteId);
 
-    let clientId = []
+    let clientIds : Array<string> = []
 
-    for( let key of clients.keys()) {
-      clientId.push(key);
-    }
+    clients.forEach((userClients: Array<string>, user: string, map) =>{
+      
+      // add clients of a given user to the list of clients to send back
+      clientIds.concat(userClients)
 
-    return ['Success', clientId];
+      // move the clients into limbo
+      userClients.forEach((client, index, arr) => {
+        this.currentUsers.get(user).set(client, "noRoom")
+      });
+
+    });
+
+    return ['Success', clientIds];
   }
  
   // TODO: finished: yes? tested: no
@@ -94,11 +97,12 @@ export class StateTracker{
     
     let clients = RoomManager.getClients(projectToOpenID);
     clients.forEach((value: string[], key: string) => {
+      
       value.forEach((client: string) => {
         affectedClients.push(client);
       })
-  });
-    
+      
+    });
 
     // send the data back to the client
     return [projectFound, affectedClients];
@@ -109,23 +113,17 @@ export class StateTracker{
 
   // TODO: Finished: yes tested: yes
 /**
- * Creates a user, adding the user data to the FAM and the database
+ * Creates a user, adding the user data to the database
  * @param username 
  * @param password 
  */
-  public static async CreateUser(username: string, password: string) : Promise<[any, Array<string>]>
+  public static async CreateUser(username: string, password: string, client: string) : Promise<[any, Array<string>]>
   { 
     let success = false;
 
     await MongooseDatabase.CreateUser(username, password)
-    
-    let userClients = this.currentUsers.get(username);
-    let affectedClients = []
-    for (let key of userClients.keys()) {
-      affectedClients.push(key);
-    }
 
-    return [!success, affectedClients];
+    return [!success, [client] ];
   }
 
   // TODO: finished: Yes? tested: partially
@@ -140,13 +138,19 @@ export class StateTracker{
   {
     //find every client that's currently logged in with these credentials
     let clients = StateTracker.currentUsers.get(userName)
+    
+    let affectedClients = Array.from(clients.keys())
+
     // if there's any client that is logged in with these credentials, log them out 
     if(clients != undefined)
-      clients.forEach( (roomCode, clientId, map) => this.LogoutUser(userName, password, clientId))
+      clients.forEach( (roomCode, clientId, map) => {
+        this.LogoutUser(userName, password, clientId)
+      })
     
     //remove user from the database too
     await MongooseDatabase.DeleteUser(userName);
-    return ['Success', undefined];
+
+    return ['Deleted', affectedClients];
   }
 
 
@@ -162,6 +166,7 @@ export class StateTracker{
 
     let affectedClients = [];
     affectedClients.push(ClientId);
+
     //Authenticate user
     if(!MongooseDatabase.AuthenticateUser(userName, password))
       return ['Failure', affectedClients];
@@ -227,13 +232,11 @@ export class StateTracker{
 
   // TODO: Finished: yes Tested: yes
   // Room Commands
-  public static CreateRoom(projectID: string) : Promise<[any, Array<string>]>
+  public static async CreateRoom(projectID: string, clientId: string) : Promise<[any, Array<string>]>
   {
     let roomCode = RoomManager.CreateRoom(projectID);
-    let affectedClients = [];
-    affectedClients.push(roomCode);
 
-    return ['Success', affectedClients];
+    return ['Success', [clientId]];
   }
 
   // TODO: Finished: Yes Tested: Yes
@@ -244,53 +247,101 @@ export class StateTracker{
    */
   public static async JoinRoom(roomCode: string, user: string, client: string) :  Promise<[any, Array<string>]>
   {
+    // move the user from whatever room they were in into whatever room they want to be in
     let oldRoom = this.currentUsers.get(user).get(client)
     await RoomManager.LeaveRoom(oldRoom, user, client)
 
     await RoomManager.JoinRoom(roomCode, user, client)
     this.currentUsers.get(user).set(client, roomCode)
 
-    let affectedClients = [];
-    affectedClients.push(client);
+    let affectedClients: Array<string> = [];
 
-    return ['Success', affectedClients];
+    // get all of the clients that are in that room so that we can tell them 
+    let roomClients = await RoomManager.getClients(roomCode)
+
+    roomClients.forEach((clients, username, map) => {
+      affectedClients.concat(clients)
+    })
+
+    return [ user + '-' + client + ' has joined the room', affectedClients];
   }
 
-}
-//   // Object Commands
-//   public static CreateObject(objectToCreate : FlowObject) : void
-//   {
-//     RoomManager.FindRoom(objectToCreate.RoomNumber)
-//                 .GetProject()
-//                 .AddObject(objectToCreate);
-//   }
+  // Object Commands
+  public static async CreateObject(objectToCreate : FlowObject, projectId: string) : Promise<[any, Array<string>]>
+  {
+    RoomManager.FindRoom(projectId)
+                .GetProject()
+                .AddObject(objectToCreate);
+  
+    MongooseDatabase.CreateObject(objectToCreate, projectId)
 
-//   public static DeleteObject(objectToDelete : FlowObject) : void
-//   {
-//     RoomManager.FindRoom(objectToDelete.RoomNumber)
-//                 .GetProject()
-//                 .DeleteObject(objectToDelete);
-//   }
+    let affectedClients: Array<string> = [];
 
-//   public static UpdateObject(objectToUpdate : FlowObject) : void
-//   {
-//     RoomManager.FindRoom(objectToUpdate.RoomNumber)
-//                 .GetProject()
-//                 .UpdateFAMObject(objectToUpdate);
-//   }
+    // get all of the clients that are in that room so that we can tell them 
+    let roomClients = await RoomManager.getClients(projectId)
+
+    roomClients.forEach((clients, username, map) => {
+      affectedClients.concat(clients)
+    })
+    return [objectToCreate, affectedClients]
+  }
+
+  public static async DeleteObject(objectToDelete : FlowObject, projectId: string) : Promise<[any, Array<string>]>
+  {
+    RoomManager.FindRoom(projectId)
+                .GetProject()
+                .DeleteObject(objectToDelete);
+
+    MongooseDatabase.DeleteObject(objectToDelete.Id, projectId)
+
+    let affectedClients: Array<string> = [];
+
+    // get all of the clients that are in that room so that we can tell them 
+    let roomClients = await RoomManager.getClients(projectId)
+
+    roomClients.forEach((clients, username, map) => {
+      affectedClients.concat(clients)
+    })
+
+    return ["deleted " + objectToDelete.Id, affectedClients]
+  }
+
+  public static async UpdateObject(objectToUpdate : FlowObject, projectId: string) : Promise<[any, Array<string>]>
+  {
+    RoomManager.FindRoom(projectId)
+                .GetProject()
+                .UpdateFAMObject(objectToUpdate);
+
+    let affectedClients: Array<string> = [];
+
+    // get all of the clients that are in that room so that we can tell them 
+    let roomClients = await RoomManager.getClients(projectId)
+
+    roomClients.forEach((clients, username, map) => {
+      affectedClients.concat(clients)
+    })
+    return [objectToUpdate , affectedClients]
+  }
 
 //   /**
 //    * The final update to be sent to clients and saved in the database
 //    * @param objectToUpdate - object which holds the final truth of position for the databsse
 //    */
-//   public static FinalizedUpdateObject(objectToUpdate : FlowObject) : void
-//   {
-//     RoomManager.FindRoom(objectToUpdate.RoomNumber)
-//                 .GetProject()
-//                 .UpdateFAMObject(objectToUpdate);
+  public static async FinalizedUpdateObject(objectToUpdate : FlowObject, projectId: string) : Promise<[any, Array<string>]>
+  {
+    RoomManager.FindRoom(projectId)
+                .GetProject()
+                .UpdateFAMObject(objectToUpdate);
     
-//     //Send message to all clients notifying object change
+    //Send message to all clients notifying object change
+    let affectedClients: Array<string> = [];
 
-    
-//   }
-// }
+    // get all of the clients that are in that room so that we can tell them 
+    let roomClients = await RoomManager.getClients(projectId)
+
+    roomClients.forEach((clients, username, map) => {
+      affectedClients.concat(clients)
+    })
+    return [ objectToUpdate, affectedClients ]
+  }
+}
