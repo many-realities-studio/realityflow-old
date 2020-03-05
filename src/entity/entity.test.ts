@@ -34,20 +34,24 @@ describe("connection", ()=>{
         expect(conn).toBeTruthy()
     })
 })
+
 describe('User', () => {
     it('Can be created', async () => {
+        // arrange
         let newUser = new User();
         newUser.Username = 'CanBeCreated'
         newUser.Password = 'Password'
         newUser.Projects = []
-
+        // act
         let returnedUser = await getConnection("test").manager.save(newUser)
 
+        // assert
         expect(returnedUser).toBeTruthy()
         expect(bcrypt.compareSync('Password', returnedUser.Password)).toEqual(true)
     })
 
     it('can be found', async () => {
+        // arrange
         let conn = await getConnection("test")
 
         let newUser = new User();
@@ -59,19 +63,20 @@ describe('User', () => {
         expect(returnedUser).toBeTruthy()
         expect(bcrypt.compareSync('Password', returnedUser.Password)).toEqual(true)
 
+        // act
         let check = await conn.createQueryBuilder().
             select("user").
             from(User, "user").
             where("user.Username = :username", {username: 'CanBeFound'}).
             getOne()
-
+        
+        // assert
         expect(check).toBeTruthy()
         expect(bcrypt.compareSync('Password', check.Password)).toEqual(true)
     })
 
     it('Can be deleted', async () => {
-
-        
+        // arrange
         let conn = await getConnection("test")
 
         let newUser = new User();
@@ -82,8 +87,11 @@ describe('User', () => {
         let returnedUser = await conn.manager.save(newUser)
         expect(returnedUser).toBeTruthy()
         expect(bcrypt.compareSync('Password', returnedUser.Password)).toEqual(true)
-
+        
+        // act
         await conn.manager.remove(returnedUser)
+        
+        // assert
         let check = await conn.createQueryBuilder().
             select("user").
             from(User, "user").
@@ -96,6 +104,7 @@ describe('User', () => {
     
 
     it('can be updated', async () => {
+        // arrange
         let conn = await getConnection("test");
 
         let newUser = new User();
@@ -106,13 +115,15 @@ describe('User', () => {
         let returnedUser = await conn.manager.save(newUser);
         expect(returnedUser).toBeTruthy();
         expect(bcrypt.compareSync('Password', returnedUser.Password)).toEqual(true);
-
+        
+        // act
         await conn.createQueryBuilder().
             update(User).
             set({Password: "newPassword"}).
             where("Username = :Username", {Username: "CanBeUpdated"}).
             execute();
 
+        // assert
         let check = await conn.createQueryBuilder().
             select("user").
             from(User, "user").
@@ -131,6 +142,7 @@ describe('User', () => {
 
 describe('Project', () => {
     it("Can be created", async () => {
+        // arrange
         let conn = getConnection("test");
 
         let createdProject = new Project();
@@ -139,14 +151,15 @@ describe('Project', () => {
         createdProject.Description = "createdProjectDescription"
         createdProject.DateModified = Date.now()
         createdProject.ObjectList = []
-
+        // act
         let returnedProject = await conn.manager.save(createdProject)
-        
+        // assert
         expect(returnedProject.Id).toEqual("createdProjectId")
         expect(returnedProject.ProjectName).toEqual("createdProjectName")
     })
 
     it("can be found", async () => {
+        // arrange
         let conn = getConnection("test");
 
         let foundProject = new Project();
@@ -157,19 +170,19 @@ describe('Project', () => {
         foundProject.ObjectList = []
 
         let returnedProject = await conn.manager.save(foundProject)
-
+        // act
         let check = await conn.createQueryBuilder().
             select("project").
             from(Project, "project").
             where("Id = :id", {id: "foundProjectId"}).
             getOne();
-
+        // assert
         expect(check.Id).toEqual("foundProjectId")
         expect(check.ProjectName).toEqual("foundProjectName")
     })
 
     it("can be updated", async () =>{
-
+        // arrange
         let conn = getConnection("test");
 
         let updateProject = new Project();
@@ -178,24 +191,28 @@ describe('Project', () => {
         updateProject.Description = "updateProjectDescription"
         updateProject.DateModified = Date.now()
         updateProject.ObjectList = []
-
+        
         let returnedProject = await conn.manager.save(updateProject)
-
+        
+        // act 
         let check = await conn.createQueryBuilder().
             select("project").
             from(Project, "project").
             where("Id = :id", {id: "updateProjectId"}).
             getOne();
-
+        
+        // assert
         expect(check.Id).toEqual("updateProjectId")
         expect(check.ProjectName).toEqual("updateProjectName")
 
+        // act
         await conn.createQueryBuilder().
             update(Project).
             set({ProjectName: "newName"}).
             where("Id = :id", {id: "updateProjectId"}).
             execute()
-
+        
+        // assert
         let check_new = await conn.createQueryBuilder().
             select("project").
             from(Project, "project").
@@ -207,6 +224,7 @@ describe('Project', () => {
     })
 
     it("can be deleted", async ()=>{
+        // arrange
         let conn = getConnection("test");
 
         let deletedProject = new Project();
@@ -217,27 +235,31 @@ describe('Project', () => {
         deletedProject.ObjectList = []
 
         let returnedProject = await conn.manager.save(deletedProject)
-
+        
+        // act
         let check = await conn.createQueryBuilder().
             select("project").
             from(Project, "project").
             where("Id = :id", {id: "deletedProjectId"}).
             getOne();
-
+        
+        // assert
         expect(check.Id).toEqual("deletedProjectId")
         expect(check.ProjectName).toEqual("deletedProjectName")
-
+        
+        // act
         await conn.manager.remove(returnedProject)
         let check_again = await conn.createQueryBuilder().
             select("project").
             from(Project, "project").
             where("Id = :id", {id: "deletedProjectId"}).
             getOne();
-
+        
+        // assert
         expect(check_again).toBeFalsy()
     })
 
-    it("Can be owned by a user", async () => {
+    it("Can be owned by a user and is deleted when the user is deleted", async () => {
         
         // arrange
         let conn = getConnection("test")
@@ -246,12 +268,12 @@ describe('Project', () => {
         newUser.Username = 'CanBeOwner'
         newUser.Password = 'Password'
         newUser.Projects = []
-
+        // act
         let returnedUser = await conn.manager.save(newUser);
-
+        // assert
         expect(returnedUser).toBeTruthy()
         expect(bcrypt.compareSync('Password', returnedUser.Password)).toEqual(true)
-
+        // arrange
         let createdProject = new Project();
         createdProject.Id = "ownedProjectId";
         createdProject.ProjectName = "ownedProjectName"
@@ -259,18 +281,31 @@ describe('Project', () => {
         createdProject.DateModified = Date.now()
         createdProject.ObjectList = []
         createdProject.Owner = newUser
-
+        
+        // act
         let returnedProject = await conn.manager.save(createdProject)
         
-        let check = await conn.createQueryBuilder().select("project").from(Project, "project").where("Id = :id", {id: "ownedProjectId"}).getOne()
+        // assert
+        let check = await conn.createQueryBuilder().select("project").from(Project, "project").where("Id = :id", {id: "ownedProjectId"}).getRawOne()
+        expect(check.project_ownerUsername).toEqual(newUser.Username)
+        
+        // act 
+        await conn.createQueryBuilder().delete().from(User).where("Username = :id", {id: 'CanBeOwner'}).execute()
+        
+        // assert
+        let checkUser = await conn.createQueryBuilder().select().from(User, "user").where("Username = :id", {id: 'CanBeOwner'}).getOne()
+        expect(checkUser).toBeFalsy()
+        let check_again = await conn.createQueryBuilder().select("project").from(Project, "project").where("Id = :id", {id: "ownedProjectId"}).getOne()
+        expect(check_again).toBeFalsy()
 
-        expect(returnedProject.Owner).toBeTruthy()
     })
+
 
 })
 
 describe ('Object', () => {
     it("can be created", async () => {
+        // Arrange
         let conn = getConnection("test")
 
         let newObject = new DBObject();
@@ -290,15 +325,16 @@ describe ('Object', () => {
         newObject.G = 1;
         newObject.B = 1;
         newObject.A = 1;
-
+        // act
         let returnedObject = await conn.manager.save(newObject)
-
+        // assert
         expect(returnedObject.Id).toEqual("newObjectId")
         expect(returnedObject.Name).toEqual("newObjectName")
 
     })
 
     it("can be found", async () => {
+        // arrange/act
         let conn = getConnection("test")
 
         let foundObject = new DBObject();
@@ -320,7 +356,7 @@ describe ('Object', () => {
         foundObject.A = 1;
 
         let returnedObject = await conn.manager.save(foundObject)
-
+        // assert 
         expect(returnedObject.Id).toEqual("foundObjectId")
         expect(returnedObject.Name).toEqual("foundObjectName")
 
@@ -329,7 +365,7 @@ describe ('Object', () => {
     })
 
     it("can be updated", async () => {
-
+        // arrange
         let conn = getConnection("test")
 
         let updatedObject = new DBObject();
@@ -349,7 +385,7 @@ describe ('Object', () => {
         updatedObject.G = 1;
         updatedObject.B = 1;
         updatedObject.A = 1;
-
+        
         let returnedObject = await conn.manager.save(updatedObject)
 
         expect(returnedObject.Id).toEqual("updatedObjectId")
@@ -357,15 +393,16 @@ describe ('Object', () => {
 
         let check = await conn.createQueryBuilder().select("object").from(DBObject, "object").where("object.Id = :id", {id: "updatedObjectId"}).getOne();
         expect(check.Name).toEqual("updatedObjectName");
-
+        // act
         await conn.createQueryBuilder().update(DBObject).set({Name: "newName"}).where("Id = :id", {id: "updatedObjectId"}).execute()
-
+        // assert
         let check_Updated = await conn.createQueryBuilder().select("object").from(DBObject, "object").where("object.Id = :id", {id: "updatedObjectId"}).getOne();
         expect(check_Updated.Name).toEqual("newName");
 
     })
 
     it("can be deleted", async () => {
+        // arrange
         let conn = getConnection("test")
 
         let deletedObject = new DBObject();
@@ -393,7 +430,7 @@ describe ('Object', () => {
 
         let check = await conn.createQueryBuilder().select("object").from(DBObject, "object").where("object.Id = :id", {id: "deletedObjectId"}).getOne();
         expect(check.Name).toEqual("deletedObjectName");
-
+        // act
         let result = await conn
             .createQueryBuilder()
             .delete()
@@ -401,8 +438,7 @@ describe ('Object', () => {
             .where("Id = :id", {id: "deletedObjectId"})
             .execute()
 
-        console.log(result)
-
+        // assert
         let check_deleted = await conn.createQueryBuilder().select("object").from(DBObject, "object").where("object.Id = :id", {id: "deletedObjectId"}).getOne();
         expect(check_deleted).toBeFalsy();
 
