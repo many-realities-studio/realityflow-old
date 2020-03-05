@@ -150,13 +150,36 @@ export class ServerEventDispatcher {
             console.log(evt.data);
 
 
-            let response = NewMessageProcessor.ParseMessage(ws.ID, json);
+            NewMessageProcessor.ParseMessage(ws.ID, json).then((res) => {
 
-            for(var i = 0; i < response.affectedClients.length; i++)
+                let clients = res.affectedClients;
+
+                if(!clients)
+                {
+                    console.log("Didn't receive a clients array ");
+                }
+                else
+                {
+                    for(var i = 0; i < clients.length; i++)
+                    {
+                        let key = clients[i];
+    
+                        let json = JSON.stringify(res.data);
+                        ServerEventDispatcher.SocketConnections.get(key).send(json);
+                    }
+                }
+                
+            
+            });
+
+          /*  let clients = response.affectedClients;
+
+            for(var i = 0; i < clients.length; i++)
             {
-                let key = response.affectedClients[i];
+                let key = clients[i];
                 ServerEventDispatcher.SocketConnections.get(key).send(response.payload);
             }
+            */
         }
 
 
