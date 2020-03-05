@@ -4,7 +4,7 @@ import { FlowProject } from "./FlowLibrary/FlowProject";
 
 import { RoomManager } from "./RoomManager";
 
-import { MongooseDatabase } from "./Database/MongooseDatabase"
+import { TypeORMDatabase } from "./Database/TypeORMDatabase"
 
 
   
@@ -41,7 +41,7 @@ export class StateTracker{
   public static async CreateProject(projectToCreate: FlowProject, user: string, client: string) : Promise<[any, Array<string>]>
   {
     // Create the project in the database and give a specific user ownership
-    await MongooseDatabase.CreateProject(projectToCreate, user)
+    await TypeORMDatabase.CreateProject(projectToCreate, user)
 
     return ["Success", [client] ];
 
@@ -63,7 +63,7 @@ export class StateTracker{
     let clients = RoomManager.DestroyRoom(projectToDeleteId)
 
     // Remove project from database 
-    await MongooseDatabase.DeleteProject(projectToDeleteId);
+    await TypeORMDatabase.DeleteProject(projectToDeleteId);
 
     let clientIds : Array<string> = []
 
@@ -90,7 +90,7 @@ export class StateTracker{
   public static async OpenProject(projectToOpenID: any) : Promise<[any, Array<string>]>
   {
     // find project in list of projects so that we can return it
-    let projectFound : FlowProject = await MongooseDatabase.GetProject(projectToOpenID);
+    let projectFound : FlowProject = await TypeORMDatabase.GetProject(projectToOpenID);
     
     // grabs all the clients from the room manager
     let affectedClients: string[] = []
@@ -121,7 +121,7 @@ export class StateTracker{
   { 
     let success = false;
 
-    await MongooseDatabase.CreateUser(username, password)
+    await TypeORMDatabase.CreateUser(username, password)
 
     return [!success, [client] ];
   }
@@ -139,16 +139,17 @@ export class StateTracker{
     //find every client that's currently logged in with these credentials
     let clients = StateTracker.currentUsers.get(userName)
     
-    let affectedClients = Array.from(clients.keys())
+    let affectedClients : Array<string>= []
 
     // if there's any client that is logged in with these credentials, log them out 
     if(clients != undefined)
       clients.forEach( (roomCode, clientId, map) => {
         this.LogoutUser(userName, password, clientId)
+        affectedClients.push(clientId)
       })
     
     //remove user from the database too
-    await MongooseDatabase.DeleteUser(userName);
+    await TypeORMDatabase.DeleteUser(userName);
 
     return ['Deleted', affectedClients];
   }
@@ -168,7 +169,7 @@ export class StateTracker{
     affectedClients.push(ClientId);
 
     //Authenticate user
-    if(!MongooseDatabase.AuthenticateUser(userName, password))
+    if(!TypeORMDatabase.AuthenticateUser(userName, password))
       return ['Failure', affectedClients];
 
     // check if user is already logged in - 
@@ -200,7 +201,7 @@ export class StateTracker{
     let affectedClients = [];
     affectedClients.push(ClientId);
     //Authenticate user, I guess. Don't want someone trying to log someone else out
-    if(!MongooseDatabase.AuthenticateUser(Username, password))
+    if(!TypeORMDatabase.AuthenticateUser(Username, password))
       return ['Failure', affectedClients];
 
     // check if user is already logged in - 
@@ -247,6 +248,10 @@ export class StateTracker{
    */
   public static async JoinRoom(roomCode: string, user: string, client: string) :  Promise<[any, Array<string>]>
   {
+
+    if(RoomManager.FindRoom == undefined)
+      RoomManager.CreateRoom(roomCode)
+
     // move the user from whatever room they were in into whatever room they want to be in
     let oldRoom = this.currentUsers.get(user).get(client)
     await RoomManager.LeaveRoom(oldRoom, user, client)
@@ -273,7 +278,7 @@ export class StateTracker{
                 .GetProject()
                 .AddObject(objectToCreate);
   
-    MongooseDatabase.CreateObject(objectToCreate, projectId)
+    TypeORMDatabase.CreateObject(objectToCreate, projectId)
 
     let affectedClients: Array<string> = [];
 
@@ -292,7 +297,7 @@ export class StateTracker{
                 .GetProject()
                 .DeleteObject(objectToDelete);
 
-    MongooseDatabase.DeleteObject(objectToDelete.Id, projectId)
+    TypeORMDatabase.DeleteObject(objectToDelete.Id, projectId)
 
     let affectedClients: Array<string> = [];
 

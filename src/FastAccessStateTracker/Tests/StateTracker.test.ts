@@ -1,7 +1,7 @@
 import { StateTracker } from "../StateTracker"
 
 import { FlowUser } from "../FlowLibrary/FlowUser"
-import MongooseDatabase from "../Database/MongooseDatabase"
+import TypeORMDatabase from "../Database/TypeORMDatabase"
 import { RoomManager } from "../RoomManager"
 import { FlowProject } from "../FlowLibrary/FlowProject"
 
@@ -9,7 +9,7 @@ const databaseUserCreationMock = jest.fn()
 
 let roomManager : Map<string, Map<string, Array<string> > >
 
-jest.mock('../Database/MongooseDatabase')
+jest.mock('../Database/TypeORMDatabase')
 jest.mock('../RoomManager')
 
 const fakeJoinRoom = jest.fn(async(roomCode: string, username:string, client: string) => {})
@@ -21,17 +21,25 @@ RoomManager.LeaveRoom = fakeLeaveRoom
 const fakeDestroyRoom = jest.fn((roomCode:string) => new Map<string, Array<string>>())
 RoomManager.DestroyRoom = fakeDestroyRoom
 
+const fakeGetClients = jest.fn((roomCode) => {
+    let x = new Map<string, Array<string>>()
+    x.set("testUser", ["testClient1", "testClient2"])
+    return x
+})
+RoomManager.getClients = fakeGetClients
+
 const fakeAuthentication = jest.fn(async (username:string, password:string) => true)
-MongooseDatabase.AuthenticateUser = fakeAuthentication
+TypeORMDatabase.AuthenticateUser = fakeAuthentication
 
 const mongooseProjectDeleteMock = jest.fn(async (projectToDelete: string) => {})
-MongooseDatabase.DeleteProject = mongooseProjectDeleteMock
+TypeORMDatabase.DeleteProject = mongooseProjectDeleteMock
 
 const mongooseUserDeleteMock = jest.fn(async (userToDelete: string) => {})
-MongooseDatabase.DeleteUser = mongooseUserDeleteMock
+TypeORMDatabase.DeleteUser = mongooseUserDeleteMock
 
 const mongooseProjectCreateMock = jest.fn( async (projectToCreate: FlowProject) => {} )  
-MongooseDatabase.CreateProject = mongooseProjectCreateMock
+TypeORMDatabase.CreateProject = mongooseProjectCreateMock
+
 
 const mongooseProjectGetMock = jest.fn( async (projectToGet: string) => {
     return new FlowProject({
@@ -41,7 +49,7 @@ const mongooseProjectGetMock = jest.fn( async (projectToGet: string) => {
         ProjectName: "hello"
     })
 })
-MongooseDatabase.GetProject = mongooseProjectGetMock
+TypeORMDatabase.GetProject = mongooseProjectGetMock
 
 
 describe("User", () => {
@@ -54,7 +62,7 @@ describe("User", () => {
         
         const mongooseUserCreateMock = jest.fn(async (userName:string, Password: string) => {}) 
 
-        MongooseDatabase.CreateUser = mongooseUserCreateMock
+        TypeORMDatabase.CreateUser = mongooseUserCreateMock
 
         //act
         await StateTracker.CreateUser(testUser.Username, testUser.Password, testUser.Client)

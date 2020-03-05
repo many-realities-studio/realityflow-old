@@ -61,12 +61,6 @@ export default class TypeORMDatabase
     await UserOperations.deleteUser(userToDelete);
   }
 
-  /** 
-  * Update a User in the database
-  */ 
-  public static async UpdateUser(userToUpdate: FlowUser): Promise<void> {
-    await UserOperations.updateUser(userToUpdate.Username, userToUpdate);
-  }
 
   /**
   * Get a user based on their username 
