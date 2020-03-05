@@ -17,30 +17,26 @@ import { MessageBuilder } from "./MessageBuilder";
 
 interface ICommand
 {
-  ExecuteCommand(data: any) : Promise<[String, Array<String>]>;
+  ExecuteCommand(data: any, user: string, client: string) : Promise<[String, Array<String>]>;
 }
 
 // Project Commands
 
-// class Command_CreateProject implements ICommand
-// {
-//   async ExecuteCommand(data: any): Promise<[String, Array<String>]>
-//   {
-//     let project : FlowProject = new FlowProject(data);
-    
-//     // let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
-    
-//     let user : FlowUser = 
+class Command_CreateProject implements ICommand
+{
+  async ExecuteCommand(data: any, user: string, client: string): Promise<[String, Array<String>]>
+  {
+    let project : FlowProject = new FlowProject(data);
 
-//     StateTracker.CreateProject(project, userConnected);
+    let returnData = await StateTracker.CreateProject(project, user, client);
 
-//     // Create Project only requires a success message being sent
-//     //TODO: Ensure success before sending success message
-//     let returnMessage = MessageBuilder.SuccessMessage("CreateProject");
+    // Create Project only requires a success message being sent
+    //TODO: Ensure success before sending success message
+    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
     
-//     return returnMessage;
-//   }
-// }
+    return returnMessage;
+  }
+}
 
 // class Command_DeleteProject implements ICommand
 // {
@@ -303,8 +299,8 @@ export class CommandContext
    * @param commandToExecute The command to be executed
    * @param data The data which is needed for the command to execute.
    */
-  async ExecuteCommand(commandToExecute: string, data: any) : Promise<[String, Array<String>]>
+  async ExecuteCommand(commandToExecute: string, data: any, user: string, client: string) : Promise<[String, Array<String>]>
   {
-    return (await this._CommandList.get(commandToExecute).ExecuteCommand(data));
+    return (await this._CommandList.get(commandToExecute).ExecuteCommand(data, user, client));
   }
 }
