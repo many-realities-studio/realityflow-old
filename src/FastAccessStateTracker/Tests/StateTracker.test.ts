@@ -205,7 +205,7 @@ describe("Project", () => {
 
     it("can be deleted", async () => {
 
-        await StateTracker.DeleteProject("testProject")
+        await StateTracker.DeleteProject("testProject", "fakeUser", "fakeClient")
 
         // ngl this kinda feels stupid but woo bottom-up testing
         expect(fakeDestroyRoom).toBeCalledWith("testProject")

@@ -53,7 +53,7 @@ export class StateTracker{
    * Deletes the project from the FAM and the database
    * @param projectToDeleteId
    */
-  public static async DeleteProject(projectToDeleteId: string) : Promise<[any, Array<string>]>
+  public static async DeleteProject(projectToDeleteId: string, user: string, client: string) : Promise<[any, Array<string>]>
   {    
 
     if(!projectToDeleteId)
@@ -66,7 +66,7 @@ export class StateTracker{
     await TypeORMDatabase.DeleteProject(projectToDeleteId);
 
     let clientIds : Array<string> = []
-
+    clientIds.push(client)
     clients.forEach((userClients: Array<string>, user: string, map) =>{
       
       // add clients of a given user to the list of clients to send back
