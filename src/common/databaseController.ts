@@ -2,7 +2,10 @@
 import {UserOperations} from "../commands/user";
 import {ClientOperations} from "../commands/client";
 import {ProjectOperations} from "../commands/project";
-//import {SceneOperations} from "../commands/scene";
+import {FlowClient} from "../flow_classes/FlowClient";
+import {FlowUser} from "../flow_classes/FlowUser";
+import {FlowProject} from "../flow_classes/FlowProject";
+import {FlowObject} from "../flow_classes/FlowObject";
 import {ObjectOperations} from "../commands/object";
 import e = require("express");
 
@@ -10,48 +13,43 @@ import e = require("express");
 // another note - add error handling
 export class databaseController{ 
     
-    public static async createObject(json: any ){
-            var object = await ObjectOperations.createObject(json.obj);
-            var project = await ProjectOperations.findProject(json.project);
+    public static async CreateObject(inputObj: FlowObject, inputProject: FlowProject){
 
+            var object = await ObjectOperations.createObject(inputObj);
+            var project = await ProjectOperations.findProject(inputProject);
 
             project.objs.push(object._id);
             await project.save();
 
-            json.project = project;
-            json.obj._id = object._id;
-                
-        return json;
+        return {project, object};
     }
 
-    public static async updateObject(json: any){
-        await ObjectOperations.updateObject(json.obj);
+    public static async UpdateObject(inputObj: FlowObject){
+        await ObjectOperations.updateObject(inputObj);
     }
 
-    public static async deleteObject(json: any){
-        var project = await ProjectOperations.findProject(json.project);
-        project.objs.splice(project.objs.indexOf(json.obj._id),1);
+    // weird type shit to beware of here. As far as I can tell it's realistically all just strings,
+    // but there's some weird type specification on the mongo side that is definitely not coming from the client
+    // so for now I'm going to say that obj._id is of any type. Yay type coercion!
+    public static async DeleteObject(inputProject:FlowProject, inputObj:FlowObject){
+        var project = await ProjectOperations.findProject(project);
+        
+        project.objs.splice(project.objs.indexOf(inputObj._id),1);
         await project.save();
-        await ObjectOperations.deleteObject(json.obj);
+        await ObjectOperations.deleteObject(inputObj);
     }
 
-    //the return for this seems unnecessary but we're going to go with it for now.
-    public static async createProject(json: any){
-            var project = await ProjectOperations.createProject(json.project, json.client, json.user);
-            project.clients.push(json.client._id);
+    
+    public static async CreateProject(inProject: FlowProject, inUser: FlowUser, inClient: FlowClient){
+            var project = await ProjectOperations.createProject(inProject, inClient, inUser);
+            project.clients.push(inClient._id);
             await project.save();
 
-            json.project = project;
-
-            var payloadString = JSON.stringify(json);
-            return payloadString;
+            return project
     }
 
-    public static async fetchObjects(json: any){
-        // console.log(json.project)
+    public static async FetchObjects(json: any){
         var project = await ProjectOperations.findProject(json.project);
-        console.log("hello hello hello \n\n" +project)
-        
         
         var objectIds = project.objs;
         var objects = [];
@@ -69,73 +67,75 @@ export class databaseController{
         return objects;
     }
 
-    public static async deleteProject(project: any){
+    public static async DeleteProject(project: FlowProject){
         await ProjectOperations.deleteProject(project)
         return;
     }
 
-    public static async logoutUser(json: any){
-        var user = await UserOperations.findUser(json.user);
+    public static async LogoutUser(inUser: FlowUser, inClient: FlowClient){
+        var user = await UserOperations.findUser(inUser);
 
         var clientArray = user.clients;
 
-        var filteredArray = clientArray.filter(function(value, index, array){
+        var filteredArray = clientArray.filter(function(value: any, index: any, array: any){
 
-            return value!=json.client._id
+            return value!=inClient._id;
 
         });
 
         user.clients = filteredArray;
 
-        ClientOperations.deleteClient(json.client._id);
+        ClientOperations.deleteClient(inClient._id);
         
         return;
     }
 
     // authenticate user and then return projects
     // and add a client
-    public static async loginUser(json: any){
+    public static async LoginUser(inUser: FlowUser, inClient: FlowClient){
         
-        json.returnedUser = await UserOperations.loginUser(json.user);
+        let returnedUser = await UserOperations.loginUser(inUser);
         
-        if (json.returnedUser == undefined)
+        if (returnedUser == undefined)
             {return null;}
 
-        json.user._id = json.returnedUser._id;
+        let newUserId = returnedUser._id;
         
-        json.projects = await ProjectOperations.fetchProjects(json.returnedUser);
-        var newClientId = await ClientOperations.createClient(json.client, json.returnedUser._id);
+        let projects = await ProjectOperations.fetchProjects(returnedUser);
+        var newClient = await ClientOperations.createClient(inClient, returnedUser._id);
         
-        json.client._id = newClientId.id;
+        let newClientId = newClient._id;
+
+        let currentUser = await UserOperations.findUser(returnedUser);
+        currentUser.clients.push(newClientId);
+        currentUser.save();
         
-        json.currentUser = await UserOperations.findUser(json.returnedUser);
-        
-        return json;
+        return {projects, newClientId, newUserId};
     }
 
-    public static async createUser(json: any){
-        var newUserPayload = await UserOperations.createUser(json.user);
-        var newClientId = await ClientOperations.createClient(json.client, newUserPayload._id);
+    public static async CreateUser(inClient: FlowClient, inUser: FlowUser){
+        var newUserPayload = await UserOperations.createUser(inUser);
+        var newClientId = await ClientOperations.createClient(inClient, newUserPayload._id);
 
         newUserPayload.clients.push(newClientId);
         newUserPayload.save();
 
-        json.user._id = newUserPayload._id;
-        json.client._id = newClientId;
+        let newUserId = newUserPayload._id;
         
-        return json;
+        return { newUserId , newClientId};
     }
 
-    public static async deleteUser(json: any){
-        var User = UserOperations.findUser(json.user);
+    public static async DeleteUser(inUser: FlowUser){
+        
+        var User = await UserOperations.findUser(inUser);
         var clientArray = User.clients;
 
         for(var arr in clientArray){
 
-            ClientOperations.deleteClient(arr);
+            await ClientOperations.deleteClient(arr);
 
         }
 
-        UserOperations.deleteUser(json.user);
+        await UserOperations.deleteUser(inUser);
     }
 }

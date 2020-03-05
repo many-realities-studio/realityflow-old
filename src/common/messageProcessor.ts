@@ -2,58 +2,55 @@ import { ServerEventDispatcher } from "../server";
 import { Commands } from "./commands";
 import {databaseController} from "./databaseController"
 
-
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
-
 // DB API
-import {UserOperations} from "../commands/user";
-import {ClientOperations} from "../commands/client";
 import {ProjectOperations} from "../commands/project";
-//import {SceneOperations} from "../commands/scene";
-import {ObjectOperations} from "../commands/object";
+import {FlowClient} from "../flow_classes/FlowClient";
+import {FlowUser} from "../flow_classes/FlowUser";
+import {FlowProject} from "../flow_classes/FlowProject";
+import {FlowObject} from "../flow_classes/FlowObject";
 
 export class MessageProcessor{
 
 public static async serverMessageProcessor(json: any, connection: any){
 
-   var command: Number = json.command;
+    var command: number = json.command;
+    
+    var request = command / 1000;
+    var action = command % 100;
 
-   if(command>=Commands.object.CREATE&&command<=Commands.object.DELETE){
+    if(request == Commands.request.object){
 
-        switch(command){
+        switch(action){
 
             // Creates object, adds object ID to project object array, and
             // sends out payload with updated project and object info
-            case Commands.object.CREATE:{
+            case Commands.action.CREATE:{
 
-                var ret = await databaseController.createObject(json)
+                var obj = new FlowObject(json.obj);
+                var proj = new FlowProject(json.project)
+                
+                var ret = await databaseController.CreateObject(obj, proj)
+
+                json.project = ret.project;
+                json.obj._id = ret.object._id
 
                 ServerEventDispatcher.broadcast(ret, true);
                 
             }
 
             //Broadcasts the change to all other involved clients
-            case Commands.object.UPDATE:{
+            case Commands.action.UPDATE:{
                 ServerEventDispatcher.broadcast(json, false);
                 break;
             }
             
-            // Update the object info in the DB
-            // I know this is silly, but it's a little messy
-            // to have control going both ways - esp. when changes 
-            // aren't just going to the database anymore
-            case Commands.object.UPDATELONGTERM:{
-                await databaseController.updateObject(json)
-                break;
-            }
 
             //Deletes the object from DB and broadcasts delete to
             //all involved clients
-            case Commands.object.DELETE:{
+            case Commands.action.DELETE:{
 
                 ServerEventDispatcher.broadcast(json, true);
-                await databaseController.deleteObject(json)
+                await databaseController.DeleteObject(new FlowProject(json.project), new FlowObject(json.obj) )
 
                 break;
             }
@@ -61,28 +58,28 @@ public static async serverMessageProcessor(json: any, connection: any){
         }
 
    }
-   else if(command>=Commands.project.CREATE&&command<=Commands.project.DELETE){
+   else if(request == Commands.request.project){
 
-        switch(command){
+        switch(action){
 
             // Creates project in DB and sends project ID back to creator
             // as of 
-            case Commands.project.CREATE:{
+            case Commands.action.CREATE:{
 
-                var payload: String = await databaseController.createProject(json)
-                ServerEventDispatcher.send(payload, connection);
+                let inProj = new FlowProject(json.project);
+                let inClient = new FlowClient(json.client);
+                let inUser = new FlowUser(json.user);
+
+                var newProject = await databaseController.CreateProject(inProj, inUser, inClient);
+                
+                json.project = newProject;
+                ServerEventDispatcher.send(json, connection);
 
                 break;
             }
 
-            case Commands.project.UPDATE:{
+            case Commands.action.UPDATE:{
                 // there's nothing in here????
-
-                break;
-            }
-
-            case Commands.project.FETCH:{
-                // there's also nothing in here???
 
                 break;
             }
@@ -93,7 +90,7 @@ public static async serverMessageProcessor(json: any, connection: any){
             // Fetches project from DB, adds current client ID to
             // project client IDs list, fetches all objects in the
             // project, and broadcasts the complete payload to the requestor
-            case Commands.project.OPEN:{
+            case Commands.action.FETCH:{
             
                 //I think that this client stuff isn't that necessary?
                 var project = await ProjectOperations.findProject(json.project);
@@ -119,7 +116,7 @@ public static async serverMessageProcessor(json: any, connection: any){
 
                 }
 
-                var objects = await databaseController.fetchObjects(json)
+                var objects = await databaseController.FetchObjects(json)
 
                 json.objs = objects;
                 var payloadString = JSON.stringify(json);
@@ -128,31 +125,31 @@ public static async serverMessageProcessor(json: any, connection: any){
                 break;
             }
 
-            case Commands.project.DELETE:{
-                await databaseController.deleteProject(json);
+            case Commands.action.DELETE:{
+                await databaseController.DeleteProject(new FlowProject(json.project));
                 break;
             }
 
         }
    }
    // this is completely empty
-   else if(command>=Commands.scene.CREATE&&command<=Commands.scene.DELETE){
+   else if(request == Commands.request.scene){
 
         switch(command){
 
-            case Commands.scene.CREATE:{
+            case Commands.action.CREATE:{
 
 
                 break;
             }
 
-            case Commands.scene.UPDATE:{
+            case Commands.action.UPDATE:{
 
 
                 break;
             }
 
-            case Commands.scene.DELETE:{
+            case Commands.action.DELETE:{
 
 
                 break;
@@ -162,27 +159,28 @@ public static async serverMessageProcessor(json: any, connection: any){
 
    }
 
-   else if(command>=Commands.user.CREATE&&command<=Commands.user.DELETE){
+   else if(request == Commands.request.user){
 
-        switch(command){
+        switch(action){
 
             //Creates new user in DB, creates new client in DB, adds
             //client ID and connection to server connection array, and
             //sends the new user ID and client ID back to the creator
-            case Commands.user.CREATE: {
+            case Commands.action.CREATE: {
+                
 
-                // None of this should be being done in the message processor
-                newClientId = newClientId._id;
-
+                let ids = await databaseController.CreateUser(new FlowClient(json.client), new FlowUser(json.user))
+               
                 var connectionTracker = {
 
-                    clientId:   newClientId,
+                    clientId:   ids.newClientId,
                     connection: connection
 
                 };
 
-                json = await databaseController.createUser(json)
-               
+                json.client._id = ids.newClientId;
+                json.user._id = ids.newUserId;
+
                 ServerEventDispatcher.connections.push(connectionTracker);
 
                 var payloadString = JSON.stringify(json);
@@ -197,17 +195,16 @@ public static async serverMessageProcessor(json: any, connection: any){
             //creates new client ID, adds client ID and connection to server
             //connection array, fetches any projects that the user owns, and
             //returns the client ID and project ID(s) to the logged in user
-            case Commands.user.LOGIN: {
+            case Commands.action.LOGIN: {
 
-                var loginData = await databaseController.loginUser(json);
-                var newClientId = loginData.newClientId;
+                var loginData = await databaseController.LoginUser(new FlowUser(json.user), new FlowClient(json.client));
                 
-                // Mongoose has structures for password comparisons!
+                
                 if(loginData != null){
                 
                     var connectionTracker = {
 
-                        clientId:   newClientId,
+                        clientId:   loginData.newClientId,
                         connection: connection
 
                     };
@@ -218,9 +215,8 @@ public static async serverMessageProcessor(json: any, connection: any){
 
                     for(var x in ServerEventDispatcher.connections){}
 
-                    loginData.currentUser.clients.push(newClientId);
-                    loginData.currentUser.save();
-                    
+                    json.client._id = loginData.newClientId;
+                    json.user._id = loginData.newUserId;
                     json.projects = loginData.projects;
                     
                     var payloadString = JSON.stringify(json);
@@ -243,9 +239,9 @@ public static async serverMessageProcessor(json: any, connection: any){
 
             //Removes client ID from user in DB, deletes
             //client ID and connection from server connection array
-            case Commands.user.LOGOUT: {
+            case Commands.action.LOGOUT: {
 
-                await databaseController.logoutUser(json)
+                await databaseController.LogoutUser(new FlowUser(json.user), new FlowClient(json.client));
 
                 // This is a big no-no! This should be happening in the ServerEventDispatcher code 
                 var connectionIndex = ServerEventDispatcher.connections.findIndex(x => x.clientId === json.client._id);
@@ -253,18 +249,16 @@ public static async serverMessageProcessor(json: any, connection: any){
 
                 break;
             }
-
-            case Commands.user.FIND: {
-
-                
-
+            
+            // empty
+            case Commands.action.FETCH: {
                 break;
             }
 
-            //Delets user from DB
-            case Commands.user.DELETE: {
+            //Deletes user from DB
+            case Commands.action.DELETE: {
 
-                await databaseController.deleteUser(json)
+                await databaseController.DeleteUser(json)
 
                 var payloadString = JSON.stringify(json);
 

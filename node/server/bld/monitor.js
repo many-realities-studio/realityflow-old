@@ -19,3 +19,4 @@ ws.onmessage = function incoming(data) {
     let json = JSON.parse(decodedString);
     console.log(json);
 };
+//# sourceMappingURL=monitor.js.map
