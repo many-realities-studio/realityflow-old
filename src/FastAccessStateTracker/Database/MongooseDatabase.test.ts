@@ -9,14 +9,16 @@ import {FlowUser} from "../FlowLibrary/FlowUser";
 import {FlowProject} from "../FlowLibrary/FlowProject";
 import {FlowObject} from "../FlowLibrary/FlowObject";
 import TypeORMDatabase from "./TypeORMDatabase";
+
 import { Project } from "../../entity/project";
+import { User } from "../../entity/user";
 
 // this may seem like a pointless exercise. 
 // It kind of is, but I want to make sure that every 
 // level works the way that it's supposed to.
 describe("UserOperations", () => {
 
-    jest.mock("../../commands/UserOperations");
+    jest.mock("../../ORMCommands/user");
     
     it('Should be able to create a User', async () => {
         
@@ -45,12 +47,13 @@ describe("UserOperations", () => {
             password: "test"
         };
         
-        let mockUpdateUser = jest.fn(async (username) => {})
-        UserOperations.updateUser = mockUpdateUser
+        let mockFetchProjects = jest.fn(async (username) => {return [new Project()]})
+        ProjectOperations.fetchProjects = mockFetchProjects
+
         // act
         await TypeORMDatabase.GetUser(testUser.username)
         // assert
-        expect(mockUpdateUser).toBeCalledWith(testUser.username)
+        expect(mockFetchProjects).toBeCalledWith(testUser.username)
     })
 
     // not really worth implementing right now
@@ -246,7 +249,6 @@ describe("ProjectOperations", ()=>{
         // assert
         expect(mockDeleteProject).toBeCalledWith(testProject1.Id);
     })
-
 
 })
     

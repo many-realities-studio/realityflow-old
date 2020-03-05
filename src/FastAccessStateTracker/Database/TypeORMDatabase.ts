@@ -26,15 +26,10 @@ export default class TypeORMDatabase
 
   /**
   * Deletes the project and all its objects from the database
+  * This works because deletes cascade
   */
   public static async DeleteProject(projectToDeleteId: string): Promise<void> {
-    var project = await ProjectOperations.findProject(projectToDeleteId)
-    var objects = project.ObjectList
     
-    objects.forEach(async (element: DBObject) => {
-      await ObjectOperations.deleteObject(element.Id, projectToDeleteId)
-    }); 
-
     await ProjectOperations.deleteProject(projectToDeleteId);
     return;
   }
