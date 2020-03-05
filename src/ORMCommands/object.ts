@@ -13,7 +13,7 @@ export class ObjectOperations {
     public static async createObject(objectInfo: any, projectId: string)
     {
         
-        let project = await getConnection()
+        let project = await getConnection(process.env.NODE_ENV)
             .createQueryBuilder()
             .select("Project")
             .from(Project, "Project")
@@ -25,20 +25,24 @@ export class ObjectOperations {
 
             newObject.Id =             objectInfo.Id
             newObject.Name =           objectInfo.name;
-            newObject.X =              objectInfo.x;
-            newObject.Y =              objectInfo.y;
-            newObject.Z =              objectInfo.z;
-            newObject.Q_x =            objectInfo.q_x;
-            newObject.Q_y =            objectInfo.q_y;
-            newObject.Q_z =            objectInfo.q_z;
-            newObject.Q_w =            objectInfo.q_w;
-            newObject.S_x =            objectInfo.s_x;
-            newObject.S_y =            objectInfo.s_y;
-            newObject.S_z =            objectInfo.s_z;
+            newObject.X =              objectInfo.X;
+            newObject.Y =              objectInfo.Y;
+            newObject.Z =              objectInfo.Z;
+            newObject.Q_x =            objectInfo.Q_x;
+            newObject.Q_y =            objectInfo.Q_y;
+            newObject.Q_z =            objectInfo.Q_z;
+            newObject.Q_w =            objectInfo.Q_w;
+            newObject.S_x =            objectInfo.S_x;
+            newObject.S_y =            objectInfo.S_y;
+            newObject.S_z =            objectInfo.S_z;
+            newObject.R =              objectInfo.R;
+            newObject.G =              objectInfo.G;
+            newObject.B =               objectInfo.B;
+            newObject.A =               objectInfo.A
             newObject.Project =        project;
             
 
-        await getConnection().manager.save(newObject);
+        await getConnection(process.env.NODE_ENV).manager.save(newObject);
     }
 
     /**
@@ -48,13 +52,11 @@ export class ObjectOperations {
      */
     public static async findObject(objectInfoId: any, projectId: string)
     {
-        var project = ProjectOperations.findProject(projectId)
-
-        var object = await getConnection()
+        var object = await getConnection(process.env.NODE_ENV)
             .createQueryBuilder()
             .select("DBObject")
             .from(DBObject, "DBObject")
-            .where({Id: objectInfoId, Project: project}).getOne()
+            .where({Id: objectInfoId}).getOne()
 
         return object;
         
@@ -68,27 +70,28 @@ export class ObjectOperations {
      */
     public static async updateObject(objectInfo: any, projectId: string) : Promise<void>
     {
-        await getConnection()
+        let project = getConnection(process.env.NODE_ENV).createQueryBuilder().select().from(Project, "project").where("Id = :id", {id: projectId}).getOne()
+
+        await getConnection(process.env.NODE_ENV)
             .createQueryBuilder()
             .update(DBObject)
             .set({
-                X:          objectInfo.x,
-                Y:          objectInfo.y,
-                Z:          objectInfo.z,
-                Q_x:        objectInfo.q_x,
-                Q_y:        objectInfo.q_y,
-                Q_z:        objectInfo.q_z,
-                Q_w:        objectInfo.q_w,
-                S_x:        objectInfo.s_x,
-                S_y:        objectInfo.s_y,
-                S_z:        objectInfo.s_z,
+                X:          objectInfo.X,
+                Y:          objectInfo.Y,
+                Z:          objectInfo.Z,
+                Q_x:        objectInfo.Q_x,
+                Q_y:        objectInfo.Q_y,
+                Q_z:        objectInfo.Q_z,
+                Q_w:        objectInfo.Q_w,
+                S_x:        objectInfo.S_x,
+                S_y:        objectInfo.S_y,
+                S_z:        objectInfo.S_z,
                 R:          objectInfo.R,
                 G:          objectInfo.G,
                 B:          objectInfo.B,
                 A:          objectInfo.A
             })
-            .where("Id = :id", {id: objectInfo.id})
-            .andWhere("projectId = :projId", {projId: projectId})
+            .where({id: objectInfo.id})
             .execute();
 
     }
@@ -100,12 +103,11 @@ export class ObjectOperations {
      */
     public static async deleteObject(objectId: string, projectId: string)
     {
-        await getConnection()
+        await getConnection(process.env.NODE_ENV)
             .createQueryBuilder()
             .delete()
             .from(DBObject)
             .where("Id = :id", { id: objectId })
-            .andWhere("projectId = :pId", {pId: projectId})
             .execute();
     }
 }

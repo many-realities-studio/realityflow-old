@@ -13,7 +13,7 @@ export class ProjectOperations
      * @param Username Username of the owner of the project
      */
     public static async createProject(projectInfo: any, Username: string){
-        let user = await getConnection().createQueryBuilder().
+        let user = await getConnection(process.env.NODE_ENV).createQueryBuilder().
             select("User").
             from(User, "User").
             where("User.Username = :username", {username: Username}).getOne()
@@ -26,7 +26,7 @@ export class ProjectOperations
         newProject.ProjectName = projectInfo.ProjectName,
         newProject.Owner = user
 
-        await getConnection().manager.save(newProject);
+        await getConnection(process.env.NODE_ENV).manager.save(newProject);
     }
 
     /**
@@ -36,7 +36,7 @@ export class ProjectOperations
     public static async fetchProjects(usernameToFetch: string) : Promise<Array<Project>>{
         
         // TODO: Make sure this works
-        let projects = await getConnection().createQueryBuilder()
+        let projects = await getConnection(process.env.NODE_ENV).createQueryBuilder()
             .select("project")
             .from(Project, "project")
             .where("project.ownerUsername = :username", {username: usernameToFetch})
@@ -50,11 +50,11 @@ export class ProjectOperations
      * @param projectId
      */
     public static async findProject(projectId: string){
-        let project = await getConnection().createQueryBuilder().
+        let project = await getConnection(process.env.NODE_ENV).createQueryBuilder().
             select("project").
             from(Project, "project").
-            where("Id = :id", {id: projectId}).
-            getOne();
+            where("Id = :id", {id: projectId})
+            .getOne();
 
         return project;
 
@@ -66,7 +66,7 @@ export class ProjectOperations
      * @param projectId projectId to delete
      */
     public static async deleteProject(projectId: string){
-        await getConnection()
+        await getConnection(process.env.NODE_ENV)
                 .createQueryBuilder()
                 .delete()
                 .from(Project)
