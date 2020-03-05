@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.realityflow": "https://github.com/nyashafrank/realityflow_package.git",
+    "com.realityflow": "https://github.com/nyashafrank/realityflow_package.git#NetworkingRefactor",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.2d.tilemap": "1.0.0",
     "com.unity.ads": "2.0.8",
@@ -51,8 +51,8 @@
   },
   "lock": {
     "com.realityflow": {
-      "hash": "75b05adc54145a409fcc6d173890162ede2cd777",
-      "revision": "HEAD"
+      "hash": "0861bce39c3acf5c750a9f43112472b5c17074ef",
+      "revision": "NetworkingRefactor"
     }
   }
 }
