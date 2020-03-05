@@ -1,7 +1,7 @@
 import { FlowUser } from "./FlowLibrary/FlowUser";
 import { FlowProject } from "./FlowLibrary/FlowProject";
 
-import { MongooseDatabase } from "./Database/MongooseDatabase";
+import { TypeORMDatabase } from "./Database/TypeORMDatabase";
 import { FlowClient } from "./FlowLibrary/FlowClient";
 
 // Look into Pub/Sub architecture
@@ -15,7 +15,7 @@ export class Room
   {
     this._CurrentProjectId = projectID;
     
-    MongooseDatabase.GetProject(this._CurrentProjectId).then((project: FlowProject) =>{
+    TypeORMDatabase.GetProject(this._CurrentProjectId).then((project: FlowProject) =>{
       this._CurrentProject = project;
     })
   }
@@ -34,7 +34,7 @@ export class Room
 
     //user is not already in this room
     if(user == undefined){
-      user = await MongooseDatabase.GetUser(userJoiningTheRoom)
+      user = await TypeORMDatabase.GetUser(userJoiningTheRoom)
       this._UsersCurrentlyInTheRoom.push(user);
     }
     

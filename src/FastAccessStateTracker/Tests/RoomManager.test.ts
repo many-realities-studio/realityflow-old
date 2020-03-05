@@ -3,19 +3,19 @@ import { Room } from "../Room"
 
 import { FlowUser } from "../FlowLibrary/FlowUser"
 import { FlowProject } from "../FlowLibrary/FlowProject"
-import MongooseDatabase from "../Database/MongooseDatabase"
+import TypeORMDatabase from "../Database/TypeORMDatabase"
 
 const databaseUserCreationMock = jest.fn()
-jest.mock('../Database/MongooseDatabase')
+jest.mock('../Database/TypeORMDatabase')
 
 
 describe("RoomManager,", () => {
     it("can create rooms", async() => {
         const projectID = "1234";
         
-        const mongooseGetProjectMock = jest.fn(async (projectID: string) => {return new FlowProject({})})
+        const TypeORMGetProjectMock = jest.fn(async (projectID: string) => {return new FlowProject({})})
 
-        MongooseDatabase.GetProject = mongooseGetProjectMock
+        TypeORMDatabase.GetProject = TypeORMGetProjectMock
         
         expect(RoomManager._RoomCount).toBe(0);
 
@@ -23,16 +23,16 @@ describe("RoomManager,", () => {
         RoomManager.CreateRoom(projectID);
 
         //assert 
-        expect(mongooseGetProjectMock).toHaveBeenCalledWith(projectID);
+        expect(TypeORMGetProjectMock).toHaveBeenCalledWith(projectID);
         expect(RoomManager._RoomCount).toBe(1);
     })
 
     it("can find rooms", async() => {
         const projectID = "1234";
         
-        const mongooseGetProjectMock = jest.fn(async (projectID: string) => {return new FlowProject({})})
+        const TypeORMGetProjectMock = jest.fn(async (projectID: string) => {return new FlowProject({})})
 
-        MongooseDatabase.GetProject = mongooseGetProjectMock
+        TypeORMDatabase.GetProject = TypeORMGetProjectMock
         
         // act
         RoomManager.CreateRoom(projectID);
@@ -47,9 +47,9 @@ describe("RoomManager,", () => {
     it("can destroy rooms", async () => {
         const projectID = "1234";
         
-        const mongooseGetProjectMock = jest.fn(async (projectID: string) => {return new FlowProject({})})
+        const TypeORMGetProjectMock = jest.fn(async (projectID: string) => {return new FlowProject({})})
 
-        MongooseDatabase.GetProject = mongooseGetProjectMock
+        TypeORMDatabase.GetProject = TypeORMGetProjectMock
         
         //act
         RoomManager._RoomList = [];

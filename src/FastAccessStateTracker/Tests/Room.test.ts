@@ -2,10 +2,10 @@ import { Room } from "../Room"
 
 // for mocking
 import { FlowProject } from "../FlowLibrary/FlowProject"
-import MongooseDatabase from "../Database/MongooseDatabase"
+import TypeORMDatabase from "../Database/TypeORMDatabase"
 import { FlowUser } from "../FlowLibrary/FlowUser"
 
-jest.mock('../Database/MongooseDatabase')
+jest.mock('../Database/TypeORMDatabase')
  
 const returnProject = jest.fn( async (projectId: string) => {
     return new FlowProject({
@@ -22,8 +22,8 @@ const returnUser = jest.fn( async (userName: string) => {
     
 })
 
-MongooseDatabase.GetProject = returnProject;
-MongooseDatabase.GetUser = returnUser
+TypeORMDatabase.GetProject = returnProject;
+TypeORMDatabase.GetUser = returnUser
 
 describe("Rooms", () => {
 

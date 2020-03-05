@@ -31,17 +31,17 @@ RoomManager.getClients = fakeGetClients
 const fakeAuthentication = jest.fn(async (username:string, password:string) => true)
 TypeORMDatabase.AuthenticateUser = fakeAuthentication
 
-const mongooseProjectDeleteMock = jest.fn(async (projectToDelete: string) => {})
-TypeORMDatabase.DeleteProject = mongooseProjectDeleteMock
+const TypeORMProjectDeleteMock = jest.fn(async (projectToDelete: string) => {})
+TypeORMDatabase.DeleteProject = TypeORMProjectDeleteMock
 
-const mongooseUserDeleteMock = jest.fn(async (userToDelete: string) => {})
-TypeORMDatabase.DeleteUser = mongooseUserDeleteMock
+const TypeORMUserDeleteMock = jest.fn(async (userToDelete: string) => {})
+TypeORMDatabase.DeleteUser = TypeORMUserDeleteMock
 
-const mongooseProjectCreateMock = jest.fn( async (projectToCreate: FlowProject) => {} )  
-TypeORMDatabase.CreateProject = mongooseProjectCreateMock
+const TypeORMProjectCreateMock = jest.fn( async (projectToCreate: FlowProject) => {} )  
+TypeORMDatabase.CreateProject = TypeORMProjectCreateMock
 
 
-const mongooseProjectGetMock = jest.fn( async (projectToGet: string) => {
+const TypeORMProjectGetMock = jest.fn( async (projectToGet: string) => {
     return new FlowProject({
         Id: projectToGet,
         Description: "TestDescription",
@@ -49,7 +49,7 @@ const mongooseProjectGetMock = jest.fn( async (projectToGet: string) => {
         ProjectName: "hello"
     })
 })
-TypeORMDatabase.GetProject = mongooseProjectGetMock
+TypeORMDatabase.GetProject = TypeORMProjectGetMock
 
 
 describe("User", () => {
@@ -60,15 +60,15 @@ describe("User", () => {
             Client: "yashsClient"
         }
         
-        const mongooseUserCreateMock = jest.fn(async (userName:string, Password: string) => {}) 
+        const TypeORMUserCreateMock = jest.fn(async (userName:string, Password: string) => {}) 
 
-        TypeORMDatabase.CreateUser = mongooseUserCreateMock
+        TypeORMDatabase.CreateUser = TypeORMUserCreateMock
 
         //act
         await StateTracker.CreateUser(testUser.Username, testUser.Password, testUser.Client)
 
         //assert
-        expect(mongooseUserCreateMock).toHaveBeenCalledWith(testUser.Username, testUser.Password)
+        expect(TypeORMUserCreateMock).toHaveBeenCalledWith(testUser.Username, testUser.Password)
     });
 
     it("can be deleted", async () =>{
@@ -81,7 +81,7 @@ describe("User", () => {
         await StateTracker.DeleteUser(testUser.Username, testUser.Password)
         
         // assert
-        expect(mongooseUserDeleteMock).toHaveBeenCalledWith(testUser.Username)
+        expect(TypeORMUserDeleteMock).toHaveBeenCalledWith(testUser.Username)
     });
 
     it("can be logged in", async () => {
@@ -200,7 +200,7 @@ describe("Project", () => {
         await StateTracker.CreateProject(testFlowProject, testUser.Username, testUser.Client)
 
         // assert
-        expect(mongooseProjectCreateMock).toHaveBeenCalled()
+        expect(TypeORMProjectCreateMock).toHaveBeenCalled()
     })
 
     it("can be deleted", async () => {
@@ -209,7 +209,7 @@ describe("Project", () => {
 
         // ngl this kinda feels stupid but woo bottom-up testing
         expect(fakeDestroyRoom).toBeCalledWith("testProject")
-        expect(mongooseProjectDeleteMock).toBeCalledWith("testProject")
+        expect(TypeORMProjectDeleteMock).toBeCalledWith("testProject")
 
     })
 
@@ -219,7 +219,7 @@ describe("Project", () => {
         // act
         await StateTracker.OpenProject("newProject")
         // assert
-        expect(mongooseProjectGetMock).toBeCalledWith("newProject")
+        expect(TypeORMProjectGetMock).toBeCalledWith("newProject")
     })
 
 })
