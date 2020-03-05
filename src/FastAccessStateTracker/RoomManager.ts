@@ -35,7 +35,7 @@ export class RoomManager
     return this._RoomList.find(element => element.GetRoomCode() == roomCode);
   }
 
-  // TODO: Finished: Yes Tested: No 
+  // TODO: Finished: Yes Tested: yes 
   /**
    * @param roomCode the code of the room to destroy
    */
@@ -87,6 +87,6 @@ export class RoomManager
    * @param roomCode 
    */
   public static getClients(roomCode: string){
-      return this.FindRoom(roomCode).getClients()
+      return this._RoomList.find(element => element.GetRoomCode() == roomCode).getClients()
   }
 }
