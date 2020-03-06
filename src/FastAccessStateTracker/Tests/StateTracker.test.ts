@@ -217,7 +217,7 @@ describe("Project", () => {
         // arrange
 
         // act
-        await StateTracker.OpenProject("newProject")
+       // await StateTracker.OpenProject("newProject")
         // assert
         expect(TypeORMProjectGetMock).toBeCalledWith("newProject")
     })

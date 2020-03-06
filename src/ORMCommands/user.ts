@@ -69,7 +69,7 @@ export class UserOperations {
             where("Username = :username", {username: Username}).
             execute()
             
-        return await bcrypt.compare(Password, passwordObject.Password)        
+        return await bcrypt.compare(Password, passwordObject[0].User_Password)        
     }
     
 }

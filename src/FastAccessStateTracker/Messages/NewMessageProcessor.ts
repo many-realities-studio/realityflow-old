@@ -6,7 +6,7 @@ export class NewMessageProcessor
 
   public static ParseMessage(socketId : string, json: any) : any
   {    
-    let response = this._CommandContext.ExecuteCommand(socketId, json);
+    let response = this._CommandContext.ExecuteCommand(json.MessageType, json, json.Username, socketId);
 
     return response;
   }

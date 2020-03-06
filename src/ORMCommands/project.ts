@@ -42,6 +42,8 @@ export class ProjectOperations
             .where("project.ownerUsername = :username", {username: usernameToFetch})
             .getMany()
 
+        // console.log(projects)
+
         return projects;
     }
 

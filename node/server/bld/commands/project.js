@@ -1,57 +1,68 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose = require("mongoose");
 const project_1 = require("../models/project");
+const user_1 = require("../models/user");
+const object_1 = require("../models/object");
 var objectId = mongoose.Types.ObjectId();
 class ProjectOperations {
-    static createProject(projectInfo, clientInfo, userInfo) {
-        var newProjectDoc;
-        var newProject = new project_1.Project({
-            projectName: projectInfo.projectName,
-            owner: userInfo._id,
-            clients: [clientInfo._id],
-            objs: undefined,
-            created: projectInfo.created,
-            lastEdit: projectInfo.lastEdit,
-            lastEditor: projectInfo.lastEditor
+    static createProject(projectInfo) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var newProject = new project_1.Project({
+                Id: projectInfo.Id,
+                Description: projectInfo.Description,
+                DateModified: projectInfo.DateModified,
+                ProjectName: projectInfo.ProjectName,
+            });
+            return yield newProject.save();
         });
-        var promise = newProject.save();
-        promise.then(function (doc) {
-            newProjectDoc = doc;
-            return newProjectDoc;
-        });
-        return promise;
     }
     static saveProject(project) {
-        var promise = project.save();
-        promise.then(function (doc) {
-            return doc;
+        return __awaiter(this, void 0, void 0, function* () {
+            var promise = yield project.save();
+            return promise;
         });
-        return promise;
     }
-    static fetchProjects(userInfo) {
-        var projects = [];
-        var promise = project_1.Project.find({ owner: userInfo._id }, '_id projectName').exec();
-        promise.then(function (docs) {
-            projects.push(docs);
+    static fetchProjects(Username) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var user = yield user_1.User.findOne({ Username: Username }, {});
+            var projectsRaw = user.Projects;
+            let projects = [];
+            projectsRaw.forEach((element, index, arr) => __awaiter(this, void 0, void 0, function* () {
+                projects.push((yield project_1.Project.findById(element)).Id);
+            }));
             return projects;
         });
-        return promise;
     }
-    static findProject(projectInfo) {
-        var project;
-        var promise = project_1.Project.findById(projectInfo._id).exec();
-        promise.then(function (doc) {
-            project = doc;
+    static findProject(projectId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var project = yield project_1.Project.findOne({ Id: projectId }).exec();
             return project;
         });
-        return promise;
     }
-    static deleteProject(projectInfo) {
-        console.log("deleting project " + projectInfo._id);
-        project_1.Project.findByIdAndRemove({ _id: projectInfo._id }, function (err, doc) {
-            if (err)
-                console.log(err);
+    static deleteProject(projectId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log("deleting project " + projectId);
+            yield project_1.Project.findOneAndRemove({ Id: projectId }, function (err, doc) {
+                if (err)
+                    console.log(err);
+            }).exec();
+        });
+    }
+    static deleteObject(projectId, objectId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let obj = yield object_1.Object.findOne({ Id: objectId }).exec();
+            yield project_1.Project.updateOne({ Id: projectId }, { $pull: { ObjectList: obj._id } });
+            object_1.Object.deleteOne({ Id: objectId }).exec();
         });
     }
 }

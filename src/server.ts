@@ -1,3 +1,4 @@
+import "reflect-metadata"
 import * as express from "express";
 import * as http from "http";
 import { Server } from "ws";
@@ -5,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import * as mongoose from "mongoose";
 (<any>mongoose).Promise = Promise;
 import {NewMessageProcessor} from "./FastAccessStateTracker/Messages/NewMessageProcessor";
+import {createConnection} from 'typeorm'
 // import { passport } from 'passport';
 // import { LocalStrategy } from 'passport-local';
 // import { MongooseDatabase } from './FastAccessStateTracker/Database/MongooseDatabase';
@@ -12,7 +14,15 @@ import {NewMessageProcessor} from "./FastAccessStateTracker/Messages/NewMessageP
 
 // DB API
 import {ClientOperations} from "./commands/client";
-import {ProjectOperations} from "./commands/project";
+import {ProjectOperations} from "./ORMCommands/project";
+import { DBObject } from "./entity/object";
+import { User } from "./entity/user";
+import { Project } from "./entity/project";
+import { UserSubscriber } from "./entity/UserSubscriber";
+
+import { RoomManager } from "./FastAccessStateTracker/RoomManager";
+import { UserOperations } from "./ORMCommands/user";
+
 
 var database;
 const dburl = "mongodb://127.0.0.1:27017/realityflowdb";
@@ -28,69 +38,68 @@ export class ServerEventDispatcher {
     public static SocketConnections = new Map<String, any>();
 
 //Broadcasts to all clients and may or may not include original sender
-    public static async broadcast(json: any, newFlag: boolean){
+    // public static async broadcast(json: any, newFlag: boolean){
 
-        var payloadString = JSON.stringify(json);
+    //     var payloadString = JSON.stringify(json);
 
-        var project = await ProjectOperations.findProject(json.project);
+    //     // var project = await ProjectOperations.findProject(json.project);
 
-        var uniqueConnectionClients: any[] = [];
-        var uniqueConnections: any[] = [];
+    //     var uniqueConnectionClients: any[] = [];
+    //     var uniqueConnections: any[] = [];
 
-        //This ensures uniqueness of the connections, as there was an issue with
-        //connections being added to the array multiple times
-        for(var i=0; i<this.connections.length; i++){
+    //     //This ensures uniqueness of the connections, as there was an issue with
+    //     //connections being added to the array multiple times
+    //     for(var i=0; i<this.connections.length; i++){
 
-            if(uniqueConnectionClients.indexOf(this.connections[i].clientId)==-1){
+    //         if(uniqueConnectionClients.indexOf(this.connections[i].clientId)==-1){
 
-                uniqueConnectionClients.push(this.connections[i].clientId);
-                uniqueConnections.push(this.connections[i]);
+    //             uniqueConnectionClients.push(this.connections[i].clientId);
+    //             uniqueConnections.push(this.connections[i]);
 
-            }
+    //         }
 
-        }
+    //     }
+    //     // var clientArray = String(project.clients);
+    //     var filteredConnections = [];
 
-        var clientArray = String(project.clients);
-        var filteredConnections = [];
+    //     if(!newFlag){
 
-        if(!newFlag){
+    //          for(var i=0; i<uniqueConnections.length; i++){
 
-             for(var i=0; i<uniqueConnections.length; i++){
+    //             //This checks what clients from the client array are from the project in question
+    //             //as well as making sure it is not the client ID of the original sender
+    //             if(clientArray.includes(String(uniqueConnections[i].clientId))&&String(uniqueConnections[i].clientId)!=String(json.client._id)){
 
-                //This checks what clients from the client array are from the project in question
-                //as well as making sure it is not the client ID of the original sender
-                if(clientArray.includes(String(uniqueConnections[i].clientId))&&String(uniqueConnections[i].clientId)!=String(json.client._id)){
+    //                 filteredConnections.push(uniqueConnections[i].connection);
 
-                    filteredConnections.push(uniqueConnections[i].connection);
+    //             }
 
-                }
+    //          }
 
-             }
+    //     }
+    //     else{
 
-        }
-        else{
+    //         for(var i=0; i<uniqueConnections.length; i++){
 
-            for(var i=0; i<uniqueConnections.length; i++){
+    //             //This checks what clients from the client array are from the project in question
+    //             if(clientArray.includes(String(uniqueConnections[i].clientId))){
 
-                //This checks what clients from the client array are from the project in question
-                if(clientArray.includes(String(uniqueConnections[i].clientId))){
+    //                 filteredConnections.push(uniqueConnections[i].connection);
 
-                    filteredConnections.push(uniqueConnections[i].connection);
+    //             }
 
-                }
+    //          }
+    //     }
 
-             }
-        }
+    //     //Send the payload to each client that is part of the project,
+    //     //possibly including the original sender
+    //     for(var i=0; i<filteredConnections.length; i++){
 
-        //Send the payload to each client that is part of the project,
-        //possibly including the original sender
-        for(var i=0; i<filteredConnections.length; i++){
+    //         this.send(payloadString, filteredConnections[i]);
 
-            this.send(payloadString, filteredConnections[i]);
+    //     }
 
-        }
-
-    }
+    // }
 
     //This function simply takes in whatever JSON payload and sends it to the connection
     public static send(payloadString: any, connection: any){
@@ -108,23 +117,13 @@ export class ServerEventDispatcher {
 
     constructor(server: http.Server) {
 
-        //Setting up the connection to the DB. Currently the address is the
-        //default Mongo address
-        mongoose.connect(dburl);
-        database = mongoose.connection;
-
-        database.on('error', console.error.bind(console, 'connection error: '));
-        database.once('open', function(){
-
-            console.log('Database connection successful at ' + dburl);
-
-        });
-
+        
+        
         ServerEventDispatcher.wss = new Server({ server }, function (err: any) {
 
         });
         ServerEventDispatcher.wss.on("error", (err) => {
-
+            console.log("Server running");
         });
 
         ServerEventDispatcher.callbacks = [];
@@ -143,16 +142,16 @@ export class ServerEventDispatcher {
         ServerEventDispatcher.SocketConnections.set(ws.ID, ws);
 
 
-        function onMessageEvent(evt: MessageEvent) {
+        function onMessageEvent(evt: any) {
 
             const json = JSON.parse(evt.data);            
 
             console.log(evt.data);
 
 
-            NewMessageProcessor.ParseMessage(ws.ID, json).then((res) => {
+            NewMessageProcessor.ParseMessage(ws.ID, json).then((res: any) => {
 
-                let clients = res.affectedClients;
+                let clients = res[1];
 
                 if(!clients)
                 {
@@ -164,8 +163,8 @@ export class ServerEventDispatcher {
                     {
                         let key = clients[i];
     
-                        let json = JSON.stringify(res.data);
-                        ServerEventDispatcher.SocketConnections.get(key).send(json);
+                        //let json = JSON.stringify(res[0];
+                        ServerEventDispatcher.SocketConnections.get(key).send(res[0]);
                     }
                 }
                 
@@ -183,12 +182,12 @@ export class ServerEventDispatcher {
         }
 
 
-        function onCloseEvent(evt: CloseEvent): any {
+        function onCloseEvent(evt: any): any {
 
            ServerEventDispatcher.SocketConnections.delete(ws.ID);
         }
 
-        function onErrorEvent(evt: ErrorEvent) {
+        function onErrorEvent(evt: any) {
 
         }
 
@@ -198,6 +197,46 @@ export class ServerEventDispatcher {
     }
 
 };
+
+
+(async () => {
+    console.log("hello! I a")
+    await createConnection({
+        "name": "prod",
+        "type": "sqlite",
+        "database": "./database/prod.db", 
+        "logging": true,
+        "synchronize": true,
+        "entities": [
+           DBObject,
+           User,
+           Project
+        ],
+        subscribers: [
+            UserSubscriber
+        ]
+     }).then(async (res)=>{
+        process.env.NODE_ENV = "prod" 
+        console.log(res.isConnected)
+        
+        await UserOperations.createUser("God", "Jesus")
+
+        await ProjectOperations.createProject({
+            Id: "noRoom",
+            Description: "this is not a room",
+            DateModified: Date.now(),
+            ProjectName: "noRoom"
+
+        }, "God")
+
+        RoomManager.CreateRoom("noRoom");
+        })
+
+     
+     console.log(process.env.NODE_ENV)
+})()
+
+
 
 
 const app = express();

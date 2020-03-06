@@ -11,12 +11,13 @@ import { FlowProject } from "../FlowLibrary/FlowProject";
 import { FlowObject } from "../FlowLibrary/FlowObject";
 
 import { MessageBuilder } from "./MessageBuilder";
+import { TreeChildren } from "typeorm";
 
 
 
 interface ICommand
 {
-  ExecuteCommand(data: any, user: string, client: string) : Promise<[String, Array<String>]>;
+  ExecuteCommand(data: any, client: string) : Promise<[String, Array<String>]>;
 }
 
 // Project Commands
@@ -243,6 +244,9 @@ export class CommandContext
    */
   async ExecuteCommand(commandToExecute: string, data: any, user: string, client: string) : Promise<[String, Array<String>]>
   {
-    return (await this._CommandList.get(commandToExecute).ExecuteCommand(data, user, client));
+    
+      this._CommandList.set("LoginUser", new Command_LoginUser());
+    
+    return (await this._CommandList.get(commandToExecute).ExecuteCommand(data, client));
   }
 }

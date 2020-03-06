@@ -5,6 +5,8 @@ import { FlowProject } from "./FlowLibrary/FlowProject";
 import { RoomManager } from "./RoomManager";
 
 import { TypeORMDatabase } from "./Database/TypeORMDatabase"
+import { UserOperations } from "../ORMCommands/user";
+import { ProjectOperations } from "../ORMCommands/project";
 
 
   
@@ -185,8 +187,11 @@ export class StateTracker{
     this.currentUsers.get(userName).set(ClientId, "noRoom") 
 
     RoomManager.JoinRoom("noRoom", userName, ClientId)
-    
-    return ['Success', affectedClients];    
+
+    let returnMessage = {username: userName, projects: await ProjectOperations.fetchProjects(userName)}
+    console.log(returnMessage.projects)
+    console.log(affectedClients)
+    return [returnMessage, affectedClients];    
   }
 
   // TODO: Finished: Yes Tested: Yes

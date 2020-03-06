@@ -3,21 +3,18 @@
         "target": "ES6",
         "module": "commonjs",
         "moduleResolution": "node",
-        "noImplicitAny": true,
+        "noImplicitAny": false,
         "removeComments": true,
         "preserveConstEnums": true,
         "noEmitOnError": true,
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
         "sourceMap": true,
         "outDir": "./node/server/bld",
-        "lib": [ "es6" ]
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true
     },
     "exclude": [
-        "**/node_modules",
+        "/*.spec.ts",
+        "/node_modules",
         "**web-client"
-    ],
-    "include": [
-        "./**/*"
     ]
 }
