@@ -8,7 +8,6 @@ import { StateTracker } from "../StateTracker";
 
 
 import { FlowProject } from "../FlowLibrary/FlowProject";
-import { FlowUser } from "../FlowLibrary/FlowUser";
 import { FlowObject } from "../FlowLibrary/FlowObject";
 
 import { MessageBuilder } from "./MessageBuilder";
@@ -24,11 +23,11 @@ interface ICommand
 
 class Command_CreateProject implements ICommand
 {
-  async ExecuteCommand(data: any, user: string, client: string): Promise<[String, Array<String>]>
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
   {
-    let project : FlowProject = new FlowProject(data);
+    let project : FlowProject = new FlowProject(data.project);
 
-    let returnData = await StateTracker.CreateProject(project, user, client);
+    let returnData = await StateTracker.CreateProject(project, data.user.Username, client);
 
     // Create Project only requires a success message being sent
     //TODO: Ensure success before sending success message
@@ -38,228 +37,171 @@ class Command_CreateProject implements ICommand
   }
 }
 
-// class Command_DeleteProject implements ICommand
-// {
-//   async ExecuteCommand(data: any): Promise<[String, Array<String>]>
-//   {
-//     let project = new FlowProject(data);
-//     let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
-//     StateTracker.DeleteProject(project);
+class Command_DeleteProject implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
+  {
+    let project = new FlowProject(data.project);
+    let returnData = await StateTracker.DeleteProject(project.Id, data.user.Username, client);
     
-//     let returnMessage = MessageBuilder.SuccessMessage("DeleteProject");
+    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
 
-//     return returnMessage;
-//   }
-// }
+    return returnMessage;
+  }
+}
 
-// // TODO: Find out what this is supposed to do
-// class Command_OpenProject implements ICommand
-// {
-//   async async ExecuteCommand(data: any): Promise<[String, Array<String>]>
-//   {
+// TODO: Find out what this is supposed to do
+class Command_OpenProject implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
+  {
     
-//     let project = await StateTracker.OpenProject(data.ProjectId, data.UserId)
+    let returnData = await StateTracker.OpenProject(data.ProjectId, client)
 
-//     return project.toString()
-//   }
-// }
+    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
+
+    return returnMessage;
+  }
+}
 
 // // User Commands
 
-// class Command_CreateUser implements ICommand
-// {
-//   async async ExecuteCommand(data: any): Promise<[String, Array<String>]> 
-//   {
-//     let user = new FlowUser(data);
-
-//     // create boolean if message was sent
-//     let success = await StateTracker.CreateUser(user);
-//     let returnMessage = ""
+class Command_CreateUser implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+  {
+    let returnData = await StateTracker.CreateUser(data.Username, data.password, client);
+    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
     
-//     if(success)
-//     {
-//       returnMessage = MessageBuilder.SuccessMessage("CreateUser");
-//     } else 
-//     {
-//       returnMessage = MessageBuilder.FailureMessage("CreateUser");
-//     }
-    
-//     return returnMessage;
+    return returnMessage;
+  }
+}
 
+class Command_DeleteUser implements ICommand
+{
+  async ExecuteCommand(data: any): Promise<[String, Array<String>]>
+  {
+    let returnData = await StateTracker.DeleteUser(data.Username, data.Password);
 
-//   }
-// }
-
-// class Command_DeleteUser implements ICommand
-// {
-//   async async ExecuteCommand(data: any): Promise<[String, Array<String>]>
-//   {
-//     let user = new FlowUser(data);
-//     await StateTracker.DeleteUser(user);
-//   }
-// }
+    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
+    return returnMessage
+  }
+}
  
-// class Command_LoginUser implements ICommand
-// {
-//   async async ExecuteCommand(data: any): Promise<[String, Array<String>]> 
-//   {
-//     let user = new FlowUser(data);
-//     let success = await StateTracker.LoginUser(user, connection);
-//     let returnMessage = ""
-
-//     if(success)
-//     {
-//       returnMessage = MessageBuilder.SuccessMessage("LoginUser");
-//     } else 
-//     {
-//       returnMessage = MessageBuilder.FailureMessage("LoginUser");
-//     }
+class Command_LoginUser implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+  {
+    let returnData = await StateTracker.LoginUser(data.Username, data.Password, client);
+    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
     
-//     return returnMessage;
-//   }
-// }
+    return returnMessage;
+  }
+}
 
-// class Command_LogoutUser implements ICommand
-// {
-//   async async ExecuteCommand(data: any): Promise<[String, Array<String>]> 
-//   {
-//     let user = new FlowUser(data);
-//     StateTracker.LogoutUser(user);
-//     let returnMessage = MessageBuilder.SuccessMessage("LogoutUser");
+class Command_LogoutUser implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+  {
+    let returnData = await StateTracker.LogoutUser(data.Username, data.Password, client);
+    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
     
-//     return returnMessage;
-//   }
-// }
+    return returnMessage;
+  }
+}
 
 // // Room Commands
 
-// class Command_CreateRoom implements ICommand
-// {
-//   async ExecuteCommand(data: any): Promise<[String, Array<String>]>  
-//   {
-//     // grab the projectID from the JSON, confirm format
-//     // TODO: ensure the message json is being extracted properly 
-//     let projectID = data.projectID;
-//     let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection)
+class Command_CreateRoom implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>  
+  {
+    // grab the projectID from the JSON, confirm format
+    // TODO: ensure the message json is being extracted properly 
+    let projectID = data.projectID;
 
-//     // send confirmation message & room code to client
-//     let roomCode = StateTracker.CreateRoom(projectID);
-//     let returnMessage;
+    // send confirmation message & room code to client
+    let returnData = await StateTracker.CreateRoom(projectID, client);
+    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1]);
 
-//     // error catch
-//     if(roomCode) 
-//     {
-//       let returnMessage = MessageBuilder.CreateMessage(roomCode.toString());
-      
-//     } else 
-//     {
-//       let returnMessage = MessageBuilder.FailureMessage("CreateRoom");
-      
-//     }
-//     return returnMessage;
-//   }
-// }
+    return returnMessage;
+  }
+}
 
-// class Command_JoinRoom implements ICommand
-// {
-//   async async ExecuteCommand(data: any): Promise<[String, Array<String>]>
-//   {
-//     let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
-//     //TODO: Ensure proper JSON recieval
-//     let roomCode = data.roomCode;
-//     let messages: String[];
-//     let returnMessage; 
-//     //error catch 
-//     if(roomCode)
-//     {
-//       let project = StateTracker.JoinRoom(roomCode, userConnected);
-//       //send success message to user
-//       let successMessage = MessageBuilder.SuccessMessage("JoinRoom");
-      
-//       messages.push(successMessage, project.toString());
+class Command_JoinRoom implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
+  {
+    let returnData = await StateTracker.JoinRoom(data.Project.Id, data.user.Username, client); 
 
-//       returnMessage = MessageBuilder.CreateMessage(messages);
-      
-//     } else 
-//     {      
-//       //send fail message to user
-//       returnMessage = MessageBuilder.FailureMessage("JoinRoom");
-      
-//     }
+    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
 
-//     return returnMessage;
-//   }
-// }
+    return returnMessage;
+  }
+}
 
-// class Command_DeleteRoom implements ICommand
-// {
-//   async ExecuteCommand(data: any): Promise<[String, Array<String>]>  
-//   {
-//     throw new Error("Method not implemented.");
-//   }
-// }
+class Command_DeleteRoom implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>  
+  {
+    throw new Error("Method not implemented.");
+  }
+}
 
 // // Object Commands
 
-// class Command_CreateObject implements ICommand
-// {
-//   async ExecuteCommand(data: any): Promise<[String, Array<String>]> 
-//   {
-//     let flowObject = new FlowObject(data);
-//     let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
-//     let successMessage = MessageBuilder.SuccessMessage("CreateObject");
+class Command_CreateObject implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+  {
+    let flowObject = new FlowObject(data);
     
-//     //TODO: Add failure check and message
-//     StateTracker.CreateObject(flowObject);
-    
-//     return successMessage;
-//   }
-// }
+    //TODO: Add failure check and message
+    let returnData = await StateTracker.CreateObject(flowObject, client);
+    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
 
-// class Command_DeleteObject implements ICommand
-// {
-//   async ExecuteCommand(data: any): Promise<[String, Array<String>]> 
-//   {
-//     let flowObject = new FlowObject(data);
-//     StateTracker.DeleteObject(flowObject);
+    return returnMessage;
+  }
+}
 
-//     let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
-//     let successMessage = MessageBuilder.SuccessMessage("DeleteObject");
-    
-//     //TODO: Add failure check and message
-//     return successMessage;
-//   }
-// }
+class Command_DeleteObject implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+  {
+    let flowObject = new FlowObject(data);
+    let returnData = await StateTracker.DeleteObject(flowObject, data.Project);
+    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
+    //TODO: Add failure check and message
+    return returnMessage;
+  }
+}
 
-// class Command_UpdateObject implements ICommand
-// {
-//   async ExecuteCommand(data: any): Promise<[String, Array<String>]> 
-//   {
-//     let flowObject = new FlowObject(data);
-//     StateTracker.UpdateObject(flowObject);
-//     let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
-//     let successMessage = MessageBuilder.SuccessMessage("UpdateObject");
+class Command_UpdateObject implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+  {
+    let flowObject = new FlowObject(data);
+    let returnData = await StateTracker.UpdateObject(flowObject, data.Project.Id);
     
-//     //TODO: Add failure check and message
-//     return successMessage;
-//   }
-// }
+    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
+    //TODO: Add failure check and message
+    return returnMessage;
+  }
+}
 
-// class Command_FinalizedUpdateObject implements ICommand
-// {
-//   async ExecuteCommand(data: any): Promise<[String, Array<String>]> 
-//   {
-//     let flowObject = new FlowObject(data);
-//     StateTracker.FinalizedUpdateObject(flowObject);
+class Command_FinalizedUpdateObject implements ICommand
+{
+  async ExecuteCommand(data: any, client:string): Promise<[String, Array<String>]> 
+  {
+    let flowObject = new FlowObject(data);
+    let returnData = await StateTracker.FinalizedUpdateObject(flowObject, data.Project.Id);
+    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
     
-//     let userConnected : FlowUser = ConnectionManager.FindUserWithConnection(connection);
-//     let successMessage = MessageBuilder.SuccessMessage("FinalizedObjectUpdate");
-    
-//     //TODO: Add failure check and message
-//     return successMessage;
+    //TODO: Add failure check and message
+    return returnMessage;
 
-//   }
-// }
+  }
+}
 
 /**
  * Holds the set of commands that can be executed and executes said commands 
@@ -272,26 +214,26 @@ export class CommandContext
   public CommandContext()
   {
     // Project Commands
-    // this._CommandList.set("CreateProject", new Command_CreateProject());
-    // this._CommandList.set("DeleteProject", new Command_DeleteProject());
-    // this._CommandList.set("OpenProject", new Command_OpenProject());
+    this._CommandList.set("CreateProject", new Command_CreateProject());
+    this._CommandList.set("DeleteProject", new Command_DeleteProject());
+    this._CommandList.set("OpenProject", new Command_OpenProject());
 
-    // // User Commands
-    // this._CommandList.set("CreateUser", new Command_CreateUser());
-    // this._CommandList.set("DeleteUser", new Command_DeleteUser());
-    // this._CommandList.set("LoginUser", new Command_LoginUser());
-    // this._CommandList.set("LogoutUser", new Command_LogoutUser());
+    // User Commands
+    this._CommandList.set("CreateUser", new Command_CreateUser());
+    this._CommandList.set("DeleteUser", new Command_DeleteUser());
+    this._CommandList.set("LoginUser", new Command_LoginUser());
+    this._CommandList.set("LogoutUser", new Command_LogoutUser());
 
-    // // Room Commands
-    // this._CommandList.set("CreateRoom", new Command_CreateRoom());
-    // this._CommandList.set("DeleteRoom", new Command_DeleteRoom());
-    // this._CommandList.set("JoinRoom", new Command_JoinRoom());
+    // Room Commands
+    this._CommandList.set("CreateRoom", new Command_CreateRoom());
+    this._CommandList.set("DeleteRoom", new Command_DeleteRoom());
+    this._CommandList.set("JoinRoom", new Command_JoinRoom());
 
-    // // Object Commands
-    // this._CommandList.set("CreateObject", new Command_CreateObject());
-    // this._CommandList.set("DeleteObject", new Command_DeleteObject());
-    // this._CommandList.set("UpdateObject", new Command_UpdateObject());
-    // this._CommandList.set("FinalizedUpdateObject", new Command_FinalizedUpdateObject());
+    // Object Commands
+    this._CommandList.set("CreateObject", new Command_CreateObject());
+    this._CommandList.set("DeleteObject", new Command_DeleteObject());
+    this._CommandList.set("UpdateObject", new Command_UpdateObject());
+    this._CommandList.set("FinalizedUpdateObject", new Command_FinalizedUpdateObject());
   }
 
   /**
