@@ -87,14 +87,14 @@ export class StateTracker{
    * Finds a project with id projectToOpenId, returns it to the command context
    * @param projectToOpenID - ID of associated project
    */
-  public static async OpenProject(projectToOpenID: any) : Promise<[any, Array<string>]>
+  public static async OpenProject(projectToOpenID: any, client: string) : Promise<[any, Array<string>]>
   {
     // find project in list of projects so that we can return it
     let projectFound : FlowProject = await TypeORMDatabase.GetProject(projectToOpenID);
     
     // grabs all the clients from the room manager
     let affectedClients: string[] = []
-    
+    affectedClients.push(client)
     let clients = RoomManager.getClients(projectToOpenID);
     clients.forEach((value: string[], key: string) => {
       
