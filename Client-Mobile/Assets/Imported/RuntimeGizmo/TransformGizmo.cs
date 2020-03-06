@@ -573,7 +573,7 @@ namespace RuntimeGizmos
 			targetRoots.Clear();
 			targetRootsOrdered.Clear();
             //observableTargets.Clear();
-			children.Clear();
+			//children.Clear();
 		}
 
 		public void ClearAndAddTarget(Transform target)
