@@ -66,13 +66,18 @@ class Command_OpenProject implements ICommand
 }
 
 // // User Commands
-
+//TODO: Make it such that the user is logged in when the account is created? 
 class Command_CreateUser implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let returnData = await StateTracker.CreateUser(data.Username, data.password, client);
-    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
+    let returnData = await StateTracker.CreateUser(data.FlowUser.Username, data.FlowUser.Password, client);
+    let returnContent = {
+      "Message": "message",
+      "MessageType": "Register",
+      "WasSuccessful": returnData[0]
+    }
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
     
     return returnMessage;
   }
@@ -93,7 +98,7 @@ class Command_LoginUser implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let returnData = await StateTracker.LoginUser(data.Username, data.Password, client);
+    let returnData = await StateTracker.LoginUser(data.FlowUser.Username, data.FlowUser.Password, client);
     let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
     
     return returnMessage;
@@ -104,8 +109,13 @@ class Command_LogoutUser implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let returnData = await StateTracker.LogoutUser(data.Username, data.Password, client);
-    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
+    let returnData = await StateTracker.LogoutUser(data.FlowUser.Username, data.FlowUser.Password, client);
+    let returnContent = {
+      "Message": "message",
+      "MessageType": "LogoutUser",
+      "WasSuccessful": returnData[0]
+    }
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
     
     return returnMessage;
   }
@@ -244,8 +254,28 @@ export class CommandContext
    */
   async ExecuteCommand(commandToExecute: string, data: any, user: string, client: string) : Promise<[String, Array<String>]>
   {
-    
+    if(this._CommandList.size == 0) {
+      this._CommandList.set("CreateProject", new Command_CreateProject());
+      this._CommandList.set("DeleteProject", new Command_DeleteProject());
+      this._CommandList.set("OpenProject", new Command_OpenProject());
+
+      // User Commands
+      this._CommandList.set("CreateUser", new Command_CreateUser());
+      this._CommandList.set("DeleteUser", new Command_DeleteUser());
       this._CommandList.set("LoginUser", new Command_LoginUser());
+      this._CommandList.set("LogoutUser", new Command_LogoutUser());
+
+      // Room Commands
+      this._CommandList.set("CreateRoom", new Command_CreateRoom());
+      this._CommandList.set("DeleteRoom", new Command_DeleteRoom());
+      this._CommandList.set("JoinRoom", new Command_JoinRoom());
+
+      // Object Commands
+      this._CommandList.set("CreateObject", new Command_CreateObject());
+      this._CommandList.set("DeleteObject", new Command_DeleteObject());
+      this._CommandList.set("UpdateObject", new Command_UpdateObject());
+      this._CommandList.set("FinalizedUpdateObject", new Command_FinalizedUpdateObject());
+    }
     
     return (await this._CommandList.get(commandToExecute).ExecuteCommand(data, client));
   }

@@ -122,7 +122,7 @@ export class StateTracker{
   public static async CreateUser(username: string, password: string, client: string) : Promise<[any, Array<string>]>
   { 
     let success = false;
-
+    console.log("Username is " + username+ " password is " + password)
     await TypeORMDatabase.CreateUser(username, password)
 
     return [!success, [client] ];

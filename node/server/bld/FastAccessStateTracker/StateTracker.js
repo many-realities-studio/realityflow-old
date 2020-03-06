@@ -53,6 +53,7 @@ class StateTracker {
     static CreateUser(username, password, client) {
         return __awaiter(this, void 0, void 0, function* () {
             let success = false;
+            console.log("Username is " + username + " password is " + password);
             yield TypeORMDatabase_1.TypeORMDatabase.CreateUser(username, password);
             return [!success, [client]];
         });

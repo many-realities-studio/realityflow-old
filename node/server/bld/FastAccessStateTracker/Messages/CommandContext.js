@@ -45,8 +45,13 @@ class Command_OpenProject {
 class Command_CreateUser {
     ExecuteCommand(data, client) {
         return __awaiter(this, void 0, void 0, function* () {
-            let returnData = yield StateTracker_1.StateTracker.CreateUser(data.Username, data.password, client);
-            let returnMessage = MessageBuilder_1.MessageBuilder.CreateMessage(returnData[0], returnData[1]);
+            let returnData = yield StateTracker_1.StateTracker.CreateUser(data.FlowUser.Username, data.FlowUser.Password, client);
+            let returnContent = {
+                "Message": "message",
+                "MessageType": "Register",
+                "WasSuccessful": returnData[0]
+            };
+            let returnMessage = MessageBuilder_1.MessageBuilder.CreateMessage(returnContent, returnData[1]);
             return returnMessage;
         });
     }
@@ -63,7 +68,7 @@ class Command_DeleteUser {
 class Command_LoginUser {
     ExecuteCommand(data, client) {
         return __awaiter(this, void 0, void 0, function* () {
-            let returnData = yield StateTracker_1.StateTracker.LoginUser(data.Username, data.Password, client);
+            let returnData = yield StateTracker_1.StateTracker.LoginUser(data.FlowUser.Username, data.FlowUser.Password, client);
             let returnMessage = MessageBuilder_1.MessageBuilder.CreateMessage(returnData[0], returnData[1]);
             return returnMessage;
         });
@@ -72,8 +77,13 @@ class Command_LoginUser {
 class Command_LogoutUser {
     ExecuteCommand(data, client) {
         return __awaiter(this, void 0, void 0, function* () {
-            let returnData = yield StateTracker_1.StateTracker.LogoutUser(data.Username, data.Password, client);
-            let returnMessage = MessageBuilder_1.MessageBuilder.CreateMessage(returnData[0], returnData[1]);
+            let returnData = yield StateTracker_1.StateTracker.LogoutUser(data.FlowUser.Username, data.FlowUser.Password, client);
+            let returnContent = {
+                "Message": "message",
+                "MessageType": "LogoutUser",
+                "WasSuccessful": returnData[0]
+            };
+            let returnMessage = MessageBuilder_1.MessageBuilder.CreateMessage(returnContent, returnData[1]);
             return returnMessage;
         });
     }
@@ -166,7 +176,22 @@ class CommandContext {
     }
     ExecuteCommand(commandToExecute, data, user, client) {
         return __awaiter(this, void 0, void 0, function* () {
-            this._CommandList.set("LoginUser", new Command_LoginUser());
+            if (this._CommandList.size == 0) {
+                this._CommandList.set("CreateProject", new Command_CreateProject());
+                this._CommandList.set("DeleteProject", new Command_DeleteProject());
+                this._CommandList.set("OpenProject", new Command_OpenProject());
+                this._CommandList.set("CreateUser", new Command_CreateUser());
+                this._CommandList.set("DeleteUser", new Command_DeleteUser());
+                this._CommandList.set("LoginUser", new Command_LoginUser());
+                this._CommandList.set("LogoutUser", new Command_LogoutUser());
+                this._CommandList.set("CreateRoom", new Command_CreateRoom());
+                this._CommandList.set("DeleteRoom", new Command_DeleteRoom());
+                this._CommandList.set("JoinRoom", new Command_JoinRoom());
+                this._CommandList.set("CreateObject", new Command_CreateObject());
+                this._CommandList.set("DeleteObject", new Command_DeleteObject());
+                this._CommandList.set("UpdateObject", new Command_UpdateObject());
+                this._CommandList.set("FinalizedUpdateObject", new Command_FinalizedUpdateObject());
+            }
             return (yield this._CommandList.get(commandToExecute).ExecuteCommand(data, client));
         });
     }
