@@ -13,12 +13,12 @@ const RoomManager_1 = require("./RoomManager");
 const TypeORMDatabase_1 = require("./Database/TypeORMDatabase");
 const project_1 = require("../ORMCommands/project");
 class StateTracker {
-    static CreateProject(projectToCreate, user, client) {
+    static CreateProject(projectToCreate, username, client) {
         return __awaiter(this, void 0, void 0, function* () {
-            let userLoggedIn = this.currentUsers.has(user);
+            let userLoggedIn = this.currentUsers.has(username);
             if (!userLoggedIn)
                 return [null, [client]];
-            let newProject = yield TypeORMDatabase_1.TypeORMDatabase.CreateProject(projectToCreate, user);
+            let newProject = yield TypeORMDatabase_1.TypeORMDatabase.CreateProject(projectToCreate, username);
             return [newProject, [client]];
         });
     }
@@ -41,6 +41,9 @@ class StateTracker {
     }
     static OpenProject(projectToOpenID, username, client) {
         return __awaiter(this, void 0, void 0, function* () {
+            let userLoggedIn = this.currentUsers.has(username);
+            if (!userLoggedIn)
+                return [null, [client], null];
             let projectFound = yield TypeORMDatabase_1.TypeORMDatabase.GetProject(projectToOpenID);
             let affectedClients = [];
             affectedClients.push(client);

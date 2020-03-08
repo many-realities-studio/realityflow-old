@@ -47,7 +47,13 @@ class Command_OpenProject {
         return __awaiter(this, void 0, void 0, function* () {
             let returnData = yield StateTracker_1.StateTracker.OpenProject(data.ProjectId, data.FlowUser.Username, client);
             this.SendRoomAnnouncement(returnData[2], "UserJoinedRoom");
-            let returnMessage = MessageBuilder_1.MessageBuilder.CreateMessage(returnData[0], returnData[1]);
+            let message = returnData[0] == null ? "Failed to Open Project" : returnData[0];
+            let returnContent = {
+                "MessageType": "OpenProject",
+                "WasSuccessful": returnData[0] == null ? false : true,
+                "FlowProject": message
+            };
+            let returnMessage = MessageBuilder_1.MessageBuilder.CreateMessage(returnContent, returnData[1]);
             return returnMessage;
         });
     }

@@ -35,7 +35,7 @@ class Command_CreateProject implements ICommand
 
     let returnData = await StateTracker.CreateProject(project, data.FlowUser.Username, client);
 
-    let message = returnData[0] == null ? "Failed to Create Project" : returnData[0]
+    let message = returnData[0] == null ? "Failed to Create Project" : returnData[0];
       
     let returnContent = {
       "MessageType": "CreateProject",
@@ -73,7 +73,15 @@ class Command_OpenProject implements ICommand
     // notify others in the room that user has joined
     this.SendRoomAnnouncement(returnData[2], "UserJoinedRoom");
 
-    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
+    let message = returnData[0] == null ? "Failed to Open Project" : returnData[0];
+
+    let returnContent = {
+      "MessageType": "OpenProject",
+      "WasSuccessful": returnData[0] == null ? false : true,
+      "FlowProject": message
+    }
+
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
 
     return returnMessage;
   }

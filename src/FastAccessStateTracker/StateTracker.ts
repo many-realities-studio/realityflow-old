@@ -40,15 +40,15 @@ export class StateTracker{
    * Adds a project to the database
    * @param projectToCreate 
    */
-  public static async CreateProject(projectToCreate: FlowProject, user: string, client: string) : Promise<[any, Array<string>]>
+  public static async CreateProject(projectToCreate: FlowProject, username: string, client: string) : Promise<[any, Array<string>]>
   {
-    let userLoggedIn = this.currentUsers.has(user);
+    let userLoggedIn = this.currentUsers.has(username);
 
     // Don't allow users to create projects if they are not logged in
     if(!userLoggedIn)
       return [null, [client]]
 
-    let newProject = await TypeORMDatabase.CreateProject(projectToCreate, user);
+    let newProject = await TypeORMDatabase.CreateProject(projectToCreate, username);
 
     return [ newProject, [client] ];
   }
@@ -88,13 +88,19 @@ export class StateTracker{
     return ['Success', clientIds];
   }
  
-  // TODO: finished: yes? tested: no
+  // TODO: finished: yes tested: no
   /**
    * Finds a project with id projectToOpenId, returns it to the command context
    * @param projectToOpenID - ID of associated project
    */
   public static async OpenProject(projectToOpenID: any, username: string, client: string) : Promise<[any, Array<string>, [any, Array<string>]]>
   {
+    let userLoggedIn = this.currentUsers.has(username);
+
+    // Don't allow users to create projects if they are not logged in
+    if(!userLoggedIn)
+      return [ null, [client], null ];
+
     // find project in list of projects so that we can return it
     let projectFound = await TypeORMDatabase.GetProject(projectToOpenID);
     
