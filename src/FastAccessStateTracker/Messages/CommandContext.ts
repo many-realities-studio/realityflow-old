@@ -26,13 +26,19 @@ class Command_CreateProject implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
   {
-    let project : FlowProject = new FlowProject(data.project);
+    let project : FlowProject = new FlowProject(data.Project);
 
-    let returnData = await StateTracker.CreateProject(project, data.user.Username, client);
+    let returnData = await StateTracker.CreateProject(project, data.FlowUser.Username, client);
 
-    // Create Project only requires a success message being sent
-    //TODO: Ensure success before sending success message
-    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
+    let message = returnData[0] == null ? "Failed to Create Project" : returnData[0]
+      
+    let returnContent = {
+      "MessageType": "CreateProject",
+      "WasSuccessful": returnData[0] == null ? false : true,
+      "FlowProject": message
+    }
+
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
     
     return returnMessage;
   }
@@ -224,27 +230,6 @@ export class CommandContext
   
   public CommandContext()
   {
-    // Project Commands
-    this._CommandList.set("CreateProject", new Command_CreateProject());
-    this._CommandList.set("DeleteProject", new Command_DeleteProject());
-    this._CommandList.set("OpenProject", new Command_OpenProject());
-
-    // User Commands
-    this._CommandList.set("CreateUser", new Command_CreateUser());
-    this._CommandList.set("DeleteUser", new Command_DeleteUser());
-    this._CommandList.set("LoginUser", new Command_LoginUser());
-    this._CommandList.set("LogoutUser", new Command_LogoutUser());
-
-    // Room Commands
-    this._CommandList.set("CreateRoom", new Command_CreateRoom());
-    this._CommandList.set("DeleteRoom", new Command_DeleteRoom());
-    this._CommandList.set("JoinRoom", new Command_JoinRoom());
-
-    // Object Commands
-    this._CommandList.set("CreateObject", new Command_CreateObject());
-    this._CommandList.set("DeleteObject", new Command_DeleteObject());
-    this._CommandList.set("UpdateObject", new Command_UpdateObject());
-    this._CommandList.set("FinalizedUpdateObject", new Command_FinalizedUpdateObject());
   }
 
   /**
@@ -252,7 +237,7 @@ export class CommandContext
    * @param commandToExecute The command to be executed
    * @param data The data which is needed for the command to execute.
    */
-  async ExecuteCommand(commandToExecute: string, data: any, user: string, client: string) : Promise<[String, Array<String>]>
+  async ExecuteCommand(commandToExecute: string, data: any, client: string) : Promise<[String, Array<String>]>
   {
     if(this._CommandList.size == 0) {
       this._CommandList.set("CreateProject", new Command_CreateProject());

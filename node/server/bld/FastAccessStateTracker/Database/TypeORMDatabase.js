@@ -19,7 +19,8 @@ class TypeORMDatabase {
     constructor(url) { }
     static CreateProject(projectToCreate, user) {
         return __awaiter(this, void 0, void 0, function* () {
-            let newProject = yield project_1.ProjectOperations.createProject(projectToCreate, user);
+            let projectId = yield project_1.ProjectOperations.createProject(projectToCreate, user);
+            return yield project_1.ProjectOperations.findProject(projectId);
         });
     }
     static DeleteProject(projectToDeleteId) {

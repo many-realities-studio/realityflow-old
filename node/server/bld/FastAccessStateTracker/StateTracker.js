@@ -15,8 +15,11 @@ const project_1 = require("../ORMCommands/project");
 class StateTracker {
     static CreateProject(projectToCreate, user, client) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield TypeORMDatabase_1.TypeORMDatabase.CreateProject(projectToCreate, user);
-            return ["Success", [client]];
+            let userLoggedIn = this.currentUsers.has(user);
+            if (!userLoggedIn)
+                return [null, [client]];
+            let newProject = yield TypeORMDatabase_1.TypeORMDatabase.CreateProject(projectToCreate, user);
+            return [newProject, [client]];
         });
     }
     static DeleteProject(projectToDeleteId, user, client) {
@@ -80,6 +83,8 @@ class StateTracker {
             let userLoggedIn = this.currentUsers.has(userName);
             if (!userLoggedIn)
                 this.currentUsers.set(userName, new Map());
+            console.log("\n\n\is the user logged in after logging in");
+            console.log(this.currentUsers.has(userName));
             this.currentUsers.get(userName).set(ClientId, "noRoom");
             RoomManager_1.RoomManager.JoinRoom("noRoom", userName, ClientId);
             let returnMessage = { username: userName, projects: yield project_1.ProjectOperations.fetchProjects(userName) };

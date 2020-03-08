@@ -21,7 +21,10 @@ export default class TypeORMDatabase
 
   // Project functions
   public static async CreateProject(projectToCreate: FlowProject, user: string) {
-    let newProject = await ProjectOperations.createProject(projectToCreate, user);
+
+    let projectId = await ProjectOperations.createProject(projectToCreate, user);
+    
+    return await ProjectOperations.findProject(projectId);
   }
 
   /**

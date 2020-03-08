@@ -35,18 +35,22 @@ export class StateTracker{
   
   // Project Functions
 
-  // TODO: finished: yes? Tested: yes 
+  // TODO: finished: yes Tested: yes 
   /**
    * Adds a project to the database
    * @param projectToCreate 
    */
   public static async CreateProject(projectToCreate: FlowProject, user: string, client: string) : Promise<[any, Array<string>]>
   {
-    // Create the project in the database and give a specific user ownership
-    await TypeORMDatabase.CreateProject(projectToCreate, user)
+    let userLoggedIn = this.currentUsers.has(user);
 
-    return ["Success", [client] ];
+    // Don't allow users to create projects if they are not logged in
+    if(!userLoggedIn)
+      return [null, [client]]
 
+    let newProject = await TypeORMDatabase.CreateProject(projectToCreate, user);
+
+    return [ newProject, [client] ];
   }
 
 
@@ -180,8 +184,11 @@ export class StateTracker{
 
     // If the user is not already logged in, then we need to start keeping track of them.
     if(!userLoggedIn)
-      this.currentUsers.set(userName, new Map<string, string>())
+      this.currentUsers.set(userName, new Map<string, string>());
     
+      console.log("\n\n\is the user logged in after logging in");
+      console.log(this.currentUsers.has(userName));
+
     // put the client in limbo - aka, an empty room
     // TODO: figure out noRoom situation
     this.currentUsers.get(userName).set(ClientId, "noRoom") 

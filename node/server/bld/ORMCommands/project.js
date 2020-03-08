@@ -26,6 +26,7 @@ class ProjectOperations {
                 newProject.ProjectName = projectInfo.ProjectName,
                 newProject.Owner = user;
             yield typeorm_1.getConnection(process.env.NODE_ENV).manager.save(newProject);
+            return newProject.Id;
         });
     }
     static fetchProjects(usernameToFetch) {

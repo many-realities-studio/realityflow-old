@@ -1,9 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const uuid_1 = require("uuid");
 class FlowProject {
     constructor(json) {
         this._ObjectList = [];
-        this.Id = json.Id;
+        this.Id = uuid_1.v4();
         this.Description = json.Description;
         this.DateModified = json.DateModified;
         this.ProjectName = json.ProjectName;
