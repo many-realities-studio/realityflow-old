@@ -46,7 +46,7 @@ class Command_OpenProject {
     ExecuteCommand(data, client) {
         return __awaiter(this, void 0, void 0, function* () {
             let returnData = yield StateTracker_1.StateTracker.OpenProject(data.ProjectId, data.FlowUser.Username, client);
-            this.SendRoomAnnouncement(returnData[2], "UserJoinedRoom");
+            Command_OpenProject.SendRoomAnnouncement(returnData[2], "UserJoinedRoom");
             let message = returnData[0] == null ? "Failed to Open Project" : returnData[0];
             let returnContent = {
                 "MessageType": "OpenProject",
@@ -57,7 +57,7 @@ class Command_OpenProject {
             return returnMessage;
         });
     }
-    SendRoomAnnouncement(roomBulletin, messageType) {
+    static SendRoomAnnouncement(roomBulletin, messageType) {
         return __awaiter(this, void 0, void 0, function* () {
             if (roomBulletin) {
                 let roomMessage = roomBulletin[0];
@@ -71,6 +71,22 @@ class Command_OpenProject {
                     server_1.ServerEventDispatcher.send(JSON.stringify(message), clientSocket);
                 }
             }
+        });
+    }
+}
+class Command_LeaveProject {
+    ExecuteCommand(data, client) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let returnData = yield StateTracker_1.StateTracker.LeaveProject(data.ProjectId, data.FlowUser.Username, client);
+            Command_OpenProject.SendRoomAnnouncement(returnData[2], "UserLeftRoom");
+            let message = returnData[0] == false ? "Failed to Leave Project" : "Successfully Left Project";
+            let returnContent = {
+                "MessageType": "LeaveProject",
+                "WasSuccessful": returnData[0],
+                "FlowProject": message
+            };
+            let returnMessage = MessageBuilder_1.MessageBuilder.CreateMessage(returnContent, returnData[1]);
+            return returnMessage;
         });
     }
 }
@@ -198,6 +214,7 @@ class CommandContext {
                 this._CommandList.set("CreateProject", new Command_CreateProject());
                 this._CommandList.set("DeleteProject", new Command_DeleteProject());
                 this._CommandList.set("OpenProject", new Command_OpenProject());
+                this._CommandList.set("LeaveProject", new Command_LeaveProject());
                 this._CommandList.set("CreateUser", new Command_CreateUser());
                 this._CommandList.set("DeleteUser", new Command_DeleteUser());
                 this._CommandList.set("LoginUser", new Command_LoginUser());

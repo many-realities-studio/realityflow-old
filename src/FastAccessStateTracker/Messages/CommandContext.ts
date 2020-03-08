@@ -62,7 +62,7 @@ class Command_DeleteProject implements ICommand
   }
 }
 
-// TODO: Find out what this is supposed to do
+
 class Command_OpenProject implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
@@ -71,7 +71,7 @@ class Command_OpenProject implements ICommand
     let returnData = await StateTracker.OpenProject(data.ProjectId, data.FlowUser.Username, client);
     
     // notify others in the room that user has joined
-    this.SendRoomAnnouncement(returnData[2], "UserJoinedRoom");
+    Command_OpenProject.SendRoomAnnouncement(returnData[2], "UserJoinedRoom");
 
     let message = returnData[0] == null ? "Failed to Open Project" : returnData[0];
 
@@ -86,7 +86,7 @@ class Command_OpenProject implements ICommand
     return returnMessage;
   }
 
-  async SendRoomAnnouncement(roomBulletin: [String, Array<String>], messageType : string): Promise<void>
+  static async SendRoomAnnouncement(roomBulletin: [String, Array<String>], messageType : string): Promise<void>
   {
 
     if(roomBulletin)
@@ -106,6 +106,31 @@ class Command_OpenProject implements ICommand
       }
     }
     
+  }
+}
+
+
+class Command_LeaveProject implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
+  {
+    
+    let returnData = await StateTracker.LeaveProject(data.ProjectId, data.FlowUser.Username, client);
+    
+    // notify others in the room that user has joined
+    Command_OpenProject.SendRoomAnnouncement(returnData[2], "UserLeftRoom");
+
+    let message = returnData[0] == false ? "Failed to Leave Project" : "Successfully Left Project";
+
+    let returnContent = {
+      "MessageType": "LeaveProject",
+      "WasSuccessful": returnData[0],
+      "FlowProject": message
+    }
+
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
+
+    return returnMessage;
   }
 }
 
@@ -282,6 +307,7 @@ export class CommandContext
       this._CommandList.set("CreateProject", new Command_CreateProject());
       this._CommandList.set("DeleteProject", new Command_DeleteProject());
       this._CommandList.set("OpenProject", new Command_OpenProject());
+      this._CommandList.set("LeaveProject", new Command_LeaveProject());
 
       // User Commands
       this._CommandList.set("CreateUser", new Command_CreateUser());

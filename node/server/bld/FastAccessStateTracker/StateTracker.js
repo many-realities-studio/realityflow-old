@@ -51,6 +51,16 @@ class StateTracker {
             return [projectFound, affectedClients, userJoinedRoom];
         });
     }
+    static LeaveProject(projectToLeaveID, username, client) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let userLoggedIn = this.currentUsers.has(username);
+            if (!userLoggedIn)
+                return [null, [client], null];
+            let userLeftRoom = yield this.LeaveRoom(projectToLeaveID, username, client);
+            let operationStatus = RoomManager_1.RoomManager.FindRoom(projectToLeaveID).hasClient(username, client);
+            return [!operationStatus, [client], userLeftRoom];
+        });
+    }
     static CreateUser(username, password, client) {
         return __awaiter(this, void 0, void 0, function* () {
             let success = false;
@@ -134,6 +144,23 @@ class StateTracker {
                 });
             });
             return [user + ' has joined the room', affectedClients];
+        });
+    }
+    static LeaveRoom(roomCode, user, client) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (RoomManager_1.RoomManager.FindRoom(roomCode) == undefined)
+                return [null, [client]];
+            yield RoomManager_1.RoomManager.LeaveRoom(roomCode, user, client);
+            yield RoomManager_1.RoomManager.JoinRoom("noRoom", user, client);
+            this.currentUsers.get(user).set(client, "noRoom");
+            let affectedClients = [];
+            let clients = yield RoomManager_1.RoomManager.getClients(roomCode);
+            clients.forEach((value, key) => {
+                value.forEach((client) => {
+                    affectedClients.push(client);
+                });
+            });
+            return [user + ' has left the room', affectedClients];
         });
     }
     static CreateObject(objectToCreate, projectId) {

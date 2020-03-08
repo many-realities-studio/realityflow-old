@@ -7,6 +7,7 @@ import { RoomManager } from "./RoomManager";
 import { TypeORMDatabase } from "./Database/TypeORMDatabase"
 import { UserOperations } from "../ORMCommands/user";
 import { ProjectOperations } from "../ORMCommands/project";
+import { Room } from "./Room";
 
 
   
@@ -110,17 +111,30 @@ export class StateTracker{
 
     let userJoinedRoom = await this.JoinRoom(projectToOpenID, username, client);
 
-   /* let clients = RoomManager.getClients(projectToOpenID);
-    clients.forEach((value: string[], key: string) => {
-      
-      value.forEach((client: string) => {
-        affectedClients.push(client);
-      })
-      
-    });
-*/
-    // send the data back to the client
     return [projectFound, affectedClients, userJoinedRoom];
+  }
+
+
+    // TODO: finished: yes tested: no
+  /**
+   * Leaves a project with id projectToOpenId, returns it to the command context
+   * @param projectToOpenID - ID of associated project
+   */
+  public static async LeaveProject(projectToLeaveID: any, username: string, client: string) : Promise<[any, Array<string>, [any, Array<string>]]>
+  {
+    let userLoggedIn = this.currentUsers.has(username);
+
+    // Don't allow users to leave projects if they are not logged in
+    if(!userLoggedIn)
+      return [ null, [client], null ];
+
+
+    let userLeftRoom = await this.LeaveRoom(projectToLeaveID, username, client);
+
+    // check that user has been removed
+    let operationStatus = RoomManager.FindRoom(projectToLeaveID).hasClient(username, client);
+
+    return [ !operationStatus, [client], userLeftRoom ];
   }
 
 
@@ -300,6 +314,43 @@ export class StateTracker{
 
     return [ user + ' has joined the room', affectedClients];
   }
+
+
+  // TODO: Finished: Yes Tested: No
+  /**
+   * Removes user from the room, does not worry about maintaining user connections
+   * @param roomCode - code of room they are looking to leave
+   * @param user - user to be logged in
+   */
+  public static async LeaveRoom(roomCode: string, user: string, client: string) :  Promise<[any, Array<string>]>
+  {
+
+    if(RoomManager.FindRoom(roomCode) == undefined)
+      return [ null, [client] ];
+
+    // move the user from whatever room they were in into the lobby
+    await RoomManager.LeaveRoom(roomCode, user, client)
+
+    await RoomManager.JoinRoom("noRoom", user, client)
+    this.currentUsers.get(user).set(client, "noRoom");
+
+    let affectedClients: Array<string> = [];
+
+    // get all of the clients that are in that room so that we can tell them 
+    let clients = await RoomManager.getClients(roomCode)
+
+    clients.forEach((value: string[], key: string) => {
+      
+      value.forEach((client: string) => {
+        affectedClients.push(client);
+      })
+      
+    });
+
+    return [ user + ' has left the room', affectedClients];
+  }
+
+
 
   // Object Commands
   public static async CreateObject(objectToCreate : FlowObject, projectId: string) : Promise<[any, Array<string>]>
