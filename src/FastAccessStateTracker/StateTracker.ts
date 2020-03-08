@@ -93,15 +93,18 @@ export class StateTracker{
    * Finds a project with id projectToOpenId, returns it to the command context
    * @param projectToOpenID - ID of associated project
    */
-  public static async OpenProject(projectToOpenID: any, client: string) : Promise<[any, Array<string>]>
+  public static async OpenProject(projectToOpenID: any, username: string, client: string) : Promise<[any, Array<string>, [any, Array<string>]]>
   {
     // find project in list of projects so that we can return it
-    let projectFound : FlowProject = await TypeORMDatabase.GetProject(projectToOpenID);
+    let projectFound = await TypeORMDatabase.GetProject(projectToOpenID);
     
     // grabs all the clients from the room manager
     let affectedClients: string[] = []
-    affectedClients.push(client)
-    let clients = RoomManager.getClients(projectToOpenID);
+    affectedClients.push(client);
+
+    let userJoinedRoom = await this.JoinRoom(projectToOpenID, username, client);
+
+   /* let clients = RoomManager.getClients(projectToOpenID);
     clients.forEach((value: string[], key: string) => {
       
       value.forEach((client: string) => {
@@ -109,9 +112,9 @@ export class StateTracker{
       })
       
     });
-
+*/
     // send the data back to the client
-    return [projectFound, affectedClients];
+    return [projectFound, affectedClients, userJoinedRoom];
   }
 
 
@@ -261,7 +264,7 @@ export class StateTracker{
   public static async JoinRoom(roomCode: string, user: string, client: string) :  Promise<[any, Array<string>]>
   {
 
-    if(RoomManager.FindRoom == undefined)
+    if(RoomManager.FindRoom(roomCode) == undefined)
       RoomManager.CreateRoom(roomCode)
 
     // move the user from whatever room they were in into whatever room they want to be in
@@ -274,13 +277,22 @@ export class StateTracker{
     let affectedClients: Array<string> = [];
 
     // get all of the clients that are in that room so that we can tell them 
-    let roomClients = await RoomManager.getClients(roomCode)
+    let clients = await RoomManager.getClients(roomCode)
 
-    roomClients.forEach((clients, username, map) => {
+   /* roomClients.forEach((clients, username, map) => {
       affectedClients.concat(clients)
     })
 
-    return [ user + '-' + client + ' has joined the room', affectedClients];
+    let clients = RoomManager.getClients(projectToOpenID);*/
+    clients.forEach((value: string[], key: string) => {
+      
+      value.forEach((client: string) => {
+        affectedClients.push(client);
+      })
+      
+    });
+
+    return [ user + ' has joined the room', affectedClients];
   }
 
   // Object Commands

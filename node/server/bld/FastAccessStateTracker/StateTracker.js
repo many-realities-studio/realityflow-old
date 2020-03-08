@@ -39,18 +39,13 @@ class StateTracker {
             return ['Success', clientIds];
         });
     }
-    static OpenProject(projectToOpenID, client) {
+    static OpenProject(projectToOpenID, username, client) {
         return __awaiter(this, void 0, void 0, function* () {
             let projectFound = yield TypeORMDatabase_1.TypeORMDatabase.GetProject(projectToOpenID);
             let affectedClients = [];
             affectedClients.push(client);
-            let clients = RoomManager_1.RoomManager.getClients(projectToOpenID);
-            clients.forEach((value, key) => {
-                value.forEach((client) => {
-                    affectedClients.push(client);
-                });
-            });
-            return [projectFound, affectedClients];
+            let userJoinedRoom = yield this.JoinRoom(projectToOpenID, username, client);
+            return [projectFound, affectedClients, userJoinedRoom];
         });
     }
     static CreateUser(username, password, client) {
@@ -122,18 +117,20 @@ class StateTracker {
     }
     static JoinRoom(roomCode, user, client) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (RoomManager_1.RoomManager.FindRoom == undefined)
+            if (RoomManager_1.RoomManager.FindRoom(roomCode) == undefined)
                 RoomManager_1.RoomManager.CreateRoom(roomCode);
             let oldRoom = this.currentUsers.get(user).get(client);
             yield RoomManager_1.RoomManager.LeaveRoom(oldRoom, user, client);
             yield RoomManager_1.RoomManager.JoinRoom(roomCode, user, client);
             this.currentUsers.get(user).set(client, roomCode);
             let affectedClients = [];
-            let roomClients = yield RoomManager_1.RoomManager.getClients(roomCode);
-            roomClients.forEach((clients, username, map) => {
-                affectedClients.concat(clients);
+            let clients = yield RoomManager_1.RoomManager.getClients(roomCode);
+            clients.forEach((value, key) => {
+                value.forEach((client) => {
+                    affectedClients.push(client);
+                });
             });
-            return [user + '-' + client + ' has joined the room', affectedClients];
+            return [user + ' has joined the room', affectedClients];
         });
     }
     static CreateObject(objectToCreate, projectId) {

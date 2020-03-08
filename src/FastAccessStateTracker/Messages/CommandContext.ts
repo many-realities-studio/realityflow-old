@@ -14,6 +14,7 @@ import { MessageBuilder } from "./MessageBuilder";
 import { TreeChildren } from "typeorm";
 
 import { v4 as uuidv4 } from 'uuid';
+import { ServerEventDispatcher } from "../../server";
 
 
 
@@ -29,7 +30,7 @@ class Command_CreateProject implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
   {
     data.Project.Id = uuidv4();
-    
+
     let project : FlowProject = new FlowProject(data.Project);
 
     let returnData = await StateTracker.CreateProject(project, data.FlowUser.Username, client);
@@ -67,13 +68,39 @@ class Command_OpenProject implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
   {
     
-    let returnData = await StateTracker.OpenProject(data.ProjectId, client)
+    let returnData = await StateTracker.OpenProject(data.ProjectId, data.FlowUser.Username, client);
+    
+    // notify others in the room that user has joined
+    this.SendRoomAnnouncement(returnData[2], "UserJoinedRoom");
 
     let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
 
     return returnMessage;
   }
+
+  async SendRoomAnnouncement(roomBulletin: [String, Array<String>], messageType : string): Promise<void>
+  {
+
+    if(roomBulletin)
+    {
+      let roomMessage = roomBulletin[0];
+      let message = {
+        "MessageType": messageType,
+        "Message": roomMessage,
+      }
+
+      let roomClients : Array<String> = roomBulletin[1];
+      
+      for(let i = 0; i < roomClients.length; i++)
+      {
+        let clientSocket = ServerEventDispatcher.SocketConnections.get(roomClients[i]);
+        ServerEventDispatcher.send(JSON.stringify(message), clientSocket);
+      }
+    }
+    
+  }
 }
+
 
 // // User Commands
 //TODO: Make it such that the user is logged in when the account is created? 

@@ -87,6 +87,8 @@ export class RoomManager
    * @param roomCode 
    */
   public static getClients(roomCode: string){
-      return this._RoomList.find(element => element.GetRoomCode() == roomCode).getClients()
+
+    let room = this.FindRoom(roomCode);
+    return room.getClients();
   }
 }

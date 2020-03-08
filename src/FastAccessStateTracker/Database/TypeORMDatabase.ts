@@ -40,8 +40,9 @@ export default class TypeORMDatabase
   public static async UpdateProject(projectToUpdate: FlowProject): Promise<void> {
     throw new Error("Method not implemented.");
   }
+
   public static async GetProject(projectId: string): Promise<FlowProject> {
-    return new FlowProject(ProjectOperations.findProject(projectId))
+    return new FlowProject(await ProjectOperations.findProject(projectId));
   }
 
   // User functions

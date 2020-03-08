@@ -14,6 +14,7 @@ const FlowProject_1 = require("../FlowLibrary/FlowProject");
 const FlowObject_1 = require("../FlowLibrary/FlowObject");
 const MessageBuilder_1 = require("./MessageBuilder");
 const uuid_1 = require("uuid");
+const server_1 = require("../../server");
 class Command_CreateProject {
     ExecuteCommand(data, client) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -44,9 +45,26 @@ class Command_DeleteProject {
 class Command_OpenProject {
     ExecuteCommand(data, client) {
         return __awaiter(this, void 0, void 0, function* () {
-            let returnData = yield StateTracker_1.StateTracker.OpenProject(data.ProjectId, client);
+            let returnData = yield StateTracker_1.StateTracker.OpenProject(data.ProjectId, data.FlowUser.Username, client);
+            this.SendRoomAnnouncement(returnData[2], "UserJoinedRoom");
             let returnMessage = MessageBuilder_1.MessageBuilder.CreateMessage(returnData[0], returnData[1]);
             return returnMessage;
+        });
+    }
+    SendRoomAnnouncement(roomBulletin, messageType) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (roomBulletin) {
+                let roomMessage = roomBulletin[0];
+                let message = {
+                    "MessageType": messageType,
+                    "Message": roomMessage,
+                };
+                let roomClients = roomBulletin[1];
+                for (let i = 0; i < roomClients.length; i++) {
+                    let clientSocket = server_1.ServerEventDispatcher.SocketConnections.get(roomClients[i]);
+                    server_1.ServerEventDispatcher.send(JSON.stringify(message), clientSocket);
+                }
+            }
         });
     }
 }
