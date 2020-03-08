@@ -1,5 +1,4 @@
 import { FlowObject } from "./FlowObject";
-import { v4 as uuidv4 } from 'uuid';
 
 
 
@@ -17,7 +16,7 @@ export class FlowProject
   public ProjectName: string;
  
   constructor(json:any){
-    this.Id = uuidv4();
+    this.Id = json.Id;
     this.Description = json.Description;
     this.DateModified = json.DateModified;
     this.ProjectName = json.ProjectName;

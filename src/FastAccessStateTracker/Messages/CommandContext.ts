@@ -13,6 +13,8 @@ import { FlowObject } from "../FlowLibrary/FlowObject";
 import { MessageBuilder } from "./MessageBuilder";
 import { TreeChildren } from "typeorm";
 
+import { v4 as uuidv4 } from 'uuid';
+
 
 
 interface ICommand
@@ -26,6 +28,8 @@ class Command_CreateProject implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
   {
+    data.Project.Id = uuidv4();
+    
     let project : FlowProject = new FlowProject(data.Project);
 
     let returnData = await StateTracker.CreateProject(project, data.FlowUser.Username, client);

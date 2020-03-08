@@ -13,9 +13,11 @@ const StateTracker_1 = require("../StateTracker");
 const FlowProject_1 = require("../FlowLibrary/FlowProject");
 const FlowObject_1 = require("../FlowLibrary/FlowObject");
 const MessageBuilder_1 = require("./MessageBuilder");
+const uuid_1 = require("uuid");
 class Command_CreateProject {
     ExecuteCommand(data, client) {
         return __awaiter(this, void 0, void 0, function* () {
+            data.Project.Id = uuid_1.v4();
             let project = new FlowProject_1.FlowProject(data.Project);
             let returnData = yield StateTracker_1.StateTracker.CreateProject(project, data.FlowUser.Username, client);
             let message = returnData[0] == null ? "Failed to Create Project" : returnData[0];
