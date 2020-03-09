@@ -13,12 +13,21 @@ const StateTracker_1 = require("../StateTracker");
 const FlowProject_1 = require("../FlowLibrary/FlowProject");
 const FlowObject_1 = require("../FlowLibrary/FlowObject");
 const MessageBuilder_1 = require("./MessageBuilder");
+const uuid_1 = require("uuid");
+const server_1 = require("../../server");
 class Command_CreateProject {
     ExecuteCommand(data, client) {
         return __awaiter(this, void 0, void 0, function* () {
-            let project = new FlowProject_1.FlowProject(data.project);
-            let returnData = yield StateTracker_1.StateTracker.CreateProject(project, data.user.Username, client);
-            let returnMessage = MessageBuilder_1.MessageBuilder.CreateMessage(returnData[0], returnData[1]);
+            data.Project.Id = uuid_1.v4();
+            let project = new FlowProject_1.FlowProject(data.Project);
+            let returnData = yield StateTracker_1.StateTracker.CreateProject(project, data.FlowUser.Username, client);
+            let message = returnData[0] == null ? "Failed to Create Project" : returnData[0];
+            let returnContent = {
+                "MessageType": "CreateProject",
+                "WasSuccessful": returnData[0] == null ? false : true,
+                "FlowProject": message
+            };
+            let returnMessage = MessageBuilder_1.MessageBuilder.CreateMessage(returnContent, returnData[1]);
             return returnMessage;
         });
     }
@@ -36,8 +45,47 @@ class Command_DeleteProject {
 class Command_OpenProject {
     ExecuteCommand(data, client) {
         return __awaiter(this, void 0, void 0, function* () {
-            let returnData = yield StateTracker_1.StateTracker.OpenProject(data.ProjectId, client);
-            let returnMessage = MessageBuilder_1.MessageBuilder.CreateMessage(returnData[0], returnData[1]);
+            let returnData = yield StateTracker_1.StateTracker.OpenProject(data.ProjectId, data.FlowUser.Username, client);
+            Command_OpenProject.SendRoomAnnouncement(returnData[2], "UserJoinedRoom");
+            let message = returnData[0] == null ? "Failed to Open Project" : returnData[0];
+            let returnContent = {
+                "MessageType": "OpenProject",
+                "WasSuccessful": returnData[0] == null ? false : true,
+                "FlowProject": message
+            };
+            let returnMessage = MessageBuilder_1.MessageBuilder.CreateMessage(returnContent, returnData[1]);
+            return returnMessage;
+        });
+    }
+    static SendRoomAnnouncement(roomBulletin, messageType) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (roomBulletin) {
+                let roomMessage = roomBulletin[0];
+                let message = {
+                    "MessageType": messageType,
+                    "Message": roomMessage,
+                };
+                let roomClients = roomBulletin[1];
+                for (let i = 0; i < roomClients.length; i++) {
+                    let clientSocket = server_1.ServerEventDispatcher.SocketConnections.get(roomClients[i]);
+                    server_1.ServerEventDispatcher.send(JSON.stringify(message), clientSocket);
+                }
+            }
+        });
+    }
+}
+class Command_LeaveProject {
+    ExecuteCommand(data, client) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let returnData = yield StateTracker_1.StateTracker.LeaveProject(data.ProjectId, data.FlowUser.Username, client);
+            Command_OpenProject.SendRoomAnnouncement(returnData[2], "UserLeftRoom");
+            let message = returnData[0] == false ? "Failed to Leave Project" : "Successfully Left Project";
+            let returnContent = {
+                "MessageType": "LeaveProject",
+                "WasSuccessful": returnData[0],
+                "FlowProject": message
+            };
+            let returnMessage = MessageBuilder_1.MessageBuilder.CreateMessage(returnContent, returnData[1]);
             return returnMessage;
         });
     }
@@ -159,27 +207,14 @@ class CommandContext {
         this._CommandList = new Map();
     }
     CommandContext() {
-        this._CommandList.set("CreateProject", new Command_CreateProject());
-        this._CommandList.set("DeleteProject", new Command_DeleteProject());
-        this._CommandList.set("OpenProject", new Command_OpenProject());
-        this._CommandList.set("CreateUser", new Command_CreateUser());
-        this._CommandList.set("DeleteUser", new Command_DeleteUser());
-        this._CommandList.set("LoginUser", new Command_LoginUser());
-        this._CommandList.set("LogoutUser", new Command_LogoutUser());
-        this._CommandList.set("CreateRoom", new Command_CreateRoom());
-        this._CommandList.set("DeleteRoom", new Command_DeleteRoom());
-        this._CommandList.set("JoinRoom", new Command_JoinRoom());
-        this._CommandList.set("CreateObject", new Command_CreateObject());
-        this._CommandList.set("DeleteObject", new Command_DeleteObject());
-        this._CommandList.set("UpdateObject", new Command_UpdateObject());
-        this._CommandList.set("FinalizedUpdateObject", new Command_FinalizedUpdateObject());
     }
-    ExecuteCommand(commandToExecute, data, user, client) {
+    ExecuteCommand(commandToExecute, data, client) {
         return __awaiter(this, void 0, void 0, function* () {
             if (this._CommandList.size == 0) {
                 this._CommandList.set("CreateProject", new Command_CreateProject());
                 this._CommandList.set("DeleteProject", new Command_DeleteProject());
                 this._CommandList.set("OpenProject", new Command_OpenProject());
+                this._CommandList.set("LeaveProject", new Command_LeaveProject());
                 this._CommandList.set("CreateUser", new Command_CreateUser());
                 this._CommandList.set("DeleteUser", new Command_DeleteUser());
                 this._CommandList.set("LoginUser", new Command_LoginUser());

@@ -13,10 +13,13 @@ const RoomManager_1 = require("./RoomManager");
 const TypeORMDatabase_1 = require("./Database/TypeORMDatabase");
 const project_1 = require("../ORMCommands/project");
 class StateTracker {
-    static CreateProject(projectToCreate, user, client) {
+    static CreateProject(projectToCreate, username, client) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield TypeORMDatabase_1.TypeORMDatabase.CreateProject(projectToCreate, user);
-            return ["Success", [client]];
+            let userLoggedIn = this.currentUsers.has(username);
+            if (!userLoggedIn)
+                return [null, [client]];
+            let newProject = yield TypeORMDatabase_1.TypeORMDatabase.CreateProject(projectToCreate, username);
+            return [newProject, [client]];
         });
     }
     static DeleteProject(projectToDeleteId, user, client) {
@@ -36,18 +39,26 @@ class StateTracker {
             return ['Success', clientIds];
         });
     }
-    static OpenProject(projectToOpenID, client) {
+    static OpenProject(projectToOpenID, username, client) {
         return __awaiter(this, void 0, void 0, function* () {
+            let userLoggedIn = this.currentUsers.has(username);
+            if (!userLoggedIn)
+                return [null, [client], null];
             let projectFound = yield TypeORMDatabase_1.TypeORMDatabase.GetProject(projectToOpenID);
             let affectedClients = [];
             affectedClients.push(client);
-            let clients = RoomManager_1.RoomManager.getClients(projectToOpenID);
-            clients.forEach((value, key) => {
-                value.forEach((client) => {
-                    affectedClients.push(client);
-                });
-            });
-            return [projectFound, affectedClients];
+            let userJoinedRoom = yield this.JoinRoom(projectToOpenID, username, client);
+            return [projectFound, affectedClients, userJoinedRoom];
+        });
+    }
+    static LeaveProject(projectToLeaveID, username, client) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let userLoggedIn = this.currentUsers.has(username);
+            if (!userLoggedIn)
+                return [null, [client], null];
+            let userLeftRoom = yield this.LeaveRoom(projectToLeaveID, username, client);
+            let operationStatus = RoomManager_1.RoomManager.FindRoom(projectToLeaveID).hasClient(username, client);
+            return [!operationStatus, [client], userLeftRoom];
         });
     }
     static CreateUser(username, password, client) {
@@ -80,6 +91,8 @@ class StateTracker {
             let userLoggedIn = this.currentUsers.has(userName);
             if (!userLoggedIn)
                 this.currentUsers.set(userName, new Map());
+            console.log("\n\n\is the user logged in after logging in");
+            console.log(this.currentUsers.has(userName));
             this.currentUsers.get(userName).set(ClientId, "noRoom");
             RoomManager_1.RoomManager.JoinRoom("noRoom", userName, ClientId);
             let returnMessage = { username: userName, projects: yield project_1.ProjectOperations.fetchProjects(userName) };
@@ -117,18 +130,37 @@ class StateTracker {
     }
     static JoinRoom(roomCode, user, client) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (RoomManager_1.RoomManager.FindRoom == undefined)
+            if (RoomManager_1.RoomManager.FindRoom(roomCode) == undefined)
                 RoomManager_1.RoomManager.CreateRoom(roomCode);
             let oldRoom = this.currentUsers.get(user).get(client);
             yield RoomManager_1.RoomManager.LeaveRoom(oldRoom, user, client);
             yield RoomManager_1.RoomManager.JoinRoom(roomCode, user, client);
             this.currentUsers.get(user).set(client, roomCode);
             let affectedClients = [];
-            let roomClients = yield RoomManager_1.RoomManager.getClients(roomCode);
-            roomClients.forEach((clients, username, map) => {
-                affectedClients.concat(clients);
+            let clients = yield RoomManager_1.RoomManager.getClients(roomCode);
+            clients.forEach((value, key) => {
+                value.forEach((client) => {
+                    affectedClients.push(client);
+                });
             });
-            return [user + '-' + client + ' has joined the room', affectedClients];
+            return [user + ' has joined the room', affectedClients];
+        });
+    }
+    static LeaveRoom(roomCode, user, client) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (RoomManager_1.RoomManager.FindRoom(roomCode) == undefined)
+                return [null, [client]];
+            yield RoomManager_1.RoomManager.LeaveRoom(roomCode, user, client);
+            yield RoomManager_1.RoomManager.JoinRoom("noRoom", user, client);
+            this.currentUsers.get(user).set(client, "noRoom");
+            let affectedClients = [];
+            let clients = yield RoomManager_1.RoomManager.getClients(roomCode);
+            clients.forEach((value, key) => {
+                value.forEach((client) => {
+                    affectedClients.push(client);
+                });
+            });
+            return [user + ' has left the room', affectedClients];
         });
     }
     static CreateObject(objectToCreate, projectId) {

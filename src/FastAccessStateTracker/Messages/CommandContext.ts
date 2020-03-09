@@ -13,6 +13,9 @@ import { FlowObject } from "../FlowLibrary/FlowObject";
 import { MessageBuilder } from "./MessageBuilder";
 import { TreeChildren } from "typeorm";
 
+import { v4 as uuidv4 } from 'uuid';
+import { ServerEventDispatcher } from "../../server";
+
 
 
 interface ICommand
@@ -26,13 +29,21 @@ class Command_CreateProject implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
   {
-    let project : FlowProject = new FlowProject(data.project);
+    data.Project.Id = uuidv4();
 
-    let returnData = await StateTracker.CreateProject(project, data.user.Username, client);
+    let project : FlowProject = new FlowProject(data.Project);
 
-    // Create Project only requires a success message being sent
-    //TODO: Ensure success before sending success message
-    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
+    let returnData = await StateTracker.CreateProject(project, data.FlowUser.Username, client);
+
+    let message = returnData[0] == null ? "Failed to Create Project" : returnData[0];
+      
+    let returnContent = {
+      "MessageType": "CreateProject",
+      "WasSuccessful": returnData[0] == null ? false : true,
+      "FlowProject": message
+    }
+
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
     
     return returnMessage;
   }
@@ -51,19 +62,78 @@ class Command_DeleteProject implements ICommand
   }
 }
 
-// TODO: Find out what this is supposed to do
+
 class Command_OpenProject implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
   {
     
-    let returnData = await StateTracker.OpenProject(data.ProjectId, client)
+    let returnData = await StateTracker.OpenProject(data.ProjectId, data.FlowUser.Username, client);
+    
+    // notify others in the room that user has joined
+    Command_OpenProject.SendRoomAnnouncement(returnData[2], "UserJoinedRoom");
 
-    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
+    let message = returnData[0] == null ? "Failed to Open Project" : returnData[0];
+
+    let returnContent = {
+      "MessageType": "OpenProject",
+      "WasSuccessful": returnData[0] == null ? false : true,
+      "FlowProject": message
+    }
+
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
+
+    return returnMessage;
+  }
+
+  static async SendRoomAnnouncement(roomBulletin: [String, Array<String>], messageType : string): Promise<void>
+  {
+
+    if(roomBulletin)
+    {
+      let roomMessage = roomBulletin[0];
+      let message = {
+        "MessageType": messageType,
+        "Message": roomMessage,
+      }
+
+      let roomClients : Array<String> = roomBulletin[1];
+      
+      for(let i = 0; i < roomClients.length; i++)
+      {
+        let clientSocket = ServerEventDispatcher.SocketConnections.get(roomClients[i]);
+        ServerEventDispatcher.send(JSON.stringify(message), clientSocket);
+      }
+    }
+    
+  }
+}
+
+
+class Command_LeaveProject implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
+  {
+    
+    let returnData = await StateTracker.LeaveProject(data.ProjectId, data.FlowUser.Username, client);
+    
+    // notify others in the room that user has joined
+    Command_OpenProject.SendRoomAnnouncement(returnData[2], "UserLeftRoom");
+
+    let message = returnData[0] == false ? "Failed to Leave Project" : "Successfully Left Project";
+
+    let returnContent = {
+      "MessageType": "LeaveProject",
+      "WasSuccessful": returnData[0],
+      "FlowProject": message
+    }
+
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
 
     return returnMessage;
   }
 }
+
 
 // // User Commands
 //TODO: Make it such that the user is logged in when the account is created? 
@@ -224,27 +294,6 @@ export class CommandContext
   
   public CommandContext()
   {
-    // Project Commands
-    this._CommandList.set("CreateProject", new Command_CreateProject());
-    this._CommandList.set("DeleteProject", new Command_DeleteProject());
-    this._CommandList.set("OpenProject", new Command_OpenProject());
-
-    // User Commands
-    this._CommandList.set("CreateUser", new Command_CreateUser());
-    this._CommandList.set("DeleteUser", new Command_DeleteUser());
-    this._CommandList.set("LoginUser", new Command_LoginUser());
-    this._CommandList.set("LogoutUser", new Command_LogoutUser());
-
-    // Room Commands
-    this._CommandList.set("CreateRoom", new Command_CreateRoom());
-    this._CommandList.set("DeleteRoom", new Command_DeleteRoom());
-    this._CommandList.set("JoinRoom", new Command_JoinRoom());
-
-    // Object Commands
-    this._CommandList.set("CreateObject", new Command_CreateObject());
-    this._CommandList.set("DeleteObject", new Command_DeleteObject());
-    this._CommandList.set("UpdateObject", new Command_UpdateObject());
-    this._CommandList.set("FinalizedUpdateObject", new Command_FinalizedUpdateObject());
   }
 
   /**
@@ -252,12 +301,13 @@ export class CommandContext
    * @param commandToExecute The command to be executed
    * @param data The data which is needed for the command to execute.
    */
-  async ExecuteCommand(commandToExecute: string, data: any, user: string, client: string) : Promise<[String, Array<String>]>
+  async ExecuteCommand(commandToExecute: string, data: any, client: string) : Promise<[String, Array<String>]>
   {
     if(this._CommandList.size == 0) {
       this._CommandList.set("CreateProject", new Command_CreateProject());
       this._CommandList.set("DeleteProject", new Command_DeleteProject());
       this._CommandList.set("OpenProject", new Command_OpenProject());
+      this._CommandList.set("LeaveProject", new Command_LeaveProject());
 
       // User Commands
       this._CommandList.set("CreateUser", new Command_CreateUser());

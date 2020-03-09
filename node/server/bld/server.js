@@ -29,10 +29,10 @@ var database;
 const dburl = "mongodb://127.0.0.1:27017/realityflowdb";
 class ServerEventDispatcher {
     constructor(server) {
+        console.log("Server running");
         ServerEventDispatcher.wss = new ws_1.Server({ server }, function (err) {
         });
         ServerEventDispatcher.wss.on("error", (err) => {
-            console.log("Server running");
         });
         ServerEventDispatcher.callbacks = [];
         ServerEventDispatcher.wss.on("connection", this.connection);
@@ -48,20 +48,24 @@ class ServerEventDispatcher {
         ws.ID = uuid_1.v4();
         ServerEventDispatcher.SocketConnections.set(ws.ID, ws);
         function onMessageEvent(evt) {
-            const json = JSON.parse(evt.data);
-            console.log(evt.data);
-            NewMessageProcessor_1.NewMessageProcessor.ParseMessage(ws.ID, json).then((res) => {
-                let clients = res[1];
-                if (!clients) {
-                    console.log("Didn't receive a clients array ");
-                }
-                else {
-                    for (var i = 0; i < clients.length; i++) {
-                        let key = clients[i];
-                        ServerEventDispatcher.SocketConnections.get(key).send(res[0]);
+            try {
+                const json = JSON.parse(evt.data);
+                NewMessageProcessor_1.NewMessageProcessor.ParseMessage(ws.ID, json).then((res) => {
+                    let clients = res[1];
+                    if (!clients) {
+                        console.log("Didn't receive a clients array ");
                     }
-                }
-            });
+                    else {
+                        for (var i = 0; i < clients.length; i++) {
+                            let key = clients[i];
+                            ServerEventDispatcher.SocketConnections.get(key).send(res[0]);
+                        }
+                    }
+                });
+            }
+            catch (error) {
+                ServerEventDispatcher.SocketConnections.get(ws.ID).send("Error:\n" + error);
+            }
         }
         function onCloseEvent(evt) {
             ServerEventDispatcher.SocketConnections.delete(ws.ID);

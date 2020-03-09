@@ -2,7 +2,6 @@ import { FlowObject } from "./FlowObject";
 
 
 
-
 // NOTE: FAM Stands for Fast Access Memory
 export class FlowProject 
 {
@@ -17,7 +16,7 @@ export class FlowProject
   public ProjectName: string;
  
   constructor(json:any){
-    this.Id = json.Id
+    this.Id = json.Id;
     this.Description = json.Description;
     this.DateModified = json.DateModified;
     this.ProjectName = json.ProjectName;

@@ -128,7 +128,14 @@ describe("ProjectOperations", () => {
             Username: "Yash",
             Password: "test"
         };
-        let mockCreateProject = jest.fn((project, username) => __awaiter(void 0, void 0, void 0, function* () { }));
+        let mockCreateProject = jest.fn((project, username) => __awaiter(void 0, void 0, void 0, function* () {
+            let p = new project_2.Project();
+            p.Id = "testProject1Id",
+                p.Description = "This is a project";
+            p.ProjectName = "TestProject1";
+            p.DateModified = Date.now();
+            return p.Id;
+        }));
         project_1.ProjectOperations.createProject = mockCreateProject;
         yield TypeORMDatabase_1.default.CreateProject(testProject1, testUser.Username);
         expect(mockCreateProject).toBeCalledWith(testProject1, testUser.Username);

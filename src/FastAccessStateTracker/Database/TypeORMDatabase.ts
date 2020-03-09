@@ -21,7 +21,10 @@ export default class TypeORMDatabase
 
   // Project functions
   public static async CreateProject(projectToCreate: FlowProject, user: string) {
-    let newProject = await ProjectOperations.createProject(projectToCreate, user);
+
+    let projectId = await ProjectOperations.createProject(projectToCreate, user);
+    
+    return await ProjectOperations.findProject(projectId);
   }
 
   /**
@@ -37,8 +40,9 @@ export default class TypeORMDatabase
   public static async UpdateProject(projectToUpdate: FlowProject): Promise<void> {
     throw new Error("Method not implemented.");
   }
+
   public static async GetProject(projectId: string): Promise<FlowProject> {
-    return new FlowProject(ProjectOperations.findProject(projectId))
+    return new FlowProject(await ProjectOperations.findProject(projectId));
   }
 
   // User functions

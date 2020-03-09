@@ -36,7 +36,6 @@ TypeORMDatabase_1.default.DeleteProject = TypeORMProjectDeleteMock;
 const TypeORMUserDeleteMock = jest.fn((userToDelete) => __awaiter(void 0, void 0, void 0, function* () { }));
 TypeORMDatabase_1.default.DeleteUser = TypeORMUserDeleteMock;
 const TypeORMProjectCreateMock = jest.fn((projectToCreate) => __awaiter(void 0, void 0, void 0, function* () { }));
-TypeORMDatabase_1.default.CreateProject = TypeORMProjectCreateMock;
 const TypeORMProjectGetMock = jest.fn((projectToGet) => __awaiter(void 0, void 0, void 0, function* () {
     return new FlowProject_1.FlowProject({
         Id: projectToGet,

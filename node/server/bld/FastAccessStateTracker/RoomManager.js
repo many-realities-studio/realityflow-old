@@ -33,7 +33,8 @@ class RoomManager {
         roomToLogin.LeaveRoom(user, clientId);
     }
     static getClients(roomCode) {
-        return this._RoomList.find(element => element.GetRoomCode() == roomCode).getClients();
+        let room = this.FindRoom(roomCode);
+        return room.getClients();
     }
 }
 exports.RoomManager = RoomManager;

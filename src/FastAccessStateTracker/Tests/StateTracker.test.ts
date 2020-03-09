@@ -38,7 +38,7 @@ const TypeORMUserDeleteMock = jest.fn(async (userToDelete: string) => {})
 TypeORMDatabase.DeleteUser = TypeORMUserDeleteMock
 
 const TypeORMProjectCreateMock = jest.fn( async (projectToCreate: FlowProject) => {} )  
-TypeORMDatabase.CreateProject = TypeORMProjectCreateMock
+//TypeORMDatabase.CreateProject = TypeORMProjectCreateMock
 
 
 const TypeORMProjectGetMock = jest.fn( async (projectToGet: string) => {

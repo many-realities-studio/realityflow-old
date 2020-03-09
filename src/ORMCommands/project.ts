@@ -27,6 +27,7 @@ export class ProjectOperations
         newProject.Owner = user
 
         await getConnection(process.env.NODE_ENV).manager.save(newProject);
+        return newProject.Id;
     }
 
     /**
