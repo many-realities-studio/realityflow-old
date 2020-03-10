@@ -53,10 +53,14 @@ class Command_DeleteProject implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
   {
-    let project = new FlowProject(data.project);
-    let returnData = await StateTracker.DeleteProject(project.Id, data.user.Username, client);
+
+    let returnData = await StateTracker.DeleteProject(data.FlowProject.Id, data.FlowUser.Username, client);
+    let returnContent = {
+      "MessageType": "DeleteProject",
+      "WasSuccessful": returnData[0],
+    }
     
-    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
 
     return returnMessage;
   }
@@ -169,7 +173,14 @@ class Command_LoginUser implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
     let returnData = await StateTracker.LoginUser(data.FlowUser.Username, data.FlowUser.Password, client);
-    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
+    let returnContent = {
+      "MessageType": "LoginUser",
+      "WasSuccessful": returnData[0],
+      "Message": returnData[2]
+    };
+
+
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
     
     return returnMessage;
   }

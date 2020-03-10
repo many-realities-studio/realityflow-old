@@ -24,19 +24,11 @@ class StateTracker {
     }
     static DeleteProject(projectToDeleteId, user, client) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!projectToDeleteId)
-                return;
+            if (!(yield project_1.ProjectOperations.findProject(projectToDeleteId)))
+                return [false, [client]];
             let clients = RoomManager_1.RoomManager.DestroyRoom(projectToDeleteId);
             yield TypeORMDatabase_1.TypeORMDatabase.DeleteProject(projectToDeleteId);
-            let clientIds = [];
-            clientIds.push(client);
-            clients.forEach((userClients, user, map) => {
-                clientIds.concat(userClients);
-                userClients.forEach((client, index, arr) => {
-                    this.currentUsers.get(user).set(client, "noRoom");
-                });
-            });
-            return ['Success', clientIds];
+            return [true, [client]];
         });
     }
     static OpenProject(projectToOpenID, username, client) {
@@ -45,6 +37,8 @@ class StateTracker {
             if (!userLoggedIn)
                 return [null, [client], null];
             let projectFound = yield TypeORMDatabase_1.TypeORMDatabase.GetProject(projectToOpenID);
+            if (!projectFound)
+                [null, [client], null];
             let affectedClients = [];
             affectedClients.push(client);
             let userJoinedRoom = yield this.JoinRoom(projectToOpenID, username, client);
@@ -86,19 +80,15 @@ class StateTracker {
         return __awaiter(this, void 0, void 0, function* () {
             let affectedClients = [];
             affectedClients.push(ClientId);
-            if (!TypeORMDatabase_1.TypeORMDatabase.AuthenticateUser(userName, password))
-                return ['Failure', affectedClients];
+            if (!(yield TypeORMDatabase_1.TypeORMDatabase.AuthenticateUser(userName, password)))
+                return [false, affectedClients, null];
             let userLoggedIn = this.currentUsers.has(userName);
             if (!userLoggedIn)
                 this.currentUsers.set(userName, new Map());
-            console.log("\n\n\is the user logged in after logging in");
-            console.log(this.currentUsers.has(userName));
             this.currentUsers.get(userName).set(ClientId, "noRoom");
             RoomManager_1.RoomManager.JoinRoom("noRoom", userName, ClientId);
-            let returnMessage = { username: userName, projects: yield project_1.ProjectOperations.fetchProjects(userName) };
-            console.log(returnMessage.projects);
-            console.log(affectedClients);
-            return [returnMessage, affectedClients];
+            let returnMessage = { Username: userName, Projects: yield project_1.ProjectOperations.fetchProjects(userName) };
+            return [true, affectedClients, returnMessage];
         });
     }
     static LogoutUser(Username, password, ClientId) {
@@ -143,7 +133,8 @@ class StateTracker {
                     affectedClients.push(client);
                 });
             });
-            return [user + ' has joined the room', affectedClients];
+            let shortClientId = client.slice(0, 8);
+            return [user + "-" + shortClientId + ' has joined the room', affectedClients];
         });
     }
     static LeaveRoom(roomCode, user, client) {
@@ -160,7 +151,8 @@ class StateTracker {
                     affectedClients.push(client);
                 });
             });
-            return [user + ' has left the room', affectedClients];
+            let shortClientId = client.slice(0, 8);
+            return [user + "-" + shortClientId + 'has left the room', affectedClients];
         });
     }
     static CreateObject(objectToCreate, projectId) {

@@ -68,8 +68,11 @@ export class UserOperations {
             from(User, "User").
             where("Username = :username", {username: Username}).
             execute()
+
+        if(!passwordObject[0])
+            return false;
             
-        return await bcrypt.compare(Password, passwordObject[0].User_Password)        
+        return await bcrypt.compare(Password, passwordObject[0].User_Password);
     }
     
 }

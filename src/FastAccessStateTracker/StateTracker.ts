@@ -63,17 +63,18 @@ export class StateTracker{
   public static async DeleteProject(projectToDeleteId: string, user: string, client: string) : Promise<[any, Array<string>]>
   {    
 
-    if(!projectToDeleteId)
-      return
+    if(! await ProjectOperations.findProject(projectToDeleteId))
+      return [ false, [client] ];
 
     // remove roomManager, get the list of all affected users/clients
-    let clients = RoomManager.DestroyRoom(projectToDeleteId)
+    let clients = RoomManager.DestroyRoom(projectToDeleteId);
 
     // Remove project from database 
     await TypeORMDatabase.DeleteProject(projectToDeleteId);
 
-    let clientIds : Array<string> = []
-    clientIds.push(client)
+   /* let clientIds : Array<string> = [];
+    clientIds.push(client);
+
     clients.forEach((userClients: Array<string>, user: string, map) =>{
       
       // add clients of a given user to the list of clients to send back
@@ -85,8 +86,8 @@ export class StateTracker{
       });
 
     });
-
-    return ['Success', clientIds];
+*/
+    return [true, [client] ];
   }
  
   // TODO: finished: yes tested: no
@@ -104,6 +105,9 @@ export class StateTracker{
 
     // find project in list of projects so that we can return it
     let projectFound = await TypeORMDatabase.GetProject(projectToOpenID);
+
+    if(!projectFound)
+      [ null, [client], null];
     
     // grabs all the clients from the room manager
     let affectedClients: string[] = []
@@ -191,15 +195,15 @@ export class StateTracker{
    * @param password 
    * @param ClientId 
    */
-  public static async LoginUser(userName:string, password: string, ClientId : string) : Promise<[any, Array<string>]>
+  public static async LoginUser(userName:string, password: string, ClientId : string) : Promise<[any, Array<string>, any]>
   {
 
     let affectedClients = [];
     affectedClients.push(ClientId);
 
     //Authenticate user
-    if(!TypeORMDatabase.AuthenticateUser(userName, password))
-      return ['Failure', affectedClients];
+    if(! await TypeORMDatabase.AuthenticateUser(userName, password))
+      return [false, affectedClients, null];
 
     // check if user is already logged in - 
     // user could be logged in on another client
@@ -208,9 +212,6 @@ export class StateTracker{
     // If the user is not already logged in, then we need to start keeping track of them.
     if(!userLoggedIn)
       this.currentUsers.set(userName, new Map<string, string>());
-    
-      console.log("\n\n\is the user logged in after logging in");
-      console.log(this.currentUsers.has(userName));
 
     // put the client in limbo - aka, an empty room
     // TODO: figure out noRoom situation
@@ -218,10 +219,10 @@ export class StateTracker{
 
     RoomManager.JoinRoom("noRoom", userName, ClientId)
 
-    let returnMessage = {username: userName, projects: await ProjectOperations.fetchProjects(userName)}
-    console.log(returnMessage.projects)
-    console.log(affectedClients)
-    return [returnMessage, affectedClients];    
+
+    let returnMessage = {Username: userName, Projects: await ProjectOperations.fetchProjects(userName)}
+
+    return [true, affectedClients, returnMessage];    
   }
 
   // TODO: Finished: Yes Tested: Yes
@@ -312,7 +313,10 @@ export class StateTracker{
       
     });
 
-    return [ user + ' has joined the room', affectedClients];
+    // to differentiate multiple clients under same user
+    let shortClientId = client.slice(0, 8);
+
+    return [ user + "-" + shortClientId + ' has joined the room', affectedClients];
   }
 
 
@@ -347,7 +351,10 @@ export class StateTracker{
       
     });
 
-    return [ user + ' has left the room', affectedClients];
+    // to differentiate multiple clients under same user
+    let shortClientId = client.slice(0, 8);
+
+    return [ user + "-" + shortClientId + 'has left the room', affectedClients];
   }
 
 

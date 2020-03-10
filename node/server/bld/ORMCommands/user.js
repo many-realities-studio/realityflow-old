@@ -52,6 +52,8 @@ class UserOperations {
                 from(user_1.User, "User").
                 where("Username = :username", { username: Username }).
                 execute();
+            if (!passwordObject[0])
+                return false;
             return yield bcrypt.compare(Password, passwordObject[0].User_Password);
         });
     }
