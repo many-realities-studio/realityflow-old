@@ -169,6 +169,10 @@ describe("ObjectOperations", () => {
 
     });
 
+    it("should delete an object", () => {
+        throw new Error("Test not yet created")
+    })
+
 })
 
 describe("ProjectOperations", ()=>{

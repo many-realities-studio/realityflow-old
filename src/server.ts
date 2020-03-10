@@ -3,17 +3,10 @@ import * as express from "express";
 import * as http from "http";
 import { Server } from "ws";
 import { v4 as uuidv4 } from 'uuid';
-import * as mongoose from "mongoose";
-(<any>mongoose).Promise = Promise;
 import {NewMessageProcessor} from "./FastAccessStateTracker/Messages/NewMessageProcessor";
 import {createConnection} from 'typeorm'
-// import { passport } from 'passport';
-// import { LocalStrategy } from 'passport-local';
-// import { MongooseDatabase } from './FastAccessStateTracker/Database/MongooseDatabase';
-// import { User } from './models/user';
 
 // DB API
-import {ClientOperations} from "./commands/client";
 import {ProjectOperations} from "./ORMCommands/project";
 import { DBObject } from "./entity/object";
 import { User } from "./entity/user";
@@ -22,10 +15,8 @@ import { UserSubscriber } from "./entity/UserSubscriber";
 
 import { RoomManager } from "./FastAccessStateTracker/RoomManager";
 import { UserOperations } from "./ORMCommands/user";
-
-
 var database;
-const dburl = "mongodb://127.0.0.1:27017/realityflowdb";
+
 
 //The main Server class
 export class ServerEventDispatcher {
