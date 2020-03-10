@@ -85,3 +85,4 @@ package-lock.json
 
 node/editor/server/bld
 src/node/server/bld/*
+node/server/bld/*
