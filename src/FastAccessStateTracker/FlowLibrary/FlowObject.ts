@@ -20,6 +20,7 @@ export class FlowObject
   // Fields used for tracking this object in the FAM
   public Id: string; 
   public RoomNumber: number;
+  public currentCheckout: string;
 
   constructor(json: any)
   {    
@@ -35,7 +36,7 @@ export class FlowObject
     this.S_x = json.S_x;
     this.S_y = json.S_y;
     this.S_z = json.S_z;
-
+    this.currentCheckout = null;
 }
 
   /**

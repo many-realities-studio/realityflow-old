@@ -376,16 +376,38 @@ export class StateTracker{
     roomClients.forEach((clients, username, map) => {
       affectedClients.concat(clients)
     })
+
     return [objectToCreate, affectedClients]
   }
 
-  public static async DeleteObject(objectToDelete : FlowObject, projectId: string) : Promise<[any, Array<string>]>
+  public static async CheckoutObject(projectId: string, objectId: string, user: string, client: string){
+    // make sure the object is available for checkout
+    if(RoomManager.FindRoom(projectId).GetProject().GetObjectHolder(objectId) != null)
+      return["Cannot check out object", [client]]
+
+    RoomManager.FindRoom(projectId).GetProject().CheckoutObject(objectId, client)
+
+  }
+
+  public static async CheckinObject(projectId: string, objectId: string, user: string, client: string){
+    // make sure the actual person that checked an object out is the one checking it back in
+    if(RoomManager.FindRoom(projectId).GetProject().GetObjectHolder(objectId) != client)
+      return["Cannot check in object", [client]]
+
+    RoomManager.FindRoom(projectId).GetProject().CheckinObject(objectId)
+  }
+
+  public static async DeleteObject(objectId: string, projectId: string, client: string) : Promise<[any, Array<string>]>
   {
+
+    if(RoomManager.FindRoom(projectId).GetProject().GetObjectHolder(objectId) != client)
+      return["Cannot delete object", [client]]
+
     RoomManager.FindRoom(projectId)
                 .GetProject()
-                .DeleteObject(objectToDelete);
+                .DeleteObject(objectId);
 
-    TypeORMDatabase.DeleteObject(objectToDelete.Id, projectId)
+    TypeORMDatabase.DeleteObject(objectId, projectId)
 
     let affectedClients: Array<string> = [];
 
@@ -396,45 +418,39 @@ export class StateTracker{
       affectedClients.concat(clients)
     })
 
-    return ["deleted " + objectToDelete.Id, affectedClients]
+    return ["deleted " + objectId, affectedClients]
   }
 
-  public static async UpdateObject(objectToUpdate : FlowObject, projectId: string) : Promise<[any, Array<string>]>
+  /**
+   * update an object in the FAM (and, if necessary, in the database)
+   * @param objectToUpdate the object data to update - includes the Id of the object
+   * @param projectId project Id that the client is in
+   * @param client client Id to make sure they have the object checked out
+   * @param saveToDatabase Flag to save the object update to the database 
+   */
+  public static async UpdateObject(objectToUpdate : FlowObject, projectId: string, client: string, saveToDatabase:boolean=false) : Promise<[any, Array<string>]>
   {
+
+    if(RoomManager.FindRoom(projectId).GetProject().GetObjectHolder(objectToUpdate.Id) != client)
+      return["Cannot check in object", [client]]
+
     RoomManager.FindRoom(projectId)
                 .GetProject()
                 .UpdateFAMObject(objectToUpdate);
 
     let affectedClients: Array<string> = [];
 
+    if(saveToDatabase)
+      TypeORMDatabase.UpdateObject(objectToUpdate, projectId)
+
     // get all of the clients that are in that room so that we can tell them 
     let roomClients = await RoomManager.getClients(projectId)
 
     roomClients.forEach((clients, username, map) => {
       affectedClients.concat(clients)
     })
+
     return [objectToUpdate , affectedClients]
   }
 
-//   /**
-//    * The final update to be sent to clients and saved in the database
-//    * @param objectToUpdate - object which holds the final truth of position for the databsse
-//    */
-  public static async FinalizedUpdateObject(objectToUpdate : FlowObject, projectId: string) : Promise<[any, Array<string>]>
-  {
-    RoomManager.FindRoom(projectId)
-                .GetProject()
-                .UpdateFAMObject(objectToUpdate);
-    
-    //Send message to all clients notifying object change
-    let affectedClients: Array<string> = [];
-
-    // get all of the clients that are in that room so that we can tell them 
-    let roomClients = await RoomManager.getClients(projectId)
-
-    roomClients.forEach((clients, username, map) => {
-      affectedClients.concat(clients)
-    })
-    return [ objectToUpdate, affectedClients ]
-  }
 }

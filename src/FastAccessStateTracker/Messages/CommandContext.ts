@@ -240,8 +240,7 @@ class Command_DeleteRoom implements ICommand
   }
 }
 
-// // Object Commands
-
+// Object Commands
 class Command_CreateObject implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
@@ -249,7 +248,7 @@ class Command_CreateObject implements ICommand
     let flowObject = new FlowObject(data);
     
     //TODO: Add failure check and message
-    let returnData = await StateTracker.CreateObject(flowObject, client);
+    let returnData = await StateTracker.CreateObject(flowObject, data.projectId);
     let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
 
     return returnMessage;
@@ -260,8 +259,8 @@ class Command_DeleteObject implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let flowObject = new FlowObject(data);
-    let returnData = await StateTracker.DeleteObject(flowObject, data.Project);
+    let flowObject = new FlowObject(data.flowObject);
+    let returnData = await StateTracker.DeleteObject(flowObject.Id, data.ProjectId, client);
     let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
     //TODO: Add failure check and message
     return returnMessage;
@@ -273,9 +272,9 @@ class Command_UpdateObject implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
     let flowObject = new FlowObject(data);
-    let returnData = await StateTracker.UpdateObject(flowObject, data.Project.Id);
-    
+    let returnData = await StateTracker.UpdateObject(flowObject, data.ProjectId, client);
     let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
+
     //TODO: Add failure check and message
     return returnMessage;
   }
@@ -286,7 +285,7 @@ class Command_FinalizedUpdateObject implements ICommand
   async ExecuteCommand(data: any, client:string): Promise<[String, Array<String>]> 
   {
     let flowObject = new FlowObject(data);
-    let returnData = await StateTracker.FinalizedUpdateObject(flowObject, data.Project.Id);
+    let returnData = await StateTracker.UpdateObject(flowObject, data.Project.Id, client, true);
     let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
     
     //TODO: Add failure check and message

@@ -28,7 +28,6 @@ export class ServerEventDispatcher {
 
     public static SocketConnections = new Map<String, any>();
 
-
     //This function simply takes in whatever JSON payload and sends it to the connection
     public static send(payloadString: any, connection: any){
 
@@ -44,9 +43,6 @@ export class ServerEventDispatcher {
 
 
     constructor(server: http.Server) {
-
-        
-        console.log("Server running");
         
         ServerEventDispatcher.wss = new Server({ server }, function (err: any) {
 
@@ -150,9 +146,6 @@ export class ServerEventDispatcher {
      
      console.log(process.env.NODE_ENV)
 })()
-
-
-
 
 const app = express();
 

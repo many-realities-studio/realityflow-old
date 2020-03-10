@@ -1,8 +1,5 @@
 import { FlowObject } from "./FlowObject";
 
-
-
-// NOTE: FAM Stands for Fast Access Memory
 export class FlowProject 
 {
   private _ObjectList: Array<FlowObject> = [];
@@ -35,9 +32,9 @@ export class FlowProject
    * Removes an object from the list of available objects
    * @param objectToRemove 
    */
-  public DeleteObject(objectToRemove: FlowObject): void
+  public DeleteObject(objectToRemove: string): void
   {
-    const index = this._ObjectList.findIndex((element) => element.Id == objectToRemove.Id);
+    const index = this._ObjectList.findIndex((element) => element.Id == objectToRemove);
     this._ObjectList.splice(index)
   }
 
@@ -60,6 +57,33 @@ export class FlowProject
     // Save for fast access
     this.AddObject(objectToCreate);
     
+  }
+
+  /**
+   * sets an object to "checked out," preventing another user from checking out/editing that object
+   * @param objectId 
+   * @param userName 
+   * @param client 
+   */
+  public CheckoutObject(objectId: string, client: string){
+    this._ObjectList.find(element => element.Id == objectId).currentCheckout = client;
+  }
+
+
+  /**
+   * sets an object to "checked in," preventing another user from checking out/editing that object
+   * @param objectId 
+   */
+  public CheckinObject(objectId: string){
+    this._ObjectList.find(element => element.Id == objectId).currentCheckout = null;
+  }
+
+    /**
+   * find out who has checked out the object in question
+   * @param objectId 
+   */
+  public GetObjectHolder(objectId: string){
+    return this._ObjectList.find(element => element.Id == objectId).currentCheckout
   }
 
   /**
