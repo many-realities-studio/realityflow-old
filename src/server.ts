@@ -4,11 +4,7 @@ import * as http from "http";
 import { Server } from "ws";
 import { v4 as uuidv4 } from 'uuid';
 import {NewMessageProcessor} from "./FastAccessStateTracker/Messages/NewMessageProcessor";
-<<<<<<< HEAD
-import {createConnection} from 'typeorm'
-=======
 import {createConnection} from 'typeorm';
->>>>>>> 923123b5835ba3671beae7ce918e7f94e6918354
 
 // DB API
 import {ProjectOperations} from "./ORMCommands/project";
