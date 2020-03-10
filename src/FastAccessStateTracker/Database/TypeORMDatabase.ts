@@ -42,7 +42,12 @@ export default class TypeORMDatabase
   }
 
   public static async GetProject(projectId: string): Promise<FlowProject> {
-    return new FlowProject(await ProjectOperations.findProject(projectId));
+    let project = await ProjectOperations.findProject(projectId);
+
+    if(!project)
+      return null;
+
+    return new FlowProject(project);
   }
 
   // User functions

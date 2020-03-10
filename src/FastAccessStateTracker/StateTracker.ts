@@ -105,6 +105,9 @@ export class StateTracker{
 
     // find project in list of projects so that we can return it
     let projectFound = await TypeORMDatabase.GetProject(projectToOpenID);
+
+    if(!projectFound)
+      [ null, [client], null];
     
     // grabs all the clients from the room manager
     let affectedClients: string[] = []

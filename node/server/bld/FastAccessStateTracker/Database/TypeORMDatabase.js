@@ -36,7 +36,10 @@ class TypeORMDatabase {
     }
     static GetProject(projectId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return new FlowProject_1.FlowProject(yield project_1.ProjectOperations.findProject(projectId));
+            let project = yield project_1.ProjectOperations.findProject(projectId);
+            if (!project)
+                return null;
+            return new FlowProject_1.FlowProject(project);
         });
     }
     static CreateUser(username, password) {

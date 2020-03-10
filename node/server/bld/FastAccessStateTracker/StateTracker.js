@@ -37,6 +37,8 @@ class StateTracker {
             if (!userLoggedIn)
                 return [null, [client], null];
             let projectFound = yield TypeORMDatabase_1.TypeORMDatabase.GetProject(projectToOpenID);
+            if (!projectFound)
+                [null, [client], null];
             let affectedClients = [];
             affectedClients.push(client);
             let userJoinedRoom = yield this.JoinRoom(projectToOpenID, username, client);
