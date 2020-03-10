@@ -1,1 +1,0 @@
-{"version":3,"file":"MessageBuilder.js","sourceRoot":"","sources":["../../../../../src/FastAccessStateTracker/Messages/MessageBuilder.ts"],"names":[],"mappings":";;AACA,MAAa,cAAc;IAGlB,MAAM,CAAC,aAAa,CAAE,OAAa,EAAE,OAAiB;QAE3D,IAAI,aAAa,GAAG,IAAI,CAAC,SAAS,CAAC,OAAO,CAAC,CAAA;QAE3C,OAAO,CAAC,aAAa,EAAE,OAAO,CAAC,CAAA;IACjC,CAAC;CACF;AATD,wCASC"}
