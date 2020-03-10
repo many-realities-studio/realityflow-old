@@ -313,7 +313,10 @@ export class StateTracker{
       
     });
 
-    return [ user + ' has joined the room', affectedClients];
+    // to differentiate multiple clients under same user
+    let shortClientId = client.slice(0, 8);
+
+    return [ user + "-" + shortClientId + ' has joined the room', affectedClients];
   }
 
 
@@ -348,7 +351,10 @@ export class StateTracker{
       
     });
 
-    return [ user + ' has left the room', affectedClients];
+    // to differentiate multiple clients under same user
+    let shortClientId = client.slice(0, 8);
+
+    return [ user + "-" + shortClientId + 'has left the room', affectedClients];
   }
 
 

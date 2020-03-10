@@ -133,7 +133,8 @@ class StateTracker {
                     affectedClients.push(client);
                 });
             });
-            return [user + ' has joined the room', affectedClients];
+            let shortClientId = client.slice(0, 8);
+            return [user + "-" + shortClientId + ' has joined the room', affectedClients];
         });
     }
     static LeaveRoom(roomCode, user, client) {
@@ -150,7 +151,8 @@ class StateTracker {
                     affectedClients.push(client);
                 });
             });
-            return [user + ' has left the room', affectedClients];
+            let shortClientId = client.slice(0, 8);
+            return [user + "-" + shortClientId + 'has left the room', affectedClients];
         });
     }
     static CreateObject(objectToCreate, projectId) {
