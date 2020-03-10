@@ -192,7 +192,16 @@ describe("ProjectOperations", ()=>{
             Password: "test"
         };
 
-        let mockCreateProject = jest.fn(async (project, username) => {})
+        let mockCreateProject = jest.fn(async (project, username) => {
+            
+            let p = new Project()
+            p.Id= "testProject1Id",
+            p.Description= "This is a project"
+            p.ProjectName= "TestProject1"
+            p.DateModified= Date.now()
+            return p.Id;
+        });
+
         ProjectOperations.createProject = mockCreateProject
         // act
         await TypeORMDatabase.CreateProject(testProject1, testUser.Username);

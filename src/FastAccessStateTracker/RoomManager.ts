@@ -77,8 +77,10 @@ export class RoomManager
    * @param clientId client to leave room
    */
   public static LeaveRoom(roomCode: string, user: string, clientId: string){
-    let roomToLogin: Room = this.FindRoom(roomCode)
-    roomToLogin.LeaveRoom(user, clientId)
+    let roomToLeave: Room = this.FindRoom(roomCode)
+
+    if(roomToLeave)
+      roomToLeave.LeaveRoom(user, clientId)
   }
 
   //TODO: finished: yes tested: no
@@ -87,6 +89,8 @@ export class RoomManager
    * @param roomCode 
    */
   public static getClients(roomCode: string){
-      return this._RoomList.find(element => element.GetRoomCode() == roomCode).getClients()
+
+    let room = this.FindRoom(roomCode);
+    return room.getClients();
   }
 }

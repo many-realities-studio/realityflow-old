@@ -4,7 +4,11 @@ import * as http from "http";
 import { Server } from "ws";
 import { v4 as uuidv4 } from 'uuid';
 import {NewMessageProcessor} from "./FastAccessStateTracker/Messages/NewMessageProcessor";
+<<<<<<< HEAD
 import {createConnection} from 'typeorm'
+=======
+import {createConnection} from 'typeorm';
+>>>>>>> 923123b5835ba3671beae7ce918e7f94e6918354
 
 // DB API
 import {ProjectOperations} from "./ORMCommands/project";
@@ -28,69 +32,6 @@ export class ServerEventDispatcher {
 
     public static SocketConnections = new Map<String, any>();
 
-//Broadcasts to all clients and may or may not include original sender
-    // public static async broadcast(json: any, newFlag: boolean){
-
-    //     var payloadString = JSON.stringify(json);
-
-    //     // var project = await ProjectOperations.findProject(json.project);
-
-    //     var uniqueConnectionClients: any[] = [];
-    //     var uniqueConnections: any[] = [];
-
-    //     //This ensures uniqueness of the connections, as there was an issue with
-    //     //connections being added to the array multiple times
-    //     for(var i=0; i<this.connections.length; i++){
-
-    //         if(uniqueConnectionClients.indexOf(this.connections[i].clientId)==-1){
-
-    //             uniqueConnectionClients.push(this.connections[i].clientId);
-    //             uniqueConnections.push(this.connections[i]);
-
-    //         }
-
-    //     }
-    //     // var clientArray = String(project.clients);
-    //     var filteredConnections = [];
-
-    //     if(!newFlag){
-
-    //          for(var i=0; i<uniqueConnections.length; i++){
-
-    //             //This checks what clients from the client array are from the project in question
-    //             //as well as making sure it is not the client ID of the original sender
-    //             if(clientArray.includes(String(uniqueConnections[i].clientId))&&String(uniqueConnections[i].clientId)!=String(json.client._id)){
-
-    //                 filteredConnections.push(uniqueConnections[i].connection);
-
-    //             }
-
-    //          }
-
-    //     }
-    //     else{
-
-    //         for(var i=0; i<uniqueConnections.length; i++){
-
-    //             //This checks what clients from the client array are from the project in question
-    //             if(clientArray.includes(String(uniqueConnections[i].clientId))){
-
-    //                 filteredConnections.push(uniqueConnections[i].connection);
-
-    //             }
-
-    //          }
-    //     }
-
-    //     //Send the payload to each client that is part of the project,
-    //     //possibly including the original sender
-    //     for(var i=0; i<filteredConnections.length; i++){
-
-    //         this.send(payloadString, filteredConnections[i]);
-
-    //     }
-
-    // }
 
     //This function simply takes in whatever JSON payload and sends it to the connection
     public static send(payloadString: any, connection: any){
@@ -109,19 +50,16 @@ export class ServerEventDispatcher {
     constructor(server: http.Server) {
 
         
+        console.log("Server running");
         
         ServerEventDispatcher.wss = new Server({ server }, function (err: any) {
 
         });
         ServerEventDispatcher.wss.on("error", (err) => {
-            console.log("Server running");
         });
 
         ServerEventDispatcher.callbacks = [];
         ServerEventDispatcher.wss.on("connection", this.connection);
-
-
-
     }
 
 
@@ -134,42 +72,33 @@ export class ServerEventDispatcher {
 
 
         function onMessageEvent(evt: any) {
-
-            const json = JSON.parse(evt.data);            
-
-            console.log(evt.data);
-
-
-            NewMessageProcessor.ParseMessage(ws.ID, json).then((res: any) => {
-
-                let clients = res[1];
-
-                if(!clients)
-                {
-                    console.log("Didn't receive a clients array ");
-                }
-                else
-                {
-                    for(var i = 0; i < clients.length; i++)
-                    {
-                        let key = clients[i];
-    
-                        //let json = JSON.stringify(res[0];
-                        ServerEventDispatcher.SocketConnections.get(key).send(res[0]);
-                    }
-                }
-                
+        
             
-            });
+            try {
 
-          /*  let clients = response.affectedClients;
+                const json = JSON.parse(evt.data);     
 
-            for(var i = 0; i < clients.length; i++)
-            {
-                let key = clients[i];
-                ServerEventDispatcher.SocketConnections.get(key).send(response.payload);
+                NewMessageProcessor.ParseMessage(ws.ID, json).then((res: any) => {
+
+                    let clients = res[1];
+    
+                    if(!clients)
+                    {
+                        console.log("Didn't receive a clients array ");
+                    }
+                    else
+                    {
+                        for(var i = 0; i < clients.length; i++)
+                        {
+                            let key = clients[i];
+                            ServerEventDispatcher.SocketConnections.get(key).send(res[0]);
+                        }
+                    }
+                });
+                
+            } catch (error) {
+                ServerEventDispatcher.SocketConnections.get(ws.ID).send("Error:\n" + error);   
             }
-            */
         }
 
 
@@ -179,7 +108,6 @@ export class ServerEventDispatcher {
         }
 
         function onErrorEvent(evt: any) {
-
         }
 
         ws.onmessage = onMessageEvent;
@@ -231,30 +159,6 @@ export class ServerEventDispatcher {
 
 
 const app = express();
-
-
-
-
-// Use Passport with express
-// app.use(passport.initialize());
-// app.use(passport.session());
-
-
-// const initializePassport = require('./passport-config')
-// initializePassport(
-//   passport,
-//   username => User.find(user => user.Username === username),
-//   password => User.find(user => user.Password === password)
-// );
-
-
-
-// passport.serializeUser(User.serializeUser());
-// Responsible for reading the session, taking data from the session and unencoding it
-// passport.deserializeUser(User.deserializeUser());
-
-
-
 
 app.use(express.static("./static"));
 
