@@ -191,15 +191,15 @@ export class StateTracker{
    * @param password 
    * @param ClientId 
    */
-  public static async LoginUser(userName:string, password: string, ClientId : string) : Promise<[any, Array<string>]>
+  public static async LoginUser(userName:string, password: string, ClientId : string) : Promise<[any, Array<string>, any]>
   {
 
     let affectedClients = [];
     affectedClients.push(ClientId);
 
     //Authenticate user
-    if(!TypeORMDatabase.AuthenticateUser(userName, password))
-      return ['Failure', affectedClients];
+    if(! await TypeORMDatabase.AuthenticateUser(userName, password))
+      return [false, affectedClients, null];
 
     // check if user is already logged in - 
     // user could be logged in on another client
@@ -208,9 +208,6 @@ export class StateTracker{
     // If the user is not already logged in, then we need to start keeping track of them.
     if(!userLoggedIn)
       this.currentUsers.set(userName, new Map<string, string>());
-    
-      console.log("\n\n\is the user logged in after logging in");
-      console.log(this.currentUsers.has(userName));
 
     // put the client in limbo - aka, an empty room
     // TODO: figure out noRoom situation
@@ -218,10 +215,10 @@ export class StateTracker{
 
     RoomManager.JoinRoom("noRoom", userName, ClientId)
 
-    let returnMessage = {username: userName, projects: await ProjectOperations.fetchProjects(userName)}
-    console.log(returnMessage.projects)
-    console.log(affectedClients)
-    return [returnMessage, affectedClients];    
+
+    let returnMessage = {Username: userName, Projects: await ProjectOperations.fetchProjects(userName)}
+
+    return [true, affectedClients, returnMessage];    
   }
 
   // TODO: Finished: Yes Tested: Yes

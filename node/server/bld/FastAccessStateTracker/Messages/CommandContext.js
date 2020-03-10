@@ -117,7 +117,12 @@ class Command_LoginUser {
     ExecuteCommand(data, client) {
         return __awaiter(this, void 0, void 0, function* () {
             let returnData = yield StateTracker_1.StateTracker.LoginUser(data.FlowUser.Username, data.FlowUser.Password, client);
-            let returnMessage = MessageBuilder_1.MessageBuilder.CreateMessage(returnData[0], returnData[1]);
+            let returnContent = {
+                "MessageType": "LoginUser",
+                "WasSuccessful": returnData[0],
+                "Message": returnData[2]
+            };
+            let returnMessage = MessageBuilder_1.MessageBuilder.CreateMessage(returnContent, returnData[1]);
             return returnMessage;
         });
     }

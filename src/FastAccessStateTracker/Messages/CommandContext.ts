@@ -169,7 +169,14 @@ class Command_LoginUser implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
     let returnData = await StateTracker.LoginUser(data.FlowUser.Username, data.FlowUser.Password, client);
-    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
+    let returnContent = {
+      "MessageType": "LoginUser",
+      "WasSuccessful": returnData[0],
+      "Message": returnData[2]
+    };
+
+
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
     
     return returnMessage;
   }

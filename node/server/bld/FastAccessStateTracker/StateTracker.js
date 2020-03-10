@@ -86,19 +86,15 @@ class StateTracker {
         return __awaiter(this, void 0, void 0, function* () {
             let affectedClients = [];
             affectedClients.push(ClientId);
-            if (!TypeORMDatabase_1.TypeORMDatabase.AuthenticateUser(userName, password))
-                return ['Failure', affectedClients];
+            if (!(yield TypeORMDatabase_1.TypeORMDatabase.AuthenticateUser(userName, password)))
+                return [false, affectedClients, null];
             let userLoggedIn = this.currentUsers.has(userName);
             if (!userLoggedIn)
                 this.currentUsers.set(userName, new Map());
-            console.log("\n\n\is the user logged in after logging in");
-            console.log(this.currentUsers.has(userName));
             this.currentUsers.get(userName).set(ClientId, "noRoom");
             RoomManager_1.RoomManager.JoinRoom("noRoom", userName, ClientId);
-            let returnMessage = { username: userName, projects: yield project_1.ProjectOperations.fetchProjects(userName) };
-            console.log(returnMessage.projects);
-            console.log(affectedClients);
-            return [returnMessage, affectedClients];
+            let returnMessage = { Username: userName, Projects: yield project_1.ProjectOperations.fetchProjects(userName) };
+            return [true, affectedClients, returnMessage];
         });
     }
     static LogoutUser(Username, password, ClientId) {
