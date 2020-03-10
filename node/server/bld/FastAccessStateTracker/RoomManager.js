@@ -29,8 +29,9 @@ class RoomManager {
         roomToLogin.JoinRoom(user, clientId);
     }
     static LeaveRoom(roomCode, user, clientId) {
-        let roomToLogin = this.FindRoom(roomCode);
-        roomToLogin.LeaveRoom(user, clientId);
+        let roomToLeave = this.FindRoom(roomCode);
+        if (roomToLeave)
+            roomToLeave.LeaveRoom(user, clientId);
     }
     static getClients(roomCode) {
         let room = this.FindRoom(roomCode);

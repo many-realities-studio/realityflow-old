@@ -64,16 +64,17 @@ export class StateTracker{
   {    
 
     if(!projectToDeleteId)
-      return
+      return [ false, [client] ];
 
     // remove roomManager, get the list of all affected users/clients
-    let clients = RoomManager.DestroyRoom(projectToDeleteId)
+    let clients = RoomManager.DestroyRoom(projectToDeleteId);
 
     // Remove project from database 
     await TypeORMDatabase.DeleteProject(projectToDeleteId);
 
-    let clientIds : Array<string> = []
-    clientIds.push(client)
+   /* let clientIds : Array<string> = [];
+    clientIds.push(client);
+
     clients.forEach((userClients: Array<string>, user: string, map) =>{
       
       // add clients of a given user to the list of clients to send back
@@ -85,8 +86,8 @@ export class StateTracker{
       });
 
     });
-
-    return ['Success', clientIds];
+*/
+    return [true, [client] ];
   }
  
   // TODO: finished: yes tested: no

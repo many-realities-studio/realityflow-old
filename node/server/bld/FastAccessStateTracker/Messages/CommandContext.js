@@ -35,9 +35,12 @@ class Command_CreateProject {
 class Command_DeleteProject {
     ExecuteCommand(data, client) {
         return __awaiter(this, void 0, void 0, function* () {
-            let project = new FlowProject_1.FlowProject(data.project);
-            let returnData = yield StateTracker_1.StateTracker.DeleteProject(project.Id, data.user.Username, client);
-            let returnMessage = MessageBuilder_1.MessageBuilder.CreateMessage(returnData[0], returnData[1]);
+            let returnData = yield StateTracker_1.StateTracker.DeleteProject(data.FlowProject.Id, data.FlowUser.Username, client);
+            let returnContent = {
+                "MessageType": "DeleteProject",
+                "WasSuccessful": returnData[0],
+            };
+            let returnMessage = MessageBuilder_1.MessageBuilder.CreateMessage(returnContent, returnData[1]);
             return returnMessage;
         });
     }

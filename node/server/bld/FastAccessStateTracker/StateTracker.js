@@ -25,18 +25,10 @@ class StateTracker {
     static DeleteProject(projectToDeleteId, user, client) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!projectToDeleteId)
-                return;
+                return [false, [client]];
             let clients = RoomManager_1.RoomManager.DestroyRoom(projectToDeleteId);
             yield TypeORMDatabase_1.TypeORMDatabase.DeleteProject(projectToDeleteId);
-            let clientIds = [];
-            clientIds.push(client);
-            clients.forEach((userClients, user, map) => {
-                clientIds.concat(userClients);
-                userClients.forEach((client, index, arr) => {
-                    this.currentUsers.get(user).set(client, "noRoom");
-                });
-            });
-            return ['Success', clientIds];
+            return [true, [client]];
         });
     }
     static OpenProject(projectToOpenID, username, client) {
