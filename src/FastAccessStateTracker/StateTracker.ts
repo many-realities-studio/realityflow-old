@@ -63,7 +63,7 @@ export class StateTracker{
   public static async DeleteProject(projectToDeleteId: string, user: string, client: string) : Promise<[any, Array<string>]>
   {    
 
-    if(!projectToDeleteId)
+    if(! await ProjectOperations.findProject(projectToDeleteId))
       return [ false, [client] ];
 
     // remove roomManager, get the list of all affected users/clients

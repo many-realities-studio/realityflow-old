@@ -24,7 +24,7 @@ class StateTracker {
     }
     static DeleteProject(projectToDeleteId, user, client) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!projectToDeleteId)
+            if (!(yield project_1.ProjectOperations.findProject(projectToDeleteId)))
                 return [false, [client]];
             let clients = RoomManager_1.RoomManager.DestroyRoom(projectToDeleteId);
             yield TypeORMDatabase_1.TypeORMDatabase.DeleteProject(projectToDeleteId);
