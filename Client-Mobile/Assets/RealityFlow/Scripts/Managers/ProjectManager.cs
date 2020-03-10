@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using RealityFlow.Plugin.Scripts;
-using RealityFlow.Plugin.Scripts.Events;
+//using RealityFlow.Plugin.Scripts.Events;
 using UnityEngine.SceneManagement;
 
 public class ProjectManager : MonoBehaviour
@@ -21,13 +21,13 @@ public class ProjectManager : MonoBehaviour
 
     public void Logout()
     {
-        UserLogoutEvent logout = new UserLogoutEvent();
-        logout.Send();
+        //UserLogoutEvent logout = new UserLogoutEvent();
+        //logout.Send();
 
-        Config.leftProject = true;
+        //Config.leftProject = true;
 
-        // when logout is sucessful, then switch to login/signup scene
-        SceneManager.LoadScene(0);
+        //// when logout is sucessful, then switch to login/signup scene
+        //SceneManager.LoadScene(0);
 
     }
 }

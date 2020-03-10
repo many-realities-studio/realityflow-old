@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using RealityFlow.Plugin.Scripts.Events;
+// using RealityFlow.Plugin.Scripts.Events;
 using RealityFlow.Plugin.Scripts;
 using System;
 
@@ -48,24 +48,24 @@ public class MainMenuManager : MonoBehaviour {
 
     public void Start()
     {
-        activePanel = REDIRECT_PANEL;
-        Config.userId = NO_USER;
-        requestPending = false;
+        //activePanel = REDIRECT_PANEL;
+        //Config.userId = NO_USER;
+        //requestPending = false;
 
-        if (GameObject.FindGameObjectWithTag("NetworkManager") == null)
-        {
-            GameObject manager = new GameObject();
-            FlowNetworkManager component = manager.AddComponent<FlowNetworkManager>();
-            manager.AddComponent<DoOnMainThread>();
-            manager.AddComponent<DontDestroyOnLoad_RF>();
-            component._debug = true;
+        //if (GameObject.FindGameObjectWithTag("NetworkManager") == null)
+        //{
+        //    GameObject manager = new GameObject();
+        //    FlowNetworkManager component = manager.AddComponent<FlowNetworkManager>();
+        //    manager.AddComponent<DoOnMainThread>();
+        //    manager.AddComponent<DontDestroyOnLoad_RF>();
+        //    component._debug = true;
 
-            manager.name = "NetworkManager";
-            manager.tag = "NetworkManager";
-        }
-        FlowNetworkManager manager_component = GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<FlowNetworkManager>();
-        manager_component.mainGameCamera = GameObject.FindGameObjectWithTag("MainCamera");
-        manager_component.eventSystem = GameObject.FindGameObjectWithTag("EventSystem");
+        //    manager.name = "NetworkManager";
+        //    manager.tag = "NetworkManager";
+        //}
+        //FlowNetworkManager manager_component = GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<FlowNetworkManager>();
+        //manager_component.mainGameCamera = GameObject.FindGameObjectWithTag("MainCamera");
+        //manager_component.eventSystem = GameObject.FindGameObjectWithTag("EventSystem");
     }
 
     private void Update()
@@ -73,19 +73,19 @@ public class MainMenuManager : MonoBehaviour {
         // If a login is pending and a response has been recieved from the server...
         if (requestPending /*&& Config.userId != NO_USER*/)
         {
-            // ... and the userId has been set to a valid Id, load the projects panel.
-            if (Config.userId != NO_USER /*""*/)
-            {
-                panels[PROJECT_PANEL].SetActive(true);
-                panels[activePanel].SetActive(false);
-                activePanel = PROJECT_PANEL;
-                requestPending = false;
-            }
-            // ... otherwise, display an error message and reset the userId to NO_USER.
-            else
-            {
-                //Debug.Log(error);
-            }
+            //// ... and the userId has been set to a valid Id, load the projects panel.
+            //if (Config.userId != NO_USER /*""*/)
+            //{
+            //    panels[PROJECT_PANEL].SetActive(true);
+            //    panels[activePanel].SetActive(false);
+            //    activePanel = PROJECT_PANEL;
+            //    requestPending = false;
+            //}
+            //// ... otherwise, display an error message and reset the userId to NO_USER.
+            //else
+            //{
+            //    //Debug.Log(error);
+            //}
 
         }
     }
@@ -126,17 +126,17 @@ public class MainMenuManager : MonoBehaviour {
 
     private void Logout()
     {
-        // clear the username and projectList so the next user to login will have a newly populated list
-        Config.ResetValues();
+        //// clear the username and projectList so the next user to login will have a newly populated list
+        //Config.ResetValues();
         
         // SEND Logout event to server maybe
     }
 
     public void login()
     {
-        // send json with entered username and password
-        UserLoginEvent login = new UserLoginEvent();
-        login.Send(username.text, password.text, FlowClient.CLIENT_MOBILE);
+        //// send json with entered username and password
+        //UserLoginEvent login = new UserLoginEvent();
+        //login.Send(username.text, password.text, FlowClient.CLIENT_MOBILE);
 
         // mark that a login is pending
         requestPending = true;
@@ -152,8 +152,8 @@ public class MainMenuManager : MonoBehaviour {
             return;
         }
         // send json with entered username, email, and password
-        UserRegisterEvent register = new UserRegisterEvent();
-        register.Send(username.text, password.text, FlowClient.CLIENT_MOBILE);
+        //UserRegisterEvent register = new UserRegisterEvent();
+        //register.Send(username.text, password.text, FlowClient.CLIENT_MOBILE);
 
         // return to main menu on recieve?
         // No; userId and clientId are both set in the same way as a login, so redirect the user to the

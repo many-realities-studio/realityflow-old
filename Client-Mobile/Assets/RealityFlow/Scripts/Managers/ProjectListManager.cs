@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using RealityFlow.Plugin.Scripts;
-using RealityFlow.Plugin.Scripts.Events;
+//using RealityFlow.Plugin.Scripts.Events;
 using System;
 
 
@@ -104,14 +104,14 @@ public class ProjectListManager : MonoBehaviour {
                 ProjectListItem item = newItem.GetComponent<ProjectListItem>();
                 Text entryName = newItem.GetComponentInChildren<Text>();
                 projectListEntries.Add(item);
-                entryName.text = p.projectName;
+                entryName.text = p.ProjectName;
                 newItem.transform.SetParent(content.transform);
                 newItem.transform.localScale = Vector3.one;
 
                 if (item != null)
                 {
-                    item.projectName = p.projectName;
-                    item.id = p._id;
+                    item.projectName = p.ProjectName;
+                    item.id = p.Id;
                     item.manager = this;
                     item.index = projectListEntries.Count - 1;
                 }
@@ -221,7 +221,7 @@ public class ProjectListManager : MonoBehaviour {
         Text entry = window.Find(CREATE_PROJECT).Find(NEW_PROJ_TEXT).Find(ENTRY_TEXT).gameObject.GetComponent<Text>();
 
         Config.projectId = PROJECT_CREATE_WAITING;
-        ProjectCreateEvent project = new ProjectCreateEvent();
-        project.Send(entry.text);
+       // ProjectCreateEvent project = new ProjectCreateEvent();
+        //project.Send(entry.text);
     }
 }
