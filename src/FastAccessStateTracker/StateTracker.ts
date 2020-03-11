@@ -301,7 +301,7 @@ export class StateTracker{
     let clients = await RoomManager.getClients(roomCode)
 
    /* roomClients.forEach((clients, username, map) => {
-      affectedClients.concat(clients)
+      affectedClients = affectedClients.concat(clients)
     })
 
     let clients = RoomManager.getClients(projectToOpenID);*/
@@ -360,6 +360,12 @@ export class StateTracker{
 
 
   // Object Commands
+
+  /**
+   * create an object in a given room.
+   * @param objectToCreate 
+   * @param projectId 
+   */
   public static async CreateObject(objectToCreate : FlowObject, projectId: string) : Promise<[any, Array<string>]>
   {
     RoomManager.FindRoom(projectId)
@@ -372,11 +378,13 @@ export class StateTracker{
 
     // get all of the clients that are in that room so that we can tell them 
     let roomClients = await RoomManager.getClients(projectId)
-
+    
     roomClients.forEach((clients, username, map) => {
-      affectedClients.concat(clients)
+      affectedClients = affectedClients.concat(clients)
+      console.log(clients)
     })
 
+    let retval = {MessageType: "CreateObject", object: objectToCreate}
     return [objectToCreate, affectedClients]
   }
 
@@ -400,9 +408,6 @@ export class StateTracker{
   public static async DeleteObject(objectId: string, projectId: string, client: string) : Promise<[any, Array<string>]>
   {
 
-    if(RoomManager.FindRoom(projectId).GetProject().GetObjectHolder(objectId) != client)
-      return["Cannot delete object", [client]]
-
     RoomManager.FindRoom(projectId)
                 .GetProject()
                 .DeleteObject(objectId);
@@ -415,7 +420,7 @@ export class StateTracker{
     let roomClients = await RoomManager.getClients(projectId)
 
     roomClients.forEach((clients, username, map) => {
-      affectedClients.concat(clients)
+      affectedClients = affectedClients.concat(clients)
     })
 
     return ["deleted " + objectId, affectedClients]
@@ -431,9 +436,6 @@ export class StateTracker{
   public static async UpdateObject(objectToUpdate : FlowObject, projectId: string, client: string, saveToDatabase:boolean=false) : Promise<[any, Array<string>]>
   {
 
-    if(RoomManager.FindRoom(projectId).GetProject().GetObjectHolder(objectToUpdate.Id) != client)
-      return["Cannot check in object", [client]]
-
     RoomManager.FindRoom(projectId)
                 .GetProject()
                 .UpdateFAMObject(objectToUpdate);
@@ -447,10 +449,11 @@ export class StateTracker{
     let roomClients = await RoomManager.getClients(projectId)
 
     roomClients.forEach((clients, username, map) => {
-      affectedClients.concat(clients)
+      affectedClients = affectedClients.concat(clients)
     })
 
-    return [objectToUpdate , affectedClients]
+    return [RoomManager.FindRoom(projectId)
+      .GetProject().GetObject(objectToUpdate.Id) , affectedClients]
   }
 
 }

@@ -16,6 +16,10 @@ export class FlowObject
   public S_x:            Number;
   public S_y:            Number;
   public S_z:            Number;
+  public R: Number;
+  public G: Number;
+  public B: Number;
+  public A: Number;
 
   // Fields used for tracking this object in the FAM
   public Id: string; 
@@ -24,7 +28,7 @@ export class FlowObject
 
   constructor(json: any)
   {    
-    this.Id = json.id;
+    this.Id = json.Id;
     this.Name = json.Name;
     this.X = json.X;
     this.Y = json.Y;
@@ -36,6 +40,10 @@ export class FlowObject
     this.S_x = json.S_x;
     this.S_y = json.S_y;
     this.S_z = json.S_z;
+    this.R = json.R;
+    this.G = json.G;
+    this.B = json.B;
+    this.A = json.A;
     this.currentCheckout = null;
 }
 

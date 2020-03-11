@@ -16,7 +16,7 @@ export class RoomManager
   public static CreateRoom(projectID : string) : string
   {
     let newRoom = new Room(projectID);
-
+    
     this._RoomList.push(newRoom);
     this._RoomCount++;
     

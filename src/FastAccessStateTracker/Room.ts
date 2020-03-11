@@ -18,6 +18,7 @@ export class Room
     TypeORMDatabase.GetProject(this._CurrentProjectId).then((project: FlowProject) =>{
       this._CurrentProject = project;
     })
+
   }
 
   // TODO: finished: yes tested: yes

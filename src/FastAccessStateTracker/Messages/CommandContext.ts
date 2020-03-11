@@ -173,6 +173,7 @@ class Command_LoginUser implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
     let returnData = await StateTracker.LoginUser(data.FlowUser.Username, data.FlowUser.Password, client);
+    
     let returnContent = {
       "MessageType": "LoginUser",
       "WasSuccessful": returnData[0],
@@ -245,8 +246,10 @@ class Command_CreateObject implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let flowObject = new FlowObject(data);
+    let flowObject = new FlowObject(data.flowObject);
     
+    console.log(flowObject)
+
     //TODO: Add failure check and message
     let returnData = await StateTracker.CreateObject(flowObject, data.projectId);
     let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
@@ -260,7 +263,7 @@ class Command_DeleteObject implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
     let flowObject = new FlowObject(data.flowObject);
-    let returnData = await StateTracker.DeleteObject(flowObject.Id, data.ProjectId, client);
+    let returnData = await StateTracker.DeleteObject(flowObject.Id, data.projectId, client);
     let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
     //TODO: Add failure check and message
     return returnMessage;
@@ -271,8 +274,8 @@ class Command_UpdateObject implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let flowObject = new FlowObject(data);
-    let returnData = await StateTracker.UpdateObject(flowObject, data.ProjectId, client);
+    let flowObject = new FlowObject(data.flowObject);
+    let returnData = await StateTracker.UpdateObject(flowObject, data.projectId, client);
     let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
 
     //TODO: Add failure check and message
@@ -284,8 +287,8 @@ class Command_FinalizedUpdateObject implements ICommand
 {
   async ExecuteCommand(data: any, client:string): Promise<[String, Array<String>]> 
   {
-    let flowObject = new FlowObject(data);
-    let returnData = await StateTracker.UpdateObject(flowObject, data.Project.Id, client, true);
+    let flowObject = new FlowObject(data.flowObject);
+    let returnData = await StateTracker.UpdateObject(flowObject, data.projectId, client, true);
     let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
     
     //TODO: Add failure check and message
@@ -336,6 +339,7 @@ export class CommandContext
       this._CommandList.set("UpdateObject", new Command_UpdateObject());
       this._CommandList.set("FinalizedUpdateObject", new Command_FinalizedUpdateObject());
     }
+    console.log(commandToExecute)
     
     return (await this._CommandList.get(commandToExecute).ExecuteCommand(data, client));
   }

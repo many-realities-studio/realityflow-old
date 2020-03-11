@@ -22,9 +22,9 @@ export class ObjectOperations {
 
 
         var newObject = new DBObject();
-
-            newObject.Id =             objectInfo.Id
-            newObject.Name =           objectInfo.name;
+            
+            newObject.Id =             objectInfo.Id;
+            newObject.Name =           objectInfo.Name;
             newObject.X =              objectInfo.X;
             newObject.Y =              objectInfo.Y;
             newObject.Z =              objectInfo.Z;
@@ -37,8 +37,8 @@ export class ObjectOperations {
             newObject.S_z =            objectInfo.S_z;
             newObject.R =              objectInfo.R;
             newObject.G =              objectInfo.G;
-            newObject.B =               objectInfo.B;
-            newObject.A =               objectInfo.A
+            newObject.B =              objectInfo.B;
+            newObject.A =              objectInfo.A
             newObject.Project =        project;
             
 

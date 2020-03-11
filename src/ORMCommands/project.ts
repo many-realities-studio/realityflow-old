@@ -63,6 +63,16 @@ export class ProjectOperations
 
     }
 
+    public static async getObjects(projectId: string){
+        let objects = await getConnection(process.env.NODE_ENV).createQueryBuilder()
+            .select("object")
+            .from(DBObject, "object")
+            .where("object.projectId = :id", {id: projectId})
+            .getMany()
+
+        return objects
+    }
+
     /**
      * Delete a project given its ID.
      * This will also auto-delete the objects associated with the project

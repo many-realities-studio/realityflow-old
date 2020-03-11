@@ -2,7 +2,8 @@ import { FlowObject } from "./FlowObject";
 
 export class FlowProject 
 {
-  private _ObjectList: Array<FlowObject> = [];
+  // TODO: this is temporarily public for convenience.
+  public _ObjectList: Array<FlowObject> = [];
   
   // Used for identification in the FAM
   
@@ -92,6 +93,8 @@ export class FlowProject
    */
   public UpdateFAMObject(newObject: FlowObject) : void
   {
+    console.log("object list is " + this._ObjectList)
+    console.log("Object Id is " + newObject.Id)
     // Get the object that we are changing from the specified project
     var oldObject: FlowObject = this.GetObject(newObject.Id);
 

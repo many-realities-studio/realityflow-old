@@ -47,7 +47,13 @@ export default class TypeORMDatabase
     if(!project)
       return null;
 
-    return new FlowProject(project);
+    let objects = await ProjectOperations.getObjects(projectId);
+    
+    let returnProject = new FlowProject(project);
+    
+    returnProject._ObjectList = objects.map((val, index, arr) => new FlowObject(val))
+    
+    return returnProject;
   }
 
   // User functions
