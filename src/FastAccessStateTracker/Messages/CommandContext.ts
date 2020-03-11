@@ -33,7 +33,7 @@ class Command_CreateProject implements ICommand
 
     let project : FlowProject = new FlowProject(data.Project);
 
-    let returnData = await StateTracker.CreateProject(project, data.FlowUser.Username, client);
+    let returnData = await StateTracker.CreateProject(project, data.flowUser.Username, client);
 
     let message = returnData[0] == null ? "Failed to Create Project" : returnData[0];
       
@@ -54,7 +54,7 @@ class Command_DeleteProject implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
   {
 
-    let returnData = await StateTracker.DeleteProject(data.FlowProject.Id, data.FlowUser.Username, client);
+    let returnData = await StateTracker.DeleteProject(data.FlowProject.Id, data.flowUser.Username, client);
     let returnContent = {
       "MessageType": "DeleteProject",
       "WasSuccessful": returnData[0],
@@ -72,7 +72,7 @@ class Command_OpenProject implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
   {
     
-    let returnData = await StateTracker.OpenProject(data.ProjectId, data.FlowUser.Username, client);
+    let returnData = await StateTracker.OpenProject(data.ProjectId, data.flowUser.Username, client);
     
     // notify others in the room that user has joined
     Command_OpenProject.SendRoomAnnouncement(returnData[2], "UserJoinedRoom");
@@ -119,7 +119,7 @@ class Command_LeaveProject implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
   {
     
-    let returnData = await StateTracker.LeaveProject(data.ProjectId, data.FlowUser.Username, client);
+    let returnData = await StateTracker.LeaveProject(data.ProjectId, data.flowUser.Username, client);
     
     // notify others in the room that user has joined
     Command_OpenProject.SendRoomAnnouncement(returnData[2], "UserLeftRoom");
@@ -145,10 +145,10 @@ class Command_CreateUser implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let returnData = await StateTracker.CreateUser(data.FlowUser.Username, data.FlowUser.Password, client);
+    let returnData = await StateTracker.CreateUser(data.flowUser.Username, data.flowUser.Password, client);
     let returnContent = {
       "Message": "message",
-      "MessageType": "Register",
+      "MessageType": "CreateUser",
       "WasSuccessful": returnData[0]
     }
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
@@ -172,7 +172,7 @@ class Command_LoginUser implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let returnData = await StateTracker.LoginUser(data.FlowUser.Username, data.FlowUser.Password, client);
+    let returnData = await StateTracker.LoginUser(data.flowUser.Username, data.flowUser.Password, client);
     
     let returnContent = {
       "MessageType": "LoginUser",
@@ -191,7 +191,7 @@ class Command_LogoutUser implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let returnData = await StateTracker.LogoutUser(data.FlowUser.Username, data.FlowUser.Password, client);
+    let returnData = await StateTracker.LogoutUser(data.flowUser.Username, data.flowUser.Password, client);
     let returnContent = {
       "Message": "message",
       "MessageType": "LogoutUser",
