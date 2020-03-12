@@ -3,11 +3,13 @@
 import { FlowProject } from "../FlowLibrary/FlowProject";
 import { FlowUser } from "../FlowLibrary/FlowUser";
 import { FlowObject } from "../FlowLibrary/FlowObject";
+import { FlowBehavior } from "../FlowLibrary/FlowBehavior";
 
 
 import { ProjectOperations } from "../../ORMCommands/project"
 import { ObjectOperations } from "../../ORMCommands/object"
 import { UserOperations } from "../../ORMCommands/user"
+import { BehaviorOperations } from "../../ORMCommands/behavior"
 
 import { DBObject } from "../../entity/object";
 /**
@@ -125,5 +127,28 @@ export default class TypeORMDatabase
     return new FlowObject(await ObjectOperations.findObject(ObjectId, projectId))
   }
 
-}
+
+  // Behavior functions
+
+
+  /**
+  *  Create an Behavior and add it to a pre-existing project in the database
+  *  Assumes that the project already exists
+  */
+  public static async CreateBehavior(behaviorToCreate: FlowBehavior, projectId: string){
+  await BehaviorOperations.createBehavior(behaviorToCreate, projectId);
+  }
+
+  /** Delete an behavior from a project in the database*/
+
+  public static async DeleteBehavior(behaviorId:string, projectId: string): Promise<void> {
+  await BehaviorOperations.deleteBehavior(behaviorId, projectId)
+  }
+
+  /**Update a given behavior */
+  public static async UpdateBehavior(behaviorToUpdate: FlowBehavior, projectId: string): Promise<void> {
+  await BehaviorOperations.updateBehavior(behaviorToUpdate, projectId);
+  }
+
+  }
 export {TypeORMDatabase};

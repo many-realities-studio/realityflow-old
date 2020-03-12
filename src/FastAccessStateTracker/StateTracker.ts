@@ -8,6 +8,7 @@ import { TypeORMDatabase } from "./Database/TypeORMDatabase"
 import { UserOperations } from "../ORMCommands/user";
 import { ProjectOperations } from "../ORMCommands/project";
 import { Room } from "./Room";
+import { FlowBehavior } from "./FlowLibrary/FlowBehavior";
 
 
   
@@ -454,6 +455,72 @@ export class StateTracker{
 
     return [RoomManager.FindRoom(projectId)
       .GetProject().GetObject(objectToUpdate.Id) , affectedClients]
+  }
+
+  public static async CreateBehavior(behaviorToCreate : FlowBehavior, projectId: string) : Promise<[any, Array<string>]>
+  {
+    RoomManager.FindRoom(projectId)
+                .GetProject()
+                .AddBehavior(behaviorToCreate);
+  
+    TypeORMDatabase.CreateBehavior(behaviorToCreate, projectId)
+
+    let affectedClients: Array<string> = [];
+
+    // get all of the clients that are in that room so that we can tell them 
+    let roomClients = await RoomManager.getClients(projectId)
+    
+    roomClients.forEach((clients, username, map) => {
+      affectedClients = affectedClients.concat(clients)
+      console.log(clients)
+    })
+
+    let retval = {MessageType: "CreateObject", object: behaviorToCreate}
+    return [behaviorToCreate, affectedClients]
+  }
+
+  public static async DeleteBehavior(behaviorId: string, projectId: string, client: string) : Promise<[any, Array<string>]>
+  {
+
+    RoomManager.FindRoom(projectId)
+                .GetProject()
+                .DeleteBehavior(behaviorId);
+
+    TypeORMDatabase.DeleteBehavior(behaviorId, projectId)
+
+    let affectedClients: Array<string> = [];
+
+    // get all of the clients that are in that room so that we can tell them 
+    let roomClients = await RoomManager.getClients(projectId)
+
+    roomClients.forEach((clients, username, map) => {
+      affectedClients = affectedClients.concat(clients)
+    })
+
+    return ["deleted " + behaviorId, affectedClients]
+  }
+
+  public static async UpdateBehavior(behaviorToUpdate : FlowBehavior, projectId: string, client: string, saveToDatabase:boolean=true) : Promise<[any, Array<string>]>
+  {
+
+    RoomManager.FindRoom(projectId)
+                .GetProject()
+                .UpdateBehavior(behaviorToUpdate);
+
+    let affectedClients: Array<string> = [];
+
+    if(saveToDatabase)
+      TypeORMDatabase.UpdateBehavior(behaviorToUpdate, projectId)
+
+    // get all of the clients that are in that room so that we can tell them 
+    let roomClients = await RoomManager.getClients(projectId)
+
+    roomClients.forEach((clients, username, map) => {
+      affectedClients = affectedClients.concat(clients)
+    })
+
+    return [RoomManager.FindRoom(projectId)
+      .GetProject().GetObject(behaviorToUpdate.Id) , affectedClients]
   }
 
 }

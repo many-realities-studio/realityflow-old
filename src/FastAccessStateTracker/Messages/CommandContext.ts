@@ -148,7 +148,7 @@ class Command_CreateUser implements ICommand
     let returnData = await StateTracker.CreateUser(data.flowUser.Username, data.flowUser.Password, client);
     let returnContent = {
       "Message": "message",
-      "MessageType": "CreateUser",
+      "__type": "CreateUser",
       "WasSuccessful": returnData[0]
     }
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
@@ -297,6 +297,48 @@ class Command_FinalizedUpdateObject implements ICommand
   }
 }
 
+// Behavior Commands
+class Command_CreateBehavior implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+  {
+    let flowBehavior = new FlowBehavior(data.flowBehavior);
+    
+    console.log(flowBehavior)
+
+    //TODO: Add failure check and message
+    let returnData = await StateTracker.CreateBehavior(flowBehavior, data.projectId);
+    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
+
+    return returnMessage;
+  }
+}
+
+class Command_DeleteBehavior implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+  {
+    let flowBehavior = new FlowBehavior(data.flowBehavior);
+    let returnData = await StateTracker.DeleteBehavior(flowBehavior.Id, data.projectId, client);
+    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
+    //TODO: Add failure check and message
+    return returnMessage;
+  }
+}
+
+class Command_UpdateBehavior implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+  {
+    let flowBehavior = new FlowBehavior(data.flowBehavior);
+    let returnData = await StateTracker.UpdateBehavior(flowBehavior, data.projectId, client);
+    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
+
+    //TODO: Add failure check and message
+    return returnMessage;
+  }
+}
+
 /**
  * Holds the set of commands that can be executed and executes said commands 
  * with the provided data (JSON)
@@ -338,6 +380,11 @@ export class CommandContext
       this._CommandList.set("DeleteObject", new Command_DeleteObject());
       this._CommandList.set("UpdateObject", new Command_UpdateObject());
       this._CommandList.set("FinalizedUpdateObject", new Command_FinalizedUpdateObject());
+
+      // Behavior Commands
+      this._CommandList.set("CreateBehavior", new Command_CreateBehavior());
+      this._CommandList.set("DeleteBehavior", new Command_DeleteBehavior());
+      this._CommandList.set("UpdateBehavior", new Command_UpdateBehavior());
     }
     console.log(commandToExecute)
     
