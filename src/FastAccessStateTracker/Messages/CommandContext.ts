@@ -9,6 +9,7 @@ import { StateTracker } from "../StateTracker";
 
 import { FlowProject } from "../FlowLibrary/FlowProject";
 import { FlowObject } from "../FlowLibrary/FlowObject";
+import { FlowBehavior } from "../FlowLibrary/FlowBehavior";
 
 import { MessageBuilder } from "./MessageBuilder";
 import { TreeChildren } from "typeorm";
