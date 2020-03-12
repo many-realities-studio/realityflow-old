@@ -475,7 +475,7 @@ export class StateTracker{
       console.log(clients)
     })
 
-    let retval = {MessageType: "CreateObject", object: behaviorToCreate}
+    let retval = {MessageType: "CreateBehavior", object: behaviorToCreate}
     return [behaviorToCreate, affectedClients]
   }
 
