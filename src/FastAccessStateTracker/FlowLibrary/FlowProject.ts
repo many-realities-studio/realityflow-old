@@ -21,7 +21,7 @@ export class FlowProject
     this.Description = json.Description;
     this.DateModified = json.DateModified;
     this.ProjectName = json.ProjectName;
-}
+  }
 
   /**
    * Adds an object to a project, saving it to both FAM and the database

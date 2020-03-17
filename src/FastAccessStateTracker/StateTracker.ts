@@ -320,6 +320,21 @@ export class StateTracker{
     return [ user + "-" + shortClientId + ' has joined the room', affectedClients];
   }
 
+  public static async PopulateRoom(roomCode: string, client: string) : Promise<[any, Array<string>]>
+  {
+    if(RoomManager.FindRoom(roomCode) == undefined)
+      return [null, [client]];
+
+    let affectedClients: Array<string> = [];
+
+    let project = RoomManager.FindRoom(roomCode).GetProject()
+
+    affectedClients.push(client);
+    return[project, affectedClients];
+
+
+  } 
+
 
   // TODO: Finished: Yes Tested: No
   /**

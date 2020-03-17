@@ -14,7 +14,7 @@ export class FlowBehavior
         this.Name = behavior.Name;
         this.Id = behavior.Id;
         this.TriggerObjectID = behavior.TriggerObjectID;
-        this.TargetObjectID = behavior.TargerObjectID;
+        this.TargetObjectID = behavior.TargetObjectID;
         this.BehaviorChain = new FlowBehavior(behavior.BehaviorChain);
     }
 

@@ -234,6 +234,32 @@ class Command_JoinRoom implements ICommand
   }
 }
 
+class Command_PopulateRoom implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
+  {
+    let returnData = await StateTracker.PopulateRoom(data.Project.Id, client);
+    let returnContent = {
+      "MessageType": "PopulateRoom",
+      "WasSuccesful": false,
+    } 
+
+    if(returnData[0] != null)
+    {
+      let returnContent = {
+        "MessageType": "PopulateRoom",
+        "ObjectList": returnData[0]._ObjectList,
+        "BehaviorList": returnData[0]._BehaviorList,
+        "WasSuccesful": true,
+      }
+  
+    } 
+
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
+    return returnMessage;
+  }
+}
+
 class Command_DeleteRoom implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>  
@@ -340,6 +366,10 @@ class Command_UpdateBehavior implements ICommand
   }
 }
 
+class Command_ReadBehavior implements ICommand
+{
+  async ExecuteCommand = new FlowBehavior()
+}
 /**
  * Holds the set of commands that can be executed and executes said commands 
  * with the provided data (JSON)
@@ -375,6 +405,7 @@ export class CommandContext
       this._CommandList.set("CreateRoom", new Command_CreateRoom());
       this._CommandList.set("DeleteRoom", new Command_DeleteRoom());
       this._CommandList.set("JoinRoom", new Command_JoinRoom());
+      this._CommandList.set("PopulateRoom", new Command_PopulateRoom());
 
       // Object Commands
       this._CommandList.set("CreateObject", new Command_CreateObject());
