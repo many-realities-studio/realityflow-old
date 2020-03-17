@@ -55,6 +55,20 @@ export class StateTracker{
     return [ newProject, [client] ];
   }
 
+  /**
+   * 
+   * @param projectToReadId The id to reference in the room manager to recieve all FlowProject Data
+   * @param client current client to send data to
+   */
+  public static async ReadProject(projectToReadId: string, client: string): Promise<[any, Array<string>]>
+  {
+    let project = RoomManager.FindRoom(projectToReadId).GetProject()
+    let affectedClients = [];
+    affectedClients.push(client);
+    
+    return [project, affectedClients];
+  } 
+
 
   // TODO: finished: yes tested: yes
   /**
@@ -158,6 +172,12 @@ export class StateTracker{
     await TypeORMDatabase.CreateUser(username, password)
 
     return [!success, [client] ];
+  }
+
+  public static async ReadUser(username: string, client: string): Promise<[any, Array<string>]>
+  {
+    let user = TypeORMDatabase.GetUser(username);
+    return [user, [client]];
   }
 
   // TODO: finished: Yes? tested: partially
@@ -472,6 +492,18 @@ export class StateTracker{
       .GetProject().GetObject(objectToUpdate.Id) , affectedClients]
   }
 
+  public static async ReadObject(objectToReadId: string, projectId: string, client: string) :  Promise<[any, Array<string>]>
+  {
+    let objectRead : FlowObject = null;
+    let objectList = RoomManager.FindRoom(projectId)
+              .GetProject()._ObjectList;
+    objectList.forEach( object => {
+      if(object.Id == objectToReadId)
+        objectRead = object;
+    });
+    return [objectRead, [client]];
+  }
+
   public static async CreateBehavior(behaviorToCreate : FlowBehavior, projectId: string) : Promise<[any, Array<string>]>
   {
     RoomManager.FindRoom(projectId)
@@ -535,7 +567,19 @@ export class StateTracker{
     })
 
     return [RoomManager.FindRoom(projectId)
-      .GetProject().GetObject(behaviorToUpdate.Id) , affectedClients]
+      .GetProject().GetBehavior(behaviorToUpdate.Id) , affectedClients]
+  }
+
+  public static async ReadBehavior(behaviorId: string, projectId, client: string) : Promise<[any, Array<string>]>
+  {
+    let behaviorRead : FlowBehavior = null;
+    let behaviorList = RoomManager.FindRoom(projectId).GetProject()._BehaviorList;
+    behaviorList.forEach(behavior => {
+      if(behavior.Id == behaviorId)
+        behaviorRead = behavior;
+    });
+    
+    return [behaviorRead, [client]];
   }
 
 }

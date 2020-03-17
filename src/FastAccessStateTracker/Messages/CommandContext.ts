@@ -49,6 +49,28 @@ class Command_CreateProject implements ICommand
     return returnMessage;
   }
 }
+/**
+ * Read Project simply pulls in and returns Flow project data when given a project ID
+ */
+class Command_ReadProject implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
+  {
+    let returnData = await StateTracker.ReadProject(data.FlowProject.Id, client);
+    let message = returnData[0] == null ? "Failed to Read Project" : returnData[0];
+
+    let returnContent = {
+      "MessageType": "ReadProject",
+      "WasSuccessful": returnData[0] == null ? false : true,
+      "FlowProject": message
+    }
+
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
+
+    return returnMessage;
+
+  }
+}
 
 class Command_DeleteProject implements ICommand
 {
@@ -204,6 +226,31 @@ class Command_LogoutUser implements ICommand
   }
 }
 
+class Command_ReadUser implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+  {
+    let returnData = await StateTracker.ReadUser(data.flowUser.Username, client);
+    let returnContent = {};
+    if(returnData[0] == null) {
+      returnContent = {
+        "MessageType": "ReadUser",
+        "WasSuccessful": false
+      }
+    } else {
+      returnContent = {
+        "MessageType": "ReadUser",
+        "WasSuccessful": true,
+        "FlowUser": returnData[0]
+      } 
+    }
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
+
+    return returnMessage;
+  }
+  
+}
+
 // // Room Commands
 
 class Command_CreateRoom implements ICommand
@@ -310,6 +357,19 @@ class Command_UpdateObject implements ICommand
   }
 }
 
+class Command_ReadObject implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+  {
+    let returnData = await StateTracker.ReadObject(data.flowObject.Id, data.projectId, client);
+    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
+    //TODO: Add failure check and message
+    return returnMessage;
+
+  }
+}
+
+
 class Command_FinalizedUpdateObject implements ICommand
 {
   async ExecuteCommand(data: any, client:string): Promise<[String, Array<String>]> 
@@ -368,7 +428,15 @@ class Command_UpdateBehavior implements ICommand
 
 class Command_ReadBehavior implements ICommand
 {
-  async ExecuteCommand = new FlowBehavior()
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+  {
+    let returnData = await StateTracker.ReadBehavior(data.flowBehavior.Id, data.projectId, client);
+    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
+    //TODO: Add failure check and message
+    return returnMessage;
+
+  }
+
 }
 /**
  * Holds the set of commands that can be executed and executes said commands 
@@ -394,12 +462,14 @@ export class CommandContext
       this._CommandList.set("DeleteProject", new Command_DeleteProject());
       this._CommandList.set("OpenProject", new Command_OpenProject());
       this._CommandList.set("LeaveProject", new Command_LeaveProject());
+      this._CommandList.set("ReadProject", new Command_ReadProject());
 
       // User Commands
       this._CommandList.set("CreateUser", new Command_CreateUser());
       this._CommandList.set("DeleteUser", new Command_DeleteUser());
       this._CommandList.set("LoginUser", new Command_LoginUser());
       this._CommandList.set("LogoutUser", new Command_LogoutUser());
+      this._CommandList.set("ReadUser", new Command_ReadUser());
 
       // Room Commands
       this._CommandList.set("CreateRoom", new Command_CreateRoom());
@@ -412,11 +482,13 @@ export class CommandContext
       this._CommandList.set("DeleteObject", new Command_DeleteObject());
       this._CommandList.set("UpdateObject", new Command_UpdateObject());
       this._CommandList.set("FinalizedUpdateObject", new Command_FinalizedUpdateObject());
+      this._CommandList.set("ReadObject", new Command_ReadObject());
 
       // Behavior Commands
       this._CommandList.set("CreateBehavior", new Command_CreateBehavior());
       this._CommandList.set("DeleteBehavior", new Command_DeleteBehavior());
       this._CommandList.set("UpdateBehavior", new Command_UpdateBehavior());
+      this._CommandList.set("ReadBehavior", new Command_ReadBehavior());
     }
     console.log(commandToExecute)
     
