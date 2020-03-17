@@ -104,6 +104,19 @@ export class StateTracker{
 */
     return [true, [client] ];
   }
+
+
+   // TODO: finished: yes tested: no
+  /**
+   * Returns all projects associated with a username
+   * @param username
+   */
+  public static async FetchProjects(username: string, client: string) : Promise<[any, Array<string>]>
+  {    
+    let projects = await ProjectOperations.fetchProjects(username);
+
+    return [projects, [client] ];
+  }
  
   // TODO: finished: yes tested: no
   /**

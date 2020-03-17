@@ -137,6 +137,29 @@ class Command_OpenProject implements ICommand
 }
 
 
+class Command_FetchProjects implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
+  {
+    
+    let returnData = await StateTracker.FetchProjects(data.flowUser.Username, client);
+    
+
+    let message = returnData[0] == null ? "Failed to fetch projects" : returnData[0];
+
+    let returnContent = {
+      "MessageType": "FetchProjects",
+      "WasSuccessful": returnData[0] == null ? false : true,
+      "Projects": message
+    }
+
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
+
+    return returnMessage;
+  }
+}
+
+
 class Command_LeaveProject implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
@@ -463,6 +486,7 @@ export class CommandContext
       this._CommandList.set("OpenProject", new Command_OpenProject());
       this._CommandList.set("LeaveProject", new Command_LeaveProject());
       this._CommandList.set("ReadProject", new Command_ReadProject());
+      this._CommandList.set("FetchProjects", new Command_FetchProjects());
 
       // User Commands
       this._CommandList.set("CreateUser", new Command_CreateUser());
