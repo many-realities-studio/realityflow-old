@@ -39,11 +39,12 @@ public class MainMenuManager : MonoBehaviour {
 
     public void Awake()
     {
-        if (Config.leftProject)
+       /* if (Config.leftProject)
         {
             setActivePanel(PROJECT_PANEL);
             Config.leftProject = false;
         }
+        */
     }
 
     public void Start()

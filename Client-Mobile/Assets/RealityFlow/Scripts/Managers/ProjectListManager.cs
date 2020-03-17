@@ -54,14 +54,14 @@ public class ProjectListManager : MonoBehaviour {
         ProjectDataList projects = new ProjectDataList();
         projectListEntries = new List<ProjectListItem>();
         populated = false;
-        Config.projectId = PROJECT_UNSET;
+        //Config.projectId = PROJECT_UNSET;
     }
 
     public void OnEnable()
     {
         // let update function know that username has been previously set
         usernameSet = true;
-        setGreeting(Config.username);
+       // setGreeting(Config.username);
     }
 
     public void OnDisable()
@@ -87,7 +87,7 @@ public class ProjectListManager : MonoBehaviour {
 
     private void Update()
     {
-
+        /*
         // prevents the greeting from displaying the previous logged in user's name 
         if (usernameSet && Config.username != "")
         {
@@ -129,6 +129,7 @@ public class ProjectListManager : MonoBehaviour {
             //Debug.Log(Config.projectId);
             //Config.projectId = PROJECT_UNSET;
         }
+        */
     }
 
     public void selectProject(ProjectListItem item)
@@ -147,7 +148,7 @@ public class ProjectListManager : MonoBehaviour {
                     // !!!   THIS IS WHERE YOU WILL LOAD THE PROJECT   !!!
                     // !!!                                             !!!
                     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                    Config.projectId = projectListEntries[i].id;
+                   // Config.projectId = projectListEntries[i].id;
                     SceneManager.LoadScene(BUILD_SETTING_MOBILE_INTERFACE);
                     break;
                 }
@@ -220,7 +221,7 @@ public class ProjectListManager : MonoBehaviour {
         Transform window = transform.parent.Find(PROJ_WINDOW);
         Text entry = window.Find(CREATE_PROJECT).Find(NEW_PROJ_TEXT).Find(ENTRY_TEXT).gameObject.GetComponent<Text>();
 
-        Config.projectId = PROJECT_CREATE_WAITING;
+       // Config.projectId = PROJECT_CREATE_WAITING;
        // ProjectCreateEvent project = new ProjectCreateEvent();
         //project.Send(entry.text);
     }

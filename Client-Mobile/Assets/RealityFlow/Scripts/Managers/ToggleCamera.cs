@@ -12,10 +12,11 @@ public class ToggleCamera : MonoBehaviour
     public void SwitchCam(int x)
     {
 
+        // TODO: Change these later so they are not random decimals
         switch (x)
         {
             case MAIN:
-                transform.position = new Vector3(0f, 0f, -100f);
+                transform.position = new Vector3(1f, 15f, -100f);
                 newRotation = Quaternion.Euler(0, 0, 0);
                 transform.rotation = newRotation;
                 break;
