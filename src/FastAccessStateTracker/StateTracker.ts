@@ -235,7 +235,6 @@ export class StateTracker{
       this.currentUsers.set(userName, new Map<string, string>());
 
     // put the client in limbo - aka, an empty room
-    // TODO: figure out noRoom situation
     this.currentUsers.get(userName).set(ClientId, "noRoom") 
 
     RoomManager.JoinRoom("noRoom", userName, ClientId)
@@ -545,29 +544,6 @@ export class StateTracker{
     })
 
     return ["deleted " + behaviorId, affectedClients]
-  }
-
-  public static async UpdateBehavior(behaviorToUpdate : FlowBehavior, projectId: string, client: string, saveToDatabase:boolean=true) : Promise<[any, Array<string>]>
-  {
-
-    RoomManager.FindRoom(projectId)
-                .GetProject()
-                .UpdateBehavior(behaviorToUpdate);
-
-    let affectedClients: Array<string> = [];
-
-    if(saveToDatabase)
-      TypeORMDatabase.UpdateBehavior(behaviorToUpdate, projectId)
-
-    // get all of the clients that are in that room so that we can tell them 
-    let roomClients = await RoomManager.getClients(projectId)
-
-    roomClients.forEach((clients, username, map) => {
-      affectedClients = affectedClients.concat(clients)
-    })
-
-    return [RoomManager.FindRoom(projectId)
-      .GetProject().GetBehavior(behaviorToUpdate.Id) , affectedClients]
   }
 
   public static async ReadBehavior(behaviorId: string, projectId, client: string) : Promise<[any, Array<string>]>
