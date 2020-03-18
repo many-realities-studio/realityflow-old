@@ -104,6 +104,19 @@ export class StateTracker{
 */
     return [true, [client] ];
   }
+
+
+   // TODO: finished: yes tested: no
+  /**
+   * Returns all projects associated with a username
+   * @param username
+   */
+  public static async FetchProjects(username: string, client: string) : Promise<[any, Array<string>]>
+  {    
+    let projects = await ProjectOperations.fetchProjects(username);
+
+    return [projects, [client] ];
+  }
  
   // TODO: finished: yes tested: no
   /**
@@ -264,6 +277,7 @@ export class StateTracker{
     // check if user is already logged in - 
     // user could be logged in on another client
     let userLoggedIn = this.currentUsers.has(Username);
+    let operationStatus = false;
 
     if(userLoggedIn)
     {
@@ -272,18 +286,14 @@ export class StateTracker{
       RoomManager.LeaveRoom(userRoomId, Username, ClientId)
       
       // kick the client out of currentUsers (a misnomer, I know) 
-      this.currentUsers.get(Username).delete(ClientId)
+      operationStatus = this.currentUsers.get(Username).delete(ClientId)
 
       //if the current user doesn't have any more active clients, then stop keeping track of that user
       if(this.currentUsers.get(Username).size == 0)
         this.currentUsers.delete(Username)
     } 
-    // If the user wasn't logged in in the first place, then ??
-    else 
-    {
-      return ['Failure', affectedClients];;
-    }
-    return ['Success', affectedClients];
+
+    return [operationStatus, affectedClients];
   }
 
 
@@ -293,8 +303,8 @@ export class StateTracker{
   public static async CreateRoom(projectID: string, clientId: string) : Promise<[any, Array<string>]>
   {
     let roomCode = RoomManager.CreateRoom(projectID);
-
-    return ['Success', [clientId]];
+    
+    return [true, [clientId]];
   }
 
   // TODO: Finished: Yes Tested: Yes
