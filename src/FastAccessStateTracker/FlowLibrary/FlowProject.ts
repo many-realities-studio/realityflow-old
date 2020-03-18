@@ -70,7 +70,7 @@ export class FlowProject
    * @param client 
    */
   public CheckoutObject(objectId: string, client: string){
-    this._ObjectList.find(element => element.Id == objectId).currentCheckout = client;
+    this._ObjectList.find(element => element.Id == objectId).CurrentCheckout = client;
   }
 
 
@@ -79,7 +79,7 @@ export class FlowProject
    * @param objectId 
    */
   public CheckinObject(objectId: string){
-    this._ObjectList.find(element => element.Id == objectId).currentCheckout = null;
+    this._ObjectList.find(element => element.Id == objectId).CurrentCheckout = null;
   }
 
     /**
@@ -87,7 +87,7 @@ export class FlowProject
    * @param objectId 
    */
   public GetObjectHolder(objectId: string){
-    return this._ObjectList.find(element => element.Id == objectId).currentCheckout
+    return this._ObjectList.find(element => element.Id == objectId).CurrentCheckout
   }
 
   /**
