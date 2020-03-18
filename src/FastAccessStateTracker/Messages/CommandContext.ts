@@ -380,7 +380,7 @@ class Command_DeleteObject implements ICommand
     let returnData = await StateTracker.DeleteObject(flowObject.Id, data.projectId, client);
     let returnContent = {
       "MessageType": "DeleteObject",
-      "Message": returnData[0],
+      "ObjectId": returnData[0],
       "WasSuccessful": (returnData[0] == null) ? false: true,
     }
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
@@ -471,7 +471,7 @@ class Command_DeleteBehavior implements ICommand
     let returnData = await StateTracker.DeleteBehavior(flowBehavior.Id, data.projectId, client);
     let returnContent = {
       "MessageType": "DeleteBehavior",
-      "Message": returnData[0],
+      "BehaviorId": returnData[0],
       "WasSuccessful": (returnData[0] == null) ? false: true,
     }
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
