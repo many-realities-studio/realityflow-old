@@ -34,7 +34,7 @@ class Command_CreateProject implements ICommand
 
     let project : FlowProject = new FlowProject(data.Project);
 
-    let returnData = await StateTracker.CreateProject(project, data.flowUser.Username, client);
+    let returnData = await StateTracker.CreateProject(project, data.FlowUser.Username, client);
 
     let message = returnData[0] == null ? "Failed to Create Project" : returnData[0];
       
@@ -77,7 +77,7 @@ class Command_DeleteProject implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
   {
 
-    let returnData = await StateTracker.DeleteProject(data.FlowProject.Id, data.flowUser.Username, client);
+    let returnData = await StateTracker.DeleteProject(data.FlowProject.Id, data.FlowUser.Username, client);
     let returnContent = {
       "MessageType": "DeleteProject",
       "WasSuccessful": returnData[0],
@@ -95,7 +95,7 @@ class Command_OpenProject implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
   {
     
-    let returnData = await StateTracker.OpenProject(data.ProjectId, data.flowUser.Username, client);
+    let returnData = await StateTracker.OpenProject(data.ProjectId, data.FlowUser.Username, client);
     
     // notify others in the room that user has joined
     Command_OpenProject.SendRoomAnnouncement(returnData[2], "UserJoinedRoom");
@@ -142,7 +142,7 @@ class Command_FetchProjects implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
   {
     
-    let returnData = await StateTracker.FetchProjects(data.flowUser.Username, client);
+    let returnData = await StateTracker.FetchProjects(data.FlowUser.Username, client);
     
 
     let message = returnData[0] == null ? "Failed to fetch projects" : returnData[0];
@@ -165,7 +165,7 @@ class Command_LeaveProject implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
   {
     
-    let returnData = await StateTracker.LeaveProject(data.ProjectId, data.flowUser.Username, client);
+    let returnData = await StateTracker.LeaveProject(data.ProjectId, data.FlowUser.Username, client);
     
     // notify others in the room that user has joined
     Command_OpenProject.SendRoomAnnouncement(returnData[2], "UserLeftRoom");
@@ -191,7 +191,7 @@ class Command_CreateUser implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let returnData = await StateTracker.CreateUser(data.flowUser.Username, data.flowUser.Password, client);
+    let returnData = await StateTracker.CreateUser(data.FlowUser.Username, data.FlowUser.Password, client);
     let returnContent = {
       "Message": "message",
       "MessageType": "CreateUser",
@@ -222,7 +222,7 @@ class Command_LoginUser implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let returnData = await StateTracker.LoginUser(data.flowUser.Username, data.flowUser.Password, client);
+    let returnData = await StateTracker.LoginUser(data.FlowUser.Username, data.FlowUser.Password, client);
     
     let returnContent = {
       "MessageType": "LoginUser",
@@ -241,7 +241,7 @@ class Command_LogoutUser implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let returnData = await StateTracker.LogoutUser(data.flowUser.Username, data.flowUser.Password, client);
+    let returnData = await StateTracker.LogoutUser(data.FlowUser.Username, data.FlowUser.Password, client);
     let returnContent = {
       "Message": "message",
       "MessageType": "LogoutUser",
@@ -257,7 +257,7 @@ class Command_ReadUser implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let returnData = await StateTracker.ReadUser(data.flowUser.Username, client);
+    let returnData = await StateTracker.ReadUser(data.FlowUser.Username, client);
     let returnContent = {};
     if(returnData[0] == null) {
       returnContent = {
@@ -286,7 +286,7 @@ class Command_CreateRoom implements ICommand
   {
     // grab the projectID from the JSON, confirm format
     // TODO: ensure the message json is being extracted properly 
-    let projectID = data.projectID;
+    let projectID = data.ProjectID;
 
     // send confirmation message & room code to client
     let returnData = await StateTracker.CreateRoom(projectID, client);
@@ -304,7 +304,7 @@ class Command_JoinRoom implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
   {
-    let returnData = await StateTracker.JoinRoom(data.Project.Id, data.user.Username, client); 
+    let returnData = await StateTracker.JoinRoom(data.Project.Id, data.User.Username, client); 
     let returnContent = {
       "MessageType": "JoinRoom",
       "WasSuccessful": true,
@@ -356,11 +356,11 @@ class Command_CreateObject implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let flowObject = new FlowObject(data.flowObject);
+    let flowObject = new FlowObject(data.FlowObject);
     
     console.log(flowObject)
 
-    let returnData = await StateTracker.CreateObject(flowObject, data.projectId);
+    let returnData = await StateTracker.CreateObject(flowObject, data.ProjectId);
     let returnContent = {
       "MessageType": "CreateObject",
       "FlowObject": returnData[0],
@@ -377,7 +377,7 @@ class Command_DeleteObject implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
     let flowObject = new FlowObject(data.flowObject);
-    let returnData = await StateTracker.DeleteObject(flowObject.Id, data.projectId, client);
+    let returnData = await StateTracker.DeleteObject(flowObject.Id, data.ProjectId, client);
     let returnContent = {
       "MessageType": "DeleteObject",
       "Message": returnData[0],
@@ -393,8 +393,8 @@ class Command_UpdateObject implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let flowObject = new FlowObject(data.flowObject);
-    let returnData = await StateTracker.UpdateObject(flowObject, data.projectId, client);
+    let flowObject = new FlowObject(data.FlowObject);
+    let returnData = await StateTracker.UpdateObject(flowObject, data.ProjectId, client);
     let returnContent = {
       "MessageType": "UpdateObject",
       "FlowObject": returnData[0],
@@ -410,7 +410,7 @@ class Command_ReadObject implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let returnData = await StateTracker.ReadObject(data.flowObject.Id, data.projectId, client);
+    let returnData = await StateTracker.ReadObject(data.FlowObject.Id, data.ProjectId, client);
     let returnContent = {
       "MessageType": "ReadObject",
       "FlowObject": returnData[0],
@@ -429,7 +429,7 @@ class Command_FinalizedUpdateObject implements ICommand
   async ExecuteCommand(data: any, client:string): Promise<[String, Array<String>]> 
   {
     let flowObject = new FlowObject(data.flowObject);
-    let returnData = await StateTracker.UpdateObject(flowObject, data.projectId, client, true);
+    let returnData = await StateTracker.UpdateObject(flowObject, data.ProjectId, client, true);
     let returnContent = {
       "MessageType": "UpdateObject",
       "FlowObject": returnData[0],
@@ -447,11 +447,11 @@ class Command_CreateBehavior implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let flowBehavior = new FlowBehavior(data.flowBehavior);
+    let flowBehavior = new FlowBehavior(data.FlowBehavior);
     
     console.log(flowBehavior)
 
-    let returnData = await StateTracker.CreateBehavior(flowBehavior, data.projectId);
+    let returnData = await StateTracker.CreateBehavior(flowBehavior, data.ProjectId);
     let returnContent = {
       "MessageType": "CreateBehavior",
       "FlowBehavior": returnData[0],
@@ -467,8 +467,8 @@ class Command_DeleteBehavior implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let flowBehavior = new FlowBehavior(data.flowBehavior);
-    let returnData = await StateTracker.DeleteBehavior(flowBehavior.Id, data.projectId, client);
+    let flowBehavior = new FlowBehavior(data.FlowBehavior);
+    let returnData = await StateTracker.DeleteBehavior(flowBehavior.Id, data.ProjectId, client);
     let returnContent = {
       "MessageType": "DeleteBehavior",
       "Message": returnData[0],
@@ -485,7 +485,7 @@ class Command_UpdateBehavior implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
     let flowBehavior = new FlowBehavior(data.flowBehavior);
-    let returnData = await StateTracker.UpdateBehavior(flowBehavior, data.projectId, client);
+    let returnData = await StateTracker.UpdateBehavior(flowBehavior, data.ProjectId, client);
     let returnContent = {
       "MessageType": "UpdateBehavior",
       "FlowBehavior": returnData[0],
@@ -501,7 +501,7 @@ class Command_ReadBehavior implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let returnData = await StateTracker.ReadBehavior(data.flowBehavior.Id, data.projectId, client);
+    let returnData = await StateTracker.ReadBehavior(data.FlowBehavior.Id, data.ProjectId, client);
     let returnContent = {
       "MessageType": "ReadBehavior",
       "FlowBehavior": returnData[0],
