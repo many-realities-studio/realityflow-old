@@ -100,12 +100,10 @@ class Command_OpenProject implements ICommand
     // notify others in the room that user has joined
     Command_OpenProject.SendRoomAnnouncement(returnData[2], "UserJoinedRoom");
 
-    let message = returnData[0] == null ? "Failed to Open Project" : returnData[0];
-
     let returnContent = {
       "MessageType": "OpenProject",
       "WasSuccessful": returnData[0] == null ? false : true,
-      "FlowProject": message
+      "FlowProject": returnData[0]
     }
 
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
