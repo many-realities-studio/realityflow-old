@@ -592,4 +592,23 @@ export class StateTracker{
     return [behaviorRead, [client]];
   }
 
+  public static async TogglePlayMode(projectId: string, toggle: boolean) : Promise<[any, Array<string>]>
+  {
+    let affectedClients: Array<string> = [];
+    let room = RoomManager.FindRoom(projectId);
+    if(toggle)
+    {
+      room.turnOnPlayMode();
+    } else 
+    {
+      room.turnOffPlayMode();
+    }
+
+    let roomClients = room.getClients();
+    roomClients.forEach((clients, username, map) => 
+      {
+        affectedClients = affectedClients.concat(clients)
+      });
+    return [true, affectedClients];
+  }
 }

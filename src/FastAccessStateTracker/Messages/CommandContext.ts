@@ -512,8 +512,38 @@ class Command_ReadBehavior implements ICommand
     return returnMessage;
 
   }
-
 }
+
+class Command_StartPlayMode implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
+  {
+    let returnData = await StateTracker.TogglePlayMode(data.ProjectId, true);
+    let returnContent = {
+      "MessageType": "StartPlayMode",
+      "WasSuccessful": returnData[0]
+    }
+
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
+    return returnMessage;
+  }
+}
+
+class Command_EndPlayMode implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
+  {
+    let returnData = await StateTracker.TogglePlayMode(data.ProjectId, false);
+    let returnContent = {
+      "MessageType": "EndPlayMode",
+      "WasSuccessful": returnData[0]
+    }
+
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
+    return returnMessage;
+  }
+}
+
 /**
  * Holds the set of commands that can be executed and executes said commands 
  * with the provided data (JSON)
@@ -566,6 +596,10 @@ export class CommandContext
       this._CommandList.set("DeleteBehavior", new Command_DeleteBehavior());
       this._CommandList.set("UpdateBehavior", new Command_UpdateBehavior());
       this._CommandList.set("ReadBehavior", new Command_ReadBehavior());
+
+      // PlayMode Commands
+      this._CommandList.set("StartPlayMode", new Command_StartPlayMode());
+      this._CommandList.set("EndPlayMode", new Command_EndPlayMode());
     }
     console.log(commandToExecute)
     

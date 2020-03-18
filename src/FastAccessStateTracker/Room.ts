@@ -10,10 +10,12 @@ export class Room
   private _UsersCurrentlyInTheRoom: Array<FlowUser> = [];
   private _CurrentProject: FlowProject;
   private _CurrentProjectId: string;
+  private PlayMode: boolean;
 
   constructor(projectID: string)
   {
     this._CurrentProjectId = projectID;
+    this.PlayMode = false;
     
     TypeORMDatabase.GetProject(this._CurrentProjectId).then((project: FlowProject) =>{
       this._CurrentProject = project;
@@ -112,6 +114,15 @@ export class Room
     this._UsersCurrentlyInTheRoom.forEach( (user, index, arr) => clients.set(user.Username, user.ActiveClients))
     // console.log(clients.get("Yash"))
     return clients
+  }
+
+  public turnOnPlayMode() 
+  {
+    this.PlayMode = true;
+  }
+  public turnOffPlayMode()
+  {
+    this.PlayMode = false;
   }
 
 }
