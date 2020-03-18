@@ -139,7 +139,18 @@ export default class TypeORMDatabase
 
   /** Delete an behavior from a project in the database*/
   public static async DeleteBehavior(behaviorId:string, projectId: string): Promise<void> {
+<<<<<<< HEAD
     await BehaviorOperations.deleteBehavior(behaviorId, projectId)
+=======
+ // await BehaviorOperations.deleteBehavior(behaviorId, projectId)
+  }
+
+  /**Update a given behavior */
+  public static async UpdateBehavior(behaviorToUpdate: FlowBehavior, projectId: string): Promise<void> {
+  //await BehaviorOperations.updateBehavior(behaviorToUpdate, projectId);
+  }
+
+>>>>>>> f98d8870c10d7becc5d767e7a907364eb4875904
   }
 }
 export {TypeORMDatabase};
