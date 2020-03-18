@@ -77,7 +77,7 @@ class Command_DeleteProject implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
   {
 
-    let returnData = await StateTracker.DeleteProject(data.FlowProject.Id, data.FlowUser.Username, client);
+    let returnData = await StateTracker.DeleteProject(data.ProjectId, data.FlowUser.Username, client);
     let returnContent = {
       "MessageType": "DeleteProject",
       "WasSuccessful": returnData[0],
@@ -227,7 +227,7 @@ class Command_LoginUser implements ICommand
     let returnContent = {
       "MessageType": "LoginUser",
       "WasSuccessful": returnData[0],
-      "Message": returnData[2]
+      "Projects": returnData[2]
     };
 
 

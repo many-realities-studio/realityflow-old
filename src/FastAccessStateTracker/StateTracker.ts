@@ -254,9 +254,9 @@ export class StateTracker{
     RoomManager.JoinRoom("noRoom", userName, ClientId)
 
 
-    let returnMessage = {Username: userName, Projects: await ProjectOperations.fetchProjects(userName)}
+    let projects = await ProjectOperations.fetchProjects(userName);
 
-    return [true, affectedClients, returnMessage];    
+    return [true, affectedClients, projects];    
   }
 
   // TODO: Finished: Yes Tested: Yes
