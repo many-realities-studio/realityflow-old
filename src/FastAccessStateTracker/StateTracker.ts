@@ -469,7 +469,7 @@ export class StateTracker{
       affectedClients = affectedClients.concat(clients)
     })
 
-    return ["deleted " + objectId, affectedClients]
+    return [objectId, affectedClients]
   }
 
   /**
@@ -554,7 +554,7 @@ export class StateTracker{
       affectedClients = affectedClients.concat(clients)
     })
 
-    return ["deleted " + behaviorId, affectedClients]
+    return [behaviorId, affectedClients]
   }
 
   public static async UpdateBehavior(behaviorToUpdate : FlowBehavior, projectId: string, client: string, saveToDatabase:boolean=true) : Promise<[any, Array<string>]>
@@ -592,4 +592,23 @@ export class StateTracker{
     return [behaviorRead, [client]];
   }
 
+  public static async TogglePlayMode(projectId: string, toggle: boolean) : Promise<[any, Array<string>]>
+  {
+    let affectedClients: Array<string> = [];
+    let room = RoomManager.FindRoom(projectId);
+    if(toggle)
+    {
+      room.turnOnPlayMode();
+    } else 
+    {
+      room.turnOffPlayMode();
+    }
+
+    let roomClients = room.getClients();
+    roomClients.forEach((clients, username, map) => 
+      {
+        affectedClients = affectedClients.concat(clients)
+      });
+    return [true, affectedClients];
+  }
 }
