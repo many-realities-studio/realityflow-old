@@ -77,7 +77,7 @@ class Command_DeleteProject implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
   {
 
-    let returnData = await StateTracker.DeleteProject(data.FlowProject.Id, data.FlowUser.Username, client);
+    let returnData = await StateTracker.DeleteProject(data.ProjectId, data.FlowUser.Username, client);
     let returnContent = {
       "MessageType": "DeleteProject",
       "WasSuccessful": returnData[0],
@@ -100,12 +100,10 @@ class Command_OpenProject implements ICommand
     // notify others in the room that user has joined
     Command_OpenProject.SendRoomAnnouncement(returnData[2], "UserJoinedRoom");
 
-    let message = returnData[0] == null ? "Failed to Open Project" : returnData[0];
-
     let returnContent = {
       "MessageType": "OpenProject",
       "WasSuccessful": returnData[0] == null ? false : true,
-      "FlowProject": message
+      "FlowProject": returnData[0]
     }
 
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
@@ -227,7 +225,7 @@ class Command_LoginUser implements ICommand
     let returnContent = {
       "MessageType": "LoginUser",
       "WasSuccessful": returnData[0],
-      "Message": returnData[2]
+      "Projects": returnData[2]
     };
 
 
