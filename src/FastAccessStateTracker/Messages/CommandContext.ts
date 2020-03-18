@@ -194,7 +194,7 @@ class Command_CreateUser implements ICommand
     let returnData = await StateTracker.CreateUser(data.flowUser.Username, data.flowUser.Password, client);
     let returnContent = {
       "Message": "message",
-      "__type": "CreateUser",
+      "MessageType": "CreateUser",
       "WasSuccessful": returnData[0]
     }
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
@@ -208,8 +208,12 @@ class Command_DeleteUser implements ICommand
   async ExecuteCommand(data: any): Promise<[String, Array<String>]>
   {
     let returnData = await StateTracker.DeleteUser(data.Username, data.Password);
+    let returnContent = {
+      "MessageType": "DeleteUser",
+      "WasSuccessful": returnData[0]
+    }
 
-    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
     return returnMessage
   }
 }
@@ -286,7 +290,11 @@ class Command_CreateRoom implements ICommand
 
     // send confirmation message & room code to client
     let returnData = await StateTracker.CreateRoom(projectID, client);
-    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1]);
+    let returnContent = {
+      "MessageType": "CreateRoom",
+      "WasSuccessful": returnData[0],
+    }
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
 
     return returnMessage;
   }
@@ -297,8 +305,13 @@ class Command_JoinRoom implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
   {
     let returnData = await StateTracker.JoinRoom(data.Project.Id, data.user.Username, client); 
+    let returnContent = {
+      "MessageType": "JoinRoom",
+      "WasSuccessful": true,
+      "Message":returnData[0]
+    }
 
-    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
 
     return returnMessage;
   }
@@ -311,7 +324,7 @@ class Command_PopulateRoom implements ICommand
     let returnData = await StateTracker.PopulateRoom(data.Project.Id, client);
     let returnContent = {
       "MessageType": "PopulateRoom",
-      "WasSuccesful": false,
+      "WasSuccessful": false,
     } 
 
     if(returnData[0] != null)
@@ -320,7 +333,7 @@ class Command_PopulateRoom implements ICommand
         "MessageType": "PopulateRoom",
         "ObjectList": returnData[0]._ObjectList,
         "BehaviorList": returnData[0]._BehaviorList,
-        "WasSuccesful": true,
+        "WasSuccessful": true,
       }
   
     } 
@@ -347,9 +360,13 @@ class Command_CreateObject implements ICommand
     
     console.log(flowObject)
 
-    //TODO: Add failure check and message
     let returnData = await StateTracker.CreateObject(flowObject, data.projectId);
-    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
+    let returnContent = {
+      "MessageType": "CreateObject",
+      "FlowObject": returnData[0],
+      "WasSuccessful": (returnData[0] == null) ? false: true
+    }
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
 
     return returnMessage;
   }
@@ -361,8 +378,13 @@ class Command_DeleteObject implements ICommand
   {
     let flowObject = new FlowObject(data.flowObject);
     let returnData = await StateTracker.DeleteObject(flowObject.Id, data.projectId, client);
-    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
-    //TODO: Add failure check and message
+    let returnContent = {
+      "MessageType": "DeleteObject",
+      "Message": returnData[0],
+      "WasSuccessful": (returnData[0] == null) ? false: true,
+    }
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
+
     return returnMessage;
   }
 }
@@ -373,9 +395,13 @@ class Command_UpdateObject implements ICommand
   {
     let flowObject = new FlowObject(data.flowObject);
     let returnData = await StateTracker.UpdateObject(flowObject, data.projectId, client);
-    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
+    let returnContent = {
+      "MessageType": "UpdateObject",
+      "FlowObject": returnData[0],
+      "WasSuccessful": (returnData[0] == null) ? false: true,
+    }
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
 
-    //TODO: Add failure check and message
     return returnMessage;
   }
 }
@@ -385,8 +411,13 @@ class Command_ReadObject implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
     let returnData = await StateTracker.ReadObject(data.flowObject.Id, data.projectId, client);
-    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
-    //TODO: Add failure check and message
+    let returnContent = {
+      "MessageType": "ReadObject",
+      "FlowObject": returnData[0],
+      "WasSuccessful": (returnData[0] == null) ? false: true,
+    }
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
+
     return returnMessage;
 
   }
@@ -399,9 +430,13 @@ class Command_FinalizedUpdateObject implements ICommand
   {
     let flowObject = new FlowObject(data.flowObject);
     let returnData = await StateTracker.UpdateObject(flowObject, data.projectId, client, true);
-    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
+    let returnContent = {
+      "MessageType": "UpdateObject",
+      "FlowObject": returnData[0],
+      "WasSuccessful": (returnData[0] == null) ? false: true,
+    }
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
     
-    //TODO: Add failure check and message
     return returnMessage;
 
   }
@@ -416,9 +451,13 @@ class Command_CreateBehavior implements ICommand
     
     console.log(flowBehavior)
 
-    //TODO: Add failure check and message
     let returnData = await StateTracker.CreateBehavior(flowBehavior, data.projectId);
-    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
+    let returnContent = {
+      "MessageType": "CreateBehavior",
+      "FlowBehavior": returnData[0],
+      "WasSuccessful": (returnData[0] == null) ? false: true
+    }
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
 
     return returnMessage;
   }
@@ -430,8 +469,13 @@ class Command_DeleteBehavior implements ICommand
   {
     let flowBehavior = new FlowBehavior(data.flowBehavior);
     let returnData = await StateTracker.DeleteBehavior(flowBehavior.Id, data.projectId, client);
-    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
-    //TODO: Add failure check and message
+    let returnContent = {
+      "MessageType": "DeleteBehavior",
+      "Message": returnData[0],
+      "WasSuccessful": (returnData[0] == null) ? false: true,
+    }
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
+
     return returnMessage;
   }
 }
@@ -442,9 +486,13 @@ class Command_UpdateBehavior implements ICommand
   {
     let flowBehavior = new FlowBehavior(data.flowBehavior);
     let returnData = await StateTracker.UpdateBehavior(flowBehavior, data.projectId, client);
-    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
+    let returnContent = {
+      "MessageType": "UpdateBehavior",
+      "FlowBehavior": returnData[0],
+      "WasSuccessful": (returnData[0] == null) ? false: true,
+    }
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
 
-    //TODO: Add failure check and message
     return returnMessage;
   }
 }
@@ -454,8 +502,13 @@ class Command_ReadBehavior implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
     let returnData = await StateTracker.ReadBehavior(data.flowBehavior.Id, data.projectId, client);
-    let returnMessage = MessageBuilder.CreateMessage(returnData[0], returnData[1])
-    //TODO: Add failure check and message
+    let returnContent = {
+      "MessageType": "ReadBehavior",
+      "FlowBehavior": returnData[0],
+      "WasSuccessful": (returnData[0] == null) ? false: true,
+    }
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
+
     return returnMessage;
 
   }

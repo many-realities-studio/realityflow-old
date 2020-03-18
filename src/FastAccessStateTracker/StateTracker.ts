@@ -218,7 +218,7 @@ export class StateTracker{
     //remove user from the database too
     await TypeORMDatabase.DeleteUser(userName);
 
-    return ['Deleted', affectedClients];
+    return [true, affectedClients];
   }
 
 
