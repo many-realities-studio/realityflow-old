@@ -95,32 +95,32 @@ export class RoomManager
     return room.getClients();
   }
 
-  public static updateObject(objectToUpdate: FlowObject, projectId: string, user:string, client:string){
+  public static updateObject(objectToUpdate: FlowObject, projectId: string, client:string){
     let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
-    return room.updateObject(objectToUpdate, user, client)
+    return room.updateObject(objectToUpdate, client)
   }
 
   public static AddObject(objectToCreate: FlowObject, projectId:string){
     return this._RoomList.find(element => element.GetRoomCode() == projectId).AddObject(objectToCreate)
   }
 
-  public static DeleteObject(projectId: string, objectId: string, user:string, client:string){
-    let success = this._RoomList.find(element => element.GetRoomCode() == projectId).DeleteObject(objectId, user, client);
+  public static DeleteObject(projectId: string, objectId: string, client:string){
+    let success = this._RoomList.find(element => element.GetRoomCode() == projectId).DeleteObject(objectId, client);
     return success
   }
 
   public static ReadObject(projectId:string, objectId:string){
-    this._RoomList.find(element => element.GetRoomCode() == projectId).ReadObject(objectId);
+    return this._RoomList.find(element => element.GetRoomCode() == projectId).ReadObject(objectId);
   }
 
-  public static checkoutObject(projectId: string, objectId: string, user: string, client: string){
+  public static checkoutObject(projectId: string, objectId: string, client: string){
     let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
-    return room.checkoutObject(objectId, user, client);
+    return room.checkoutObject(objectId, client);
   }
 
-  public static checkinObject(projectId: string, objectId: string, user: string, client: string){
+  public static checkinObject(projectId: string, objectId: string,  client: string){
     let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
-    return room.checkinObject(objectId, user, client)
+    return room.checkinObject(objectId, client)
   }
 
 }
