@@ -118,8 +118,8 @@ export class Room
   }
 
 // TODO: finished: yes tested: no
-  public updateObject(objectToUpdate, user, client){
-    let success = this._CurrentProject.UpdateFAMObject(objectToUpdate, user, client);
+  public updateObject(objectToUpdate, client){
+    let success = this._CurrentProject.UpdateFAMObject(objectToUpdate, client);
     return success;
   }
 
@@ -129,8 +129,8 @@ export class Room
   }
 
   // TODO: optimize all of these
-  public DeleteObject(objectId: string, user: string, client: string) {
-    let success = this._CurrentProject.DeleteObject(objectId, user, client)
+  public DeleteObject(objectId: string, client: string) {
+    let success = this._CurrentProject.DeleteObject(objectId, client)
     return success;
   }
 
@@ -140,12 +140,12 @@ export class Room
   }
 
   // TODO: finished: yes tested: yes
-  public checkinObject(objectId: string, user: string, client: string){
+  public checkinObject(objectId: string, client: string){
     return this._CurrentProject.CheckinObject(objectId, client)
   }
 
   // TODO: finished: yes tested: yes
-  public checkoutObject(objectId: string, user: string, client: string): boolean{
+  public checkoutObject(objectId: string, client: string): boolean{
     return this._CurrentProject.CheckoutObject(objectId, client)
   }
   public turnOnPlayMode() 

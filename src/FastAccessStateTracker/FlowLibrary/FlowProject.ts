@@ -37,7 +37,7 @@ export class FlowProject
    * Removes an object from the list of available objects
    * @param objectToRemove 
    */
-  public DeleteObject(objectToRemove: string, user:string, client: string) 
+  public DeleteObject(objectToRemove: string, client: string) 
   {
     let index = this._ObjectList.findIndex((element) => element.Id == objectToRemove);
     if(index > -1 && this._ObjectList[index].CurrentCheckout == client){
@@ -99,7 +99,7 @@ export class FlowProject
    * Updates the object in the FAM without saving to the database
    * @param newObject 
    */
-  public UpdateFAMObject(newObject: FlowObject, user: string, client: string) 
+  public UpdateFAMObject(newObject: FlowObject, client: string) 
   {
     // Get the object that we are changing from the specified project
     var oldObject: FlowObject = this._ObjectList.find(element => element.Id == newObject.Id);
