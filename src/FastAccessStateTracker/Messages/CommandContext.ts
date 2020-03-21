@@ -77,7 +77,7 @@ class Command_DeleteProject implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
   {
 
-    let returnData = await StateTracker.DeleteProject(data.FlowProject.Id, data.FlowUser.Username, client);
+    let returnData = await StateTracker.DeleteProject(data.ProjectId, data.FlowUser.Username, client);
     let returnContent = {
       "MessageType": "DeleteProject",
       "WasSuccessful": returnData[0],
@@ -100,12 +100,10 @@ class Command_OpenProject implements ICommand
     // notify others in the room that user has joined
     Command_OpenProject.SendRoomAnnouncement(returnData[2], "UserJoinedRoom");
 
-    let message = returnData[0] == null ? "Failed to Open Project" : returnData[0];
-
     let returnContent = {
       "MessageType": "OpenProject",
       "WasSuccessful": returnData[0] == null ? false : true,
-      "FlowProject": message
+      "FlowProject": returnData[0]
     }
 
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
@@ -227,7 +225,7 @@ class Command_LoginUser implements ICommand
     let returnContent = {
       "MessageType": "LoginUser",
       "WasSuccessful": returnData[0],
-      "Message": returnData[2]
+      "Projects": returnData[2]
     };
 
 
@@ -380,7 +378,7 @@ class Command_DeleteObject implements ICommand
     let returnData = await StateTracker.DeleteObject(flowObject.Id, data.ProjectId, client);
     let returnContent = {
       "MessageType": "DeleteObject",
-      "Message": returnData[0],
+      "ObjectId": returnData[0],
       "WasSuccessful": (returnData[0] == null) ? false: true,
     }
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
@@ -471,7 +469,7 @@ class Command_DeleteBehavior implements ICommand
     let returnData = await StateTracker.DeleteBehavior(flowBehavior.Id, data.ProjectId, client);
     let returnContent = {
       "MessageType": "DeleteBehavior",
-      "Message": returnData[0],
+      "BehaviorId": returnData[0],
       "WasSuccessful": (returnData[0] == null) ? false: true,
     }
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
@@ -512,8 +510,38 @@ class Command_ReadBehavior implements ICommand
     return returnMessage;
 
   }
-
 }
+
+class Command_StartPlayMode implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
+  {
+    let returnData = await StateTracker.TogglePlayMode(data.ProjectId, true);
+    let returnContent = {
+      "MessageType": "StartPlayMode",
+      "WasSuccessful": returnData[0]
+    }
+
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
+    return returnMessage;
+  }
+}
+
+class Command_EndPlayMode implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
+  {
+    let returnData = await StateTracker.TogglePlayMode(data.ProjectId, false);
+    let returnContent = {
+      "MessageType": "EndPlayMode",
+      "WasSuccessful": returnData[0]
+    }
+
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
+    return returnMessage;
+  }
+}
+
 /**
  * Holds the set of commands that can be executed and executes said commands 
  * with the provided data (JSON)
@@ -566,6 +594,10 @@ export class CommandContext
       this._CommandList.set("DeleteBehavior", new Command_DeleteBehavior());
       this._CommandList.set("UpdateBehavior", new Command_UpdateBehavior());
       this._CommandList.set("ReadBehavior", new Command_ReadBehavior());
+
+      // PlayMode Commands
+      this._CommandList.set("StartPlayMode", new Command_StartPlayMode());
+      this._CommandList.set("EndPlayMode", new Command_EndPlayMode());
     }
     console.log(commandToExecute)
     

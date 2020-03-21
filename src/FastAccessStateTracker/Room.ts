@@ -12,10 +12,12 @@ export class Room
   private _UsersCurrentlyInTheRoom: Array<FlowUser> = [];
   private _CurrentProject: FlowProject;
   private _CurrentProjectId: string;
+  private PlayMode: boolean;
 
   constructor(projectID: string)
   {
     this._CurrentProjectId = projectID;
+    this.PlayMode = false;
     
     TypeORMDatabase.GetProject(this._CurrentProjectId).then((project: FlowProject) =>{
       this._CurrentProject = project;
@@ -146,4 +148,13 @@ export class Room
   public checkoutObject(objectId: string, user: string, client: string): boolean{
     return this._CurrentProject.CheckoutObject(objectId, client)
   }
+  public turnOnPlayMode() 
+  {
+    this.PlayMode = true;
+  }
+  public turnOffPlayMode()
+  {
+    this.PlayMode = false;
+  }
+
 }
