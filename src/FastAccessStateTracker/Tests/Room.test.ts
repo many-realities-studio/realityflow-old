@@ -4,6 +4,8 @@ import { Room } from "../Room"
 import { FlowProject } from "../FlowLibrary/FlowProject"
 import TypeORMDatabase from "../Database/TypeORMDatabase"
 import { FlowUser } from "../FlowLibrary/FlowUser"
+import { FlowObject } from "../FlowLibrary/FlowObject"
+import { Client } from "_debugger"
 
 jest.mock('../Database/TypeORMDatabase')
  
@@ -128,4 +130,283 @@ describe("Rooms", () => {
     
     
     })
+})
+
+describe("Object in a room", () => {
+    it("can be created", async () => {
+        // arrange
+        let room : Room = await new Room("testProjectId")
+        var createdObject = new FlowObject({
+            Id:             "createdObjectId",
+            name:           "object1",
+            X:              3,
+            Y:              1,
+            Z:              1,
+            Q_x:            1,
+            Q_y:            1,
+            Q_z:            1,
+            Q_w:            1,
+            S_x:            1,
+            S_y:            1,
+            S_z:            1,
+            R:              1,
+            G:              1,
+            B:              1,
+            A:              1,
+        })
+
+        // act
+        room.AddObject(createdObject)
+        let check = room.GetProject()._ObjectList.find(object => object.Id = createdObject.Id)
+        
+        // assert
+        expect(check).toBeTruthy()
+    })
+
+    it("can be read", async () => {
+        // arrange
+        let room : Room = await new Room("testProjectId")
+        var readObject = new FlowObject({
+            Id:             "readObjectId",
+            name:           "object1",
+            X:              3,
+            Y:              1,
+            Z:              1,
+            Q_x:            1,
+            Q_y:            1,
+            Q_z:            1,
+            Q_w:            1,
+            S_x:            1,
+            S_y:            1,
+            S_z:            1,
+            R:              1,
+            G:              1,
+            B:              1,
+            A:              1,
+        })
+
+        room.AddObject(readObject)
+
+        // act
+        let check = room.ReadObject(readObject.Id)
+        // assert
+        expect(check.Id).toEqual(readObject.Id)
+    })
+
+
+
+    it("can be checked out", async () => {
+        // arrange
+
+        let room : Room = await new Room("testProjectId")
+        var oldObject = new FlowObject({
+            Id:             "updatedObjectId",
+            name:           "object1",
+            X:              3,
+            Y:              1,
+            Z:              1,
+            Q_x:            1,
+            Q_y:            1,
+            Q_z:            1,
+            Q_w:            1,
+            S_x:            1,
+            S_y:            1,
+            S_z:            1,
+            R:              1,
+            G:              1,
+            B:              1,
+            A:              1,
+        })
+
+        room.AddObject(oldObject)
+
+        // act
+        room.checkoutObject(oldObject.Id, "user", "client")
+        
+        // assert
+        let check = room.ReadObject(oldObject.Id)
+        expect(check.CurrentCheckout).toEqual("client");
+    })
+
+    it("can be checked in", async () => {
+        // arrange
+        let room : Room = await new Room("testProjectId")
+        var oldObject = new FlowObject({
+            Id:             "updatedObjectId",
+            name:           "object1",
+            X:              3,
+            Y:              1,
+            Z:              1,
+            Q_x:            1,
+            Q_y:            1,
+            Q_z:            1,
+            Q_w:            1,
+            S_x:            1,
+            S_y:            1,
+            S_z:            1,
+            R:              1,
+            G:              1,
+            B:              1,
+            A:              1,
+        })
+
+        room.AddObject(oldObject)
+        room.checkoutObject(oldObject.Id, "user", "client")
+        
+        // act
+        room.checkinObject(oldObject.Id, "user", "client")
+        // assert
+        let check = room.ReadObject(oldObject.Id)
+        expect(check.CurrentCheckout).toBeFalsy()
+    })
+
+    it("can only be checked in by the right person", async () => {
+                // arrange
+                let room : Room = await new Room("testProjectId")
+                var oldObject = new FlowObject({
+                    Id:             "updatedObjectId",
+                    name:           "object1",
+                    X:              3,
+                    Y:              1,
+                    Z:              1,
+                    Q_x:            1,
+                    Q_y:            1,
+                    Q_z:            1,
+                    Q_w:            1,
+                    S_x:            1,
+                    S_y:            1,
+                    S_z:            1,
+                    R:              1,
+                    G:              1,
+                    B:              1,
+                    A:              1,
+                })
+        
+                room.AddObject(oldObject)
+                room.checkoutObject(oldObject.Id, "user1", "client1")
+                
+                // act
+                room.checkinObject(oldObject.Id, "user2", "client2")
+                // assert
+                let check = room.ReadObject(oldObject.Id)
+                expect(check.CurrentCheckout).toEqual("client1")
+    })
+    it("cannot be checked out while it is checked out by someone else.", async() => {
+                        // arrange
+                        let room : Room = await new Room("testProjectId")
+                        var oldObject = new FlowObject({
+                            Id:             "updatedObjectId",
+                            name:           "object1",
+                            X:              3,
+                            Y:              1,
+                            Z:              1,
+                            Q_x:            1,
+                            Q_y:            1,
+                            Q_z:            1,
+                            Q_w:            1,
+                            S_x:            1,
+                            S_y:            1,
+                            S_z:            1,
+                            R:              1,
+                            G:              1,
+                            B:              1,
+                            A:              1,
+                        })
+                
+                        room.AddObject(oldObject)
+                        room.checkoutObject(oldObject.Id, "user1", "client1")
+                        
+                        // act
+                        room.checkoutObject(oldObject.Id, "user2", "client2")
+                        // assert
+                        let check = room.ReadObject(oldObject.Id)
+                        expect(check.CurrentCheckout).toEqual("client1")
+    })
+
+
+    it("can be updated", async () => {
+        // arrange
+        let room : Room = await new Room("testProjectId")
+        var oldObject = new FlowObject({
+            Id:             "updatedObjectId",
+            name:           "object1",
+            X:              3,
+            Y:              1,
+            Z:              1,
+            Q_x:            1,
+            Q_y:            1,
+            Q_z:            1,
+            Q_w:            1,
+            S_x:            1,
+            S_y:            1,
+            S_z:            1,
+            R:              1,
+            G:              1,
+            B:              1,
+            A:              1,
+        })
+
+        room.AddObject(oldObject)
+
+        var newObject = new FlowObject({
+            Id:             "updatedObjectId",
+            name:           "object1",
+            X:              666,
+            Y:              666,
+            Z:              666,
+            Q_x:            1,
+            Q_y:            1,
+            Q_z:            1,
+            Q_w:            1,
+            S_x:            1,
+            S_y:            1,
+            S_z:            1,
+            R:              1,
+            G:              1,
+            B:              1,
+            A:              1,
+        })
+
+        // act
+        room.checkoutObject(newObject.Id, "user","client")
+        room.updateObject(newObject, "user", "client")
+        
+        // assert
+        let check = room.GetProject()._ObjectList.find(object => object.Id = oldObject.Id)
+        expect(check.X).toEqual(newObject.X)
+})
+
+    it("can be deleted", async () => {
+    // arrange
+
+    let room : Room = await new Room("testProjectId")
+    var oldObject = new FlowObject({
+        Id:             "updatedObjectId",
+        name:           "object1",
+        X:              3,
+        Y:              1,
+        Z:              1,
+        Q_x:            1,
+        Q_y:            1,
+        Q_z:            1,
+        Q_w:            1,
+        S_x:            1,
+        S_y:            1,
+        S_z:            1,
+        R:              1,
+        G:              1,
+        B:              1,
+        A:              1,
+    })
+
+    room.AddObject(oldObject)
+
+    // act
+    room.checkoutObject(oldObject.Id, "user","client")
+    room.DeleteObject(oldObject.Id, "user", "client")
+    // assert
+    let check = room.ReadObject(oldObject.Id);
+    expect(check).toBeFalsy()
+    })
+
 })

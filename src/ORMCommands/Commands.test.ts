@@ -195,13 +195,13 @@ describe("Object", () => {
             S_x:            1,
             S_y:            1,
             S_z:            1,
-            R: 1,
-            G: 1,
-            B: 1,
-            A: 1,
+            R:              1,
+            G:              1,
+            B:              1,
+            A:              1,
         }
 
-        await ObjectOperations.createObject(object1, returnedProject.Id)
+        let x =  await ObjectOperations.createObject(object1, returnedProject.Id)
         
     })
 

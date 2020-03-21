@@ -134,4 +134,7 @@ node/server/bld/models/user.js
 node/server/bld/models/user.js.map
 
 # database files
-src/database/*
+src/database/*.db
+database/prod.db
+yashTestCmds.json
+

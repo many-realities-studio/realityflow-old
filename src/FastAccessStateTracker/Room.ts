@@ -3,10 +3,12 @@ import { FlowProject } from "./FlowLibrary/FlowProject";
 
 import { TypeORMDatabase } from "./Database/TypeORMDatabase";
 import { FlowClient } from "./FlowLibrary/FlowClient";
+import { FlowObject } from "./FlowLibrary/FlowObject";
 
 // Look into Pub/Sub architecture
 export class Room
 {
+  
   private _UsersCurrentlyInTheRoom: Array<FlowUser> = [];
   private _CurrentProject: FlowProject;
   private _CurrentProjectId: string;
@@ -111,11 +113,41 @@ export class Room
   public getClients() : Map<string, Array<string> >{
     let clients: Map<string, Array<string> > = new Map()
 
-    this._UsersCurrentlyInTheRoom.forEach( (user, index, arr) => clients.set(user.Username, user.ActiveClients))
-    // console.log(clients.get("Yash"))
+    this._UsersCurrentlyInTheRoom.forEach((user, index, arr) => clients.set(user.Username, user.ActiveClients))
     return clients
   }
 
+// TODO: finished: yes tested: no
+  public updateObject(objectToUpdate, user, client){
+    let success = this._CurrentProject.UpdateFAMObject(objectToUpdate, user, client);
+    return success;
+  }
+
+  // TODO: finished: yes tested: yes
+  public AddObject(objectToCreate: FlowObject){
+    return this._CurrentProject.AddObject(objectToCreate);
+  }
+
+  // TODO: optimize all of these
+  public DeleteObject(objectId: string, user: string, client: string) {
+    let success = this._CurrentProject.DeleteObject(objectId, user, client)
+    return success;
+  }
+
+  // TODO: finished: yes tested: yes
+  public ReadObject(objectId:string){
+    return this._CurrentProject.GetObject(objectId)
+  }
+
+  // TODO: finished: yes tested: yes
+  public checkinObject(objectId: string, user: string, client: string){
+    return this._CurrentProject.CheckinObject(objectId, client)
+  }
+
+  // TODO: finished: yes tested: yes
+  public checkoutObject(objectId: string, user: string, client: string): boolean{
+    return this._CurrentProject.CheckoutObject(objectId, client)
+  }
   public turnOnPlayMode() 
   {
     this.PlayMode = true;

@@ -129,19 +129,19 @@ export default class TypeORMDatabase
 
 
   // Behavior functions
-
-
   /**
   *  Create an Behavior and add it to a pre-existing project in the database
   *  Assumes that the project already exists
   */
   public static async CreateBehavior(behaviorToCreate: FlowBehavior, projectId: string){
-  await BehaviorOperations.createBehavior(behaviorToCreate, projectId);
+    await BehaviorOperations.createBehavior(behaviorToCreate, projectId);
   }
 
   /** Delete an behavior from a project in the database*/
-
   public static async DeleteBehavior(behaviorId:string, projectId: string): Promise<void> {
+<<<<<<< HEAD
+    await BehaviorOperations.deleteBehavior(behaviorId, projectId)
+=======
  // await BehaviorOperations.deleteBehavior(behaviorId, projectId)
   }
 
@@ -150,5 +150,7 @@ export default class TypeORMDatabase
   //await BehaviorOperations.updateBehavior(behaviorToUpdate, projectId);
   }
 
+>>>>>>> f98d8870c10d7becc5d767e7a907364eb4875904
   }
+}
 export {TypeORMDatabase};
