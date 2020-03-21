@@ -221,7 +221,7 @@ describe("Object in a room", () => {
         room.AddObject(oldObject)
 
         // act
-        room.checkoutObject(oldObject.Id, "user", "client")
+        room.checkoutObject(oldObject.Id,  "client")
         
         // assert
         let check = room.ReadObject(oldObject.Id)
@@ -251,10 +251,10 @@ describe("Object in a room", () => {
         })
 
         room.AddObject(oldObject)
-        room.checkoutObject(oldObject.Id, "user", "client")
+        room.checkoutObject(oldObject.Id,  "client")
         
         // act
-        room.checkinObject(oldObject.Id, "user", "client")
+        room.checkinObject(oldObject.Id,  "client")
         // assert
         let check = room.ReadObject(oldObject.Id)
         expect(check.CurrentCheckout).toBeFalsy()
@@ -283,10 +283,10 @@ describe("Object in a room", () => {
                 })
         
                 room.AddObject(oldObject)
-                room.checkoutObject(oldObject.Id, "user1", "client1")
+                room.checkoutObject(oldObject.Id, "client1")
                 
                 // act
-                room.checkinObject(oldObject.Id, "user2", "client2")
+                room.checkinObject(oldObject.Id,  "client2")
                 // assert
                 let check = room.ReadObject(oldObject.Id)
                 expect(check.CurrentCheckout).toEqual("client1")
@@ -314,10 +314,10 @@ describe("Object in a room", () => {
                         })
                 
                         room.AddObject(oldObject)
-                        room.checkoutObject(oldObject.Id, "user1", "client1")
+                        room.checkoutObject(oldObject.Id,  "client1")
                         
                         // act
-                        room.checkoutObject(oldObject.Id, "user2", "client2")
+                        room.checkoutObject(oldObject.Id,  "client2")
                         // assert
                         let check = room.ReadObject(oldObject.Id)
                         expect(check.CurrentCheckout).toEqual("client1")
@@ -368,8 +368,8 @@ describe("Object in a room", () => {
         })
 
         // act
-        room.checkoutObject(newObject.Id, "user","client")
-        room.updateObject(newObject, "user", "client")
+        room.checkoutObject(newObject.Id, "client")
+        room.updateObject(newObject, "client")
         
         // assert
         let check = room.GetProject()._ObjectList.find(object => object.Id = oldObject.Id)
@@ -402,8 +402,8 @@ describe("Object in a room", () => {
     room.AddObject(oldObject)
 
     // act
-    room.checkoutObject(oldObject.Id, "user","client")
-    room.DeleteObject(oldObject.Id, "user", "client")
+    room.checkoutObject(oldObject.Id, "client")
+    room.DeleteObject(oldObject.Id,  "client")
     // assert
     let check = room.ReadObject(oldObject.Id);
     expect(check).toBeFalsy()

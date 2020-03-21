@@ -13,6 +13,7 @@ import TypeORMDatabase from "./TypeORMDatabase";
 import { Project } from "../../entity/project";
 import { User } from "../../entity/user";
 
+
 // this may seem like a pointless exercise. 
 // It kind of is, but I want to make sure that every 
 // level works the way that it's supposed to.
@@ -169,8 +170,16 @@ describe("ObjectOperations", () => {
 
     });
 
-    it("should delete an object", () => {
-        throw new Error("Test not yet created")
+    it("should delete an object", async () => {
+        let mockDeleteObject = jest.fn(async (objectInfo, projectId) => {})
+        ObjectOperations.deleteObject = mockDeleteObject
+
+        // act
+        await TypeORMDatabase.DeleteObject("object1", "testProject2.Id");
+        
+        // assert
+        expect(mockDeleteObject).toBeCalledWith("object1", "testProject2.Id");
+
     })
 
 })
@@ -191,6 +200,10 @@ describe("ProjectOperations", ()=>{
             Username: "Yash",
             Password: "test"
         };
+
+        jest.mock("../../ORMCommands/project");
+        let fakeFindProject = jest.fn(async (projectId) => new Project())
+        ProjectOperations.findProject = fakeFindProject;
 
         let mockCreateProject = jest.fn(async (project, username) => {
             
@@ -224,22 +237,19 @@ describe("ProjectOperations", ()=>{
             Username: "Yash",
             Password: "test"
         };
+        
+        jest.mock("../../ORMCommands/project");
+        let fakeFindProject = jest.fn(async (projectId) => new Project())
+        ProjectOperations.findProject = fakeFindProject;
 
-        let mockGetProject = jest.fn(async (project: string) => {
-            let p = new Project()
-            p.Id= project,
-            p.Description= "This is a project"
-            p.ProjectName= "TestProject1"
-            p.DateModified= Date.now()
-            return p
-        });
-            
-        ProjectOperations.findProject = mockGetProject
+        let fakeGetObjects = jest.fn(async (projectId) => [])
+        ProjectOperations.getObjects = fakeGetObjects;
+
         // act
         await TypeORMDatabase.GetProject(testProject1.Id);
         
         // assert
-        expect(mockGetProject).toBeCalledWith(testProject1.Id)
+        expect(fakeFindProject).toBeCalledWith(testProject1.Id)
     })
 
     it('should delete a project from a collection', async () => {

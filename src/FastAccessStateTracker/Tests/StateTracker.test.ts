@@ -264,7 +264,7 @@ describe("Object", () => {
     })
 
     it("Can be read", async () => {
-        let fakeRead = jest.fn(() => true)
+        let fakeRead = jest.fn((projectId, userId) => new FlowObject({}))
         RoomManager.ReadObject = fakeRead;
         await StateTracker.ReadObject("ObjectId", "projectId", "client")
         expect(fakeRead).toHaveBeenCalled()
@@ -293,14 +293,14 @@ describe("Object", () => {
             A:              1,
         })
 
-        await StateTracker.UpdateObject(updatedObject, "projectId", "user", "client")
+        await StateTracker.UpdateObject(updatedObject, "projectId", "client")
         expect(fakeUpdate).toHaveBeenCalled()
     })
 
     it("can be deleted", async () => {
         let fakeDelete = jest.fn(() => true)
         RoomManager.DeleteObject = fakeDelete;
-        await StateTracker.DeleteObject("ObjectId", "projectId", "user", "client")
+        await StateTracker.DeleteObject("ObjectId", "projectId",  "client")
         expect(fakeDelete).toHaveBeenCalled()
     })
 
@@ -313,7 +313,7 @@ describe("checkout system", () => {
     it("allows an object to be checked out", async ()=>{
         let fakeCheckout = jest.fn(() => true)
         RoomManager.checkoutObject = fakeCheckout;
-        await StateTracker.CheckoutObject("projectId", "objectId", "user", "client")
+        await StateTracker.CheckoutObject("projectId", "objectId", "client")
         expect(fakeCheckout).toHaveBeenCalled()
 
     })
@@ -321,7 +321,7 @@ describe("checkout system", () => {
     it("allows an object to be checked in", async () => {
         let fakeCheckin = jest.fn(() => true)
         RoomManager.checkinObject = fakeCheckin;
-        await StateTracker.CheckinObject("projectId", "objectId", "user", "client")
+        await StateTracker.CheckinObject("projectId", "objectId", "client")
         expect(fakeCheckin).toHaveBeenCalled()
     })
     
