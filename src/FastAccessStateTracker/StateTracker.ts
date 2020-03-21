@@ -1,26 +1,17 @@
 import { FlowObject } from "./FlowLibrary/FlowObject";
 import { FlowProject } from "./FlowLibrary/FlowProject";
-
-
-import { RoomManager } from "./RoomManager";
-
-import { TypeORMDatabase } from "./Database/TypeORMDatabase"
-import { UserOperations } from "../ORMCommands/user";
-import { ProjectOperations } from "../ORMCommands/project";
-import { Room } from "./Room";
 import { FlowBehavior } from "./FlowLibrary/FlowBehavior";
 
-
-  
+import { RoomManager } from "./RoomManager";
+import { TypeORMDatabase } from "./Database/TypeORMDatabase"
 
 // TODO: Add logging system
-// TODO: Add checkout system 
 
 // Note: FAM is used to abbreviate "Fast Access Memory"
 
 /**
- * Keeps track of the state of the project, allowing for faster access to data while
- * storing data to the database in the
+ * Keeps track of the state of the project, allowing for faster access 
+ * to data while storing data to the database when necessary
  */
 
 export class StateTracker{
@@ -72,13 +63,13 @@ export class StateTracker{
 
   // TODO: finished: yes tested: yes
   /**
-   * Deletes the project from the FAM and the database
+   * Deletes the project from the FAM and the database - assumes that nobody is in the room
    * @param projectToDeleteId
    */
   public static async DeleteProject(projectToDeleteId: string, user: string, client: string) : Promise<[any, Array<string>]>
   {    
 
-    if(! await ProjectOperations.findProject(projectToDeleteId))
+    if(RoomManager.FindRoom == undefined || ! await TypeORMDatabase.GetProject(projectToDeleteId))
       return [ false, [client] ];
 
     // remove roomManager, get the list of all affected users/clients
@@ -87,21 +78,6 @@ export class StateTracker{
     // Remove project from database 
     await TypeORMDatabase.DeleteProject(projectToDeleteId);
 
-   /* let clientIds : Array<string> = [];
-    clientIds.push(client);
-
-    clients.forEach((userClients: Array<string>, user: string, map) =>{
-      
-      // add clients of a given user to the list of clients to send back
-      clientIds.concat(userClients)
-
-      // move the clients into limbo
-      userClients.forEach((client, index, arr) => {
-        this.currentUsers.get(user).set(client, "noRoom")
-      });
-
-    });
-*/
     return [true, [client] ];
   }
 
@@ -113,7 +89,7 @@ export class StateTracker{
    */
   public static async FetchProjects(username: string, client: string) : Promise<[any, Array<string>]>
   {    
-    let projects = await ProjectOperations.fetchProjects(username);
+    let projects = await TypeORMDatabase.fetchProjects(username);
 
     return [projects, [client] ];
   }
@@ -181,7 +157,6 @@ export class StateTracker{
   public static async CreateUser(username: string, password: string, client: string) : Promise<[any, Array<string>]>
   { 
     let success = false;
-    console.log("Username is " + username+ " password is " + password)
     await TypeORMDatabase.CreateUser(username, password)
 
     return [!success, [client] ];
@@ -253,7 +228,7 @@ export class StateTracker{
     RoomManager.JoinRoom("noRoom", userName, ClientId)
 
 
-    let projects = await ProjectOperations.fetchProjects(userName);
+    let projects = await TypeORMDatabase.fetchProjects(userName);
 
     return [true, affectedClients, projects];    
   }
@@ -417,7 +392,6 @@ export class StateTracker{
     let roomClients = await RoomManager.getClients(projectId)  
     roomClients.forEach((clients, username, map) => {
       affectedClients = affectedClients.concat(clients)
-      console.log(clients)
     })
 
     return [objectToCreate, affectedClients]
@@ -505,7 +479,6 @@ export class StateTracker{
     
     roomClients.forEach((clients, username, map) => {
       affectedClients = affectedClients.concat(clients)
-      console.log(clients)
     })
 
     let retval = {MessageType: "CreateBehavior", object: behaviorToCreate}

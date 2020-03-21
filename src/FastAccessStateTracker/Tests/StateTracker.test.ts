@@ -59,7 +59,7 @@ const TypeORMProjectGetMock = jest.fn( async (projectToGet: string) => {
 });
 TypeORMDatabase.GetProject = TypeORMProjectGetMock;
 
-ProjectOperations.fetchProjects = jest.fn( async () => [])
+TypeORMDatabase.fetchProjects = jest.fn( async () => [])
 
 let checkoutManager : Map<string, string> = new Map<string, string>();
 
