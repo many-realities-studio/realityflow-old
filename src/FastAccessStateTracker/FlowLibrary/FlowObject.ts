@@ -1,7 +1,5 @@
 import { Color } from "./Color";
 
-const uuidv4 = require('uuid/v4');
-
 export class FlowObject
 {
   // Data the FlowObject stores

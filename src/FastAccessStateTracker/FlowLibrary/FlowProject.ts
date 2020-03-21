@@ -30,16 +30,21 @@ export class FlowProject
   public AddObject(objectToAdd: FlowObject) 
   {
     this._ObjectList.push(objectToAdd);
+    return true;
   }
 
   /**
    * Removes an object from the list of available objects
    * @param objectToRemove 
    */
-  public DeleteObject(objectToRemove: string): void
+  public DeleteObject(objectToRemove: string, user:string, client: string) 
   {
-    const index = this._ObjectList.findIndex((element) => element.Id == objectToRemove);
-    this._ObjectList.splice(index)
+    let index = this._ObjectList.findIndex((element) => element.Id == objectToRemove);
+    if(index > -1 && this._ObjectList[index].CurrentCheckout == client){
+      this._ObjectList.splice(index);
+      return true;
+    }
+    else return false
   }
 
   /**
@@ -51,18 +56,6 @@ export class FlowProject
     return this._ObjectList.find(element => element.Id == objectId);
   }
 
-
-  /**
-   * Creates an object and attaches it to the desired project in both the FAM and the Database
-   * @param objectToCreate 
-   */
-  public CreateObject(objectToCreate: FlowObject) : void
-  {
-    // Save for fast access
-    this.AddObject(objectToCreate);
-    
-  }
-
   /**
    * sets an object to "checked out," preventing another user from checking out/editing that object
    * @param objectId 
@@ -70,7 +63,14 @@ export class FlowProject
    * @param client 
    */
   public CheckoutObject(objectId: string, client: string){
-    this._ObjectList.find(element => element.Id == objectId).CurrentCheckout = client;
+    let obj = this._ObjectList.find(element => element.Id == objectId);
+    
+    if (obj != undefined && obj.CurrentCheckout == null){
+      this._ObjectList.find(element => element.Id == objectId).CurrentCheckout = client;
+      return true
+    }
+    
+    else return false
   }
 
 
@@ -78,8 +78,13 @@ export class FlowProject
    * sets an object to "checked in," preventing another user from checking out/editing that object
    * @param objectId 
    */
-  public CheckinObject(objectId: string){
-    this._ObjectList.find(element => element.Id == objectId).CurrentCheckout = null;
+  public CheckinObject(objectId: string, client){
+    let obj = this._ObjectList.find(element => element.Id == objectId);
+    if(obj != undefined && obj.CurrentCheckout == client){
+      obj.CurrentCheckout = null;
+      return true;
+    }
+    else return false;
   }
 
     /**
@@ -94,16 +99,15 @@ export class FlowProject
    * Updates the object in the FAM without saving to the database
    * @param newObject 
    */
-  public UpdateFAMObject(newObject: FlowObject) : void
+  public UpdateFAMObject(newObject: FlowObject, user: string, client: string) 
   {
-    console.log("object list is " + this._ObjectList)
-    console.log("Object Id is " + newObject.Id)
     // Get the object that we are changing from the specified project
-    var oldObject: FlowObject = this.GetObject(newObject.Id);
-
-    // Update all properties of the old object to the new object.
-    oldObject.UpdateProperties(newObject);
-
+    var oldObject: FlowObject = this._ObjectList.find(element => element.Id == newObject.Id);
+    if(oldObject != undefined && oldObject.CurrentCheckout == client){
+      oldObject.UpdateProperties(newObject);
+      return true;
+    }
+    else return false;
   }
 
   /**

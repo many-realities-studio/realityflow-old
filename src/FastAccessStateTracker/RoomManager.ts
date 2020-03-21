@@ -1,4 +1,5 @@
 import { Room } from "./Room";
+import { FlowObject } from "./FlowLibrary/FlowObject";
 
 // TODO: Make a check for how many people are in a room and delete the room if there is nobody inside
 export class RoomManager
@@ -8,7 +9,7 @@ export class RoomManager
   public static _RoomList : Array<Room> = [];
   public static _RoomCount : number = 0;
 
-  // TODO: finished: yes Tested: yes
+  // TEST
   /**
    * Creates a new room. This room must be tied to a project.
    * @param projectId aka the room code
@@ -93,4 +94,33 @@ export class RoomManager
     let room = this.FindRoom(roomCode);
     return room.getClients();
   }
+
+  public static updateObject(objectToUpdate: FlowObject, projectId: string, user:string, client:string){
+    let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
+    return room.updateObject(objectToUpdate, user, client)
+  }
+
+  public static AddObject(objectToCreate: FlowObject, projectId:string){
+    return this._RoomList.find(element => element.GetRoomCode() == projectId).AddObject(objectToCreate)
+  }
+
+  public static DeleteObject(projectId: string, objectId: string, user:string, client:string){
+    let success = this._RoomList.find(element => element.GetRoomCode() == projectId).DeleteObject(objectId, user, client);
+    return success
+  }
+
+  public static ReadObject(projectId:string, objectId:string){
+    this._RoomList.find(element => element.GetRoomCode() == projectId).ReadObject(objectId);
+  }
+
+  public static checkoutObject(projectId: string, objectId: string, user: string, client: string){
+    let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
+    return room.checkoutObject(objectId, user, client);
+  }
+
+  public static checkinObject(projectId: string, objectId: string, user: string, client: string){
+    let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
+    return room.checkinObject(objectId, user, client)
+  }
+
 }
