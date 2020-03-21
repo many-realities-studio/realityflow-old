@@ -303,8 +303,7 @@ class Command_JoinRoom implements ICommand
     let returnData = await StateTracker.JoinRoom(data.ProjectId, data.FlowUser.Username, client); 
     let returnContent = {
       "MessageType": "JoinRoom",
-      "WasSuccessful": true,
-      "Message":returnData[0]
+      "WasSuccessful": true
     }
 
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
