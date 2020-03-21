@@ -191,7 +191,6 @@ class Command_CreateUser implements ICommand
   {
     let returnData = await StateTracker.CreateUser(data.FlowUser.Username, data.FlowUser.Password, client);
     let returnContent = {
-      "Message": "message",
       "MessageType": "CreateUser",
       "WasSuccessful": returnData[0]
     }
@@ -241,7 +240,6 @@ class Command_LogoutUser implements ICommand
   {
     let returnData = await StateTracker.LogoutUser(data.FlowUser.Username, data.FlowUser.Password, client);
     let returnContent = {
-      "Message": "message",
       "MessageType": "LogoutUser",
       "WasSuccessful": returnData[0]
     }
@@ -302,7 +300,7 @@ class Command_JoinRoom implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
   {
-    let returnData = await StateTracker.JoinRoom(data.Project.Id, data.User.Username, client); 
+    let returnData = await StateTracker.JoinRoom(data.ProjectId, data.FlowUser.Username, client); 
     let returnContent = {
       "MessageType": "JoinRoom",
       "WasSuccessful": true,
@@ -355,6 +353,7 @@ class Command_CreateObject implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
     let flowObject = new FlowObject(data.FlowObject);
+    flowObject.Id = uuidv4();
     
     console.log(flowObject)
 
@@ -374,8 +373,7 @@ class Command_DeleteObject implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let flowObject = new FlowObject(data.flowObject);
-    let returnData = await StateTracker.DeleteObject(flowObject.Id, data.ProjectId, client);
+    let returnData = await StateTracker.DeleteObject(data.ObjectId, data.ProjectId, client);
     let returnContent = {
       "MessageType": "DeleteObject",
       "ObjectId": returnData[0],
