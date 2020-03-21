@@ -4,42 +4,48 @@ import { FlowUser } from "../FlowLibrary/FlowUser"
 import TypeORMDatabase from "../Database/TypeORMDatabase"
 import { RoomManager } from "../RoomManager"
 import { FlowProject } from "../FlowLibrary/FlowProject"
+import { Project } from "../../entity/project"
+import { FlowObject } from "../FlowLibrary/FlowObject"
 
 const databaseUserCreationMock = jest.fn()
 
-let roomManager : Map<string, Map<string, Array<string> > >
+let roomManager : Map<string, Map<string, Array<string> > >;
 
-jest.mock('../Database/TypeORMDatabase')
-jest.mock('../RoomManager')
 
-const fakeJoinRoom = jest.fn(async(roomCode: string, username:string, client: string) => {})
-RoomManager.JoinRoom = fakeJoinRoom 
 
-const fakeLeaveRoom = jest.fn(async(roomCode: string, username:string, client: string) => {})
-RoomManager.LeaveRoom = fakeLeaveRoom 
+jest.mock('../Database/TypeORMDatabase');
+jest.mock('../RoomManager');
 
-const fakeDestroyRoom = jest.fn((roomCode:string) => new Map<string, Array<string>>())
-RoomManager.DestroyRoom = fakeDestroyRoom
+const fakeJoinRoom = jest.fn(async(roomCode: string, username:string, client: string) => {});
+RoomManager.JoinRoom = fakeJoinRoom ;
+
+const fakeLeaveRoom = jest.fn(async(roomCode: string, username:string, client: string) => {});
+RoomManager.LeaveRoom = fakeLeaveRoom;
+
+const fakeDestroyRoom = jest.fn((roomCode:string) => new Map<string, Array<string>>());
+RoomManager.DestroyRoom = fakeDestroyRoom;
 
 const fakeGetClients = jest.fn((roomCode) => {
     let x = new Map<string, Array<string>>()
     x.set("testUser", ["testClient1", "testClient2"])
     return x
-})
-RoomManager.getClients = fakeGetClients
+});
+RoomManager.getClients = fakeGetClients;
 
-const fakeAuthentication = jest.fn(async (username:string, password:string) => true)
-TypeORMDatabase.AuthenticateUser = fakeAuthentication
+const fakeAuthentication = jest.fn(async (username:string, password:string) => true);
+TypeORMDatabase.AuthenticateUser = fakeAuthentication;
 
-const TypeORMProjectDeleteMock = jest.fn(async (projectToDelete: string) => {})
-TypeORMDatabase.DeleteProject = TypeORMProjectDeleteMock
+const TypeORMProjectDeleteMock = jest.fn(async (projectToDelete: string) => {});
+TypeORMDatabase.DeleteProject = TypeORMProjectDeleteMock;
 
-const TypeORMUserDeleteMock = jest.fn(async (userToDelete: string) => {})
-TypeORMDatabase.DeleteUser = TypeORMUserDeleteMock
+const TypeORMUserDeleteMock = jest.fn(async (userToDelete: string) => {});
+TypeORMDatabase.DeleteUser = TypeORMUserDeleteMock;
 
-const TypeORMProjectCreateMock = jest.fn( async (projectToCreate: FlowProject) => {} )  
-//TypeORMDatabase.CreateProject = TypeORMProjectCreateMock
+const TypeORMProjectCreateMock = jest.fn( async (projectToCreate: FlowProject) => {return new Project()});
+TypeORMDatabase.CreateProject = TypeORMProjectCreateMock;
 
+const TypeORMObjectCreateMock = jest.fn( async (objectToCreate: FlowObject, projectId: string) => {});
+TypeORMDatabase.CreateObject = TypeORMObjectCreateMock;
 
 const TypeORMProjectGetMock = jest.fn( async (projectToGet: string) => {
     return new FlowProject({
@@ -48,9 +54,10 @@ const TypeORMProjectGetMock = jest.fn( async (projectToGet: string) => {
         DateModified: Date.now(),
         ProjectName: "hello"
     })
-})
-TypeORMDatabase.GetProject = TypeORMProjectGetMock
+});
+TypeORMDatabase.GetProject = TypeORMProjectGetMock;
 
+let checkoutManager : Map<string, string> = new Map<string, string>();
 
 describe("User", () => {
     it("can be created", async () => {
@@ -217,9 +224,81 @@ describe("Project", () => {
         // arrange
 
         // act
-       // await StateTracker.OpenProject("newProject")
+        await StateTracker.OpenProject("newProject", "testUser", "testClient")
         // assert
         expect(TypeORMProjectGetMock).toBeCalledWith("newProject")
     })
 
+})
+
+describe("Object", () => {
+    it("Can be created", async () =>{
+
+        var createdObject = new FlowObject({
+            Id:             "createdObjectId",
+            name:           "object1",
+            X:              3,
+            Y:              1,
+            Z:              1,
+            Q_x:            1,
+            Q_y:            1,
+            Q_z:            1,
+            Q_w:            1,
+            S_x:            1,
+            S_y:            1,
+            S_z:            1,
+            R:              1,
+            G:              1,
+            B:              1,
+            A:              1,
+        })
+        
+        await StateTracker.CreateObject(createdObject, "projectId") 
+
+        expect(TypeORMObjectCreateMock).toHaveBeenCalled()
+
+    })
+
+    it("Can be read", () => {
+
+    })
+
+    it("can be updated", () =>{
+
+    })
+
+    it("can be deleted", () => {
+
+    })
+
+
+})
+
+describe("checkout system", () => {
+    
+    
+    it("allows an object to be checked out", ()=>{
+        // arrange
+        // act
+        // assert
+
+    })
+
+    it("allows an object to be checked in", () => {
+        // arrange
+        // act
+        // assert
+    })
+    
+})
+
+
+describe("Behavior", () => {
+    it("Can be created", () => {
+
+    })
+
+    it("can be deleted", () => {
+
+    })
 })
