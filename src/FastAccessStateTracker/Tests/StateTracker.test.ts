@@ -6,6 +6,7 @@ import { RoomManager } from "../RoomManager"
 import { FlowProject } from "../FlowLibrary/FlowProject"
 import { Project } from "../../entity/project"
 import { FlowObject } from "../FlowLibrary/FlowObject"
+import { ProjectOperations } from "../../ORMCommands/project"
 
 const databaseUserCreationMock = jest.fn()
 
@@ -15,6 +16,7 @@ let roomManager : Map<string, Map<string, Array<string> > >;
 
 jest.mock('../Database/TypeORMDatabase');
 jest.mock('../RoomManager');
+jest.mock('../../ORMCommands/project')
 
 const fakeJoinRoom = jest.fn(async(roomCode: string, username:string, client: string) => {});
 RoomManager.JoinRoom = fakeJoinRoom ;
@@ -56,6 +58,8 @@ const TypeORMProjectGetMock = jest.fn( async (projectToGet: string) => {
     })
 });
 TypeORMDatabase.GetProject = TypeORMProjectGetMock;
+
+ProjectOperations.fetchProjects = jest.fn( async () => [])
 
 let checkoutManager : Map<string, string> = new Map<string, string>();
 
@@ -202,7 +206,7 @@ describe("Project", () => {
             Client: "yashsClient"
         }
         var testFlowProject = new FlowProject(testProject)
-
+        await StateTracker.LoginUser(testUser.Username, testUser.Password, testUser.Client)
         // act
         await StateTracker.CreateProject(testFlowProject, testUser.Username, testUser.Client)
 
@@ -211,8 +215,8 @@ describe("Project", () => {
     })
 
     it("can be deleted", async () => {
-
-        await StateTracker.DeleteProject("testProject", "fakeUser", "fakeClient")
+        await StateTracker.LoginUser("testUser", "password", "testClient")
+        await StateTracker.DeleteProject("testProject", "testUser", "testClient")
 
         // ngl this kinda feels stupid but woo bottom-up testing
         expect(fakeDestroyRoom).toBeCalledWith("testProject")
@@ -222,7 +226,7 @@ describe("Project", () => {
 
     it("can be opened", async () => {
         // arrange
-
+        await StateTracker.LoginUser("testUser", "password", "testClient")
         // act
         await StateTracker.OpenProject("newProject", "testUser", "testClient")
         // assert
@@ -259,16 +263,45 @@ describe("Object", () => {
 
     })
 
-    it("Can be read", () => {
-
+    it("Can be read", async () => {
+        let fakeRead = jest.fn(() => true)
+        RoomManager.ReadObject = fakeRead;
+        await StateTracker.ReadObject("ObjectId", "projectId", "client")
+        expect(fakeRead).toHaveBeenCalled()
     })
 
-    it("can be updated", () =>{
+    it("can be updated", async () =>{
+        let fakeUpdate = jest.fn(() => true)
+        RoomManager.updateObject = fakeUpdate;
 
+        var updatedObject = new FlowObject({
+            Id:             "updatedObjectId",
+            name:           "object1",
+            X:              3,
+            Y:              1,
+            Z:              1,
+            Q_x:            1,
+            Q_y:            1,
+            Q_z:            1,
+            Q_w:            1,
+            S_x:            1,
+            S_y:            1,
+            S_z:            1,
+            R:              1,
+            G:              1,
+            B:              1,
+            A:              1,
+        })
+
+        await StateTracker.UpdateObject(updatedObject, "projectId", "user", "client")
+        expect(fakeUpdate).toHaveBeenCalled()
     })
 
-    it("can be deleted", () => {
-
+    it("can be deleted", async () => {
+        let fakeDelete = jest.fn(() => true)
+        RoomManager.DeleteObject = fakeDelete;
+        await StateTracker.DeleteObject("ObjectId", "projectId", "user", "client")
+        expect(fakeDelete).toHaveBeenCalled()
     })
 
 
@@ -277,17 +310,19 @@ describe("Object", () => {
 describe("checkout system", () => {
     
     
-    it("allows an object to be checked out", ()=>{
-        // arrange
-        // act
-        // assert
+    it("allows an object to be checked out", async ()=>{
+        let fakeCheckout = jest.fn(() => true)
+        RoomManager.checkoutObject = fakeCheckout;
+        await StateTracker.CheckoutObject("projectId", "objectId", "user", "client")
+        expect(fakeCheckout).toHaveBeenCalled()
 
     })
 
-    it("allows an object to be checked in", () => {
-        // arrange
-        // act
-        // assert
+    it("allows an object to be checked in", async () => {
+        let fakeCheckin = jest.fn(() => true)
+        RoomManager.checkinObject = fakeCheckin;
+        await StateTracker.CheckinObject("projectId", "objectId", "user", "client")
+        expect(fakeCheckin).toHaveBeenCalled()
     })
     
 })
