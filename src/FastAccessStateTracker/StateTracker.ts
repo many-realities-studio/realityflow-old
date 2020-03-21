@@ -361,7 +361,6 @@ export class StateTracker{
     affectedClients.push(client);
     return[project, affectedClients];
 
-
   } 
 
 
@@ -387,13 +386,10 @@ export class StateTracker{
 
     // get all of the clients that are in that room so that we can tell them 
     let clients = await RoomManager.getClients(roomCode)
-
     clients.forEach((value: string[], key: string) => {
-      
       value.forEach((client: string) => {
         affectedClients.push(client);
       })
-      
     });
 
     // to differentiate multiple clients under same user
@@ -413,57 +409,48 @@ export class StateTracker{
    */
   public static async CreateObject(objectToCreate : FlowObject, projectId: string) : Promise<[any, Array<string>]>
   {
-    RoomManager.FindRoom(projectId)
-                .GetProject()
-                .AddObject(objectToCreate);
-  
+    let FAMSucccess = RoomManager.AddObject(objectToCreate, projectId);
     TypeORMDatabase.CreateObject(objectToCreate, projectId)
 
-    let affectedClients: Array<string> = [];
-
     // get all of the clients that are in that room so that we can tell them 
-    let roomClients = await RoomManager.getClients(projectId)
-    
+    let affectedClients: Array<string> = [];
+    let roomClients = await RoomManager.getClients(projectId)  
     roomClients.forEach((clients, username, map) => {
       affectedClients = affectedClients.concat(clients)
       console.log(clients)
     })
 
-    let retval = {MessageType: "CreateObject", object: objectToCreate}
     return [objectToCreate, affectedClients]
   }
 
   public static async CheckoutObject(projectId: string, objectId: string, user: string, client: string){
     // make sure the object is available for checkout
-    if(RoomManager.FindRoom(projectId).GetProject().GetObjectHolder(objectId) != null)
+    let success = RoomManager.checkoutObject(projectId, objectId, user, client);
+    if(success)
+      return["Checkout successful", [client]]
+    else
       return["Cannot check out object", [client]]
-
-    RoomManager.FindRoom(projectId).GetProject().CheckoutObject(objectId, client)
-
   }
 
   public static async CheckinObject(projectId: string, objectId: string, user: string, client: string){
     // make sure the actual person that checked an object out is the one checking it back in
-    if(RoomManager.FindRoom(projectId).GetProject().GetObjectHolder(objectId) != client)
+    let success = RoomManager.checkinObject(projectId, objectId, user, client)
+    if(success)
+      return["Checkin successful", [client]]
+    else
       return["Cannot check in object", [client]]
-
-    RoomManager.FindRoom(projectId).GetProject().CheckinObject(objectId)
   }
 
-  public static async DeleteObject(objectId: string, projectId: string, client: string) : Promise<[any, Array<string>]>
+  public static async DeleteObject(objectId: string, projectId: string, user:string, client: string) : Promise<[any, Array<string>]>
   {
 
-    RoomManager.FindRoom(projectId)
-                .GetProject()
-                .DeleteObject(objectId);
-
+    // Perform the delete in both the FAM and the Database
+    RoomManager.DeleteObject(projectId, objectId, user, client);
     TypeORMDatabase.DeleteObject(objectId, projectId)
 
-    let affectedClients: Array<string> = [];
-
     // get all of the clients that are in that room so that we can tell them 
+    let affectedClients: Array<string> = [];
     let roomClients = await RoomManager.getClients(projectId)
-
     roomClients.forEach((clients, username, map) => {
       affectedClients = affectedClients.concat(clients)
     })
@@ -478,38 +465,28 @@ export class StateTracker{
    * @param client client Id to make sure they have the object checked out
    * @param saveToDatabase Flag to save the object update to the database 
    */
-  public static async UpdateObject(objectToUpdate : FlowObject, projectId: string, client: string, saveToDatabase:boolean=false) : Promise<[any, Array<string>]>
-  {
-
-    RoomManager.FindRoom(projectId)
-                .GetProject()
-                .UpdateFAMObject(objectToUpdate);
-
-    let affectedClients: Array<string> = [];
-
+  public static async UpdateObject(objectToUpdate : FlowObject, projectId: string, user: string, client: string, saveToDatabase:boolean=false) : Promise<[any, Array<string>]>
+  {  
+    // perform the updates
+    let famSuccess = RoomManager.updateObject(objectToUpdate, projectId, user, client);
+    if(!famSuccess)
+      return ["could not update object", [client]]
     if(saveToDatabase)
       TypeORMDatabase.UpdateObject(objectToUpdate, projectId)
 
     // get all of the clients that are in that room so that we can tell them 
+    let affectedClients: Array<string> = [];
     let roomClients = await RoomManager.getClients(projectId)
-
     roomClients.forEach((clients, username, map) => {
       affectedClients = affectedClients.concat(clients)
     })
 
-    return [RoomManager.FindRoom(projectId)
-      .GetProject().GetObject(objectToUpdate.Id) , affectedClients]
+    return [objectToUpdate , affectedClients]
   }
 
-  public static async ReadObject(objectToReadId: string, projectId: string, client: string) :  Promise<[any, Array<string>]>
+  public static async ReadObject(objectId: string, projectId: string, client: string) :  Promise<[any, Array<string>]>
   {
-    let objectRead : FlowObject = null;
-    let objectList = RoomManager.FindRoom(projectId)
-              .GetProject()._ObjectList;
-    objectList.forEach( object => {
-      if(object.Id == objectToReadId)
-        objectRead = object;
-    });
+    let objectRead = RoomManager.ReadObject(projectId, objectId)
     return [objectRead, [client]];
   }
 
