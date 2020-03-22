@@ -392,22 +392,20 @@ export class StateTracker{
     return [objectToCreate, affectedClients]
   }
 
-  public static async CheckoutObject(projectId: string, objectId: string, client: string){
+  public static async CheckoutObject(projectId: string, objectId: string, client: string) : Promise<[any, Array<string>]>
+  {
     // make sure the object is available for checkout
     let success = RoomManager.checkoutObject(projectId, objectId, client);
-    if(success)
-      return["Checkout successful", [client]]
-    else
-      return["Cannot check out object", [client]]
+    
+    return[success, [client]]
   }
 
-  public static async CheckinObject(projectId: string, objectId: string, client: string){
+  public static async CheckinObject(projectId: string, objectId: string, client: string) : Promise<[any, Array<string>]>
+  {
     // make sure the actual person that checked an object out is the one checking it back in
     let success = RoomManager.checkinObject(projectId, objectId, client)
-    if(success)
-      return["Checkin successful", [client]]
-    else
-      return["Cannot check in object", [client]]
+     
+    return[success, [client]]
   }
 
   public static async DeleteObject(objectId: string, projectId: string, client: string) : Promise<[any, Array<string>]>
@@ -560,12 +558,13 @@ export class StateTracker{
   {
     let affectedClients: Array<string> = [];
     let room = RoomManager.FindRoom(projectId);
+    let success = false;
     if(toggle)
     {
-      room.turnOnPlayMode();
+      success = room.turnOnPlayMode();
     } else 
     {
-      room.turnOffPlayMode();
+      success = room.turnOffPlayMode();
     }
 
     let roomClients = room.getClients();
@@ -573,7 +572,6 @@ export class StateTracker{
       {
         affectedClients = affectedClients.concat(clients)
       });
-
-    return [true, affectedClients];
+    return [success, affectedClients];
   }
 }
