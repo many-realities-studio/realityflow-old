@@ -47,7 +47,7 @@ gulp.task('webpack', () => {
 
 gulp.task("build-app", function () {
     console.log("Rebulding app");
-    return gulp.src('src/**/*.ts')
+    return gulp.src('src/**/**/*.ts')
         .pipe(tsProject(tsc.reporter.longReporter()))
         .pipe(gulp.dest("node/server/bld/"))
 });
@@ -203,7 +203,7 @@ gulp.task('watch', ['build-app'], function () {
     // Watch HTML and livereload
     gulp.watch(['./static/index.html', './static/js/flow.js', './static/js/client_interface.js',
         './static/js/flow_common.js'], ['editor']);
-    gulp.watch(['./src/**/*.ts'], ['build-app']);
+    gulp.watch(['./src/**/**/*.ts'], ['build-app']);
     gulp.watch(['./node/server/bld/server.js'], ['run-server']);
     //gulp.watch(['./server/static/flow-extensions/*.html', './server/static/flow-extensions/*.js'], ['extension-update']);
     //gulp.watch(['./server/static/modules/**/*.html', './server/static/modules/**/ *.js'], ['module-update']);
