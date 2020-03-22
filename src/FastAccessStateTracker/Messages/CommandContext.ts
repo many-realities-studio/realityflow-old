@@ -30,9 +30,9 @@ class Command_CreateProject implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
   {
-    data.Project.Id = uuidv4();
+    data.FlowProject.Id = uuidv4();
 
-    let project : FlowProject = new FlowProject(data.Project);
+    let project : FlowProject = new FlowProject(data.FlowProject);
 
     let returnData = await StateTracker.CreateProject(project, data.FlowUser.Username, client);
 
@@ -368,6 +368,38 @@ class Command_CreateObject implements ICommand
   }
 }
 
+class Command_CheckinObject implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+  {
+    let returnData = await StateTracker.CheckinObject(data.FlowProjectId, data.FlowObjectId, client)
+    let returnContent = {
+      "MessageType": "CheckinObject",
+      "WasSuccessful": returnData[0]
+    }
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
+
+    return returnMessage;
+
+  }
+}
+
+class Command_CheckoutObject implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+  {
+    let returnData = await StateTracker.CheckoutObject(data.FlowProjectId, data.FlowObjectId, client)
+    let returnContent = {
+      "MessageType": "CheckoutObject",
+      "WasSuccessful": returnData[0]
+    }
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
+
+    return returnMessage;
+
+  }
+}
+
 class Command_DeleteObject implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
@@ -475,22 +507,6 @@ class Command_DeleteBehavior implements ICommand
   }
 }
 
-class Command_UpdateBehavior implements ICommand
-{
-  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
-  {
-    let flowBehavior = new FlowBehavior(data.flowBehavior);
-    let returnData = await StateTracker.UpdateBehavior(flowBehavior, data.ProjectId, client);
-    let returnContent = {
-      "MessageType": "UpdateBehavior",
-      "FlowBehavior": returnData[0],
-      "WasSuccessful": (returnData[0] == null) ? false: true,
-    }
-    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
-
-    return returnMessage;
-  }
-}
 
 class Command_ReadBehavior implements ICommand
 {
@@ -585,11 +601,12 @@ export class CommandContext
       this._CommandList.set("UpdateObject", new Command_UpdateObject());
       this._CommandList.set("FinalizedUpdateObject", new Command_FinalizedUpdateObject());
       this._CommandList.set("ReadObject", new Command_ReadObject());
+      this._CommandList.set("CheckinObject", new Command_CheckinObject());
+      this._CommandList.set("CheckoutObject", new Command_CheckoutObject());
 
       // Behavior Commands
       this._CommandList.set("CreateBehavior", new Command_CreateBehavior());
       this._CommandList.set("DeleteBehavior", new Command_DeleteBehavior());
-      this._CommandList.set("UpdateBehavior", new Command_UpdateBehavior());
       this._CommandList.set("ReadBehavior", new Command_ReadBehavior());
 
       // PlayMode Commands

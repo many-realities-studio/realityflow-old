@@ -145,16 +145,23 @@ export class Room
   }
 
   // TODO: finished: yes tested: yes
-  public checkoutObject(objectId: string, client: string): boolean{
+  public checkoutObject(objectId: string, client: string): boolean
+  {
     return this._CurrentProject.CheckoutObject(objectId, client)
   }
-  public turnOnPlayMode() 
+  public turnOnPlayMode() : boolean
   {
+    if(this.PlayMode == true)
+      return false;
     this.PlayMode = true;
+    return true;
   }
-  public turnOffPlayMode()
+  public turnOffPlayMode() : boolean
   {
+    if(this.PlayMode == false)
+      return false;
     this.PlayMode = false;
+    return true;
   }
 
 }
