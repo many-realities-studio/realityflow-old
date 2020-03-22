@@ -1,0 +1,29 @@
+{
+    "name": "strformat",
+    "main": "strformat.js",
+    "version": "0.0.7",
+    "homepage": "https://github.com/fhellwig/strformat",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/fhellwig/strformat.git"
+    },
+    "authors": [
+        "Frank Hellwig <frank@hellwig.org>"
+    ],
+    "description": "String formatting for Node.js and AngularJS.",
+    "keywords": [
+        "string",
+        "format"
+    ],
+    "license": "MIT",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ],
+    "dependencies": {
+        "angular": ">=1.3.0"
+    }
+}

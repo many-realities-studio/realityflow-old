@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "target": "ES6",
+        "module": "commonjs",
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "noEmitOnError": true,
+        "sourceMap": true,
+        "outDir": "../static/js/"
+    },
+    "exclude": [
+        "**/*.spec.ts",
+        "**/node_modules",
+        "**web-client"
+    ]
+}

@@ -1,0 +1,231 @@
+.panel-body {
+  padding:0px;
+
+}
+#activeProjectNav {
+    font-size:26px;
+    padding:0px;
+    margin-top:5px;
+    margin-bottom:5px;
+    color:white;
+}
+#activeBubbleNav {
+    color:white;
+    font-size:22px;
+    padding:0px;
+    vertical-align: center;
+    margin-top:8px;
+    margin-bottom:8px;
+}
+.project > .thumbnail {
+    cursor: pointer;
+    margin:2px;
+    background-color:lightgray;
+}
+.thumbnail img {
+    background-color:black;
+}
+
+.project > .thumbnail:hover {
+    background-color:white;
+}
+.navbar-nav li {
+  font-size:1.1em;
+  vertical-align: center;
+}
+
+.navbar-nav .glyphicon {
+    padding-right:.8em;
+}
+
+html,body {
+    height: 100%;
+    /* overflow-y: hidden; */
+}
+
+.caption > h3 {
+  font-size:5hw;
+  font-weight: bold;
+}
+.caption > p {
+  font-size:4hw;
+}
+
+.navbar-right {
+    font-size:1.1em;
+    padding:10px;
+    margin:4px;
+}
+.navbar-right .glyphicon {
+    padding-right:6px;
+}
+@media (min-width: 768px){
+.navbar-right {
+    float: right!important;
+    margin-right: 0px;
+}}
+
+#projectHeader {
+  text-align:center;
+}
+
+#mainProjectPanel {
+  padding:10px;
+  width: 100%;
+}
+
+#projectListContainer {
+  padding:15px;
+}
+
+#projectListContainer > div {
+  padding:5px;
+}
+
+#projectListContainer div.thumbnail > img {
+  width:100%;
+  height:100px;
+}
+
+#projectListContainer > div > div {
+  background-color:lightgray;
+  padding-top:20px;
+}
+#projectsContainer,#statesContainer {
+  margin-top:50px;
+}
+#projectsContainer {
+  min-width: 100px;
+  max-width: 800px;
+  width:80%;
+  background-color: rgba(255, 255, 255, 0.9);
+  /* margin-bottom: 30px; */
+  /* margin-top: 50px; */
+}
+#editorContainer.container {
+    display:flex;
+    flex-grow:1;
+    flex-direction: row;
+    width: 100%;
+    margin-top: 50px;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+button {
+  align-self: center;
+}
+#editorLeftSideBar {
+  width: 170px;
+}
+#editor {
+  padding: 0px;
+  margin: 0px;
+}
+
+#editorRightSideBar {
+  width: 200px;
+}
+.clients > div {
+  padding-top:0px;
+  padding-bottom:0px;
+}
+.row .no-float {
+  display: table-cell;
+  float: none;
+}
+* {
+  margin: 0;
+  padding: 0;
+}
+body {
+  background-color: #333;
+  display: flex;
+  flex-direction: column;
+}
+canvas {
+  width: 100%;
+}
+#editorToolPalette {
+  height: 100px;
+  margin-top: -5px;
+}
+div#loadingBox {
+  height: 20px;
+  top: 50%;
+  margin-top: 14px;
+  margin-left: 100px;
+  text-align: center;
+}
+div#bgBar {
+  display: none;
+  width: 200px;
+  left: 50%;
+  height: 2px;
+  background-color: #FFF;
+  border-radius: 2px;
+}
+div#progressBar {
+  display: none;
+  left: 50%;
+  height: 2px;
+  background-color: #990000;
+  border-radius: 2px;
+}
+p#loadingInfo {
+  color: #FFF;
+  letter-spacing: 1px;
+  font-family: "Monaco", sans-serif;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 8px;
+  margin-top: 10px;
+}
+div#spinner {
+  /* position: absolute; */
+  height: 2px;
+  left: 50%;
+  margin-left: -100px;
+  width: 200px;
+  position: relative;
+  overflow: hidden;
+  background-color: #FFF;
+}
+div#spinner:before{
+  display: block;
+  position: absolute;
+  content: "";
+  left: -200px;
+  width: 200px;
+  height: 4px;
+  background-color: #990000;
+  animation: loading 2s linear infinite;
+}
+@keyframes loading {
+  from {left: -50%; width: 30%;}
+  50% {width: 30%;}
+  70% {width: 70%;}
+  80% { left: 50%;}
+  95% {left: 120%;}
+  to {left: 100%;}
+}
+.modal {
+  text-align: center;
+  padding: 0!important;
+}
+
+.modal:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -4px;
+}
+
+.modal-dialog {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
+}
+#projectListContainer > div > div.activeProject {
+    background-color:lightgreen;
+}

@@ -1,0 +1,44 @@
+<script>
+    if(!state_palette_loaded) {
+        window.addEventListener("flow_activateProject",loadStates);
+        state_palette_loaded=true;
+    }
+    function loadStates() {
+        //console.log("Loading states",activeProject.currentBubble.states);
+        $("#state_container").empty();
+        $.each(activeProject.currentBubble.states,function(index,state){
+            if(!document.getElementById(state._id))
+            $("#state_container").append($("<li class='list-group-item'><span class='btn btn-info btn-small btn-block active' id='"+state._id+"'>"+state.name+"</span></li>"));
+        });
+    }
+    if(activeProject != null) {
+        loadStates();
+    }
+    $("#state_container").on('click', '.btn.active', function(){
+        //console.log("Clicking the state!");
+    });
+    function newStateCreated(state) {
+        //console.log("Callback for New state!",state);
+    }
+    $("#newStateButton").click(function(){
+        //console.log("Create a new state");
+        remoteFunctionCall(commands.bubbles.DEFINE_STATE,"",newStateCreated);
+    });
+    function onNewState(newState) {
+        //console.log("Got a new state!",newState);
+        activeProject.startBubble.states.push(newState);
+        loadStates();
+    } 
+
+    registerListener(commands.states.NEW,onNewState);
+</script>
+<div class="panel panel-default">
+    <div class="panel panel-header">
+        <h4>State Palette</h4>
+    </div>
+    <div class="panel panel-body">
+        <span class="btn btn-block btn-success" id="newStateButton">New State</span>
+            <ul id="state_container" class="list-group">
+            </ul>
+    </div>
+</div>
