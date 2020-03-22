@@ -372,9 +372,10 @@ class Command_CheckinObject implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let returnData = await StateTracker.CheckinObject(data.FlowProjectId, data.FlowObjectId, client)
+    let returnData = await StateTracker.CheckinObject(data.ProjectId, data.ObjectId, client)
     let returnContent = {
       "MessageType": "CheckinObject",
+      "ObjectId": data.ObjectId,
       "WasSuccessful": returnData[0]
     }
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
@@ -388,10 +389,11 @@ class Command_CheckoutObject implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let returnData = await StateTracker.CheckoutObject(data.FlowProjectId, data.FlowObjectId, client)
+    let returnData = await StateTracker.CheckoutObject(data.ProjectId, data.ObjectId, client)
     let returnContent = {
       "MessageType": "CheckoutObject",
-      "WasSuccessful": returnData[0]
+      "WasSuccessful": returnData[0],
+      "ObjectId": data.ObjectId,
     }
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
 
