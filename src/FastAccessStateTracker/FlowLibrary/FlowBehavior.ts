@@ -5,25 +5,28 @@ export class FlowBehavior
 {
     public Name: string;
     public Id: string;
-    public TriggerObjectID: string;
-    public TargetObjectID: string;
-    public BehaviorChain: FlowBehavior;
-
+    public Trigger: string;
+    public Target: string;
+    public Index : number;
+    public ChainOwner: string;
     constructor(behavior: any)
     {
+        console.log(behavior)
         this.Name = behavior.Name;
         this.Id = behavior.Id;
-        this.TriggerObjectID = behavior.TriggerObjectID;
-        this.TargetObjectID = behavior.TargetObjectID;
-        this.BehaviorChain = new FlowBehavior(behavior.BehaviorChain);
+        this.Trigger = behavior.Trigger;
+        this.Target = behavior.Target;
+        this.ChainOwner = behavior.ChainOwner;
+        this.Index = behavior.Index;
     }
 
     public UpdateProperties(newBehavior: FlowBehavior)
     {
         this.Name = newBehavior.Name;
-        this.TriggerObjectID = newBehavior.TriggerObjectID;
-        this.TargetObjectID = newBehavior.TargetObjectID;
-        this.BehaviorChain = newBehavior.BehaviorChain;
+        this.Trigger = newBehavior.Trigger;
+        this.Target = newBehavior.Target;
+        this.Index = newBehavior.Index;
+        this.ChainOwner = newBehavior.ChainOwner;
     }
 
 }

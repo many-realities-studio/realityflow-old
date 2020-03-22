@@ -1,4 +1,5 @@
 import { Color } from "./Color";
+import { FlowBehavior } from "./FlowBehavior";
 
 export class FlowObject
 {
@@ -14,15 +15,16 @@ export class FlowObject
   public S_x:            Number;
   public S_y:            Number;
   public S_z:            Number;
-  public R: Number;
-  public G: Number;
-  public B: Number;
-  public A: Number;
+  public R:              Number;
+  public G:              Number;
+  public B:              Number;
+  public A:              Number;
 
   // Fields used for tracking this object in the FAM
   public Id: string; 
   public RoomNumber: number;
   public CurrentCheckout: string;
+  public behavior: Array<FlowBehavior>
 
   constructor(json: any)
   {    

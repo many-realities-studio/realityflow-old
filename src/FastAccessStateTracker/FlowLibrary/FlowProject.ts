@@ -13,7 +13,7 @@ export class FlowProject
   // Data storage fields
   public Id: string;
   public Description: string;
-  public DateModified: Number;
+  public DateModified: number;
   public ProjectName: string;
  
   constructor(json:any){
@@ -114,44 +114,43 @@ export class FlowProject
    * Adds behavior to project list for reference 
    * @param behaviorToAdd The behavior to add to the project
    */
-  public AddBehavior(behaviorToAdd: FlowBehavior)
+  public AddBehavior(objectId: string, behaviorToAdd: Array<FlowBehavior>)
   {
-    this._BehaviorList.push(behaviorToAdd);
+    this._ObjectList.find(element => element.Id == objectId).behavior = behaviorToAdd;
   }
 
   /**
    * Delete's behavior from project
    * @param behaviorToRemove the ID of the behavior to be removed from the project
    */
-  public DeleteBehavior(behaviorToRemove: string): void
+  public DeleteBehavior(objectId: string): void
   {
-    const index = this._BehaviorList.findIndex((element) => element.Id == behaviorToRemove);
-    this._BehaviorList.splice(index)
+    this._ObjectList.find(element => element.Id == objectId).behavior = null;
   }
 
-  /**
-   * Updates behaviors
-   * @param newBehavior new behavior whose properties to transfer over
-   */
-  public UpdateBehavior(newBehavior: FlowBehavior) : void
-  {
-    console.log("behavior list is " + this._BehaviorList)
-    console.log("behavior Id is " + newBehavior.Id)
-    // Get the behavior that we are changing from the specified project
-    var oldBehavior: FlowBehavior = this.GetBehavior(newBehavior.Id);
+  // /**
+  //  * Updates behaviors
+  //  * @param newBehavior new behavior whose properties to transfer over
+  //  */
+  // public UpdateBehavior(newBehavior: FlowBehavior) : void
+  // {
+  //   console.log("behavior list is " + this._BehaviorList)
+  //   console.log("behavior Id is " + newBehavior.Id)
+  //   // Get the behavior that we are changing from the specified project
+  //   var oldBehavior: FlowBehavior = this.GetBehavior(newBehavior.Id);
 
-    // Update all properties of the old behavior to the new behavior.
-    oldBehavior.UpdateProperties(newBehavior);
+  //   // Update all properties of the old behavior to the new behavior.
+  //   oldBehavior.UpdateProperties(newBehavior);
 
-  }
+  // }
 
   /**
    * Retrieves Flow Behavior
    * @param behaviorId ID of behavior to get
    */
-  public GetBehavior(behaviorId: string) : FlowBehavior
+  public GetBehavior(objectId: string) : Array<FlowBehavior>
   {
-    return this._BehaviorList.find(element => element.Id == behaviorId);
+    return this._ObjectList.find(element => element.Id == objectId).behavior;
   }
 
   // TODO: Find out what this does (or needs to do)

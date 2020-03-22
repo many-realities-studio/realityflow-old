@@ -312,32 +312,6 @@ class Command_JoinRoom implements ICommand
   }
 }
 
-class Command_PopulateRoom implements ICommand
-{
-  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>
-  {
-    let returnData = await StateTracker.PopulateRoom(data.Project.Id, client);
-    let returnContent = {
-      "MessageType": "PopulateRoom",
-      "WasSuccessful": false,
-    } 
-
-    if(returnData[0] != null)
-    {
-      let returnContent = {
-        "MessageType": "PopulateRoom",
-        "ObjectList": returnData[0]._ObjectList,
-        "BehaviorList": returnData[0]._BehaviorList,
-        "WasSuccessful": true,
-      }
-  
-    } 
-
-    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
-    return returnMessage;
-  }
-}
-
 class Command_DeleteRoom implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]>  
@@ -471,19 +445,19 @@ class Command_FinalizedUpdateObject implements ICommand
   }
 }
 
-// Behavior Commands
-class Command_CreateBehavior implements ICommand
+// behaviour Commands
+class Command_CreateBehaviour implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let flowBehavior = new FlowBehavior(data.FlowBehavior);
+    let flowBehaviour = StateTracker.listifyBehavior(data.FlowBehaviour)
     
-    console.log(flowBehavior)
+    let owner = flowBehaviour[0].ChainOwner;
 
-    let returnData = await StateTracker.CreateBehavior(flowBehavior, data.ProjectId);
+    let returnData = await StateTracker.CreateBehavior(flowBehaviour, owner, data.ProjectId);
     let returnContent = {
-      "MessageType": "CreateBehavior",
-      "FlowBehavior": returnData[0],
+      "MessageType": "CreateBehaviour",
+      "FlowBehaviour": returnData[0],
       "WasSuccessful": (returnData[0] == null) ? false: true
     }
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
@@ -492,15 +466,17 @@ class Command_CreateBehavior implements ICommand
   }
 }
 
-class Command_DeleteBehavior implements ICommand
+class Command_DeleteBehaviour implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let flowBehavior = new FlowBehavior(data.FlowBehavior);
-    let returnData = await StateTracker.DeleteBehavior(flowBehavior.Id, data.ProjectId, client);
+    let flowBehaviour = StateTracker.listifyBehavior(data.FlowBehaviour)    
+    let owner = flowBehaviour[0].ChainOwner;
+
+    let returnData = await StateTracker.DeleteBehavior(data.ProjectId, owner, client);
     let returnContent = {
-      "MessageType": "DeleteBehavior",
-      "BehaviorId": returnData[0],
+      "MessageType": "DeleteBehaviour",
+      "BehaviourId": returnData[0],
       "WasSuccessful": (returnData[0] == null) ? false: true,
     }
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
@@ -510,14 +486,18 @@ class Command_DeleteBehavior implements ICommand
 }
 
 
-class Command_ReadBehavior implements ICommand
+class Command_ReadBehaviour implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let returnData = await StateTracker.ReadBehavior(data.FlowBehavior.Id, data.ProjectId, client);
+
+    let flowBehaviour = StateTracker.listifyBehavior(data.FlowBehaviour)    
+    let owner = flowBehaviour[0].ChainOwner;
+
+    let returnData = await StateTracker.ReadBehavior(data.FlowBehaviour.Id, owner, data.ProjectId, client);
     let returnContent = {
-      "MessageType": "ReadBehavior",
-      "FlowBehavior": returnData[0],
+      "MessageType": "ReadBehaviour",
+      "FlowBehaviour": returnData[0],
       "WasSuccessful": (returnData[0] == null) ? false: true,
     }
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
@@ -595,7 +575,6 @@ export class CommandContext
       this._CommandList.set("CreateRoom", new Command_CreateRoom());
       this._CommandList.set("DeleteRoom", new Command_DeleteRoom());
       this._CommandList.set("JoinRoom", new Command_JoinRoom());
-      this._CommandList.set("PopulateRoom", new Command_PopulateRoom());
 
       // Object Commands
       this._CommandList.set("CreateObject", new Command_CreateObject());
@@ -606,10 +585,10 @@ export class CommandContext
       this._CommandList.set("CheckinObject", new Command_CheckinObject());
       this._CommandList.set("CheckoutObject", new Command_CheckoutObject());
 
-      // Behavior Commands
-      this._CommandList.set("CreateBehavior", new Command_CreateBehavior());
-      this._CommandList.set("DeleteBehavior", new Command_DeleteBehavior());
-      this._CommandList.set("ReadBehavior", new Command_ReadBehavior());
+      // behaviour Commands
+      this._CommandList.set("CreateBehaviour", new Command_CreateBehaviour());
+      this._CommandList.set("DeleteBehaviour", new Command_DeleteBehaviour());
+      this._CommandList.set("ReadBehaviour", new Command_ReadBehaviour());
 
       // PlayMode Commands
       this._CommandList.set("StartPlayMode", new Command_StartPlayMode());

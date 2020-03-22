@@ -12,7 +12,7 @@ export class ProjectOperations
      * @param projectInfo Data for the new project
      * @param Username Username of the owner of the project
      */
-    public static async createProject(projectInfo: any, Username: string){
+    public static async createProject(projectInfo: FlowProject, Username: string){
         let user = await getConnection(process.env.NODE_ENV).createQueryBuilder().
             select("User").
             from(User, "User").
