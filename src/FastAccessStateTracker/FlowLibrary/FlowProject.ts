@@ -1,36 +1,26 @@
 import { FlowObject } from "./FlowObject";
+import { FlowBehavior } from "./FlowBehavior";
 
-// For the database
-import {Object} from "../../models/object";
-import { IStringable } from "./IStringable";
-import { MongooseDatabase } from "../Database/MongooseDatabase"
-import { ConfigurationSingleton } from "../ConfigurationSingleton";
-
-// NOTE: FAM Stands for Fast Access Memory
-export class FlowProject implements IStringable
+export class FlowProject 
 {
-  private _ObjectList: Array<FlowObject> = [];
+  // TODO: this is temporarily public for convenience.
+  public _ObjectList: Array<FlowObject> = [];
+  //TODO: list of FlowBehaviors
+  public _BehaviorList: Array<FlowBehavior> = [];
   
   // Used for identification in the FAM
   
   // Data storage fields
-  public Id;
+  public Id: string;
   public Description: string;
   public DateModified: Date;
   public ProjectName: string;
  
   constructor(json:any){
-    this.Id = json.Id
+    this.Id = json.Id;
     this.Description = json.Description;
     this.DateModified = json.DateModified;
     this.ProjectName = json.ProjectName;
-
-    // TODO: Save to Database in constructor and generate/attach ID
-    // Async measure
-}
-
-  ToString(): string {
-    throw new Error("Method not implemented.");
   }
 
   /**
@@ -40,133 +30,127 @@ export class FlowProject implements IStringable
   public AddObject(objectToAdd: FlowObject) 
   {
     this._ObjectList.push(objectToAdd);
-    objectToAdd.SaveToDatabase();
+    return true;
   }
 
   /**
-   * Removes an object from the list of available objects and returns the object removed
-   * Also deletes object from the database
+   * Removes an object from the list of available objects
    * @param objectToRemove 
    */
-  public DeleteObject(objectToRemove: FlowObject): void
+  public DeleteObject(objectToRemove: string, client: string) 
   {
-    const index = this._ObjectList.findIndex((element) => element.Id == objectToRemove.Id);
-
-    var DeletedObject : FlowObject = null;
-    if(index > -1)
-    {
-      DeletedObject = this._ObjectList.splice(index, 1)[0];
+    let index = this._ObjectList.findIndex((element) => element.Id == objectToRemove);
+    if(index > -1 && this._ObjectList[index].CurrentCheckout == client){
+      this._ObjectList.splice(index);
+      return true;
     }
-
-    // Remove object from database
-    if(DeletedObject != null)
-    {
-      DeletedObject.DeleteFromDatabase();
-    }
+    else return false
   }
 
   /**
    * Returns FlowObject with the given ID number 
    * @param objectId 
    */
-  public GetObject(objectId: Number) : FlowObject
+  public GetObject(objectId: string) : FlowObject
   {
     return this._ObjectList.find(element => element.Id == objectId);
   }
 
   /**
-   * Deletes the project and all its objects from the database
+   * sets an object to "checked out," preventing another user from checking out/editing that object
+   * @param objectId 
+   * @param userName 
+   * @param client 
    */
-  public Delete()
-  {
-    this._ObjectList.forEach((objectToDelete) => {
-      objectToDelete.DeleteFromDatabase()
-    })
-
-    this.DeleteFromDatabase();
+  public CheckoutObject(objectId: string, client: string){
+    let obj = this._ObjectList.find(element => element.Id == objectId);
+    
+    if (obj != undefined && obj.CurrentCheckout == null){
+      this._ObjectList.find(element => element.Id == objectId).CurrentCheckout = client;
+      return true
+    }
+    
+    else return false
   }
+
 
   /**
-   * Deletes the project reference from the database
-   * Note: Does not delete any of the projects dependencies, including objects, textures, etc.
+   * sets an object to "checked in," preventing another user from checking out/editing that object
+   * @param objectId 
    */
-  private DeleteFromDatabase()
-  {
-    ConfigurationSingleton.Database.DeleteProject(this);
+  public CheckinObject(objectId: string, client){
+    let obj = this._ObjectList.find(element => element.Id == objectId);
+    if(obj != undefined && obj.CurrentCheckout == client){
+      obj.CurrentCheckout = null;
+      return true;
+    }
+    else return false;
   }
 
-  public SaveToDatabase()
-  {
-    ConfigurationSingleton.Database.UpdateProject(this);
-  }
-
-  /**
-   * Creates an object and attaches it to the desired project in both the FAM and the Database
-   * @param objectToCreate 
+    /**
+   * find out who has checked out the object in question
+   * @param objectId 
    */
-  public CreateObject(objectToCreate: FlowObject) : void
-  {
-    // Save for fast access
-    this.AddObject(objectToCreate);
-
-    // Async save to database
-    var databaseFlowObject = new Object({
-      Type:           objectToCreate.Type,
-      Name:           objectToCreate.Name,
-      Triangles:      objectToCreate.Triangles,
-      X:              objectToCreate.X,
-      Y:              objectToCreate.Y,
-      Z:              objectToCreate.Z,
-      Q_x:            objectToCreate.Q_x,
-      Q_y:            objectToCreate.Q_y,
-      Q_z:            objectToCreate.Q_z,
-      Q_w:            objectToCreate.Q_w,
-      S_x:            objectToCreate.S_x,
-      S_y:            objectToCreate.S_y,
-      S_z:            objectToCreate.S_z,
-      Uv:             objectToCreate.Uv,
-      Texture:        objectToCreate.Texture,
-      TextureHeight:  objectToCreate.TextureHeight,
-      TextureWidth:   objectToCreate.TextureWidth,
-      TextureFormat:  objectToCreate.TextureFormat,
-      MipmapCount:    objectToCreate.MipmapCount,
-      Locked:         objectToCreate.Locked
-    });
-
-    databaseFlowObject.save()
-      .then( (doc) => {
-          this.SaveToDatabase();
-      });
-  }
-
-  /**
-   * Updates the data of a desired object, first in the FAM and then (asynchronously) to the database
-   * @param objectToUpdate 
-   */
-  public UpdateObject(newObject: FlowObject) : void
-  {
-    // Get the object that we are changing from the specified project
-    var oldObject: FlowObject = this.GetObject(newObject.Id);
-
-    // Update all properties of the old object to the new object.
-    oldObject.UpdateProperties(newObject);
-
-    // Update the database
-    oldObject.SaveToDatabase();
+  public GetObjectHolder(objectId: string){
+    return this._ObjectList.find(element => element.Id == objectId).CurrentCheckout
   }
 
   /**
    * Updates the object in the FAM without saving to the database
    * @param newObject 
    */
-  public UpdateFAMObject(newObject: FlowObject) : void
+  public UpdateFAMObject(newObject: FlowObject, client: string) 
   {
     // Get the object that we are changing from the specified project
-    var oldObject: FlowObject = this.GetObject(newObject.Id);
+    var oldObject: FlowObject = this._ObjectList.find(element => element.Id == newObject.Id);
+    if(oldObject != undefined && oldObject.CurrentCheckout == client){
+      oldObject.UpdateProperties(newObject);
+      return true;
+    }
+    else return false;
+  }
 
-    // Update all properties of the old object to the new object.
-    oldObject.UpdateProperties(newObject);
+  /**
+   * Adds behavior to project list for reference 
+   * @param behaviorToAdd The behavior to add to the project
+   */
+  public AddBehavior(objectId: string, behaviorToAdd: Array<FlowBehavior>)
+  {
+    this._ObjectList.find(element => element.Id == objectId).behavior = behaviorToAdd;
+  }
 
+  /**
+   * Delete's behavior from project
+   * @param behaviorToRemove the ID of the behavior to be removed from the project
+   */
+  public DeleteBehavior(objectId: string): void
+  {
+    this._ObjectList.find(element => element.Id == objectId).behavior = null;
+  }
+
+  // /**
+  //  * Updates behaviors
+  //  * @param newBehavior new behavior whose properties to transfer over
+  //  */
+  // public UpdateBehavior(newBehavior: FlowBehavior) : void
+  // {
+  //   console.log("behavior list is " + this._BehaviorList)
+  //   console.log("behavior Id is " + newBehavior.Id)
+  //   // Get the behavior that we are changing from the specified project
+  //   var oldBehavior: FlowBehavior = this.GetBehavior(newBehavior.Id);
+
+  //   // Update all properties of the old behavior to the new behavior.
+  //   oldBehavior.UpdateProperties(newBehavior);
+
+  // }
+
+  /**
+   * Retrieves Flow Behavior
+   * @param behaviorId ID of behavior to get
+   */
+  public GetBehavior(objectId: string) : Array<FlowBehavior>
+  {
+    return this._ObjectList.find(element => element.Id == objectId).behavior;
   }
 
   // TODO: Find out what this does (or needs to do)
