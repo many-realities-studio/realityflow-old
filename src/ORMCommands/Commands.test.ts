@@ -9,6 +9,7 @@ import { UserOperations } from './user'
 import { ProjectOperations } from './project'
 import { ObjectOperations } from './object'
 import * as bcrypt from 'bcrypt'
+import { FlowProject } from '../FastAccessStateTracker/FlowLibrary/FlowProject'
 
 beforeAll( async () => {
     await createConnection({
@@ -99,12 +100,12 @@ describe("User", () => {
 describe("Project", () =>{
     it("can be created", async () => {
         // arrange
-        var testProject1 = {
+        var testProject1 = new FlowProject({
             Id: "createdProjecttest",
             Description: "This is a project",
             ProjectName: "TestProject1",
             DateModified: Date.now(),
-        };
+        });
 
         var testUser = {
             Username: "YashProject1",

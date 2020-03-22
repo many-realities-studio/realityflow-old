@@ -5,9 +5,11 @@ import {
     ManyToOne,
     PrimaryColumn,
     PrimaryGeneratedColumn,
+    OneToMany,
   } from 'typeorm';
 
   import {Project} from './project'
+import { Behavior } from './behavior';
 
 @Entity()
 export class DBObject extends BaseEntity{

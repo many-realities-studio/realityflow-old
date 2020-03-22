@@ -335,7 +335,6 @@ export class StateTracker{
 
     affectedClients.push(client);
     return[project, affectedClients];
-
   } 
 
 
@@ -347,7 +346,6 @@ export class StateTracker{
    */
   public static async LeaveRoom(roomCode: string, user: string, client: string) :  Promise<[any, Array<string>]>
   {
-
     if(RoomManager.FindRoom(roomCode) == undefined)
       return [ null, [client] ];
 
@@ -373,10 +371,7 @@ export class StateTracker{
     return [ user + "-" + shortClientId + 'has left the room', affectedClients];
   }
 
-
-
   // Object Commands
-
   /**
    * create an object in a given room.
    * @param objectToCreate 
@@ -464,35 +459,78 @@ export class StateTracker{
     return [objectRead, [client]];
   }
 
-  public static async CreateBehavior(behaviorToCreate : FlowBehavior, projectId: string) : Promise<[any, Array<string>]>
+  /**
+   * unfuckify the bizarre recursive data structure is put into it
+   * @param behavior 
+   */
+  public static listifyBehavior(behavior: any){
+    let counter: number = 0;
+    let temp: any = behavior;
+    let retArr: Array<FlowBehavior> = []
+    let owner = temp.TriggerObjectID;
+
+    while(temp != null){
+      retArr.push(new FlowBehavior({
+        Name: temp.Name,
+        Id: temp.Id,
+        Trigger: temp.TriggerObjectID,
+        Target: temp.TargetObjectID,
+        Index: counter,
+        ChainOwner: owner
+      }));
+
+      counter ++;
+      temp = temp.FlowBehavior;
+    }
+    return retArr
+  } 
+
+  public static reconstitute(behaviors: Array<FlowBehavior>){
+    let retBehavior: any = {}
+
+    let temp: any = retBehavior;
+
+    behaviors.forEach((behavior, index, arr) => {
+      temp.Name = behavior.Name;
+      temp.TriggerObjectID = behavior.Trigger;
+      temp.TargetObjectID = behavior.Target;
+      if (index === arr.length - 1)
+        temp.BehaviorChain = null
+      else
+        temp.BehaviorChain = {}
+
+      temp = temp.BehaviorChain
+    })
+    
+  }
+
+  public static async CreateBehavior(behaviorToCreate : Array<FlowBehavior>, objectId:string, projectId: string) : Promise<[any, Array<string>]>
   {
     RoomManager.FindRoom(projectId)
                 .GetProject()
-                .AddBehavior(behaviorToCreate);
+                .AddBehavior(objectId, behaviorToCreate);
   
-    TypeORMDatabase.CreateBehavior(behaviorToCreate, projectId)
+    TypeORMDatabase.CreateBehavior(behaviorToCreate, objectId)
 
     let affectedClients: Array<string> = [];
 
     // get all of the clients that are in that room so that we can tell them 
     let roomClients = await RoomManager.getClients(projectId)
-    
     roomClients.forEach((clients, username, map) => {
       affectedClients = affectedClients.concat(clients)
     })
 
-    let retval = {MessageType: "CreateBehavior", object: behaviorToCreate}
     return [behaviorToCreate, affectedClients]
   }
 
-  public static async DeleteBehavior(behaviorId: string, projectId: string, client: string) : Promise<[any, Array<string>]>
+  public static async DeleteBehavior(projectId: string, objectId, client: string) : Promise<[any, Array<string>]>
   {
 
     RoomManager.FindRoom(projectId)
                 .GetProject()
-                .DeleteBehavior(behaviorId);
+                .DeleteBehavior(objectId);
 
-    TypeORMDatabase.DeleteBehavior(behaviorId, projectId)
+    TypeORMDatabase.DeleteBehavior(objectId)
 
     let affectedClients: Array<string> = [];
 
@@ -503,13 +541,13 @@ export class StateTracker{
       affectedClients = affectedClients.concat(clients)
     })
 
-    return [behaviorId, affectedClients]
+    return [projectId, affectedClients]
   }
 
-  public static async ReadBehavior(behaviorId: string, projectId, client: string) : Promise<[any, Array<string>]>
+  public static async ReadBehavior(behaviorId: string, objectId, projectId: string, client: string) : Promise<[any, Array<string>]>
   {
     let behaviorRead : FlowBehavior = null;
-    let behaviorList = RoomManager.FindRoom(projectId).GetProject()._BehaviorList;
+    let behaviorList = RoomManager.FindRoom(projectId).GetProject().GetBehavior(objectId);
     behaviorList.forEach(behavior => {
       if(behavior.Id == behaviorId)
         behaviorRead = behavior;
@@ -535,6 +573,7 @@ export class StateTracker{
       {
         affectedClients = affectedClients.concat(clients)
       });
+
     return [true, affectedClients];
   }
 }

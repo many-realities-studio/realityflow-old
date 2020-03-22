@@ -2,33 +2,50 @@ import {getConnection} from 'typeorm'
 
 import { Project } from "../entity/project";
 import { DBObject } from "../entity/object";
+import { Behavior } from "../entity/behavior"
 
-import {ProjectOperations} from "./project"
+import { ObjectOperations } from "../ORMCommands/object"
 import { FlowBehavior } from '../FastAccessStateTracker/FlowLibrary/FlowBehavior';
+
 
 export class BehaviorOperations 
 {
+    // TODO: created: yes tested: no
     /**
-     * creates the behavior and associates it with a project
+     * creates the behavior and associates it with certain objects
      * @param behaviorInfo new behavior info
      * @param projectId project for association
      */
-    public static async createBehavior(behaviorInfo: any, projectId: string)
+    public static async CreateBehavior(behaviorInfo: Array<FlowBehavior>, ChainOwner:string)
     {
-        let project = await getConnection(process.env.NODE_ENV)
-        .createQueryBuilder()
-        .select("Project")
-        .from(Project, "Project")
-        .where("Project.Id = :id", {id: projectId})
-        .getOne();
-
-        var newBehavior = new DBBehavior();
-        newBehavior.Id = behaviorInfo.Id;
-        newBehavior.Name = behaviorInfo.Name;
-        newBehavior.TriggerObjectID = behaviorInfo.TriggerObjectID;
-        newBehavior.TargetObjectID = behaviorInfo.TargetObjectID;
-        newBehavior.BehaviorChain =  behaviorInfo.BehaviorChain;
-
-        await getConnection(process.env.NODE_ENV).manager.save(newBehavior);
+        // I hate ORMs
+        return await getConnection(process.env.NODE_ENV)
+            .createQueryBuilder()
+            .insert()
+            .into(Behavior)
+            .values(behaviorInfo)
+            .execute();
     }
+
+    // TODO: created: yes tested: no
+    public static async deleteBehavior(objectId: string){
+        await getConnection(process.env.NODE_ENV)
+            .createQueryBuilder()
+            .delete()
+            .from(Behavior)
+            .where("ChainOwner = :id", {id : objectId})
+            .execute()
+    }
+
+    public static async getBehavior(objectId: string): Promise<Array<Behavior>>{
+        return  await getConnection(process.env.NODE_ENV).createQueryBuilder()
+            .select()
+            .from(Behavior, "behavior")
+            .where("ChainOwner = :owner", {owner: "Trigger"})
+            .orderBy("behavior.Index", "ASC")
+            .execute()
+
+    }
+
+
 }

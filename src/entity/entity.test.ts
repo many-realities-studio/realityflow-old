@@ -5,6 +5,7 @@ import { Project } from './project'
 import { DBObject } from './object'
 import { UserSubscriber } from "./UserSubscriber"
 import * as bcrypt from 'bcrypt'
+import { Behavior } from './behavior'
 
 beforeAll( async () => {
     await createConnection(    {
@@ -449,4 +450,63 @@ describe ('Object', () => {
     })
 
 
+})
+
+// TODO: has not been run yet
+describe ('Behavior', () =>{
+    
+    it("can be created", () =>{
+        let conn = getConnection("test")
+
+        let behavior = new Behavior()
+        behavior.Id = "behaviorId"
+        behavior.Name = "behaviorName"
+
+        conn.manager.save(behavior)
+
+        let check = conn.manager.createQueryBuilder()
+            .select("behavior")
+            .from(Behavior, "behavior")
+            .where("behavior.Id = :id", {id: behavior.Id})
+            .getOne();
+
+        expect(check).toEqual(behavior.Id)
+    })
+
+    it("can be deleted", async () => {
+
+        let conn = getConnection("test")
+
+        let behavior = new Behavior()
+        behavior.Id = "deleteBehaviorId"
+        behavior.Name = "behaviorName"
+
+        conn.manager.save(behavior)
+
+        let check = await conn.manager.createQueryBuilder()
+            .select("behavior")
+            .from(Behavior, "behavior")
+            .where("behavior.Id = :id", {id: behavior.Id})
+            .getOne();
+
+        expect(check.Id).toEqual(behavior.Id)
+
+        await conn.manager.createQueryBuilder()
+            .delete()
+            .from(Behavior)
+            .where("Id = :id", {id: behavior.Id})
+            .execute()
+        
+        let deleteCheck = await conn.manager.createQueryBuilder()
+            .select("behavior")
+            .from(Behavior, "behavior")
+            .where("behavior.Id = :id", {id: behavior.Id})
+            .getOne();
+
+        expect(deleteCheck).toBeFalsy()
+    })
+
+    it("can be chained", () => {
+        
+    })
 })

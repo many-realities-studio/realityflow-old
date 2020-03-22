@@ -445,11 +445,11 @@ class Command_CreateBehavior implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let flowBehavior = new FlowBehavior(data.FlowBehavior);
+    let flowBehavior = StateTracker.listifyBehavior(data.FlowBehavior)
     
-    console.log(flowBehavior)
+    let owner = flowBehavior[0].ChainOwner;
 
-    let returnData = await StateTracker.CreateBehavior(flowBehavior, data.ProjectId);
+    let returnData = await StateTracker.CreateBehavior(flowBehavior, owner, data.ProjectId);
     let returnContent = {
       "MessageType": "CreateBehavior",
       "FlowBehavior": returnData[0],
@@ -465,8 +465,10 @@ class Command_DeleteBehavior implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let flowBehavior = new FlowBehavior(data.FlowBehavior);
-    let returnData = await StateTracker.DeleteBehavior(flowBehavior.Id, data.ProjectId, client);
+    let flowBehavior = StateTracker.listifyBehavior(data.FlowBehavior)    
+    let owner = flowBehavior[0].ChainOwner;
+
+    let returnData = await StateTracker.DeleteBehavior(data.ProjectId, owner, client);
     let returnContent = {
       "MessageType": "DeleteBehavior",
       "BehaviorId": returnData[0],
@@ -478,28 +480,32 @@ class Command_DeleteBehavior implements ICommand
   }
 }
 
-class Command_UpdateBehavior implements ICommand
-{
-  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
-  {
-    let flowBehavior = new FlowBehavior(data.flowBehavior);
-    let returnData = await StateTracker.UpdateBehavior(flowBehavior, data.ProjectId, client);
-    let returnContent = {
-      "MessageType": "UpdateBehavior",
-      "FlowBehavior": returnData[0],
-      "WasSuccessful": (returnData[0] == null) ? false: true,
-    }
-    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
+// class Command_UpdateBehavior implements ICommand
+// {
+//   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+//   {
+//     let flowBehavior = new FlowBehavior(data.flowBehavior);
+//     let returnData = await StateTracker.UpdateBehavior(flowBehavior, data.ProjectId, client);
+//     let returnContent = {
+//       "MessageType": "UpdateBehavior",
+//       "FlowBehavior": returnData[0],
+//       "WasSuccessful": (returnData[0] == null) ? false: true,
+//     }
+//     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
 
-    return returnMessage;
-  }
-}
+//     return returnMessage;
+//   }
+// }
 
 class Command_ReadBehavior implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let returnData = await StateTracker.ReadBehavior(data.FlowBehavior.Id, data.ProjectId, client);
+
+    let flowBehavior = StateTracker.listifyBehavior(data.FlowBehavior)    
+    let owner = flowBehavior[0].ChainOwner;
+
+    let returnData = await StateTracker.ReadBehavior(data.FlowBehavior.Id, owner, data.ProjectId, client);
     let returnContent = {
       "MessageType": "ReadBehavior",
       "FlowBehavior": returnData[0],
@@ -592,7 +598,7 @@ export class CommandContext
       // Behavior Commands
       this._CommandList.set("CreateBehavior", new Command_CreateBehavior());
       this._CommandList.set("DeleteBehavior", new Command_DeleteBehavior());
-      this._CommandList.set("UpdateBehavior", new Command_UpdateBehavior());
+      // this._CommandList.set("UpdateBehavior", new Command_UpdateBehavior());
       this._CommandList.set("ReadBehavior", new Command_ReadBehavior());
 
       // PlayMode Commands

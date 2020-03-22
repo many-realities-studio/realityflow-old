@@ -12,9 +12,11 @@ import { DBObject } from "./entity/object";
 import { User } from "./entity/user";
 import { Project } from "./entity/project";
 import { UserSubscriber } from "./entity/UserSubscriber";
+import { Behavior } from "./entity/behavior"
 
 import { RoomManager } from "./FastAccessStateTracker/RoomManager";
 import { UserOperations } from "./ORMCommands/user";
+import { FlowProject } from "./FastAccessStateTracker/FlowLibrary/FlowProject";
 var database;
 
 
@@ -121,7 +123,8 @@ export class ServerEventDispatcher {
         "entities": [
            DBObject,
            User,
-           Project
+           Project,
+           Behavior
         ],
         subscribers: [
             UserSubscriber
@@ -132,13 +135,13 @@ export class ServerEventDispatcher {
         
         await UserOperations.createUser("God", "Jesus")
 
-        await ProjectOperations.createProject({
+        await ProjectOperations.createProject(new FlowProject({
             Id: "noRoom",
             Description: "this is not a room",
             DateModified: Date.now(),
             ProjectName: "noRoom"
 
-        }, "God")
+        }), "God")
 
         RoomManager.CreateRoom("noRoom");
         })
