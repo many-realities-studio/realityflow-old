@@ -15,20 +15,20 @@ export class BehaviorOperations
      */
     public static async createBehavior(behaviorInfo: any, projectId: string)
     {
-        let project = await getConnection(process.env.NODE_ENV)
-        .createQueryBuilder()
-        .select("Project")
-        .from(Project, "Project")
-        .where("Project.Id = :id", {id: projectId})
-        .getOne();
+        // let project = await getConnection(process.env.NODE_ENV)
+        // .createQueryBuilder()
+        // .select("Project")
+        // .from(Project, "Project")
+        // .where("Project.Id = :id", {id: projectId})
+        // .getOne();
 
-        var newBehavior = new DBBehavior();
-        newBehavior.Id = behaviorInfo.Id;
-        newBehavior.Name = behaviorInfo.Name;
-        newBehavior.TriggerObjectID = behaviorInfo.TriggerObjectID;
-        newBehavior.TargetObjectID = behaviorInfo.TargetObjectID;
-        newBehavior.BehaviorChain =  behaviorInfo.BehaviorChain;
+        // var newBehavior = new DBBehavior();
+        // newBehavior.Id = behaviorInfo.Id;
+        // newBehavior.Name = behaviorInfo.Name;
+        // newBehavior.TriggerObjectID = behaviorInfo.TriggerObjectID;
+        // newBehavior.TargetObjectID = behaviorInfo.TargetObjectID;
+        // newBehavior.BehaviorChain =  behaviorInfo.BehaviorChain;
 
-        await getConnection(process.env.NODE_ENV).manager.save(newBehavior);
+        // await getConnection(process.env.NODE_ENV).manager.save(newBehavior);
     }
 }
