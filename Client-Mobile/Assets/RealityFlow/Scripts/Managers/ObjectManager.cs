@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using UnityEngine.UI;
-using RealityFlow.Plugin.Scripts;
-using RealityFlow.Plugin.Scripts.Events;
+using Assets.RealityFlow.Scripts.Events;
 
 // This script contains functions necessary for populating the scene with objects.
 

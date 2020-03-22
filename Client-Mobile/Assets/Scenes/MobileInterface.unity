@@ -6777,7 +6777,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 229162761}
   m_Direction: 0
   m_Value: 1
-  m_Size: 1
+  m_Size: 0.9999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -11102,6 +11102,7 @@ GameObject:
   - component: {fileID: 2023674175}
   - component: {fileID: 2023674174}
   - component: {fileID: 2023674173}
+  - component: {fileID: 2023674172}
   - component: {fileID: 2023674171}
   - component: {fileID: 2023674170}
   m_Layer: 0
@@ -11181,6 +11182,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967291
   targetRootsOrdered: []
+--- !u!114 &2023674172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2023674169}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29e9582cca22d2c4ebe43d9f07ca38b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!81 &2023674173
 AudioListener:
   m_ObjectHideFlags: 0

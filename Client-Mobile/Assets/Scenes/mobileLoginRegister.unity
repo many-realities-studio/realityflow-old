@@ -1430,7 +1430,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.05, y: 0.15}
   m_AnchorMax: {x: 0.95, y: 0.9}
-  m_AnchoredPosition: {x: 0, y: -459.29996}
+  m_AnchoredPosition: {x: 0.000030517578, y: -459.3}
   m_SizeDelta: {x: 80, y: -492.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &424504280
@@ -3771,7 +3771,6 @@ GameObject:
   - component: {fileID: 1185693894}
   - component: {fileID: 1185693895}
   - component: {fileID: 1185693896}
-  - component: {fileID: 1185693897}
   m_Layer: 5
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -3786,7 +3785,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1185693891}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b92b707d7e7145b4286a1c16074da173, type: 3}
   m_Name: 
@@ -3862,29 +3861,6 @@ MonoBehaviour:
   music: 0
   mainGameCamera: {fileID: 0}
   eventSystem: {fileID: 0}
-  connectionStatus: {fileID: 0}
-  test: 
-  parentObject: {fileID: 0}
-  onFrame: 3
-  ARRAY_SIZE: 5
-  ARRAY_OFFSET: {x: 0.4, y: 0.4, z: 0.4}
---- !u!114 &1185693897
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1185693891}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 644968c9a08adaf49a6a398dc9075c00, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  LocalServer: 0
-  _debug: 1
-  music: 0
-  mainGameCamera: {fileID: 1004449832}
-  eventSystem: {fileID: 94521033}
   connectionStatus: {fileID: 0}
   test: 
   parentObject: {fileID: 0}
