@@ -478,7 +478,7 @@ export class StateTracker{
       }));
 
       counter ++;
-      temp = temp.FlowBehavior;
+      temp = temp.FlowBehaviour;
     }
     return retArr
   } 
@@ -493,11 +493,11 @@ export class StateTracker{
       temp.TriggerObjectID = behavior.Trigger;
       temp.TargetObjectID = behavior.Target;
       if (index === arr.length - 1)
-        temp.BehaviorChain = null
+        temp.BehaviourChain = null
       else
-        temp.BehaviorChain = {}
+        temp.BehaviourChain = {}
 
-      temp = temp.BehaviorChain
+      temp = temp.BehaviourChain
     })
     
   }
