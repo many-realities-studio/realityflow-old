@@ -1,3 +1,4 @@
 [submodule "UnityPlugin/Packages/RealityFlow"]
 	path = UnityPlugin/Packages/RealityFlow
 	url = https://github.com/lucidbard/realityflow_package.git
+	ignore = all
