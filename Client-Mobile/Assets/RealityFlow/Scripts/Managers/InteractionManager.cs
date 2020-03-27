@@ -17,16 +17,10 @@ public class InteractionManager : MonoBehaviour
     public TMP_Dropdown disableDropdown;
 
     private FlowBehaviour headBehaviour = null;
-    private FlowBehaviour currentBehaviour = null;
 
-    private Boolean addingChain = false;
-
-
-    private FlowUser flowUser = new FlowUser("moira", "rose");
     private string projectId = "dtr54e4";
     Dictionary<string, string> objectList;
 
-    private string currentInteraction = null;
     // Start is called before the first frame update
     void Start()
     {
@@ -43,36 +37,23 @@ public class InteractionManager : MonoBehaviour
         objectList.Add("enemy 1", "kj23iij35");
     }
 
-    private void OnEnable()
-    {
-        Debug.Log("it's enabling");
-        //headBehaviour = null;
-        //currentBehaviour = null;
-        //addingChain = false;
-    }
-
     public void InteractionSelection(int button)
     {
         switch(button)
         {
             case 0:
-                currentInteraction = "Teleport";
                 PopulateDropDownMenu(teleportDropdown1, teleportDropdown2);
                 break;
             case 1:
-                currentInteraction = "Click";
                 PopulateDropDownMenu(onClickDropdown);
                 break;
             case 2:
-                currentInteraction = "Snap Zone";
                 PopulateDropDownMenu(snapZoneDropdown);
                 break;
             case 3:
-                currentInteraction = "Disable";
                 PopulateDropDownMenu(disableDropdown);
                 break;
             case 4:
-                currentInteraction = "Enable";
                 PopulateDropDownMenu(enableDropdown);
                 break;
             case '_':
@@ -80,6 +61,10 @@ public class InteractionManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Populates the dropdown with all the object names
+    /// </summary>
+    /// <param name="dropdown"></param>
     private void PopulateDropDownMenu(TMP_Dropdown dropdown)
     {
         dropdown.options.Clear();
@@ -89,6 +74,11 @@ public class InteractionManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Populates two dropdown menus with all the object names
+    /// </summary>
+    /// <param name="dropdown1"></param>
+    /// <param name="dropdown2"></param>
     private void PopulateDropDownMenu(TMP_Dropdown dropdown1, TMP_Dropdown dropdown2)
     {
         dropdown1.options.Clear();
@@ -102,6 +92,10 @@ public class InteractionManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Creates a teleport behaviour
+    /// </summary>
+    /// <param name="addingChain"></param>
     public void SendTeleport(int addingChain)
     {
         int index1 = teleportDropdown1.value;
@@ -113,11 +107,17 @@ public class InteractionManager : MonoBehaviour
         objectList.TryGetValue(object1name, out string firstObjectId);
         objectList.TryGetValue(object2name, out string secondObjectId);
 
-        FlowBehaviour fb = new FlowBehaviour(currentInteraction, "1", firstObjectId, secondObjectId, null);
+        FlowBehaviour fb = new FlowBehaviour("Teleport", "1", firstObjectId, secondObjectId, null, firstObjectId);
 
         AddBehaviour(fb, addingChain == 0 ? false : true);
     }
 
+    /// <summary>
+    /// Adds a behaviour to the current chain. If addingChain is false,
+    /// then the final FlowBehaviour is sent to the server.
+    /// </summary>
+    /// <param name="fb">The flow behaviour to add to the current chain</param>
+    /// <param name="addingChain">Boolean to determine if another behaviour will be added later</param>
     public void AddBehaviour(FlowBehaviour fb, Boolean addingChain)
     {
         if (headBehaviour == null)
@@ -136,7 +136,7 @@ public class InteractionManager : MonoBehaviour
 
         if (!addingChain)
         {
-            Operations.CreateBehaviour(headBehaviour, flowUser, projectId, "something", (_, e) =>
+            Operations.CreateBehaviour(headBehaviour, projectId, (_, e) =>
             {
                 if (e.message.WasSuccessful == true)
                 { }
@@ -144,6 +144,10 @@ public class InteractionManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Creates an on Click behaviour. A chain must always be created
+    /// after an click behaviour is created
+    /// </summary>
     public void CreateClick()
     {
         int index1 = onClickDropdown.value;
@@ -151,10 +155,14 @@ public class InteractionManager : MonoBehaviour
 
         objectList.TryGetValue(object1name, out string firstObjectId);
 
-        FlowBehaviour fb = new FlowBehaviour("Click", "1", firstObjectId, firstObjectId, null);
+        FlowBehaviour fb = new FlowBehaviour("Click", "1", firstObjectId, firstObjectId, null, firstObjectId);
         AddBehaviour(fb, true);
     }
 
+    /// <summary>
+    /// Creates an on Enable behaviour
+    /// </summary>
+    /// <param name="addingChain"></param>
     public void CreateEnable(int addingChain)
     {
         int index1 = enableDropdown.value;
@@ -162,10 +170,14 @@ public class InteractionManager : MonoBehaviour
 
         objectList.TryGetValue(object1name, out string firstObjectId);
 
-        FlowBehaviour fb = new FlowBehaviour("Enable", "1", firstObjectId, firstObjectId, null);
+        FlowBehaviour fb = new FlowBehaviour("Enable", "1", firstObjectId, firstObjectId, null, firstObjectId);
         AddBehaviour(fb, addingChain == 0 ? false : true);
     }
 
+    /// <summary>
+    /// Creates an on Disable behaviour
+    /// </summary>
+    /// <param name="addingChain"></param>
     public void CreateDisable(int addingChain)
     {
         int index1 = disableDropdown.value;
@@ -173,24 +185,8 @@ public class InteractionManager : MonoBehaviour
 
         objectList.TryGetValue(object1name, out string firstObjectId);
 
-        FlowBehaviour fb = new FlowBehaviour("Disable", "1", firstObjectId, firstObjectId, null);
+        FlowBehaviour fb = new FlowBehaviour("Disable", "1", firstObjectId, firstObjectId, null, firstObjectId);
         AddBehaviour(fb, addingChain == 0 ? false : true);
-    }
-
-
-    public void SetAddingChain(int response)
-    {
-        if (response == 0)
-            this.addingChain = false;
-        else
-            this.addingChain = true;
-    }
-
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
 
