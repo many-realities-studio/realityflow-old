@@ -21,6 +21,7 @@ public class OutlinerManager : MonoBehaviour {
         OutlinerItems = new List<GameObject>();
         gizmo = mainCamera.GetComponent<RuntimeGizmos.TransformGizmo>();
         objManger = GameObject.FindGameObjectWithTag("ObjManager");
+        
     }
 
     // Creates a new entry for the object "obj" to the outliner.
@@ -53,6 +54,7 @@ public class OutlinerManager : MonoBehaviour {
     public void selectedInOutliner(OutlinerItemManager item)
     {
         Debug.Log("Selected in outliner");
+        
         for (int j = 0; j < OutlinerItems.Count; j++)
         {
             toggleButton toggle = OutlinerItems[j].GetComponent<toggleButton>();
@@ -85,6 +87,7 @@ public class OutlinerManager : MonoBehaviour {
     public void selectedInWorld(Transform item)
     {
         Debug.Log("Selected in world");
+        
         for (int j = 0; j < OutlinerItems.Count; j++)
         {
             toggleButton toggle = OutlinerItems[j].GetComponent<toggleButton>();

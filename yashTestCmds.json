@@ -1,0 +1,58 @@
+
+
+
+[{
+    "__type": "Login_SendToServer:#Packages.realityflow_package.Runtime.scripts.Messages.UserMessages",
+    "Message": null,
+    "MessageType": "LoginUser",
+    "FlowUser": {
+      "Password": "Jesus",
+      "Username": "God"
+    }
+  },
+
+ {
+    "__type": "CreateObject_Received:#Packages.realityflow_package.Runtime.scripts.Messages.ObjectMessages",
+    "Message": null,
+    "MessageType": "CreateObject",
+    "flowObject": {
+      "Id": "123",
+      "Name": "this is a name",
+      "Q_w": 1,
+      "Q_x": 0,
+      "Q_y": 0,
+      "Q_z": 0,
+      "S_x": 1,
+      "S_y": 1,
+      "S_z": 1,
+      "X": 0,
+      "Y": 0,
+      "Z": 0,
+      "R": 1,
+      "G": 1,
+      "B": 1,
+      "A":1
+    },
+    "projectId":"noRoom"
+  },
+
+  {
+      "MessageType":"DeleteObject",
+      "flowObject": {
+        "Id": "123",
+        "Name": "",
+        "Q_w": 1,
+        "Q_x": 0,
+        "Q_y": 0,
+        "Q_z": 0,
+        "S_x": 1,
+        "S_y": 1,
+        "S_z": 1,
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "projectId":"noRoom"
+  }
+
+]
