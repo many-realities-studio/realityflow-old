@@ -37,6 +37,7 @@
     "mongodb": "^2.2.11",
     "mongoose": "^4.13.18",
     "nodemon": "^1.4.1",
+    "npid": "^0.4.0",
     "redis-url": "^1.2.1",
     "reflect-metadata": "^0.1.13",
     "run-sequence": "^1.2.2",
@@ -58,7 +59,7 @@
     "@types/node": "^6.14.9",
     "@types/ws": "0.0.37",
     "del": "^3.0.0",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.2",
     "gulp-print": "^5.0.0",
     "gulp-util": "^3.0.8",
     "mocha": "^3.2.0",
@@ -71,7 +72,8 @@
   },
   "scripts": {
     "test": "mocha",
-    "build": "webpack"
+    "build": "webpack",
+    "deploy-dev": "gulp deploy-dev"
   },
   "repository": {
     "type": "git",
