@@ -82,10 +82,6 @@ __decorate([
     __metadata("design:type", Number)
 ], DBObject.prototype, "A", void 0);
 __decorate([
-    typeorm_1.Column(),
-    __metadata("design:type", String)
-], DBObject.prototype, "Prefab", void 0);
-__decorate([
     typeorm_1.ManyToOne(type => project_1.Project, proj => proj.ObjectList, { onDelete: "CASCADE", onUpdate: "CASCADE" }),
     __metadata("design:type", project_1.Project)
 ], DBObject.prototype, "Project", void 0);

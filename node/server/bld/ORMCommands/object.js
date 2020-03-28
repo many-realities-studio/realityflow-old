@@ -38,7 +38,6 @@ class ObjectOperations {
             newObject.G = objectInfo.G;
             newObject.B = objectInfo.B;
             newObject.A = objectInfo.A;
-            newObject.Prefab = objectInfo.Prefab;
             newObject.Project = project;
             yield typeorm_1.getConnection(process.env.NODE_ENV).manager.save(newObject);
         });
