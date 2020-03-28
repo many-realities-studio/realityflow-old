@@ -83,5 +83,5 @@ typings/
 # Package Lock
 package-lock.json
 
-/node/
-/database/
+node/
+database/
