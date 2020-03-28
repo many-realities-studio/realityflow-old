@@ -19,6 +19,7 @@ export class FlowObject
   public G:              Number;
   public B:              Number;
   public A:              Number;
+  public Type:           string;
 
   // Fields used for tracking this object in the FAM
   public Id: string; 
@@ -44,6 +45,7 @@ export class FlowObject
     this.G = json.G;
     this.B = json.B;
     this.A = json.A;
+    this.Type = json.Type;
     this.CurrentCheckout = null;
 }
 
