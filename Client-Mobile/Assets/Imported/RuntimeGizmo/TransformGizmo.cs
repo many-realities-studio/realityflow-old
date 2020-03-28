@@ -567,11 +567,11 @@ namespace RuntimeGizmos
 		public void ClearTargets(bool addCommand = true)
 		{
 			if(addCommand) UndoRedoManager.Insert(new ClearTargetsCommand(this, targetRootsOrdered));
-			slideMenuManager.ToggleMenuButtons(false);
 			ClearAllHighlightedRenderers();
 			targetRoots.Clear();
 			targetRootsOrdered.Clear();
-            //observableTargets.Clear();
+			slideMenuManager.ToggleMenuButtons(false);
+			//observableTargets.Clear();
 			//children.Clear();
 		}
 
