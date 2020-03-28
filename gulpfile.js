@@ -2,6 +2,7 @@
 const gulp = require('gulp'),
     fs = require('fs'),
     gulp_tslint = require('gulp-tslint');
+    process = require('process');
 
 'use strict';
 var config = JSON.parse(fs.readFileSync('./gulp_config.json'));
@@ -25,12 +26,15 @@ try {
 }
 
 var rsync = require('gulp-rsync');
+// const webpack_stream = require('webpack-stream')
+// const webpack_config = require('./webpack.config.js');
 
 // var node;
 
 const paths = {
-    src: './node/server/bld/',
-    build: './static/'
+    run: './run/',
+    build: './node/server/bld/',
+    remoteDevelopment: '/var/realityflow/development/'
 };
 
 gulp.task('tslint', function() {
@@ -41,32 +45,41 @@ gulp.task('tslint', function() {
 
 var tsProject = tsc.createProject("./tsconfig.json");
 
-  var tsTestProject = tsc.createProject("./tsconfig.json");
+// var tsTestProject = tsc.createProject("./tsconfig.json");
 
-  gulp.task("build-test", function () {
-      return gulp.src([
-          "src/**/*.test.ts",
-      ])
-          .pipe(tsc(tsTestProject))
-          .js.pipe(gulp.dest("test/"));
-  });
+// gulp.task("build-test", function () {
+//     return gulp.src([
+//         "src/**/*.test.ts",
+//     ])
+//         .pipe(tsc(tsTestProject))
+//         .js.pipe(gulp.dest("test/"));
+// });
 
 function buildApp() {
     console.log("Building app...")
     return gulp.src(['src/**/*.ts','!src/**/*.test.ts'])
         .pipe(tsProject(tsc.reporter.longReporter()))
-        .pipe(gulp.dest("node/server/bld/"))
+        .pipe(gulp.dest(paths.build))
 }
 
-function runNodeServer(cb) {
+function runNodeServer() {
     if(server != null)
         server.kill();
-    server = spawn('node',['node/server/bld/server.js'], {stdio: 'inherit'});
+    server = spawn('node',[`${paths.build}/server.js`], {stdio: 'inherit'});
+    
+    if (server.pid) {
+        fs.writeFileSync(`${paths.run}/server.pid`, server.pid)
+    }
+
+    server.on("error", function(err) {
+        console.error(err);
+    })
+
     server.on('close', function() {
+        fs.unlink(`${paths.run}/server.pid`, function (err) {});
         gutil.log("Server crashing");
+        runNodeServer();
     });
-    fs.writeFileSync('./run/server.pid', server.pid)
-    cb();
 }
 
 // New deploy to development server
@@ -76,8 +89,8 @@ function deployDev () {
           hostname: 'plato.mrl.ai',
           username: 'realityflow_daemon',
           recursive: true,
-          exclude: ['.github','.vscode','node_modules','.git', 'Client-HL', 'Client-ML','Client-Mobile', 'database','Client-Web', 'UnityPlugin'],
-          destination: '/var/realityflow/development/',
+          exclude: ['.gitignore', 'package-lock.json', '.github','.vscode','node_modules','.git', 'Client-HL', 'Client-ML','Client-Mobile', 'database','Client-Web', 'UnityPlugin'],
+          destination: paths.remoteDevelopment,
           chmod: "ugo=rwX",
           progress: true,
           archive: true,
@@ -89,17 +102,15 @@ function deployDev () {
 
 var server;
 
-gulp.task('watch-stable', function() {
-    gulp.watch(['./node/server/bld/server.js'], ['run-server']);
-});
 
 function watch() {
-  return gulp.watch('./src/**/*.ts', { ignoreInitial: false }, gulp.series(buildApp, runNodeServer))
+  return gulp.watch('./src/**/*.ts', 
+    { ignoreInitial: false }, 
+    gulp.series(buildApp, runNodeServer))
 }
 
-const defaultTasks = gulp.series(watch);
-
-  var env = gutil.env.e || "development"
-
-exports.default = defaultTasks
+exports.default = gulp.series(watch);
+exports.build = buildApp
 exports.deployDev = deployDev
+
+var env = gutil.env.e || "development"
