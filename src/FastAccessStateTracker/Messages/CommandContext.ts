@@ -326,7 +326,7 @@ class Command_CreateObject implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
     let flowObject = new FlowObject(data.FlowObject);
-    flowObject.Id = uuidv4();
+    //flowObject.Id = uuidv4();
     
     console.log(flowObject)
 
