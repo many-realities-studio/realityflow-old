@@ -56,14 +56,12 @@ export class ServerEventDispatcher {
         ServerEventDispatcher.wss.on("connection", this.connection);
     }
 
-
     private connection(ws: any, arg?: any): void {
 
         // Assign this connection an ID and store it
         ws.ID = uuidv4();
 
         ServerEventDispatcher.SocketConnections.set(ws.ID, ws);
-
 
         function onMessageEvent(evt: any) {
         
@@ -113,13 +111,13 @@ export class ServerEventDispatcher {
 
 
 (async () => {
-    console.log("hello! I a")
+    try {
     await createConnection({
         "name": "prod",
         "type": "sqlite",
         "database": "./database/prod.db", 
         "logging": true,
-        "synchronize": false,
+        "synchronize": true,
         "entities": [
            DBObject,
            User,
@@ -130,23 +128,29 @@ export class ServerEventDispatcher {
             UserSubscriber
         ]
      }).then(async (res)=>{
+        // await res.synchronize();
         process.env.NODE_ENV = "prod" 
-        console.log(res.isConnected)
-        
-        await UserOperations.createUser("God", "Jesus")
+        console.log("Is connected", res.isConnected)
+        try {
+            await UserOperations.createUser("God", "Jesus")
 
-        await ProjectOperations.createProject(new FlowProject({
-            Id: "noRoom",
-            Description: "this is not a room",
-            DateModified: Date.now(),
-            ProjectName: "noRoom"
-
-        }), "God")
-
+            await ProjectOperations.createProject(new FlowProject({
+                Id: "noRoom",
+                Description: "this is not a room",
+                DateModified: Date.now(),
+                ProjectName: "noRoom"
+            }), "God")
+        } catch(err) {
+            console.log(err)
+        }
         RoomManager.CreateRoom("noRoom");
         })
-
-     
+        .catch((err) => {
+            console.log(err)
+        })
+    } catch (err) {
+        console.log(err)
+    }
      console.log(process.env.NODE_ENV)
 })()
 
@@ -158,5 +162,5 @@ const server = http.createServer(app);
 const sockServ = new ServerEventDispatcher(server);
 
 server.listen(process.env.PORT || 8999, () => {
+    console.log("SYSTEM READY");
 });
-
