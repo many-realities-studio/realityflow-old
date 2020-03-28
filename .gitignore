@@ -83,5 +83,8 @@ typings/
 # Package Lock
 package-lock.json
 
-node/
-database/
+
+# Node Build Files
+node/server/bld/
+
+database/prod.db
