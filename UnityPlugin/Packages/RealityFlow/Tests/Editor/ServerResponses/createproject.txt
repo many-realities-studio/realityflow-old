@@ -1,0 +1,126 @@
+{
+  "command": 3000,
+  "value": {
+    "data": "",
+    "_from": ""
+  },
+  "timestamp": 637125816073541900,
+  "project_id": "",
+  "client_id": "",
+  "project": {
+    "__v": 1,
+    "projectName": "pencil",
+    "owner": "5dc8db6108152a7b700215a6",
+    "created": "1970-01-01T00:00:00.000Z",
+    "_id": "5dfee0e74c65f0208cbc9beb",
+    "objs": [],
+    "clients": [
+      "5dfee04a4c65f0208cbc9bea",
+      "5dfee04a4c65f0208cbc9bea"
+    ]
+  },
+  "user": {
+    "__v": "",
+    "_id": "5dc8db6108152a7b700215a6",
+    "id": "",
+    "username": "",
+    "password": "",
+    "active_project_id": "",
+    "client_ids": [],
+    "project_ids": [],
+    "friend_ids": []
+  },
+  "client": {
+    "__v": "",
+    "_id": "5dfee04a4c65f0208cbc9bea",
+    "id": "",
+    "uid": "",
+    "activeConnecitonId": "",
+    "device": {
+      "_id": "",
+      "cameraOffset": {
+        "__v": "",
+        "_id": "",
+        "id": "",
+        "triangles": [],
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "q_x": 0,
+        "q_y": 0,
+        "q_z": 0,
+        "q_w": 0,
+        "s_x": 0,
+        "s_y": 0,
+        "s_z": 0,
+        "type": "",
+        "name": "",
+        "vertices": [],
+        "uv": [],
+        "texture": [],
+        "textureHeight": 0,
+        "textureWidth": 0,
+        "textureFormat": 0,
+        "mipmapCount": 0,
+        "color": {
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "a": 0
+        },
+        "material": {
+          "instanceID": 0
+        },
+        "flowObject": {
+          "instanceID": 0
+        }
+      },
+      "cameraRotation": {
+        "__v": "",
+        "_id": "",
+        "id": "",
+        "triangles": [],
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "q_x": 0,
+        "q_y": 0,
+        "q_z": 0,
+        "q_w": 0,
+        "s_x": 0,
+        "s_y": 0,
+        "s_z": 0,
+        "type": "",
+        "name": "",
+        "vertices": [],
+        "uv": [],
+        "texture": [],
+        "textureHeight": 0,
+        "textureWidth": 0,
+        "textureFormat": 0,
+        "mipmapCount": 0,
+        "color": {
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "a": 0
+        },
+        "material": {
+          "instanceID": 0
+        },
+        "flowObject": {
+          "instanceID": 0
+        }
+      },
+      "resolutionX": 0,
+      "resolutionY": 0,
+      "dpi": 0,
+      "deviceModel": "",
+      "deviceType": 0,
+      "description": "",
+      "uid": ""
+    },
+    "deviceType": 0,
+    "state": 0
+  }
+}

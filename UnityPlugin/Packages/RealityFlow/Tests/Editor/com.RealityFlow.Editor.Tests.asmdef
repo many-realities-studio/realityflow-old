@@ -1,0 +1,27 @@
+{
+    "name": "com.RealityFlow.Editor.Tests",
+    "references": [
+        "MyScriptAssembly",
+        "RealityFlowScripts",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "RealityFlowObjectData",
+        "com.RealityFlow.Editor",
+        "com.RealityFlow.Resources",
+        "com.RealityFlow"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": []
+}
