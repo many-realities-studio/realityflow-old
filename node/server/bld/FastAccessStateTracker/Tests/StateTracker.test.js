@@ -42,6 +42,8 @@ const TypeORMProjectCreateMock = jest.fn((projectToCreate) => __awaiter(void 0, 
 TypeORMDatabase_1.default.CreateProject = TypeORMProjectCreateMock;
 const TypeORMObjectCreateMock = jest.fn((objectToCreate, projectId) => __awaiter(void 0, void 0, void 0, function* () { }));
 TypeORMDatabase_1.default.CreateObject = TypeORMObjectCreateMock;
+const TypeORMBehaviorCreateMock = jest.fn((BehaviorToCreate, objectId) => __awaiter(void 0, void 0, void 0, function* () { }));
+TypeORMDatabase_1.default.CreateBehavior = TypeORMBehaviorCreateMock;
 const TypeORMProjectGetMock = jest.fn((projectToGet) => __awaiter(void 0, void 0, void 0, function* () {
     return new FlowProject_1.FlowProject({
         Id: projectToGet,
@@ -240,8 +242,20 @@ describe("checkout system", () => {
     }));
 });
 describe("Behavior", () => {
-    it("Can be created", () => {
-    });
+    it("Can be created", () => __awaiter(void 0, void 0, void 0, function* () {
+        var createdBehavior = StateTracker_1.StateTracker.listifyBehavior({
+            Name: "testBehavior",
+            Id: "createdBehaviorId",
+            Trigger: "triggerObjectId",
+            Target: "targetObjectId",
+            Index: "1234",
+            ChainOwner: "Owner",
+        });
+        let projectId = "1234";
+        RoomManager_1.RoomManager.CreateRoom(projectId);
+        yield StateTracker_1.StateTracker.CreateBehavior(createdBehavior, "objectId", projectId);
+        expect(TypeORMBehaviorCreateMock).toHaveBeenCalled();
+    }));
     it("can be deleted", () => {
     });
 });

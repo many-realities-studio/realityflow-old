@@ -236,7 +236,6 @@ class Command_CreateObject {
     ExecuteCommand(data, client) {
         return __awaiter(this, void 0, void 0, function* () {
             let flowObject = new FlowObject_1.FlowObject(data.FlowObject);
-            flowObject.Id = uuid_1.v4();
             console.log(flowObject);
             let returnData = yield StateTracker_1.StateTracker.CreateObject(flowObject, data.ProjectId);
             let returnContent = {
@@ -252,10 +251,11 @@ class Command_CreateObject {
 class Command_CheckinObject {
     ExecuteCommand(data, client) {
         return __awaiter(this, void 0, void 0, function* () {
-            let returnData = yield StateTracker_1.StateTracker.CheckinObject(data.FlowProjectId, data.FlowObjectId, client);
+            let returnData = yield StateTracker_1.StateTracker.CheckinObject(data.ProjectId, data.ObjectId, client);
             let returnContent = {
                 "MessageType": "CheckinObject",
-                "WasSuccessful": returnData[0]
+                "WasSuccessful": returnData[0],
+                "ObjectID": data.ObjectId
             };
             let returnMessage = MessageBuilder_1.MessageBuilder.CreateMessage(returnContent, returnData[1]);
             return returnMessage;
@@ -265,10 +265,11 @@ class Command_CheckinObject {
 class Command_CheckoutObject {
     ExecuteCommand(data, client) {
         return __awaiter(this, void 0, void 0, function* () {
-            let returnData = yield StateTracker_1.StateTracker.CheckoutObject(data.FlowProjectId, data.FlowObjectId, client);
+            let returnData = yield StateTracker_1.StateTracker.CheckoutObject(data.ProjectId, data.ObjectId, client);
             let returnContent = {
                 "MessageType": "CheckoutObject",
-                "WasSuccessful": returnData[0]
+                "WasSuccessful": returnData[0],
+                "ObjectID": data.ObjectId
             };
             let returnMessage = MessageBuilder_1.MessageBuilder.CreateMessage(returnContent, returnData[1]);
             return returnMessage;

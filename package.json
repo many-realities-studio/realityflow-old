@@ -70,10 +70,6 @@
     "webpack-cli": "^3.2.3",
     "webpack-stream": "^5.2.1"
   },
-    "start": "gulp",
-    "deploy": "gulp deploy-dev"
-    "build": "webpack"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lucidbard/flow.git"

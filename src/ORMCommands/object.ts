@@ -39,7 +39,7 @@ export class ObjectOperations {
             newObject.G =              objectInfo.G;
             newObject.B =              objectInfo.B;
             newObject.A =              objectInfo.A
-            newObject.Type =           objectInfo.Type;
+            newObject.Prefab =         objectInfo.Prefab;
             newObject.Project =        project;
             
 
