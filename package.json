@@ -16,6 +16,7 @@
     "express": "^4.14.0",
     "express-session": "^1.17.0",
     "fs": "^0.0.1-security",
+    "fsevents": "^2.1.2",
     "graceful": "^1.0.1",
     "graceful-fs": "^4.1.11",
     "gulp-connect": "^5.0.0",
@@ -68,10 +69,6 @@
     "vinyl-paths": "^2.1.0",
     "webpack-cli": "^3.2.3",
     "webpack-stream": "^5.2.1"
-  },
-  "scripts": {
-    "test": "mocha",
-    "build": "webpack"
   },
   "repository": {
     "type": "git",
