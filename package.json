@@ -16,7 +16,6 @@
     "express": "^4.14.0",
     "express-session": "^1.17.0",
     "fs": "^0.0.1-security",
-    "fsevents": "^2.1.2",
     "graceful": "^1.0.1",
     "graceful-fs": "^4.1.11",
     "gulp-connect": "^5.0.0",
