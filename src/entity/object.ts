@@ -66,7 +66,7 @@ export class DBObject extends BaseEntity{
     A: number
 
     @Column()
-    Type: string
+    Prefab: string
 
     @ManyToOne(type=>Project, proj => proj.ObjectList, {onDelete: "CASCADE", onUpdate: "CASCADE"})
     Project: Project;
