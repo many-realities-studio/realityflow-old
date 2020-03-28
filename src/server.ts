@@ -119,7 +119,7 @@ export class ServerEventDispatcher {
         "type": "sqlite",
         "database": "./database/prod.db", 
         "logging": true,
-        "synchronize": false,
+        "synchronize": true,
         "entities": [
            DBObject,
            User,
