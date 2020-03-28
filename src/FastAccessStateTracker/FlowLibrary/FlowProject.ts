@@ -13,7 +13,7 @@ export class FlowProject
   // Data storage fields
   public Id: string;
   public Description: string;
-  public DateModified: Date;
+  public DateModified: number;
   public ProjectName: string;
  
   constructor(json:any){

@@ -16,6 +16,7 @@
     "express": "^4.14.0",
     "express-session": "^1.17.0",
     "fs": "^0.0.1-security",
+    "fsevents": "^2.1.2",
     "graceful": "^1.0.1",
     "graceful-fs": "^4.1.11",
     "gulp-connect": "^5.0.0",
@@ -53,7 +54,6 @@
     "ws": "^1.1.1"
   },
   "devDependencies": {
-    "@types/jest": "^25.1.2",
     "@types/mongodb": "^2.1.37",
     "@types/mongoose": "^4.7.2",
     "@types/node": "^6.14.9",
@@ -62,19 +62,13 @@
     "gulp": "^3.9.1",
     "gulp-print": "^5.0.0",
     "gulp-util": "^3.0.8",
-    "jest": "^25.1.0",
     "mocha": "^3.2.0",
-    "ts-jest": "^25.2.0",
     "ts-loader": "^5.2.2",
     "typescript": "^3.8.2",
     "uuid": "^3.4.0",
     "vinyl-paths": "^2.1.0",
     "webpack-cli": "^3.2.3",
     "webpack-stream": "^5.2.1"
-  },
-  "scripts": {
-    "test": "mocha",
-    "build": "webpack"
   },
   "repository": {
     "type": "git",
@@ -94,13 +88,4 @@
     "url": "https://github.com/lucidbard/flow/issues"
   },
   "homepage": "https://github.com/lucidbard/flow#readme"
-  ,
-  "jest": {
-    "globals": {
-      "ts-jest" : {
-        "diagnostics": false
-      }
-  }
-}
-
 }

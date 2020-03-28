@@ -6,7 +6,9 @@ import { RoomManager } from "../RoomManager"
 import { FlowProject } from "../FlowLibrary/FlowProject"
 import { Project } from "../../entity/project"
 import { FlowObject } from "../FlowLibrary/FlowObject"
+import {FlowBehavior} from "../FlowLibrary/FlowBehavior"
 import { ProjectOperations } from "../../ORMCommands/project"
+import { Behavior } from "../../entity/behavior"
 
 const databaseUserCreationMock = jest.fn()
 
@@ -18,6 +20,7 @@ jest.mock('../Database/TypeORMDatabase');
 jest.mock('../RoomManager');
 jest.mock('../../ORMCommands/project')
 
+
 const fakeJoinRoom = jest.fn(async(roomCode: string, username:string, client: string) => {});
 RoomManager.JoinRoom = fakeJoinRoom ;
 
@@ -26,6 +29,9 @@ RoomManager.LeaveRoom = fakeLeaveRoom;
 
 const fakeDestroyRoom = jest.fn((roomCode:string) => new Map<string, Array<string>>());
 RoomManager.DestroyRoom = fakeDestroyRoom;
+
+// const fakeAddBehavior = jest.fn(async(roomCode: string) => {});
+// RoomManager.FindRoom(fakeRoomCode).GetProject().AddBehavior = fakeAddBehavior;
 
 const fakeGetClients = jest.fn((roomCode) => {
     let x = new Map<string, Array<string>>()
@@ -48,6 +54,10 @@ TypeORMDatabase.CreateProject = TypeORMProjectCreateMock;
 
 const TypeORMObjectCreateMock = jest.fn( async (objectToCreate: FlowObject, projectId: string) => {});
 TypeORMDatabase.CreateObject = TypeORMObjectCreateMock;
+
+const TypeORMBehaviorCreateMock = jest.fn( async (BehaviorToCreate: FlowBehavior[], objectId) => {});
+TypeORMDatabase.CreateBehavior = TypeORMBehaviorCreateMock;
+
 
 const TypeORMProjectGetMock = jest.fn( async (projectToGet: string) => {
     return new FlowProject({
@@ -329,8 +339,24 @@ describe("checkout system", () => {
 
 
 describe("Behavior", () => {
-    it("Can be created", () => {
+    it("Can be created", async () => {
+        var createdBehavior =StateTracker.listifyBehavior(
+            {
+            Name: "testBehavior",
+            Id: "createdBehaviorId",
+            Trigger: "triggerObjectId",
+            Target: "targetObjectId",
+            Index : "1234",
+            ChainOwner: "Owner",
+        });
 
+        let projectId = "1234";
+
+        RoomManager.CreateRoom(projectId);
+
+        await StateTracker.CreateBehavior(createdBehavior, "objectId", projectId);
+
+        expect(TypeORMBehaviorCreateMock).toHaveBeenCalled()
     })
 
     it("can be deleted", () => {
