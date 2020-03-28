@@ -80,34 +80,46 @@ ServerEventDispatcher.connections = [];
 ServerEventDispatcher.SocketConnections = new Map();
 ;
 (() => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("hello! I a");
-    yield typeorm_1.createConnection({
-        "name": "prod",
-        "type": "sqlite",
-        "database": "./database/prod.db",
-        "logging": true,
-        "synchronize": false,
-        "entities": [
-            object_1.DBObject,
-            user_1.User,
-            project_2.Project,
-            behavior_1.Behavior
-        ],
-        subscribers: [
-            UserSubscriber_1.UserSubscriber
-        ]
-    }).then((res) => __awaiter(void 0, void 0, void 0, function* () {
-        process.env.NODE_ENV = "prod";
-        console.log(res.isConnected);
-        yield user_2.UserOperations.createUser("God", "Jesus");
-        yield project_1.ProjectOperations.createProject(new FlowProject_1.FlowProject({
-            Id: "noRoom",
-            Description: "this is not a room",
-            DateModified: Date.now(),
-            ProjectName: "noRoom"
-        }), "God");
-        RoomManager_1.RoomManager.CreateRoom("noRoom");
-    }));
+    try {
+        yield typeorm_1.createConnection({
+            "name": "prod",
+            "type": "sqlite",
+            "database": "./database/prod.db",
+            "logging": true,
+            "synchronize": true,
+            "entities": [
+                object_1.DBObject,
+                user_1.User,
+                project_2.Project,
+                behavior_1.Behavior
+            ],
+            subscribers: [
+                UserSubscriber_1.UserSubscriber
+            ]
+        }).then((res) => __awaiter(void 0, void 0, void 0, function* () {
+            process.env.NODE_ENV = "prod";
+            console.log("Is connected", res.isConnected);
+            try {
+                yield user_2.UserOperations.createUser("God", "Jesus");
+                yield project_1.ProjectOperations.createProject(new FlowProject_1.FlowProject({
+                    Id: "noRoom",
+                    Description: "this is not a room",
+                    DateModified: Date.now(),
+                    ProjectName: "noRoom"
+                }), "God");
+            }
+            catch (err) {
+                console.log(err);
+            }
+            RoomManager_1.RoomManager.CreateRoom("noRoom");
+        }))
+            .catch((err) => {
+            console.log(err);
+        });
+    }
+    catch (err) {
+        console.log(err);
+    }
     console.log(process.env.NODE_ENV);
 }))();
 const app = express();
@@ -115,5 +127,6 @@ app.use(express.static("./static"));
 const server = http.createServer(app);
 const sockServ = new ServerEventDispatcher(server);
 server.listen(process.env.PORT || 8999, () => {
+    console.log("SYSTEM READY");
 });
 //# sourceMappingURL=server.js.map

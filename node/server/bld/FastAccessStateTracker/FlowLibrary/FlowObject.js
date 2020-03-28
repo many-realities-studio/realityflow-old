@@ -18,6 +18,7 @@ class FlowObject {
         this.G = json.G;
         this.B = json.B;
         this.A = json.A;
+        this.Prefab = json.Prefab;
         this.CurrentCheckout = null;
     }
     UpdateProperties(newObject) {
