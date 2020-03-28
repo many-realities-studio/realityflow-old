@@ -1,28 +1,42 @@
 // Dependencies
-const gulp = require('gulp'),
+const {watch, parallel, series, task, src, dest  } = require('gulp'),
     fs = require('fs'),
+    exec = require('gulp-exec'),
     gulp_tslint = require('gulp-tslint');
     process = require('process');
+
+var server;
 
 'use strict';
 var config = JSON.parse(fs.readFileSync('./gulp_config.json'));
 var gutil = require('gulp-util');
-var spawn = require('child_process').spawn;
+var {spawn} = require('child_process');
 var tsc = require("gulp-typescript");
 // var sourcemaps = require('gulp-sourcemaps');
 // const stream = require('stream');
 // const path = require('path');
 var npid = require('npid');
 
+const paths = {
+    run: './run/',
+    build: './node/server/bld/',
+    remoteDevelopment: '/var/realityflow/development/'
+};
+
+if(fs.existsSync(`${paths.run}/server.pid`)) {
+  console.log("Zombie server found; kill it.")
+  // kill(fs.readFileSync(`${paths.run}/server.pid`))
+  // fs.unlink(`${paths.run}/server.pid`, function (err) {});
+}
 try {
-    var pid = npid.create('./run/gulp.pid');
-    pid.removeOnExit();
-  } catch (err) {
-    console.log("Error, previous run did not exit cleanly.");
-    npid.remove('./run/gulp.pid')
-    var pid = npid.create('./run/gulp.pid');
-    pid.removeOnExit();
-    // process.exit(1);
+  var pid = npid.create(`${paths.run}/gulp.pid`);
+  pid.removeOnExit();
+} catch (err) {
+  console.log("Error, previous run did not exit cleanly.");
+  npid.remove('./run/gulp.pid')
+  var pid = npid.create('./run/gulp.pid');
+  pid.removeOnExit();
+  // process.exit(1);
 }
 
 var rsync = require('gulp-rsync');
@@ -31,40 +45,28 @@ var rsync = require('gulp-rsync');
 
 // var node;
 
-const paths = {
-    run: './run/',
-    build: './node/server/bld/',
-    remoteDevelopment: '/var/realityflow/development/'
-};
 
-gulp.task('tslint', function() {
-    return gulp.src(['src/**/*.ts', '!**/*.d.ts'])
+function tslint() {
+    return src(['src/**/*.ts', '!**/*.d.ts'])
         .pipe(gulp_tslint({}))
         .pipe(gulp_tslint.report());
-});
+}
 
 var tsProject = tsc.createProject("./tsconfig.json");
 
-// var tsTestProject = tsc.createProject("./tsconfig.json");
-
-// gulp.task("build-test", function () {
-//     return gulp.src([
-//         "src/**/*.test.ts",
-//     ])
-//         .pipe(tsc(tsTestProject))
-//         .js.pipe(gulp.dest("test/"));
-// });
-
 function buildApp() {
     console.log("Building app...")
-    return gulp.src(['src/**/*.ts','!src/**/*.test.ts'])
+    return src(['src/**/*.ts','!src/**/*.test.ts'])
         .pipe(tsProject(tsc.reporter.longReporter()))
-        .pipe(gulp.dest(paths.build))
+        .pipe(dest(paths.build))
 }
 
-function runNodeServer() {
-    if(server != null)
+function runNodeServer(cb) {
+  console.log("Running server...")
+    if(server != null) {
+        fs.unlink(`${paths.run}/server.pid`, function (err) {});
         server.kill();
+    }
     server = spawn('node',[`${paths.build}/server.js`], {stdio: 'inherit'});
     
     if (server.pid) {
@@ -76,15 +78,16 @@ function runNodeServer() {
     })
 
     server.on('close', function() {
-        fs.unlink(`${paths.run}/server.pid`, function (err) {});
         gutil.log("Server crashing");
-        runNodeServer();
+        // runNodeServer();
     });
+    // We've set up the server and therefore have completed this task:
+    cb()
 }
 
 // New deploy to development server
 function deployDev () {
-  return gulp.src('.')
+  return src('.')
       .pipe(rsync({
           hostname: 'plato.mrl.ai',
           username: 'realityflow_daemon',
@@ -97,20 +100,45 @@ function deployDev () {
           silent: false,
           compress: true,
           command: true,
-      }));
+      }))
+      .pipe(
+        exec('ssh realityflow_daemon@plato.mrl.ai "cd development && npm install && gulp"')
+      );
 }
 
-var server;
-
-
-function watch() {
-  return gulp.watch('./src/**/*.ts', 
-    { ignoreInitial: false }, 
-    gulp.series(buildApp, runNodeServer))
+function watchEverything(cb) {
+  console.log("Watching for file changes...")
+  return parallel(
+    () => watch('src/**/*.ts', 
+      { ignoreInitial: false }, 
+      buildApp),
+    () => watch('node/**/*.js', 
+      { ignoreInitial: true, delay: 500}, 
+      runNodeServer))(cb)
 }
-
-exports.default = gulp.series(watch);
-exports.build = buildApp
-exports.deployDev = deployDev
 
 var env = gutil.env.e || "development"
+
+process.on('SIGINT', function() {
+  console.log('Interrupt signal detected; terminating node server...');
+  npid.remove('./run/gulp.pid')
+  if(server != undefined) {
+    server.kill();
+    fs.unlink(`${paths.run}/server.pid`, function (err) {});
+  }
+  process.exit();
+});
+
+process.on('exit', function () {
+  npid.remove('./run/gulp.pid')
+  if(server != undefined) {
+    console.log("Server going down...")
+    server.kill();
+    fs.unlink(`${paths.run}/server.pid`, function (err) {});
+  }
+});
+
+
+exports.default = watchEverything;
+exports.build = buildApp
+exports.deployDev = deployDev
