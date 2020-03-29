@@ -486,7 +486,7 @@ namespace RuntimeGizmos
 		{
             // When testing in editor, comment out IsPointerOverGameObject() with no parameters. When building for mobile, user 
             // version that tests with fingerId.
-			if(nearAxis == Axis.None && Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject()/*!EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)*/)
+			if(nearAxis == Axis.None && Input.GetMouseButtonDown(0) && /*!EventSystem.current.IsPointerOverGameObject()*/!EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
 			{
 				bool isAdding = Input.GetKey(AddSelection);
 				bool isRemoving = Input.GetKey(RemoveSelection);
@@ -567,12 +567,11 @@ namespace RuntimeGizmos
 		public void ClearTargets(bool addCommand = true)
 		{
 			if(addCommand) UndoRedoManager.Insert(new ClearTargetsCommand(this, targetRootsOrdered));
-
-			slideMenuManager.ToggleMenuButtons(false);
 			ClearAllHighlightedRenderers();
 			targetRoots.Clear();
 			targetRootsOrdered.Clear();
-            //observableTargets.Clear();
+			slideMenuManager.ToggleMenuButtons(false);
+			//observableTargets.Clear();
 			//children.Clear();
 		}
 
