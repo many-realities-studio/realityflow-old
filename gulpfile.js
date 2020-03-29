@@ -1,83 +1,76 @@
 // Dependencies
-const gulp = require('gulp'),
+const {watch, parallel, series, task, src, dest  } = require('gulp'),
     fs = require('fs'),
+    exec = require('gulp-exec'),
     gulp_tslint = require('gulp-tslint');
     process = require('process');
 
+var server;
+
 'use strict';
 var config = JSON.parse(fs.readFileSync('./gulp_config.json'));
-var local_config = JSON.parse(fs.readFileSync('./local_config.json'));
-var nodemon = require('gulp-nodemon');
-var notify = require('gulp-notify');
-var connect = require('gulp-connect');
 var gutil = require('gulp-util');
-var spawn = require('child_process').spawn;
+var {spawn} = require('child_process');
 var tsc = require("gulp-typescript");
-var sourcemaps = require('gulp-sourcemaps');
-const stream = require('stream');
-const path = require('path');
-var prompt = require('gulp-prompt');
-var gulpif = require('gulp-if');
+// var sourcemaps = require('gulp-sourcemaps');
+// const stream = require('stream');
+// const path = require('path');
+var npid = require('npid');
 
-var exec = require('child_process').exec;
+const paths = {
+    run: './run/',
+    build: './node/server/bld/',
+    remoteDevelopment: '/var/realityflow/development/'
+};
+
+if(fs.existsSync(`${paths.run}/server.pid`)) {
+  console.log("Zombie server found; kill it.")
+  // kill(fs.readFileSync(`${paths.run}/server.pid`))
+  // fs.unlink(`${paths.run}/server.pid`, function (err) {});
+}
+try {
+  var pid = npid.create(`${paths.run}/gulp.pid`);
+  pid.removeOnExit();
+} catch (err) {
+  console.log("Error, previous run did not exit cleanly.");
+  npid.remove('./run/gulp.pid')
+  var pid = npid.create('./run/gulp.pid');
+  pid.removeOnExit();
+  // process.exit(1);
+}
+
 var rsync = require('gulp-rsync');
 // const webpack_stream = require('webpack-stream')
 // const webpack_config = require('./webpack.config.js');
 
-var mkdirs = require('mkdirs');
-var node;
+// var node;
 
-const paths = {
-    src: './node/server/bld/',
-    build: './static/'
-};
 
-gulp.task('tslint', function() {
-    return gulp.src(['src/**/*.ts', '!**/*.d.ts'])
+function tslint() {
+    return src(['src/**/*.ts', '!**/*.d.ts'])
         .pipe(gulp_tslint({}))
         .pipe(gulp_tslint.report());
-});
+}
 
 var tsProject = tsc.createProject("./tsconfig.json");
 
-// gulp.task('webpack', () => {
-//     return webpack_stream(webpack_config)
-//         .pipe(gulp.dest(`${paths.build}`));
-// });
-
-gulp.task("build-app", function () {
-    console.log("Rebulding app");
-    return gulp.src(['src/**/*.ts','!src/**/*.test.ts'])
+function buildApp() {
+    console.log("Building app...")
+    return src(['src/**/*.ts','!src/**/*.test.ts'])
         .pipe(tsProject(tsc.reporter.longReporter()))
-        .pipe(gulp.dest("node/server/bld/"))
-});
+        .pipe(dest(paths.build))
+}
 
-gulp.task("restart-remote-server", function () {
-    console.log("Rebulding app");
-    return gulp.src(['src/**/*.ts','!src/**/*.test.ts'])
-        .pipe(tsProject(tsc.reporter.longReporter()))
-        .pipe(gulp.dest("node/server/bld/"))
-});
-
-var tsTestProject = tsc.createProject("./tsconfig.json");
-
-gulp.task("build-test", function () {
-    return gulp.src([
-        "src/**/*.test.ts",
-    ])
-        .pipe(tsc(tsTestProject))
-        .js.pipe(gulp.dest("test/"));
-});
-
-function runNodeServer() {
-    if(server != null)
+function runNodeServer(cb) {
+  console.log("Running server...")
+    if(server != null) {
+        fs.unlink(`${paths.run}/server.pid`, function (err) {});
         server.kill();
-    server = spawn('node',['node/server/bld/server.js'], {stdio: 'inherit'});
+    }
+    server = spawn('node',[`${paths.build}/server.js`], {stdio: 'inherit'});
     
     if (server.pid) {
-        pidFile = fs.createWriteStream("./server.pid");
-        pidFile.write(server.pid.toString());
-        pidFile.end();
+        fs.writeFileSync(`${paths.run}/server.pid`, server.pid)
     }
 
     server.on("error", function(err) {
@@ -85,87 +78,67 @@ function runNodeServer() {
     })
 
     server.on('close', function() {
-        fs.unlink("./server.pid", function (err) {});
         gutil.log("Server crashing");
         // runNodeServer();
     });
-    return server;
+    // We've set up the server and therefore have completed this task:
+    cb()
 }
-
-gulp.task("run-server", ['build-app'], function() {
-    gutil.log("Running server...");
-    runNodeServer();
-});
-gulp.task("run-stable", ['run-server', 'watch-stable']);
-
-gulp.task('default', ['watch', 'run-server']);
 
 // New deploy to development server
-gulp.task('deploy-dev', function () {
-    return gulp.src('.')
-        .pipe(rsync({
-            hostname: 'plato.mrl.ai',
-            username: 'pbettler',
-            recursive: true,
-            exclude: ['.github','.vscode','node_modules','.git', 'Client-HL', 'Client-ML','Client-Mobile', 'database','Client-Web', 'UnityPlugin'],
-            destination: '/var/realityflow/development/',
-            chmod: "ugo=rwX",
-            progress: true,
-            archive: true,
-            silent: false,
-            compress: true,
-            command: true,
-        }));
-});
-
-var running = false;
-
-var runCommand = function (command, cb) {
-    if (!running) {
-        running = true;
-    }
-
+function deployDev () {
+  return src('.')
+      .pipe(rsync({
+          hostname: 'plato.mrl.ai',
+          username: 'realityflow_daemon',
+          recursive: true,
+          exclude: ['.gitignore', 'package-lock.json', '.github','.vscode','node_modules','.git', 'Client-HL', 'Client-ML','Client-Mobile', 'database','Client-Web', 'UnityPlugin'],
+          destination: paths.remoteDevelopment,
+          chmod: "ugo=rwX",
+          progress: true,
+          archive: true,
+          silent: false,
+          compress: true,
+          command: true,
+      }))
+      .pipe(
+        exec('ssh realityflow_daemon@plato.mrl.ai "cd development && npm install && gulp"')
+      );
 }
 
-var buffer;
-var client_id;
-var timer;
-var delay = 2000;
-var server;
-
-gulp.task('watch-stable', function() {
-    gulp.watch(['./node/server/bld/server.js'], ['run-server']);
-});
-
-gulp.task('watch', function () {
-    gutil.log("Starting livereload server");
-    // try {
-    //     connect.server({
-    //         livereload: true,
-    //         root: 'public',
-    //         debug: false,
-    //         port: 8888
-    //     });
-    // } catch (e) {
-    //     gutil.log(e);
-    // }
-    // gulp.watch('./static/css/*.css', connect.reload);
-    // Watch HTML and livereload
-    // gulp.watch(['./static/index.html', './static/js/flow.js', './static/js/client_interface.js',
-    //     './static/js/flow_common.js'], ['editor']);
-    gulp.watch('./src/**/*.ts', { ignoreInitial: false }, function() {
-        gulp.start('run-server');
-    })
-    // gulp.watch(['./node/server/bld/server.js'], ['run-server']);
-});
+function watchEverything(cb) {
+  console.log("Watching for file changes...")
+  return parallel(
+    () => watch('src/**/*.ts', 
+      { ignoreInitial: false }, 
+      buildApp),
+    () => watch('node/**/*.js', 
+      { ignoreInitial: true, delay: 500}, 
+      runNodeServer))(cb)
+}
 
 var env = gutil.env.e || "development"
-if (process.pid) {
-    pidFile = fs.createWriteStream("./gulp.pid");
-    pidFile.write(process.pid.toString());
-    pidFile.end();
-}
 
-process.on('exit', function() {
-    fs.unlink("./gulp.pid", function (err) {});
-})
+process.on('SIGINT', function() {
+  console.log('Interrupt signal detected; terminating node server...');
+  npid.remove('./run/gulp.pid')
+  if(server != undefined) {
+    server.kill();
+    fs.unlink(`${paths.run}/server.pid`, function (err) {});
+  }
+  process.exit();
+});
+
+process.on('exit', function () {
+  npid.remove('./run/gulp.pid')
+  if(server != undefined) {
+    console.log("Server going down...")
+    server.kill();
+    fs.unlink(`${paths.run}/server.pid`, function (err) {});
+  }
+});
+
+
+exports.default = watchEverything;
+exports.build = buildApp
+exports.deployDev = deployDev

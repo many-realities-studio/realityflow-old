@@ -19,6 +19,7 @@
     "graceful": "^1.0.1",
     "graceful-fs": "^4.1.11",
     "gulp-connect": "^5.0.0",
+    "gulp-exec": "^4.0.0",
     "gulp-if": "^2.0.2",
     "gulp-istanbul": "^1.1.1",
     "gulp-livereload": "^3.8.1",
@@ -37,6 +38,7 @@
     "mongodb": "^2.2.11",
     "mongoose": "^4.13.18",
     "nodemon": "^1.4.1",
+    "npid": "^0.4.0",
     "redis-url": "^1.2.1",
     "reflect-metadata": "^0.1.13",
     "run-sequence": "^1.2.2",
@@ -58,7 +60,7 @@
     "@types/node": "^6.14.9",
     "@types/ws": "0.0.37",
     "del": "^3.0.0",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.2",
     "gulp-print": "^5.0.0",
     "gulp-util": "^3.0.8",
     "mocha": "^3.2.0",
@@ -68,6 +70,15 @@
     "vinyl-paths": "^2.1.0",
     "webpack-cli": "^3.2.3",
     "webpack-stream": "^5.2.1"
+  },
+  "scripts": {
+    "test": "mocha",
+    "start": "gulp",
+    "deploy": "gulp deploy",
+    "deploy-dev": "gulp deployDev",
+    "build": "gulp build",
+    "restart": "touch src/server.ts",
+    "restart-remote": "ssh realityflow_daemon@plato.mrl.ai \"cd development && npm run restart\""
   },
   "repository": {
     "type": "git",
