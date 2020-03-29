@@ -63,7 +63,7 @@ public class DebugPanel : MonoBehaviour
 
     void Start()
     {
-        Debug.Log(FlowNetworkManager.clientType);
+        //Debug.Log(FlowNetworkManager.clientType);
     }
 
     void Update()

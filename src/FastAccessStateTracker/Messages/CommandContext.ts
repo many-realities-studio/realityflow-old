@@ -326,7 +326,7 @@ class Command_CreateObject implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
     let flowObject = new FlowObject(data.FlowObject);
-    flowObject.Id = uuidv4();
+    //flowObject.Id = uuidv4();
     
     console.log(flowObject)
 
@@ -349,8 +349,8 @@ class Command_CheckinObject implements ICommand
     let returnData = await StateTracker.CheckinObject(data.ProjectId, data.ObjectId, client)
     let returnContent = {
       "MessageType": "CheckinObject",
-      "ObjectId": data.ObjectId,
-      "WasSuccessful": returnData[0]
+      "WasSuccessful": returnData[0],
+      "ObjectID": data.ObjectId
     }
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
 
@@ -367,7 +367,7 @@ class Command_CheckoutObject implements ICommand
     let returnContent = {
       "MessageType": "CheckoutObject",
       "WasSuccessful": returnData[0],
-      "ObjectId": data.ObjectId,
+      "ObjectID": data.ObjectId
     }
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
 

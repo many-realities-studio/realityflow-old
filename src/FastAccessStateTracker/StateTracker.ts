@@ -103,7 +103,6 @@ export class StateTracker{
   {
     let userLoggedIn = this.currentUsers.has(username);
 
-
     // Don't allow users to create projects if they are not logged in
     if(!userLoggedIn)
       return [ null, [client], null ];

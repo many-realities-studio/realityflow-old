@@ -3,7 +3,7 @@
     {
        "name": "dev",
        "type": "sqlite",
-       "database": "src/database/data.db", 
+       "database": "database/prod.db", 
        "synchronize": false,
        "logging": true,
        "entities": [

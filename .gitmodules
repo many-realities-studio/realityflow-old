@@ -1,6 +1,3 @@
 [submodule "UnityPlugin/Packages/RealityFlow"]
 	path = UnityPlugin/Packages/RealityFlow
-	url = https://github.com/nyashafrank/realityflow_package.git
-[submodule "UnityPlugin/Packages/realityflow_package"]
-	path = UnityPlugin/Packages/realityflow_package
-	url = https://github.com/lucidbard/realityflow_package
+	url = https://github.com/lucidbard/realityflow_package.git

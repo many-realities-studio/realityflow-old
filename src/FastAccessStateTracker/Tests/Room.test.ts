@@ -5,7 +5,6 @@ import { FlowProject } from "../FlowLibrary/FlowProject"
 import TypeORMDatabase from "../Database/TypeORMDatabase"
 import { FlowUser } from "../FlowLibrary/FlowUser"
 import { FlowObject } from "../FlowLibrary/FlowObject"
-import { Client } from "_debugger"
 
 jest.mock('../Database/TypeORMDatabase')
  
@@ -19,9 +18,7 @@ const returnProject = jest.fn( async (projectId: string) => {
 })
 
 const returnUser = jest.fn( async (userName: string) => {
-    return new FlowUser(userName)
-
-    
+    return new FlowUser(userName)    
 })
 
 TypeORMDatabase.GetProject = returnProject;
@@ -49,8 +46,6 @@ describe("Rooms", () => {
         let clientId : string = "YashClient"
 
         await room.JoinRoom(userName, clientId)
-
-        
 
         expect(returnUser).toHaveBeenCalled()
         expect(room.hasUser(userName)).toBeTruthy()
