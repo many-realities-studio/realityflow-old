@@ -1,19 +1,19 @@
 [
 
     {
-       "name": "dev",
+       "name": "prod",
        "type": "sqlite",
-       "database": "database/prod.db", 
-       "synchronize": false,
+       "database": "src/database/prod.db", 
+       "synchronize": true,
        "logging": true,
        "entities": [
-          "src/entity/**/*.ts"
+          "node/server/bld/entity/**/*.js"
        ],
        "migrations": [
-          "src/migration/**/*.ts"
+          "node/server/bld/migration/**/*.js"
        ],
        "subscribers": [
-          "src/subscriber/**/*.ts"
+          "node/server/bld/subscriber/**/*.js"
        ],
        "cli": {
           "entitiesDir": "src/entity",

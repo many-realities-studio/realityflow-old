@@ -40,7 +40,7 @@ export class ObjectOperations {
             newObject.B =              objectInfo.B;
             newObject.A =              objectInfo.A
             newObject.Project =        project;
-            
+            newObject.Prefab = objectInfo.Prefab
 
         await getConnection(process.env.NODE_ENV).manager.save(newObject);
     }
