@@ -13,11 +13,17 @@ class ScrollAndPinch : MonoBehaviour
     public Camera Camera;
     public bool Rotate;
     protected Plane Plane;
+    private Vector3 camPosition;
 
     private void Awake()
     {
         if (Camera == null)
+        {
             Camera = Camera.main;
+        }
+
+        camPosition = Camera.transform.position;
+            
     }
 
     private void Update()
@@ -55,7 +61,17 @@ class ScrollAndPinch : MonoBehaviour
                 return;
 
             //Move cam amount the mid ray
-            Camera.transform.position = Vector3.LerpUnclamped(pos1, Camera.transform.position, 1 / zoom);
+            Vector3 lerp = Vector3.LerpUnclamped(pos1, Camera.transform.position, 1 / zoom);
+            if (float.IsNaN(lerp.x))
+            {
+                Debug.Log("the lerp" + lerp);
+                Camera.transform.position = camPosition;
+            }
+            else
+            {
+                Camera.transform.position = lerp;
+            }
+                
 
             if (Rotate && pos2b != pos2)
                 Camera.transform.RotateAround(pos1, Plane.normal, Vector3.SignedAngle(pos2 - pos1, pos2b - pos1b, Plane.normal));

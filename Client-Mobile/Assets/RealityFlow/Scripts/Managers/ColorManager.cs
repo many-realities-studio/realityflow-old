@@ -13,7 +13,8 @@ public class ColorManager : MonoBehaviour {
     private void Start()
     {
         gizmo = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<TransformGizmo>();
-        picker = GameObject.FindGameObjectWithTag("Picker").GetComponent<ColorPicker>();
+        if(picker == null)
+            picker = GameObject.FindGameObjectWithTag("Picker").GetComponent<ColorPicker>();
         picker.onValueChanged.AddListener(color =>
         {
             foreach (Transform o in gizmo.targetRootsOrdered)

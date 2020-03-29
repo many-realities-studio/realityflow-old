@@ -12,6 +12,7 @@ TagManager:
   - EventSystem
   - TopCamera
   - SlideMenuButtons
+  - Picker2
   layers:
   - Default
   - TransparentFX
