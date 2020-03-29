@@ -66,5 +66,6 @@ export class FlowObject
     this.S_x = newObject.S_x;
     this.S_y = newObject.S_y;
     this.S_z = newObject.S_z;
+    this.Prefab = newObject.Prefab;
   }
 }

@@ -38,9 +38,10 @@ export class ObjectOperations {
             newObject.R =              objectInfo.R;
             newObject.G =              objectInfo.G;
             newObject.B =              objectInfo.B;
-            newObject.A =              objectInfo.A
+            newObject.A =              objectInfo.A;
+            newObject.Prefab =         objectInfo.Prefab;
             newObject.Project =        project;
-            newObject.Prefab = objectInfo.Prefab
+            
 
         await getConnection(process.env.NODE_ENV).manager.save(newObject);
     }
@@ -89,7 +90,8 @@ export class ObjectOperations {
                 R:          objectInfo.R,
                 G:          objectInfo.G,
                 B:          objectInfo.B,
-                A:          objectInfo.A
+                A:          objectInfo.A,
+                Prefab:     objectInfo.Prefab
             })
             .where({id: objectInfo.id})
             .execute();
