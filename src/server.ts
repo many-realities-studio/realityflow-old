@@ -11,7 +11,7 @@ import {ProjectOperations} from "./ORMCommands/project";
 import { DBObject } from "./entity/object";
 import { User } from "./entity/user";
 import { Project } from "./entity/project";
-import { UserSubscriber } from "./entity/UserSubscriber";
+import { UserSubscriber } from "./subscriber/UserSubscriber";
 import { Behavior } from "./entity/behavior"
 
 import { RoomManager } from "./FastAccessStateTracker/RoomManager";
@@ -112,22 +112,7 @@ export class ServerEventDispatcher {
 
 (async () => {
     try {
-    await createConnection({
-        "name": "prod",
-        "type": "sqlite",
-        "database": "./database/prod.db", 
-        "logging": true,
-        "synchronize": true,
-        "entities": [
-           DBObject,
-           User,
-           Project,
-           Behavior
-        ],
-        subscribers: [
-            UserSubscriber
-        ]
-     }).then(async (res)=>{
+    await createConnection("prod").then(async (res)=>{
         // await res.synchronize();
         process.env.NODE_ENV = "prod" 
         console.log("Is connected", res.isConnected)
