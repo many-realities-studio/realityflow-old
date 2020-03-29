@@ -1,5 +1,30 @@
+# dependencies
+package-lock.json
 node_modules
-node/*
-src/FastAccessStateTracker/database/*
 
+# compiled js
+node/*
+
+# sqlite databases
+src/FastAccessStateTracker/database/*
+database/*
+
+# ide generated files
 **/.vscode/
+
+.env
+.env.test
+*.tgz
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
