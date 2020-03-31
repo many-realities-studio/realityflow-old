@@ -352,7 +352,7 @@ class Command_CheckinObject implements ICommand
     let returnData = await StateTracker.CheckinObject(data.ProjectId, data.ObjectId, client)
     let returnContent = {
       "MessageType": "CheckinObject",
-      "WasSuccessful": ((returnData[0]) && finalUpdate[0] == null) ? false: true,
+      "WasSuccessful": ((returnData[0]) && finalUpdate[0] != null) ? true: false,
       "ObjectID": data.ObjectId
     }
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
