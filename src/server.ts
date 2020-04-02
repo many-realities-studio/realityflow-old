@@ -45,7 +45,7 @@ export class ServerEventDispatcher {
 
 
     constructor(server: http.Server) {
-        
+
         ServerEventDispatcher.wss = new Server({ server }, function (err: any) {
 
         });
@@ -54,6 +54,24 @@ export class ServerEventDispatcher {
 
         ServerEventDispatcher.callbacks = [];
         ServerEventDispatcher.wss.on("connection", this.connection);
+        
+        server.on("upgrade", (request, socket, upgradeHead) => {
+            let rawAuthString:string = request.headers.Authorization.toString('ascii')
+            
+            let splitIndex = rawAuthString.indexOf(":")
+            let username = rawAuthString.slice(0, splitIndex)
+            let password = rawAuthString.slice(splitIndex+1)
+            
+            this.authenticate(username, password);
+            
+            ServerEventDispatcher.wss.handleUpgrade(request, socket,upgradeHead, function(client){})  
+        })
+    }
+
+    // TODO: Complete
+
+    public authenticate(username, password){
+
     }
 
     private connection(ws: any, arg?: any): void {
