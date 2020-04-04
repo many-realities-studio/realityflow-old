@@ -138,13 +138,47 @@ export default class TypeORMDatabase
   *  Create an Behavior and add it to a pre-existing project in the database
   *  Assumes that the project already exists
   */
-  public static async CreateBehavior(behaviorToCreate: Array<FlowBehavior>, objectId: string){
-    await BehaviorOperations.CreateBehavior(behaviorToCreate, objectId);
+  public static async CreateBehavior(behaviorToCreate){
+    let ret:any = {};
+    ret.Id = behaviorToCreate.Id;
+    ret.TypeOfTrigger = behaviorToCreate.TypeOfTrigger
+    ret.TriggerObjectId = behaviorToCreate.Trigger;
+    ret.TargetObjectId = behaviorToCreate.Target;
+    ret.ActionParameters = JSON.stringify(behaviorToCreate.ActionParameters)
+    ret.NextBehavior = JSON.stringify(behaviorToCreate.NextBehavior);
+    
+    await BehaviorOperations.CreateBehavior(ret);
   }
 
   /** Delete a behavior chain from a project in the database*/
-  public static async DeleteBehavior(objectId: string): Promise<void> {
-    await BehaviorOperations.deleteBehavior( objectId)
+  public static async DeleteBehavior(behaviorId: string): Promise<void> {
+    await BehaviorOperations.deleteBehavior(behaviorId);
+  }
+
+  public static async UpdateBehavior(behaviorToUpdate): Promise<void>{
+    let ret:any = {};
+    ret.Id = behaviorToUpdate.Id;
+    ret.TypeOfTrigger = behaviorToUpdate.TypeOfTrigger
+    ret.TriggerObjectId = behaviorToUpdate.Trigger;
+    ret.TargetObjectId = behaviorToUpdate.Target;
+    ret.ActionParameters = JSON.stringify(behaviorToUpdate.ActionParameters)
+    ret.NextBehavior = JSON.stringify(behaviorToUpdate.NextBehavior);
+    await BehaviorOperations.updateBehavior(ret)
+  }
+
+  public static async getBehaviors(projectId){
+    let behaviors = await BehaviorOperations.getBehaviors(projectId);
+    let flowBehaviors = behaviors.map((behavior)=>{
+      let ret:any = {};
+      ret.Id = behavior.Id;
+      ret.TypeOfTrigger = behavior.TypeOfTrigger
+      ret.TriggerObjectId = behavior.Trigger;
+      ret.TargetObjectId = behavior.Target;
+      ret.ActionParameters = JSON.parse(behavior.ActionParameters)
+      ret.NextBehavior = JSON.parse(behavior.NextBehavior);
+      return ret;
+    })
+    return flowBehaviors;
   }
 }
 export {TypeORMDatabase};

@@ -16,7 +16,7 @@ export class BehaviorOperations
      * @param behaviorInfo new behavior info
      * @param projectId project for association
      */
-    public static async CreateBehavior(behaviorInfo: Array<FlowBehavior>, ChainOwner:string)
+    public static async CreateBehavior(behaviorInfo: any)
     {
         // I hate ORMs
         return await getConnection(process.env.NODE_ENV)
@@ -28,24 +28,29 @@ export class BehaviorOperations
     }
 
     // TODO: created: yes tested: no
-    public static async deleteBehavior(objectId: string){
+    public static async deleteBehavior(behaviorId: string){
         await getConnection(process.env.NODE_ENV)
             .createQueryBuilder()
             .delete()
             .from(Behavior)
-            .where("ChainOwner = :id", {id : objectId})
+            .where("Id = :id", {id : behaviorId})
             .execute()
     }
 
-    public static async getBehavior(objectId: string): Promise<Array<Behavior>>{
-        return  await getConnection(process.env.NODE_ENV).createQueryBuilder()
+    public static async getBehaviors(projectId: string): Promise<Array<Behavior>>{
+        return await getConnection(process.env.NODE_ENV).createQueryBuilder()
             .select()
             .from(Behavior, "behavior")
-            .where("ChainOwner = :owner", {owner: "Trigger"})
-            .orderBy("behavior.Index", "ASC")
-            .execute()
-
+            .where("Project = :owner", {owner: projectId})
+            .getMany()
     }
 
-
+    public static async updateBehavior(behavior: any){
+        await getConnection(process.env.NODE_ENV)
+            .createQueryBuilder()
+            .update(Behavior)
+            .set(behavior)
+            .where("Id = :id", {id: behavior.Id})
+            .execute();
+    }
 }
