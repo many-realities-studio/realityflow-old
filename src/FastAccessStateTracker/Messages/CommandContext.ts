@@ -431,7 +431,7 @@ class Command_FinalizedUpdateObject implements ICommand
 {
   async ExecuteCommand(data: any, client:string): Promise<[String, Array<String>]> 
   {
-    let flowObject = new FlowObject(data.flowObject);
+    let flowObject = new FlowObject(data.FlowObject);
     let returnData = await StateTracker.UpdateObject(flowObject, data.ProjectId, client, true);
     let returnContent = {
       "MessageType": "UpdateObject",
@@ -450,7 +450,7 @@ class Command_CreateBehaviour implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let flowBehavior = new FlowBehavior(data.flowBehaviour);
+    let flowBehavior = new FlowBehavior(data.FlowBehaviour);
 
     let returnData = await StateTracker.CreateBehavior(flowBehavior, data.ProjectId);
     let returnContent = {

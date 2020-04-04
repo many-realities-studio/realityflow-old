@@ -437,7 +437,7 @@ export class StateTracker{
     // perform the updates
     let famSuccess = RoomManager.updateObject(objectToUpdate, projectId, client);
     if(!famSuccess)
-      return ["could not update object", [client]]
+      return [null, [client]];
     if(saveToDatabase)
       TypeORMDatabase.UpdateObject(objectToUpdate, projectId)
 
