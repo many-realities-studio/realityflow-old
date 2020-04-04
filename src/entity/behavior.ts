@@ -23,18 +23,20 @@ import { DBObject } from './object';
     public Id: string;
 
     @Column()
-    public Name: string;
+    public TypeOfTrigger: string;
 
     @Column()
     public Trigger: string;
     
     @Column()
     public Target: string;
-    
-    // Chaining-related stuff
-    @Column()
-    public ChainOwner: string;
 
     @Column()
-    public Index: number;
+    public Project: string;
+
+    @Column()
+    public NextBehavior: string;
+
+    @Column()
+    public ActionParameters: string;
   }
