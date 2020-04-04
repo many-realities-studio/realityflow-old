@@ -144,22 +144,6 @@ export class FlowProject
     else return false
   }
 
-  // /**
-  //  * Updates behaviors
-  //  * @param newBehavior new behavior whose properties to transfer over
-  //  */
-  // public UpdateBehavior(newBehavior: FlowBehavior) : void
-  // {
-  //   console.log("behavior list is " + this._BehaviorList)
-  //   console.log("behavior Id is " + newBehavior.Id)
-  //   // Get the behavior that we are changing from the specified project
-  //   var oldBehavior: FlowBehavior = this.GetBehavior(newBehavior.Id);
-
-  //   // Update all properties of the old behavior to the new behavior.
-  //   oldBehavior.UpdateProperties(newBehavior);
-
-  // }
-
   /**
    * Retrieves Flow Behavior
    * @param behaviorId ID of behavior to get
