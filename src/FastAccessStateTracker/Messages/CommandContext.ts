@@ -600,7 +600,7 @@ export class CommandContext
       this._CommandList.set("CreateBehaviour", new Command_CreateBehaviour());
       this._CommandList.set("DeleteBehaviour", new Command_DeleteBehaviour());
       this._CommandList.set("ReadBehaviour", new Command_ReadBehaviour());
-      this._CommandList.set("UpdateBehaviour"), new Command_UpdateBehaviour());
+      this._CommandList.set("UpdateBehaviour", new Command_UpdateBehaviour());
 
       // PlayMode Commands
       this._CommandList.set("StartPlayMode", new Command_StartPlayMode());

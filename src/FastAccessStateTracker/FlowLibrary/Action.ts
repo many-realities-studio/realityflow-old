@@ -3,7 +3,7 @@ export class Action{
 
     ActionId: string;
     ActionType: string;
-    ActionParameters: Object;
+    ActionParameters: any;
 
     constructor(data: any) {
         this.ActionId = data.ActionId;

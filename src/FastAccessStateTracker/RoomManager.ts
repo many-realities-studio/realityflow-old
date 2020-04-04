@@ -1,5 +1,6 @@
 import { Room } from "./Room";
 import { FlowObject } from "./FlowLibrary/FlowObject";
+import { FlowBehavior } from "./FlowLibrary/FlowBehavior";
 
 // TODO: Make a check for how many people are in a room and delete the room if there is nobody inside
 export class RoomManager
