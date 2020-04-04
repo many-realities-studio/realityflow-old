@@ -346,10 +346,13 @@ class Command_CheckinObject implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
+    let object = await StateTracker.ReadObject(data.ObjectId, data.ProjectId, client);
+    let finalUpdate =  await StateTracker.UpdateObject(object[0], data.ProjectId, client, true);
+
     let returnData = await StateTracker.CheckinObject(data.ProjectId, data.ObjectId, client)
     let returnContent = {
       "MessageType": "CheckinObject",
-      "WasSuccessful": returnData[0],
+      "WasSuccessful": ((returnData[0]) && finalUpdate[0] != null) ? true: false,
       "ObjectID": data.ObjectId
     }
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
@@ -420,7 +423,6 @@ class Command_ReadObject implements ICommand
       "WasSuccessful": (returnData[0] == null) ? false: true,
     }
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
-
     return returnMessage;
 
   }
