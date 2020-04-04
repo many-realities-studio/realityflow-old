@@ -457,58 +457,13 @@ export class StateTracker{
     return [objectRead, [client]];
   }
 
-  /**
-   * unfuckify the bizarre recursive data structure is put into it
-   * @param behavior 
-   */
-  public static listifyBehavior(behavior: any){
-    let counter: number = 0;
-    let temp: any = behavior;
-    let retArr: Array<FlowBehavior> = []
-    let owner = temp.TriggerObjectID;
-
-    while(temp != null){
-      retArr.push(new FlowBehavior({
-        Name: temp.Name,
-        Id: temp.Id,
-        Trigger: temp.TriggerObjectID,
-        Target: temp.TargetObjectID,
-        Index: counter,
-        ChainOwner: owner
-      }));
-
-      counter ++;
-      temp = temp.FlowBehaviour;
-    }
-    return retArr
-  } 
-
-  public static reconstitute(behaviors: Array<FlowBehavior>){
-    let retBehavior: any = {}
-
-    let temp: any = retBehavior;
-
-    behaviors.forEach((behavior, index, arr) => {
-      temp.Name = behavior.Name;
-      temp.TriggerObjectID = behavior.Trigger;
-      temp.TargetObjectID = behavior.Target;
-      if (index === arr.length - 1)
-        temp.BehaviourChain = null
-      else
-        temp.BehaviourChain = {}
-
-      temp = temp.BehaviourChain
-    })
-    
-  }
-
-  public static async CreateBehavior(behaviorToCreate : Array<FlowBehavior>, objectId:string, projectId: string) : Promise<[any, Array<string>]>
+  public static async CreateBehavior(behaviorToCreate : FlowBehavior, projectId: string) : Promise<[any, Array<string>]>
   {
     RoomManager.FindRoom(projectId)
                 .GetProject()
-                .AddBehavior(objectId, behaviorToCreate);
+                .AddBehavior(behaviorToCreate);
   
-    TypeORMDatabase.CreateBehavior(behaviorToCreate, objectId)
+    TypeORMDatabase.CreateBehavior(behaviorToCreate);
 
     let affectedClients: Array<string> = [];
 
@@ -521,14 +476,14 @@ export class StateTracker{
     return [behaviorToCreate, affectedClients]
   }
 
-  public static async DeleteBehavior(projectId: string, objectId, client: string) : Promise<[any, Array<string>]>
+  public static async DeleteBehavior(projectId: string, behaviorId: string, client: string) : Promise<[any, Array<string>]>
   {
 
-    RoomManager.FindRoom(projectId)
+    let success = RoomManager.FindRoom(projectId)
                 .GetProject()
-                .DeleteBehavior(objectId);
+                .DeleteBehavior(behaviorId);
 
-    TypeORMDatabase.DeleteBehavior(objectId)
+    TypeORMDatabase.DeleteBehavior(behaviorId)
 
     let affectedClients: Array<string> = [];
 
@@ -538,20 +493,37 @@ export class StateTracker{
     roomClients.forEach((clients, username, map) => {
       affectedClients = affectedClients.concat(clients)
     })
-
-    return [projectId, affectedClients]
+    if(success)
+      return [behaviorId, affectedClients];
+    else  
+      return [null, affectedClients];
   }
 
-  public static async ReadBehavior(behaviorId: string, objectId, projectId: string, client: string) : Promise<[any, Array<string>]>
+  public static async ReadBehavior(behaviorId: string, projectId: string, client: string) : Promise<[any, Array<string>]>
   {
-    let behaviorRead : FlowBehavior = null;
-    let behaviorList = RoomManager.FindRoom(projectId).GetProject().GetBehavior(objectId);
-    behaviorList.forEach(behavior => {
-      if(behavior.Id == behaviorId)
-        behaviorRead = behavior;
-    });
+
+    let behaviorRead = RoomManager.FindRoom(projectId).GetProject().GetBehavior(behaviorId);
     
     return [behaviorRead, [client]];
+  }
+
+  public static async UpdateBehavior(behaviorToUpdate : FlowBehavior, projectId: string,  client: string, saveToDatabase:boolean=false) : Promise<[any, Array<string>]>
+  {  
+    // perform the updates
+    let famSuccess = RoomManager.updateBehavior(behaviorToUpdate, projectId, client);
+    if(!famSuccess)
+      return [null, [client]];
+    if(saveToDatabase)
+      TypeORMDatabase.UpdateBehavior(behaviorToUpdate);
+
+    // get all of the clients that are in that room so that we can tell them 
+    let affectedClients: Array<string> = [];
+    let roomClients = await RoomManager.getClients(projectId)
+    roomClients.forEach((clients, username, map) => {
+      affectedClients = affectedClients.concat(clients)
+    })
+
+    return [behaviorToUpdate , affectedClients]
   }
 
   public static async TogglePlayMode(projectId: string, toggle: boolean) : Promise<[any, Array<string>]>

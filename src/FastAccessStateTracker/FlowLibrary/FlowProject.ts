@@ -110,22 +110,38 @@ export class FlowProject
     else return false;
   }
 
+  public UpdateBehavior(newBehavior: FlowBehavior, client: string) 
+  {
+    // Get the behavior that we are changing from the specified project
+    var oldBehavior: FlowBehavior = this._BehaviorList.find(element => element.Id == newBehavior.Id);
+    if(oldBehavior != undefined){
+      oldBehavior.UpdateProperties(newBehavior);
+      return true;
+    }
+    else return false;
+  }
+
   /**
    * Adds behavior to project list for reference 
    * @param behaviorToAdd The behavior to add to the project
    */
-  public AddBehavior(objectId: string, behaviorToAdd: Array<FlowBehavior>)
+  public AddBehavior(behaviorToAdd: FlowBehavior)
   {
-    this._ObjectList.find(element => element.Id == objectId).behavior = behaviorToAdd;
+    this._BehaviorList.push(behaviorToAdd);
   }
 
   /**
    * Delete's behavior from project
    * @param behaviorToRemove the ID of the behavior to be removed from the project
    */
-  public DeleteBehavior(objectId: string): void
+  public DeleteBehavior(BehaviorToRemove: string): Boolean
   {
-    this._ObjectList.find(element => element.Id == objectId).behavior = null;
+    let index = this._BehaviorList.findIndex((element) => element.Id == BehaviorToRemove);
+    if(index > -1){
+      this._BehaviorList.splice(index);
+      return true;
+    }
+    else return false
   }
 
   // /**
@@ -148,9 +164,9 @@ export class FlowProject
    * Retrieves Flow Behavior
    * @param behaviorId ID of behavior to get
    */
-  public GetBehavior(objectId: string) : Array<FlowBehavior>
+  public GetBehavior(behaviorId: string) : FlowBehavior
   {
-    return this._ObjectList.find(element => element.Id == objectId).behavior;
+    return this._BehaviorList.find(element => element.Id == behaviorId);
   }
 
   // TODO: Find out what this does (or needs to do)

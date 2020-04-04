@@ -122,6 +122,10 @@ export class Room
     let success = this._CurrentProject.UpdateFAMObject(objectToUpdate, client);
     return success;
   }
+  public updateBehavior(behaviorToUpdate, client){
+    let success = this._CurrentProject.UpdateBehavior(behaviorToUpdate, client);
+    return success;
+  }
 
   // TODO: finished: yes tested: yes
   public AddObject(objectToCreate: FlowObject){

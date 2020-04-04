@@ -100,6 +100,11 @@ export class RoomManager
     return room.updateObject(objectToUpdate, client)
   }
 
+  public static updateBehavior(behaviorToUpdate: FlowBehavior, projectId: string, client:string){
+    let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
+    return room.updateBehavior(behaviorToUpdate, client)
+  }
+
   public static AddObject(objectToCreate: FlowObject, projectId:string){
     return this._RoomList.find(element => element.GetRoomCode() == projectId).AddObject(objectToCreate)
   }
