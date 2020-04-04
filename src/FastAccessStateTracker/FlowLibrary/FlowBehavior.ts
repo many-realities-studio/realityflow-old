@@ -10,6 +10,7 @@ export class FlowBehavior
     public TargetObjectId: string;
     public Action : Action;
     public NextBehavior: Array<string>[];
+    public ProjectId: string;
 
     constructor(behavior: any)
     {
@@ -20,6 +21,7 @@ export class FlowBehavior
         this.TargetObjectId = behavior.TargetObjectId;
         this.Action = new Action(behavior.Action);
         this.NextBehavior = behavior.NextBehavior;
+        this.ProjectId = behavior.ProjectId
     }
 
     public UpdateProperties(newBehavior: FlowBehavior)
@@ -31,6 +33,7 @@ export class FlowBehavior
         this.TargetObjectId = newBehavior.TargetObjectId;
         this.Action = new Action(newBehavior.Action);
         this.NextBehavior = newBehavior.NextBehavior;
+        this.ProjectId = newBehavior.ProjectId
     }
 
 }

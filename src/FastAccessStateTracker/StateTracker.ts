@@ -459,6 +459,7 @@ export class StateTracker{
 
   public static async CreateBehavior(behaviorToCreate : FlowBehavior, projectId: string) : Promise<[any, Array<string>]>
   {
+    console.log(projectId)
     RoomManager.FindRoom(projectId)
                 .GetProject()
                 .AddBehavior(behaviorToCreate);

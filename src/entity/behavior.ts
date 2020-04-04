@@ -26,13 +26,13 @@ import { DBObject } from './object';
     public TypeOfTrigger: string;
 
     @Column()
-    public Trigger: string;
+    public TriggerObjectId: string;
     
     @Column()
-    public Target: string;
+    public TargetObjectId: string;
 
     @Column()
-    public Project: string;
+    public ProjectId: string;
 
     @Column()
     public NextBehavior: string;

@@ -138,14 +138,16 @@ export default class TypeORMDatabase
   *  Create an Behavior and add it to a pre-existing project in the database
   *  Assumes that the project already exists
   */
-  public static async CreateBehavior(behaviorToCreate){
+  public static async CreateBehavior(behaviorToCreate: FlowBehavior){
     let ret:any = {};
     ret.Id = behaviorToCreate.Id;
     ret.TypeOfTrigger = behaviorToCreate.TypeOfTrigger
-    ret.TriggerObjectId = behaviorToCreate.Trigger;
-    ret.TargetObjectId = behaviorToCreate.Target;
-    ret.ActionParameters = JSON.stringify(behaviorToCreate.ActionParameters)
+    ret.TriggerObjectId = behaviorToCreate.TriggerObjectId;
+    ret.TargetObjectId = behaviorToCreate.TargetObjectId;
+    ret.ActionParameters = JSON.stringify(behaviorToCreate.Action)
     ret.NextBehavior = JSON.stringify(behaviorToCreate.NextBehavior);
+    ret.ProjectId = behaviorToCreate.ProjectId
+    console.log(behaviorToCreate.Action)
     
     await BehaviorOperations.CreateBehavior(ret);
   }
@@ -159,10 +161,11 @@ export default class TypeORMDatabase
     let ret:any = {};
     ret.Id = behaviorToUpdate.Id;
     ret.TypeOfTrigger = behaviorToUpdate.TypeOfTrigger
-    ret.TriggerObjectId = behaviorToUpdate.Trigger;
-    ret.TargetObjectId = behaviorToUpdate.Target;
-    ret.ActionParameters = JSON.stringify(behaviorToUpdate.ActionParameters)
+    ret.TriggerObjectId = behaviorToUpdate.TriggerObjectId;
+    ret.TargetObjectId = behaviorToUpdate.TargetObjectId;
+    ret.ActionParameters = JSON.stringify(behaviorToUpdate.Action)
     ret.NextBehavior = JSON.stringify(behaviorToUpdate.NextBehavior);
+    ret.ProjectId = behaviorToUpdate.ProjectId
     await BehaviorOperations.updateBehavior(ret)
   }
 
@@ -172,10 +175,11 @@ export default class TypeORMDatabase
       let ret:any = {};
       ret.Id = behavior.Id;
       ret.TypeOfTrigger = behavior.TypeOfTrigger
-      ret.TriggerObjectId = behavior.Trigger;
-      ret.TargetObjectId = behavior.Target;
-      ret.ActionParameters = JSON.parse(behavior.ActionParameters)
+      ret.TriggerObjectId = behavior.TriggerObjectId;
+      ret.TargetObjectId = behavior.TargetObjectId;
+      ret.Action = JSON.parse(behavior.ActionParameters)
       ret.NextBehavior = JSON.parse(behavior.NextBehavior);
+      ret.ProjectId = behavior.ProjectId
       return ret;
     })
     return flowBehaviors;

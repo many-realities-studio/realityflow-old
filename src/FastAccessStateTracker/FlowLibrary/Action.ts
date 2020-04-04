@@ -8,6 +8,6 @@ export class Action{
     constructor(data: any) {
         this.ActionId = data.ActionId;
         this.ActionType = data.ActionType;
-        this.ActionParameters = data.Parameters; 
+        this.ActionParameters = data.ActionParameters; 
     }
 }
