@@ -85,8 +85,10 @@ export class ServerEventDispatcher {
                         ServerEventDispatcher.SocketConnections.set(ID, ws);
                     
                     })
-                else
-                    socket.close()
+                else    
+                    socket.destroy()
+                
+                    
         })
         
     }
