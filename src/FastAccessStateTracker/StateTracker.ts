@@ -305,11 +305,6 @@ export class StateTracker{
     // get all of the clients that are in that room so that we can tell them 
     let clients = await RoomManager.getClients(roomCode)
 
-   /* roomClients.forEach((clients, username, map) => {
-      affectedClients = affectedClients.concat(clients)
-    })
-
-    let clients = RoomManager.getClients(projectToOpenID);*/
     clients.forEach((value: string[], key: string) => {
       
       value.forEach((client: string) => {

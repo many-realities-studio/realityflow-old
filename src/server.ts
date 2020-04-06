@@ -127,7 +127,16 @@ export class ServerEventDispatcher {
 
 
         function onCloseEvent(): any {
-           this.emit()
+           NewMessageProcessor.ParseMessage(ws.ID,
+            {
+                "FlowUser": {
+                  "Username": ws.username,
+                  "Password": "pass"
+                },
+                "MessageType": "LogoutUser"
+              }
+               
+           )
            ServerEventDispatcher.SocketConnections.delete(ws.ID);
         }
 
