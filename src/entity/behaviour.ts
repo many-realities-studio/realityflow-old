@@ -13,7 +13,7 @@ import { DBObject } from './object';
 
 
   @Entity()
-  export class Behavior extends BaseEntity{
+  export class Behaviour extends BaseEntity{
     // ignore, for the most part
     @PrimaryGeneratedColumn()
     public _id: number;
@@ -35,7 +35,7 @@ import { DBObject } from './object';
     public ProjectId: string;
 
     @Column()
-    public NextBehavior: string;
+    public NextBehaviour: string;
 
     @Column()
     public ActionParameters: string;

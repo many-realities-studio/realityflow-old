@@ -12,7 +12,7 @@ import { DBObject } from "./entity/object";
 import { User } from "./entity/user";
 import { Project } from "./entity/project";
 import { UserSubscriber } from "./subscriber/UserSubscriber";
-import { Behavior } from "./entity/behavior"
+import { Behaviour } from "./entity/behaviour"
 
 import { RoomManager } from "./FastAccessStateTracker/RoomManager";
 import { UserOperations } from "./ORMCommands/user";

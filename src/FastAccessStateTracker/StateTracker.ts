@@ -1,6 +1,6 @@
 import { FlowObject } from "./FlowLibrary/FlowObject";
 import { FlowProject } from "./FlowLibrary/FlowProject";
-import { FlowBehavior } from "./FlowLibrary/FlowBehavior";
+import { FlowBehaviour } from "./FlowLibrary/FlowBehaviour";
 
 import { RoomManager } from "./RoomManager";
 import { TypeORMDatabase } from "./Database/TypeORMDatabase"
@@ -457,14 +457,14 @@ export class StateTracker{
     return [objectRead, [client]];
   }
 
-  public static async CreateBehavior(behaviorToCreate : FlowBehavior, projectId: string) : Promise<[any, Array<string>]>
+  public static async CreateBehaviour(BehaviourToCreate : FlowBehaviour, projectId: string) : Promise<[any, Array<string>]>
   {
     console.log(projectId)
     RoomManager.FindRoom(projectId)
                 .GetProject()
-                .AddBehavior(behaviorToCreate);
+                .AddBehaviour(BehaviourToCreate);
   
-    TypeORMDatabase.CreateBehavior(behaviorToCreate);
+    TypeORMDatabase.CreateBehaviour(BehaviourToCreate);
 
     let affectedClients: Array<string> = [];
 
@@ -474,17 +474,17 @@ export class StateTracker{
       affectedClients = affectedClients.concat(clients)
     })
 
-    return [behaviorToCreate, affectedClients]
+    return [BehaviourToCreate, affectedClients]
   }
 
-  public static async DeleteBehavior(projectId: string, behaviorId: string, client: string) : Promise<[any, Array<string>]>
+  public static async DeleteBehaviour(projectId: string, BehaviourId: string, client: string) : Promise<[any, Array<string>]>
   {
 
     let success = RoomManager.FindRoom(projectId)
                 .GetProject()
-                .DeleteBehavior(behaviorId);
+                .DeleteBehaviour(BehaviourId);
 
-    TypeORMDatabase.DeleteBehavior(behaviorId)
+    TypeORMDatabase.DeleteBehaviour(BehaviourId)
 
     let affectedClients: Array<string> = [];
 
@@ -495,27 +495,27 @@ export class StateTracker{
       affectedClients = affectedClients.concat(clients)
     })
     if(success)
-      return [behaviorId, affectedClients];
+      return [BehaviourId, affectedClients];
     else  
       return [null, affectedClients];
   }
 
-  public static async ReadBehavior(behaviorId: string, projectId: string, client: string) : Promise<[any, Array<string>]>
+  public static async ReadBehaviour(BehaviourId: string, projectId: string, client: string) : Promise<[any, Array<string>]>
   {
 
-    let behaviorRead = RoomManager.FindRoom(projectId).GetProject().GetBehavior(behaviorId);
+    let BehaviourRead = RoomManager.FindRoom(projectId).GetProject().GetBehaviour(BehaviourId);
     
-    return [behaviorRead, [client]];
+    return [BehaviourRead, [client]];
   }
 
-  public static async UpdateBehavior(behaviorToUpdate : FlowBehavior, projectId: string,  client: string, saveToDatabase:boolean=false) : Promise<[any, Array<string>]>
+  public static async UpdateBehaviour(BehaviourToUpdate : FlowBehaviour, projectId: string,  client: string, saveToDatabase:boolean=false) : Promise<[any, Array<string>]>
   {  
     // perform the updates
-    let famSuccess = RoomManager.updateBehavior(behaviorToUpdate, projectId, client);
+    let famSuccess = RoomManager.updateBehaviour(BehaviourToUpdate, projectId, client);
     if(!famSuccess)
       return [null, [client]];
     if(saveToDatabase)
-      TypeORMDatabase.UpdateBehavior(behaviorToUpdate);
+      TypeORMDatabase.UpdateBehaviour(BehaviourToUpdate);
 
     // get all of the clients that are in that room so that we can tell them 
     let affectedClients: Array<string> = [];
@@ -524,7 +524,7 @@ export class StateTracker{
       affectedClients = affectedClients.concat(clients)
     })
 
-    return [behaviorToUpdate , affectedClients]
+    return [BehaviourToUpdate , affectedClients]
   }
 
   public static async TogglePlayMode(projectId: string, toggle: boolean) : Promise<[any, Array<string>]>

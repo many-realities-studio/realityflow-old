@@ -1,12 +1,12 @@
 import { FlowObject } from "./FlowObject";
-import { FlowBehavior } from "./FlowBehavior";
+import { FlowBehaviour } from "./FlowBehaviour";
 
 export class FlowProject 
 {
   // TODO: this is temporarily public for convenience.
   public _ObjectList: Array<FlowObject> = [];
-  //TODO: list of FlowBehaviors
-  public _BehaviorList: Array<FlowBehavior> = [];
+  //TODO: list of FlowBehaviours
+  public _BehaviourList: Array<FlowBehaviour> = [];
   
   // Used for identification in the FAM
   
@@ -110,47 +110,47 @@ export class FlowProject
     else return false;
   }
 
-  public UpdateBehavior(newBehavior: FlowBehavior, client: string) 
+  public UpdateBehaviour(newBehaviour: FlowBehaviour, client: string) 
   {
-    // Get the behavior that we are changing from the specified project
-    var oldBehavior: FlowBehavior = this._BehaviorList.find(element => element.Id == newBehavior.Id);
-    if(oldBehavior != undefined){
-      oldBehavior.UpdateProperties(newBehavior);
+    // Get the Behaviour that we are changing from the specified project
+    var oldBehaviour: FlowBehaviour = this._BehaviourList.find(element => element.Id == newBehaviour.Id);
+    if(oldBehaviour != undefined){
+      oldBehaviour.UpdateProperties(newBehaviour);
       return true;
     }
     else return false;
   }
 
   /**
-   * Adds behavior to project list for reference 
-   * @param behaviorToAdd The behavior to add to the project
+   * Adds Behaviour to project list for reference 
+   * @param BehaviourToAdd The Behaviour to add to the project
    */
-  public AddBehavior(behaviorToAdd: FlowBehavior)
+  public AddBehaviour(BehaviourToAdd: FlowBehaviour)
   {
-    this._BehaviorList.push(behaviorToAdd);
+    this._BehaviourList.push(BehaviourToAdd);
   }
 
   /**
-   * Delete's behavior from project
-   * @param behaviorToRemove the ID of the behavior to be removed from the project
+   * Delete's Behaviour from project
+   * @param BehaviourToRemove the ID of the Behaviour to be removed from the project
    */
-  public DeleteBehavior(BehaviorToRemove: string): Boolean
+  public DeleteBehaviour(BehaviourToRemove: string): Boolean
   {
-    let index = this._BehaviorList.findIndex((element) => element.Id == BehaviorToRemove);
+    let index = this._BehaviourList.findIndex((element) => element.Id == BehaviourToRemove);
     if(index > -1){
-      this._BehaviorList.splice(index);
+      this._BehaviourList.splice(index);
       return true;
     }
     else return false
   }
 
   /**
-   * Retrieves Flow Behavior
-   * @param behaviorId ID of behavior to get
+   * Retrieves Flow Behaviour
+   * @param BehaviourId ID of Behaviour to get
    */
-  public GetBehavior(behaviorId: string) : FlowBehavior
+  public GetBehaviour(BehaviourId: string) : FlowBehaviour
   {
-    return this._BehaviorList.find(element => element.Id == behaviorId);
+    return this._BehaviourList.find(element => element.Id == BehaviourId);
   }
 
   // TODO: Find out what this does (or needs to do)

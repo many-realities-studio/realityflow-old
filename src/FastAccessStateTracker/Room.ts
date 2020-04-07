@@ -122,8 +122,8 @@ export class Room
     let success = this._CurrentProject.UpdateFAMObject(objectToUpdate, client);
     return success;
   }
-  public updateBehavior(behaviorToUpdate, client){
-    let success = this._CurrentProject.UpdateBehavior(behaviorToUpdate, client);
+  public updateBehaviour(BehaviourToUpdate, client){
+    let success = this._CurrentProject.UpdateBehaviour(BehaviourToUpdate, client);
     return success;
   }
 

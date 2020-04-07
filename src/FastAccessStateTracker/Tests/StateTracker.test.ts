@@ -6,9 +6,9 @@ import { RoomManager } from "../RoomManager"
 import { FlowProject } from "../FlowLibrary/FlowProject"
 import { Project } from "../../entity/project"
 import { FlowObject } from "../FlowLibrary/FlowObject"
-import {FlowBehavior} from "../FlowLibrary/FlowBehavior"
+import {FlowBehaviour} from "../FlowLibrary/FlowBehaviour"
 import { ProjectOperations } from "../../ORMCommands/project"
-import { Behavior } from "../../entity/behavior"
+import { Behaviour } from "../../entity/behaviour"
 
 const databaseUserCreationMock = jest.fn()
 
@@ -30,8 +30,8 @@ RoomManager.LeaveRoom = fakeLeaveRoom;
 const fakeDestroyRoom = jest.fn((roomCode:string) => new Map<string, Array<string>>());
 RoomManager.DestroyRoom = fakeDestroyRoom;
 
-// const fakeAddBehavior = jest.fn(async(roomCode: string) => {});
-// RoomManager.FindRoom(fakeRoomCode).GetProject().AddBehavior = fakeAddBehavior;
+// const fakeAddBehaviour = jest.fn(async(roomCode: string) => {});
+// RoomManager.FindRoom(fakeRoomCode).GetProject().AddBehaviour = fakeAddBehaviour;
 
 const fakeGetClients = jest.fn((roomCode) => {
     let x = new Map<string, Array<string>>()
@@ -55,8 +55,8 @@ TypeORMDatabase.CreateProject = TypeORMProjectCreateMock;
 const TypeORMObjectCreateMock = jest.fn( async (objectToCreate: FlowObject, projectId: string) => {});
 TypeORMDatabase.CreateObject = TypeORMObjectCreateMock;
 
-const TypeORMBehaviorCreateMock = jest.fn( async (BehaviorToCreate: FlowBehavior[], objectId) => {});
-TypeORMDatabase.CreateBehavior = TypeORMBehaviorCreateMock;
+const TypeORMBehaviourCreateMock = jest.fn( async (BehaviourToCreate: FlowBehaviour[], objectId) => {});
+TypeORMDatabase.CreateBehaviour = TypeORMBehaviourCreateMock;
 
 
 const TypeORMProjectGetMock = jest.fn( async (projectToGet: string) => {
@@ -338,12 +338,12 @@ describe("checkout system", () => {
 })
 
 
-describe("Behavior", () => {
+describe("Behaviour", () => {
     it("Can be created", async () => {
-        var createdBehavior =StateTracker.listifyBehavior(
+        var createdBehaviour =StateTracker.listifyBehaviour(
             {
-            Name: "testBehavior",
-            Id: "createdBehaviorId",
+            Name: "testBehaviour",
+            Id: "createdBehaviourId",
             Trigger: "triggerObjectId",
             Target: "targetObjectId",
             Index : "1234",
@@ -354,9 +354,9 @@ describe("Behavior", () => {
 
         RoomManager.CreateRoom(projectId);
 
-        await StateTracker.CreateBehavior(createdBehavior, "objectId", projectId);
+        await StateTracker.CreateBehaviour(createdBehaviour, "objectId", projectId);
 
-        expect(TypeORMBehaviorCreateMock).toHaveBeenCalled()
+        expect(TypeORMBehaviourCreateMock).toHaveBeenCalled()
     })
 
     it("can be deleted", () => {
