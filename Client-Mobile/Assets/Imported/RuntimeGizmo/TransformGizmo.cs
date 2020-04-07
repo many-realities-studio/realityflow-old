@@ -18,6 +18,8 @@ namespace RuntimeGizmos
         // Support for outliner
         OutlinerManager outlinerManager;
 
+		public SlideMenuManager slideMenuManager;
+
 		public TransformSpace space = TransformSpace.Local;
 		public TransformType transformType = TransformType.Move;
 		public TransformPivot pivot = TransformPivot.Pivot;
@@ -130,8 +132,9 @@ namespace RuntimeGizmos
 
             // Initialize outlinerManager
             outlinerManager = GameObject.FindGameObjectWithTag("Outliner").GetComponent<OutlinerManager>();
+			slideMenuManager = GameObject.FindGameObjectWithTag("SlideMenuButtons").GetComponent<SlideMenuManager>();
 
-        }
+		}
 
 		void OnEnable()
 		{
@@ -483,7 +486,7 @@ namespace RuntimeGizmos
 		{
             // When testing in editor, comment out IsPointerOverGameObject() with no parameters. When building for mobile, user 
             // version that tests with fingerId.
-			if(nearAxis == Axis.None && Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject()/*!EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)*/)
+			if(nearAxis == Axis.None && Input.GetMouseButtonDown(0) && /*!EventSystem.current.IsPointerOverGameObject()*/!EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
 			{
 				bool isAdding = Input.GetKey(AddSelection);
 				bool isRemoving = Input.GetKey(RemoveSelection);
@@ -517,9 +520,11 @@ namespace RuntimeGizmos
         // NOTE (Jon): This is the function that is called when an object is selected. 
 		public void AddTarget(Transform target, bool addCommand = true)
 		{
-            // Target should be the GameObject selected. Use this to reference the object and reverse look up
-            // its ID.
-			if(target != null)
+			
+
+			// Target should be the GameObject selected. Use this to reference the object and reverse look up
+			// its ID.
+			if (target != null)
 			{
                 //Debug.Log(target.root.name);
 				if(targetRoots.ContainsKey(target)) return;
@@ -531,9 +536,14 @@ namespace RuntimeGizmos
 
 				AddTargetRoot(target);
 				AddTargetHighlightedRenderers(target);
-                outlinerManager.selectedInWorld(target);
 
-                SetPivotPoint();
+
+				
+
+				outlinerManager.selectedInWorld(target);
+				slideMenuManager.ToggleMenuButtons(true);
+
+				SetPivotPoint();
 			}
 		}
 
@@ -547,6 +557,7 @@ namespace RuntimeGizmos
 
 				RemoveTargetHighlightedRenderers(target);
 				RemoveTargetRoot(target);
+
                 outlinerManager.selectedInWorld(target);
 
 				SetPivotPoint();
@@ -556,12 +567,12 @@ namespace RuntimeGizmos
 		public void ClearTargets(bool addCommand = true)
 		{
 			if(addCommand) UndoRedoManager.Insert(new ClearTargetsCommand(this, targetRootsOrdered));
-
 			ClearAllHighlightedRenderers();
 			targetRoots.Clear();
 			targetRootsOrdered.Clear();
-            //observableTargets.Clear();
-			children.Clear();
+			slideMenuManager.ToggleMenuButtons(false);
+			//observableTargets.Clear();
+			//children.Clear();
 		}
 
 		public void ClearAndAddTarget(Transform target)

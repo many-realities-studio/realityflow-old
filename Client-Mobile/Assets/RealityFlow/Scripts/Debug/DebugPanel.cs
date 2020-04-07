@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
+using RealityFlow.Plugin.Scripts;
 
 //[ExecuteInEditMode]
 public class DebugPanel : MonoBehaviour
@@ -62,7 +63,7 @@ public class DebugPanel : MonoBehaviour
 
     void Start()
     {
-        Debug.Log(FlowNetworkManager.clientType);
+        //Debug.Log(FlowNetworkManager.clientType);
     }
 
     void Update()

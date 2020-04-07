@@ -1,54 +1,62 @@
-import { IStringable } from "./IStringable";
-import { MongooseDatabase } from "../Database/MongooseDatabase";
 
-export class FlowUser implements IStringable
+
+import { FlowClient } from "./FlowClient";
+
+export class FlowUser
 {
-  // ID used by FAM for unique identification
-  public id : number;
-  public connectionList : Array<WebSocket> = [];
+  // used by FAM
+  public ActiveClients : Array<string> = [];
   
-  ToString() : string 
-  {
-    throw new Error("Method not implemented.");
-  }
+  // Data storage fields
+  public Username: string;
+  public Projects: Array<string>;
 
-  /**
-   * Saves this user to the database
-   */
-  public SaveToDatabase() : void
-  {
-    MongooseDatabase.UpdateUser(this);
+  constructor(username: string, ActiveClients: Array<string> = [], Projects: Array<string> = [] ){
+      this.Username = username;
+      this.ActiveClients = ActiveClients;
+      this.Projects = Projects
+
+  }
+  public tostring(){
+    return JSON.stringify({
+      ActiveClients: this.ActiveClients,
+
+      Username: this.Username,
+      Projects: this.Projects
+    })
   }
 
   /**
    * Saves the connection information
-   * @param websocketConnection 
+   * @param newClientLogin 
    */
-  public Login(websocketConnection : WebSocket) : void
+  public Login(newClientLogin : string) : void
   {
-    this.connectionList.push(websocketConnection);
+    this.ActiveClients.push(newClientLogin);
   }
 
   /**
    * Deletes the connection information
-   * @param websocketConnection 
+   * @param client 
    */
-  public Logout(connection : WebSocket) : void
+  public Logout(client : string) : void
   {
-    const index = this.connectionList.findIndex((element) => element == connection);
+    const index = this.ActiveClients.findIndex((element) => element == client);
 
-    var ClosedConnection : WebSocket = null;
+    var ClosedConnection : string = null;
     if(index > -1)
     {
-      ClosedConnection = this.connectionList.splice(index, 1)[0];
+      ClosedConnection = this.ActiveClients.splice(index, 1)[0];
     }
   }
 
   /**
-   * Deletes this user from the database
+   * @projectToAdd : Flow Project to include in user array
    */
-  public Delete() : void
+  public addProject(projectIdToAdd: string) : void 
   {
-    MongooseDatabase.DeleteUser(this);
+    this.Projects.push(projectIdToAdd);
   }
+
+
 }

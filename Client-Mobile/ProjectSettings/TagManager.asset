@@ -11,6 +11,8 @@ TagManager:
   - NetworkManager
   - EventSystem
   - TopCamera
+  - SlideMenuButtons
+  - Picker2
   layers:
   - Default
   - TransparentFX
