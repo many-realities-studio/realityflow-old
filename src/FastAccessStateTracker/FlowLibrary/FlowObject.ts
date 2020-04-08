@@ -1,5 +1,4 @@
 import { Color } from "./Color";
-import { FlowBehavior } from "./FlowBehavior";
 
 export class FlowObject
 {
@@ -25,7 +24,6 @@ export class FlowObject
   public Id: string; 
   public RoomNumber: number;
   public CurrentCheckout: string;
-  public behavior: Array<FlowBehavior>
 
   constructor(json: any)
   {    

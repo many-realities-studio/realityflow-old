@@ -1,6 +1,6 @@
 import { Room } from "./Room";
 import { FlowObject } from "./FlowLibrary/FlowObject";
-import { FlowBehavior } from "./FlowLibrary/FlowBehavior";
+import { FlowBehaviour } from "./FlowLibrary/FlowBehaviour";
 
 // TODO: Make a check for how many people are in a room and delete the room if there is nobody inside
 export class RoomManager
@@ -101,9 +101,9 @@ export class RoomManager
     return room.updateObject(objectToUpdate, client)
   }
 
-  public static updateBehavior(behaviorToUpdate: FlowBehavior, projectId: string, client:string){
+  public static updateBehaviour(BehaviourToUpdate: FlowBehaviour, projectId: string, client:string){
     let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
-    return room.updateBehavior(behaviorToUpdate, client)
+    return room.updateBehaviour(BehaviourToUpdate, client)
   }
 
   public static AddObject(objectToCreate: FlowObject, projectId:string){

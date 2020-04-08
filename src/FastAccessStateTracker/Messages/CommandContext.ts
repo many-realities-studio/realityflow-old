@@ -9,7 +9,7 @@ import { StateTracker } from "../StateTracker";
 
 import { FlowProject } from "../FlowLibrary/FlowProject";
 import { FlowObject } from "../FlowLibrary/FlowObject";
-import { FlowBehavior } from "../FlowLibrary/FlowBehavior";
+import { FlowBehaviour } from "../FlowLibrary/FlowBehaviour";
 
 import { MessageBuilder } from "./MessageBuilder";
 import { TreeChildren } from "typeorm";
@@ -450,9 +450,9 @@ class Command_CreateBehaviour implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let flowBehavior = new FlowBehavior(data.FlowBehaviour);
+    let flowBehaviour = new FlowBehaviour(data.FlowBehaviour);
 
-    let returnData = await StateTracker.CreateBehavior(flowBehavior, data.ProjectId);
+    let returnData = await StateTracker.CreateBehaviour(flowBehaviour, data.ProjectId);
     let returnContent = {
       "MessageType": "CreateBehaviour",
       "FlowBehaviour": returnData[0],
@@ -468,9 +468,9 @@ class Command_DeleteBehaviour implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let flowBehavior = new FlowBehavior(data.FlowBehaviour);    
+    let flowBehaviour = new FlowBehaviour(data.FlowBehaviour);    
 
-    let returnData = await StateTracker.DeleteBehavior(data.ProjectId, flowBehavior.Id, client);
+    let returnData = await StateTracker.DeleteBehaviour(data.ProjectId, flowBehaviour.Id, client);
     let returnContent = {
       "MessageType": "DeleteBehaviour",
       "BehaviourId": returnData[0],
@@ -486,11 +486,11 @@ class Command_UpdateBehaviour implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let flowBehavior = new FlowBehavior(data.FlowBehaviour);
-    let returnData = await StateTracker.UpdateBehavior(flowBehavior, data.ProjectId, client, true);
+    let flowBehaviour = new FlowBehaviour(data.FlowBehaviour);
+    let returnData = await StateTracker.UpdateBehaviour(flowBehaviour, data.ProjectId, client, true);
     let returnContent = {
-      "MessageType": "UpdateBehavior",
-      "FlowBehavior": returnData[0],
+      "MessageType": "UpdateBehaviour",
+      "FlowBehaviour": returnData[0],
       "WasSuccessful": (returnData[0] == null) ? false: true,
     }
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
@@ -505,7 +505,7 @@ class Command_ReadBehaviour implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
 
-    let returnData = await StateTracker.ReadBehavior(data.FlowBehaviour.Id, data.ProjectId, client);
+    let returnData = await StateTracker.ReadBehaviour(data.FlowBehaviour.Id, data.ProjectId, client);
     let returnContent = {
       "MessageType": "ReadBehaviour",
       "FlowBehaviour": returnData[0],

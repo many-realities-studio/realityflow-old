@@ -3,13 +3,13 @@
 import { FlowProject } from "../FlowLibrary/FlowProject";
 import { FlowUser } from "../FlowLibrary/FlowUser";
 import { FlowObject } from "../FlowLibrary/FlowObject";
-import { FlowBehavior } from "../FlowLibrary/FlowBehavior";
+import { FlowBehaviour } from "../FlowLibrary/FlowBehaviour";
 
 
 import { ProjectOperations } from "../../ORMCommands/project"
 import { ObjectOperations } from "../../ORMCommands/object"
 import { UserOperations } from "../../ORMCommands/user"
-import { BehaviorOperations } from "../../ORMCommands/behavior"
+import { BehaviourOperations } from "../../ORMCommands/Behaviour"
 
 import { DBObject } from "../../entity/object";
 import { Project } from "../../entity/project";
@@ -133,56 +133,56 @@ export default class TypeORMDatabase
   }
 
 
-  // Behavior functions
+  // Behaviour functions
   /**
-  *  Create an Behavior and add it to a pre-existing project in the database
+  *  Create an Behaviour and add it to a pre-existing project in the database
   *  Assumes that the project already exists
   */
-  public static async CreateBehavior(behaviorToCreate: FlowBehavior){
+  public static async CreateBehaviour(BehaviourToCreate: FlowBehaviour){
     let ret:any = {};
-    ret.Id = behaviorToCreate.Id;
-    ret.TypeOfTrigger = behaviorToCreate.TypeOfTrigger
-    ret.TriggerObjectId = behaviorToCreate.TriggerObjectId;
-    ret.TargetObjectId = behaviorToCreate.TargetObjectId;
-    ret.ActionParameters = JSON.stringify(behaviorToCreate.Action)
-    ret.NextBehavior = JSON.stringify(behaviorToCreate.NextBehavior);
-    ret.ProjectId = behaviorToCreate.ProjectId
-    console.log(behaviorToCreate.Action)
+    ret.Id = BehaviourToCreate.Id;
+    ret.TypeOfTrigger = BehaviourToCreate.TypeOfTrigger
+    ret.TriggerObjectId = BehaviourToCreate.TriggerObjectId;
+    ret.TargetObjectId = BehaviourToCreate.TargetObjectId;
+    ret.ActionParameters = JSON.stringify(BehaviourToCreate.Action)
+    ret.NextBehaviour = JSON.stringify(BehaviourToCreate.NextBehaviour);
+    ret.ProjectId = BehaviourToCreate.ProjectId
+    console.log(BehaviourToCreate.Action)
     
-    await BehaviorOperations.CreateBehavior(ret);
+    await BehaviourOperations.CreateBehaviour(ret);
   }
 
-  /** Delete a behavior chain from a project in the database*/
-  public static async DeleteBehavior(behaviorId: string): Promise<void> {
-    await BehaviorOperations.deleteBehavior(behaviorId);
+  /** Delete a Behaviour chain from a project in the database*/
+  public static async DeleteBehaviour(BehaviourId: string): Promise<void> {
+    await BehaviourOperations.deleteBehaviour(BehaviourId);
   }
 
-  public static async UpdateBehavior(behaviorToUpdate): Promise<void>{
+  public static async UpdateBehaviour(BehaviourToUpdate): Promise<void>{
     let ret:any = {};
-    ret.Id = behaviorToUpdate.Id;
-    ret.TypeOfTrigger = behaviorToUpdate.TypeOfTrigger
-    ret.TriggerObjectId = behaviorToUpdate.TriggerObjectId;
-    ret.TargetObjectId = behaviorToUpdate.TargetObjectId;
-    ret.ActionParameters = JSON.stringify(behaviorToUpdate.Action)
-    ret.NextBehavior = JSON.stringify(behaviorToUpdate.NextBehavior);
-    ret.ProjectId = behaviorToUpdate.ProjectId
-    await BehaviorOperations.updateBehavior(ret)
+    ret.Id = BehaviourToUpdate.Id;
+    ret.TypeOfTrigger = BehaviourToUpdate.TypeOfTrigger
+    ret.TriggerObjectId = BehaviourToUpdate.TriggerObjectId;
+    ret.TargetObjectId = BehaviourToUpdate.TargetObjectId;
+    ret.ActionParameters = JSON.stringify(BehaviourToUpdate.Action)
+    ret.NextBehaviour = JSON.stringify(BehaviourToUpdate.NextBehaviour);
+    ret.ProjectId = BehaviourToUpdate.ProjectId
+    await BehaviourOperations.updateBehaviour(ret)
   }
 
-  public static async getBehaviors(projectId){
-    let behaviors = await BehaviorOperations.getBehaviors(projectId);
-    let flowBehaviors = behaviors.map((behavior)=>{
+  public static async getBehaviours(projectId){
+    let Behaviours = await BehaviourOperations.getBehaviours(projectId);
+    let flowBehaviours = Behaviours.map((Behaviour)=>{
       let ret:any = {};
-      ret.Id = behavior.Id;
-      ret.TypeOfTrigger = behavior.TypeOfTrigger
-      ret.TriggerObjectId = behavior.TriggerObjectId;
-      ret.TargetObjectId = behavior.TargetObjectId;
-      ret.Action = JSON.parse(behavior.ActionParameters)
-      ret.NextBehavior = JSON.parse(behavior.NextBehavior);
-      ret.ProjectId = behavior.ProjectId
+      ret.Id = Behaviour.Id;
+      ret.TypeOfTrigger = Behaviour.TypeOfTrigger
+      ret.TriggerObjectId = Behaviour.TriggerObjectId;
+      ret.TargetObjectId = Behaviour.TargetObjectId;
+      ret.Action = JSON.parse(Behaviour.ActionParameters)
+      ret.NextBehaviour = JSON.parse(Behaviour.NextBehaviour);
+      ret.ProjectId = Behaviour.ProjectId
       return ret;
     })
-    return flowBehaviors;
+    return flowBehaviours;
   }
 }
 export {TypeORMDatabase};

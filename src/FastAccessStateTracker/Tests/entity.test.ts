@@ -5,7 +5,7 @@ import { Project } from '../../entity/project'
 import { DBObject } from '../../entity/object'
 import { UserSubscriber } from "../../subscriber/UserSubscriber"
 import * as bcrypt from 'bcrypt'
-import { Behavior } from '../../entity/behavior'
+import { Behaviour } from '../../entity/behaviour'
 
 beforeAll( async () => {
     await createConnection(    {
@@ -19,7 +19,7 @@ beforeAll( async () => {
            DBObject,
            User,
            Project,
-           Behavior
+           Behaviour
         ],
         subscribers: [
             UserSubscriber
@@ -457,62 +457,62 @@ describe ('Object', () => {
 })
 
 // TODO: has not been run yet
-describe ('Behavior', () =>{
+describe ('Behaviour', () =>{
     
     it("can be created", async () =>{
         let conn = getConnection("test")
 
-        let behavior = new Behavior()
-        behavior.Id = "behaviorId"
-        behavior.Name = "behaviorName"
-        behavior.Trigger = "Trigger"
-        behavior.Target = "target"
-        behavior.ChainOwner = "chainOwner"
-        behavior.Index = 0
+        let Behaviour = new Behaviour()
+        Behaviour.Id = "BehaviourId"
+        Behaviour.Name = "BehaviourName"
+        Behaviour.Trigger = "Trigger"
+        Behaviour.Target = "target"
+        Behaviour.ChainOwner = "chainOwner"
+        Behaviour.Index = 0
 
-        await conn.manager.save(behavior)
+        await conn.manager.save(Behaviour)
 
         let check = await conn.manager.createQueryBuilder()
-            .select("behavior")
-            .from(Behavior, "behavior")
-            .where("Id = :id", {id: behavior.Id})
+            .select("Behaviour")
+            .from(Behaviour, "Behaviour")
+            .where("Id = :id", {id: Behaviour.Id})
             .getOne();
 
-        expect(check.Id).toEqual(behavior.Id)
+        expect(check.Id).toEqual(Behaviour.Id)
     })
 
     it("can be deleted", async () => {
 
         let conn = getConnection("test")
 
-        let behavior = new Behavior()
-        behavior.Id = "deleteBehaviorId"
-        behavior.Name = "behaviorName"
-        behavior.Trigger = "Trigger"
-        behavior.Target = "target"
-        behavior.ChainOwner = "chainOwner"
-        behavior.Index = 0
+        let Behaviour = new Behaviour()
+        Behaviour.Id = "deleteBehaviourId"
+        Behaviour.Name = "BehaviourName"
+        Behaviour.Trigger = "Trigger"
+        Behaviour.Target = "target"
+        Behaviour.ChainOwner = "chainOwner"
+        Behaviour.Index = 0
 
-        await conn.manager.save(behavior)
+        await conn.manager.save(Behaviour)
 
         let check = await conn.manager.createQueryBuilder()
-            .select("behavior")
-            .from(Behavior, "behavior")
-            .where("behavior.Id = :id", {id: behavior.Id})
+            .select("Behaviour")
+            .from(Behaviour, "Behaviour")
+            .where("Behaviour.Id = :id", {id: Behaviour.Id})
             .getOne();
 
-        expect(check.Id).toEqual(behavior.Id)
+        expect(check.Id).toEqual(Behaviour.Id)
 
         await conn.manager.createQueryBuilder()
             .delete()
-            .from(Behavior)
-            .where("Id = :id", {id: behavior.Id})
+            .from(Behaviour)
+            .where("Id = :id", {id: Behaviour.Id})
             .execute()
         
         let deleteCheck = await conn.manager.createQueryBuilder()
-            .select("behavior")
-            .from(Behavior, "behavior")
-            .where("behavior.Id = :id", {id: behavior.Id})
+            .select("Behaviour")
+            .from(Behaviour, "Behaviour")
+            .where("Behaviour.Id = :id", {id: Behaviour.Id})
             .getOne();
 
         expect(deleteCheck).toBeFalsy()

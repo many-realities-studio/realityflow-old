@@ -2,12 +2,12 @@ import { Project } from '../../entity/project'
 import { DBObject } from '../../entity/object'
 import { ProjectOperations } from '../../ORMCommands/project'
 import { ObjectOperations } from '../../ORMCommands/object'
-import { Behavior } from '../../entity/behavior'
+import { Behaviour } from '../../entity/behaviour'
 import { User } from '../../entity/user'
 import { UserSubscriber } from '../../subscriber/UserSubscriber'
 import { createConnection, getConnection } from 'typeorm'
-import { FlowBehavior } from '../FlowLibrary/FlowBehavior'
-import { BehaviorOperations } from '../../ORMCommands/behavior'
+import { FlowBehaviour } from '../FlowLibrary/FlowBehaviour'
+import { BehaviourOperations } from '../../ORMCommands/behaviour'
 import { ObjectId } from 'mongodb'
 
 beforeAll( async () => {
@@ -22,7 +22,7 @@ beforeAll( async () => {
            DBObject,
            User,
            Project,
-           Behavior
+           Behaviour
         ],
         subscribers: [
             UserSubscriber
@@ -91,8 +91,8 @@ describe("entity", () => {
     let x =  await ObjectOperations.createObject(object1, returnedProject.Id)
     let y =  await ObjectOperations.createObject(object2, returnedProject.Id)
 
-        let behavior1 = new FlowBehavior({
-            Id: "TestBehaviorId",
+        let Behaviour1 = new FlowBehaviour({
+            Id: "TestBehaviourId",
             Name: 'Name',
             Trigger: "Trigger",
             Target: "Target",
@@ -100,8 +100,8 @@ describe("entity", () => {
             ChainOwner: "Trigger"
         })
 
-        let behavior2 = new FlowBehavior({
-            Id: "TestBehaviorId2",
+        let Behaviour2 = new FlowBehaviour({
+            Id: "TestBehaviourId2",
             Name: 'Name',
             Trigger: "Target",
             Target: "Trigger",
@@ -109,14 +109,14 @@ describe("entity", () => {
             ChainOwner: "Trigger"
         })
         
-        let check = await BehaviorOperations.CreateBehavior([behavior1, behavior2], "Trigger")
+        let check = await BehaviourOperations.CreateBehaviour([Behaviour1, Behaviour2], "Trigger")
         expect(check).toBeTruthy()
         
         let find = await getConnection(process.env.NODE_ENV).createQueryBuilder()
             .select()
-            .from(Behavior, "behavior")
+            .from(Behaviour, "Behaviour")
             .where("ChainOwner = :owner", {owner: "Trigger"})
-            .orderBy("behavior.Index", "ASC")
+            .orderBy("Behaviour.Index", "ASC")
             .execute()
 
         expect(find).toBeTruthy()
@@ -124,14 +124,14 @@ describe("entity", () => {
     })
 
     it("can be referenced by its owning object", async () =>{
-        let check = await BehaviorOperations.getBehavior("Trigger");
+        let check = await BehaviourOperations.getBehaviour("Trigger");
         expect(check).toBeTruthy()
         expect(check[0].Name).toEqual("Name")
     })
 
     it("can be deleted", async () => {
-        await BehaviorOperations.deleteBehavior("Trigger")
-        let check = await BehaviorOperations.getBehavior("Trigger");
+        await BehaviourOperations.deleteBehaviour("Trigger")
+        let check = await BehaviourOperations.getBehaviour("Trigger");
         expect(check).toBeTruthy()
         expect(check.length).toEqual(0)
 
