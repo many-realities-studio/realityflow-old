@@ -9,7 +9,7 @@ import { FlowBehaviour } from "../FlowLibrary/FlowBehaviour";
 import { ProjectOperations } from "../../ORMCommands/project"
 import { ObjectOperations } from "../../ORMCommands/object"
 import { UserOperations } from "../../ORMCommands/user"
-import { BehaviourOperations } from "../../ORMCommands/Behaviour"
+import { BehaviourOperations } from "../../ORMCommands/behaviour"
 
 import { DBObject } from "../../entity/object";
 import { Project } from "../../entity/project";
@@ -155,6 +155,10 @@ export default class TypeORMDatabase
   /** Delete a Behaviour chain from a project in the database*/
   public static async DeleteBehaviour(BehaviourId: string): Promise<void> {
     await BehaviourOperations.deleteBehaviour(BehaviourId);
+  }
+
+  public static async LinkNewToOld(projectId: string, child: string, parents: string[]) {
+    await BehaviourOperations.LinkNewToOld(projectId, child, parents);
   }
 
   public static async UpdateBehaviour(BehaviourToUpdate): Promise<void>{

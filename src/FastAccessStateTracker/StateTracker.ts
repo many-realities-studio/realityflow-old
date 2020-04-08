@@ -500,6 +500,18 @@ export class StateTracker{
       return [null, affectedClients];
   }
 
+  public static async LinkNewBehaviorToExistingBehaviors(projectId: string, child: string, parents: Array<string>){
+    let behaviorsToModify = RoomManager.FindRoom(projectId)
+      .GetProject()
+      ._BehaviourList
+      .filter((x) => parents.includes(x.Id))
+
+    behaviorsToModify.map((x) => x.NextBehaviour.push(child))
+
+    await TypeORMDatabase.LinkNewToOld(projectId, child, parents)
+  }
+
+
   public static async ReadBehaviour(BehaviourId: string, projectId: string, client: string) : Promise<[any, Array<string>]>
   {
 

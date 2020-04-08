@@ -9,7 +9,7 @@ export class FlowBehaviour
     public TriggerObjectId: string;
     public TargetObjectId: string;
     public Action : Action;
-    public NextBehaviour: Array<string>[];
+    public NextBehaviour: Array<string>;
     public ProjectId: string;
 
     constructor(Behaviour: any)

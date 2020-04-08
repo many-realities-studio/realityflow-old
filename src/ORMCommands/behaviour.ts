@@ -53,4 +53,19 @@ export class BehaviourOperations
             .where("Id = :id", {id: Behaviour.Id})
             .execute();
     }
+
+    public static async LinkNewToOld(projectId: string, child: string, parents: string[]) {
+        let list = await getConnection(process.env.NODE_ENV)
+            .createQueryBuilder()
+            .select()
+            .from(Behaviour, "behavior")
+            .orWhereInIds(parents)
+            .getMany()
+
+        //I hate myself for doing this
+        list.map((x) => {
+            return JSON.stringify(JSON.parse(x.NextBehaviour).push(child))
+        })
+        await getConnection(process.env.NODE_ENV).manager.save(list)
+    }
 }
