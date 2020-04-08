@@ -457,17 +457,6 @@ export class StateTracker{
     return [objectRead, [client]];
   }
 
-  public static async LinkNewBehaviorToExistingBehaviors(projectId: string, child: string, parents: Array<string>){
-    let behaviorsToModify = RoomManager.FindRoom(projectId)
-      .GetProject()
-      ._BehaviorList
-      .filter((x) => parents.includes(x.Id))
-
-    behaviorsToModify.map((x) => x.NextBehavior.push(child))
-
-    await TypeORMDatabase.LinkNewToOld(projectId, child, parents)
-  }
-
   public static async CreateBehavior(behaviorToCreate : FlowBehavior, projectId: string) : Promise<[any, Array<string>]>
   {
     console.log(projectId)

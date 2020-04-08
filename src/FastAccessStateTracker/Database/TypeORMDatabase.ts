@@ -18,9 +18,6 @@ import { Project } from "../../entity/project";
  */
 export default class TypeORMDatabase
 {
-  public static async LinkNewToOld(projectId: string, child: string, parents: string[]) {
-    await BehaviorOperations.LinkNewToOld(projectId, child, parents);
-  }
     
   public constructor(url: string){}
     
