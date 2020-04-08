@@ -453,8 +453,10 @@ class Command_CreateBehaviour implements ICommand
     let flowBehavior = new FlowBehavior(data.FlowBehaviour);
 
     let returnData = await StateTracker.CreateBehavior(flowBehavior, data.ProjectId);
+    await StateTracker.LinkNewBehaviorToExistingBehaviors(data.ProjectId, flowBehavior.Id, data.BehaviorsToLinkTo)
     let returnContent = {
       "MessageType": "CreateBehaviour",
+      "BehaviorsToLinkTo": data.BehaviorsToLinkTo,
       "FlowBehaviour": returnData[0],
       "WasSuccessful": (returnData[0] == null) ? false: true
     }

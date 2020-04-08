@@ -10,6 +10,20 @@ import { FlowBehavior } from '../FastAccessStateTracker/FlowLibrary/FlowBehavior
 
 export class BehaviorOperations 
 {
+    public static async LinkNewToOld(projectId: string, child: string, parents: string[]) {
+        let list = await getConnection(process.env.NODE_ENV)
+            .createQueryBuilder()
+            .select()
+            .from(Behavior, "behavior")
+            .orWhereInIds(parents)
+            .getMany()
+
+        //I hate myself for doing this
+        list.map((x) => {
+            return JSON.stringify(JSON.parse(x.NextBehavior).push(child))
+        })
+        await getConnection(process.env.NODE_ENV).manager.save(list)
+    }
     // TODO: created: yes tested: no
     /**
      * creates the behavior and associates it with certain objects
