@@ -244,9 +244,9 @@ export class StateTracker{
   {
     let affectedClients = [];
     affectedClients.push(ClientId);
-    //Authenticate user, I guess. Don't want someone trying to log someone else out
-    if(!TypeORMDatabase.AuthenticateUser(Username, password))
-      return ['Failure', affectedClients];
+    // //Authenticate user, I guess. Don't want someone trying to log someone else out
+    // if(!TypeORMDatabase.AuthenticateUser(Username, password))
+    //   return ['Failure', affectedClients];
 
     // check if user is already logged in - 
     // user could be logged in on another client
@@ -305,11 +305,6 @@ export class StateTracker{
     // get all of the clients that are in that room so that we can tell them 
     let clients = await RoomManager.getClients(roomCode)
 
-   /* roomClients.forEach((clients, username, map) => {
-      affectedClients = affectedClients.concat(clients)
-    })
-
-    let clients = RoomManager.getClients(projectToOpenID);*/
     clients.forEach((value: string[], key: string) => {
       
       value.forEach((client: string) => {
