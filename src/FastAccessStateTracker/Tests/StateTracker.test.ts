@@ -1,5 +1,16 @@
 // import { StateTracker } from "../StateTracker"
 
+<<<<<<< HEAD
+import { FlowUser } from "../FlowLibrary/FlowUser"
+import TypeORMDatabase from "../Database/TypeORMDatabase"
+import { RoomManager } from "../RoomManager"
+import { FlowProject } from "../FlowLibrary/FlowProject"
+import { Project } from "../../entity/project"
+import { FlowObject } from "../FlowLibrary/FlowObject"
+import {FlowBehaviour} from "../FlowLibrary/FlowBehaviour"
+import { ProjectOperations } from "../../ORMCommands/project"
+import { Behaviour } from "../../entity/behaviour"
+=======
 // import { FlowUser } from "../FlowLibrary/FlowUser"
 // import TypeORMDatabase from "../Database/TypeORMDatabase"
 // import { RoomManager } from "../RoomManager"
@@ -9,6 +20,7 @@
 // import {FlowBehavior} from "../FlowLibrary/FlowBehavior"
 // import { ProjectOperations } from "../../ORMCommands/project"
 // import { Behavior } from "../../entity/behavior"
+>>>>>>> development
 
 // const databaseUserCreationMock = jest.fn()
 
@@ -30,8 +42,13 @@
 // const fakeDestroyRoom = jest.fn((roomCode:string) => new Map<string, Array<string>>());
 // RoomManager.DestroyRoom = fakeDestroyRoom;
 
+<<<<<<< HEAD
+// const fakeAddBehaviour = jest.fn(async(roomCode: string) => {});
+// RoomManager.FindRoom(fakeRoomCode).GetProject().AddBehaviour = fakeAddBehaviour;
+=======
 // // const fakeAddBehavior = jest.fn(async(roomCode: string) => {});
 // // RoomManager.FindRoom(fakeRoomCode).GetProject().AddBehavior = fakeAddBehavior;
+>>>>>>> development
 
 // const fakeGetClients = jest.fn((roomCode) => {
 //     let x = new Map<string, Array<string>>()
@@ -55,8 +72,13 @@
 // const TypeORMObjectCreateMock = jest.fn( async (objectToCreate: FlowObject, projectId: string) => {});
 // TypeORMDatabase.CreateObject = TypeORMObjectCreateMock;
 
+<<<<<<< HEAD
+const TypeORMBehaviourCreateMock = jest.fn( async (BehaviourToCreate: FlowBehaviour[], objectId) => {});
+TypeORMDatabase.CreateBehaviour = TypeORMBehaviourCreateMock;
+=======
 // const TypeORMBehaviorCreateMock = jest.fn( async (BehaviorToCreate: FlowBehavior[], objectId) => {});
 // TypeORMDatabase.CreateBehavior = TypeORMBehaviorCreateMock;
+>>>>>>> development
 
 
 // const TypeORMProjectGetMock = jest.fn( async (projectToGet: string) => {
@@ -338,6 +360,19 @@
 // })
 
 
+<<<<<<< HEAD
+describe("Behaviour", () => {
+    it("Can be created", async () => {
+        var createdBehaviour =StateTracker.listifyBehaviour(
+            {
+            Name: "testBehaviour",
+            Id: "createdBehaviourId",
+            Trigger: "triggerObjectId",
+            Target: "targetObjectId",
+            Index : "1234",
+            ChainOwner: "Owner",
+        });
+=======
 // describe("Behavior", () => {
 //     it("Can be created", async () => {
 //         var createdBehavior =StateTracker.listifyBehavior(
@@ -349,15 +384,23 @@
 //             Index : "1234",
 //             ChainOwner: "Owner",
 //         });
+>>>>>>> development
 
 //         let projectId = "1234";
 
 //         RoomManager.CreateRoom(projectId);
 
+<<<<<<< HEAD
+        await StateTracker.CreateBehaviour(createdBehaviour, "objectId", projectId);
+
+        expect(TypeORMBehaviourCreateMock).toHaveBeenCalled()
+    })
+=======
 //         await StateTracker.CreateBehavior(createdBehavior, "objectId", projectId);
 
 //         expect(TypeORMBehaviorCreateMock).toHaveBeenCalled()
 //     })
+>>>>>>> development
 
 //     it("can be deleted", () => {
 

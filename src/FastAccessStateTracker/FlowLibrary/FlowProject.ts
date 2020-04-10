@@ -1,12 +1,12 @@
 import { FlowObject } from "./FlowObject";
-import { FlowBehavior } from "./FlowBehavior";
+import { FlowBehaviour } from "./FlowBehaviour";
 
 export class FlowProject 
 {
   // TODO: this is temporarily public for convenience.
   public _ObjectList: Array<FlowObject> = [];
-  //TODO: list of FlowBehaviors
-  public _BehaviorList: Array<FlowBehavior> = [];
+  //TODO: list of FlowBehaviours
+  public _BehaviourList: Array<FlowBehaviour> = [];
   
   // Used for identification in the FAM
   
@@ -110,47 +110,47 @@ export class FlowProject
     else return false;
   }
 
-  /**
-   * Adds behavior to project list for reference 
-   * @param behaviorToAdd The behavior to add to the project
-   */
-  public AddBehavior(objectId: string, behaviorToAdd: Array<FlowBehavior>)
+  public UpdateBehaviour(newBehaviour: FlowBehaviour, client: string) 
   {
-    this._ObjectList.find(element => element.Id == objectId).behavior = behaviorToAdd;
+    // Get the Behaviour that we are changing from the specified project
+    var oldBehaviour: FlowBehaviour = this._BehaviourList.find(element => element.Id == newBehaviour.Id);
+    if(oldBehaviour != undefined){
+      oldBehaviour.UpdateProperties(newBehaviour);
+      return true;
+    }
+    else return false;
   }
 
   /**
-   * Delete's behavior from project
-   * @param behaviorToRemove the ID of the behavior to be removed from the project
+   * Adds Behaviour to project list for reference 
+   * @param BehaviourToAdd The Behaviour to add to the project
    */
-  public DeleteBehavior(objectId: string): void
+  public AddBehaviour(BehaviourToAdd: FlowBehaviour)
   {
-    this._ObjectList.find(element => element.Id == objectId).behavior = null;
+    this._BehaviourList.push(BehaviourToAdd);
   }
 
-  // /**
-  //  * Updates behaviors
-  //  * @param newBehavior new behavior whose properties to transfer over
-  //  */
-  // public UpdateBehavior(newBehavior: FlowBehavior) : void
-  // {
-  //   console.log("behavior list is " + this._BehaviorList)
-  //   console.log("behavior Id is " + newBehavior.Id)
-  //   // Get the behavior that we are changing from the specified project
-  //   var oldBehavior: FlowBehavior = this.GetBehavior(newBehavior.Id);
-
-  //   // Update all properties of the old behavior to the new behavior.
-  //   oldBehavior.UpdateProperties(newBehavior);
-
-  // }
+  /**
+   * Delete's Behaviour from project
+   * @param BehaviourToRemove the ID of the Behaviour to be removed from the project
+   */
+  public DeleteBehaviour(BehaviourToRemove: string): Boolean
+  {
+    let index = this._BehaviourList.findIndex((element) => element.Id == BehaviourToRemove);
+    if(index > -1){
+      this._BehaviourList.splice(index);
+      return true;
+    }
+    else return false
+  }
 
   /**
-   * Retrieves Flow Behavior
-   * @param behaviorId ID of behavior to get
+   * Retrieves Flow Behaviour
+   * @param BehaviourId ID of Behaviour to get
    */
-  public GetBehavior(objectId: string) : Array<FlowBehavior>
+  public GetBehaviour(BehaviourId: string) : FlowBehaviour
   {
-    return this._ObjectList.find(element => element.Id == objectId).behavior;
+    return this._BehaviourList.find(element => element.Id == BehaviourId);
   }
 
   // TODO: Find out what this does (or needs to do)

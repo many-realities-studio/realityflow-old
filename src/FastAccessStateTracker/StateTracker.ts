@@ -1,6 +1,6 @@
 import { FlowObject } from "./FlowLibrary/FlowObject";
 import { FlowProject } from "./FlowLibrary/FlowProject";
-import { FlowBehavior } from "./FlowLibrary/FlowBehavior";
+import { FlowBehaviour } from "./FlowLibrary/FlowBehaviour";
 
 import { RoomManager } from "./RoomManager";
 import { TypeORMDatabase } from "./Database/TypeORMDatabase"
@@ -433,7 +433,7 @@ export class StateTracker{
     let famSuccess = RoomManager.updateObject(objectToUpdate, projectId, client);
     console.log(RoomManager.ReadObject(projectId, objectToUpdate.Id))
     if(!famSuccess)
-      return ["could not update object", [client]]
+      return [null, [client]];
     if(saveToDatabase)
       TypeORMDatabase.UpdateObject(objectToUpdate, projectId)
 
@@ -460,58 +460,14 @@ export class StateTracker{
     return [objectRead, [client]];
   }
 
-  /**
-   * unfuckify the bizarre recursive data structure is put into it
-   * @param behavior 
-   */
-  public static listifyBehavior(behavior: any){
-    let counter: number = 0;
-    let temp: any = behavior;
-    let retArr: Array<FlowBehavior> = []
-    let owner = temp.TriggerObjectID;
-
-    while(temp != null){
-      retArr.push(new FlowBehavior({
-        Name: temp.Name,
-        Id: temp.Id,
-        Trigger: temp.TriggerObjectID,
-        Target: temp.TargetObjectID,
-        Index: counter,
-        ChainOwner: owner
-      }));
-
-      counter ++;
-      temp = temp.FlowBehaviour;
-    }
-    return retArr
-  } 
-
-  public static reconstitute(behaviors: Array<FlowBehavior>){
-    let retBehavior: any = {}
-
-    let temp: any = retBehavior;
-
-    behaviors.forEach((behavior, index, arr) => {
-      temp.Name = behavior.Name;
-      temp.TriggerObjectID = behavior.Trigger;
-      temp.TargetObjectID = behavior.Target;
-      if (index === arr.length - 1)
-        temp.BehaviourChain = null
-      else
-        temp.BehaviourChain = {}
-
-      temp = temp.BehaviourChain
-    })
-    
-  }
-
-  public static async CreateBehavior(behaviorToCreate : Array<FlowBehavior>, objectId:string, projectId: string) : Promise<[any, Array<string>]>
+  public static async CreateBehaviour(BehaviourToCreate : FlowBehaviour, projectId: string) : Promise<[any, Array<string>]>
   {
+    console.log(projectId)
     RoomManager.FindRoom(projectId)
                 .GetProject()
-                .AddBehavior(objectId, behaviorToCreate);
+                .AddBehaviour(BehaviourToCreate);
   
-    TypeORMDatabase.CreateBehavior(behaviorToCreate, objectId)
+    TypeORMDatabase.CreateBehaviour(BehaviourToCreate);
 
     let affectedClients: Array<string> = [];
 
@@ -521,17 +477,17 @@ export class StateTracker{
       affectedClients = affectedClients.concat(clients)
     })
 
-    return [behaviorToCreate, affectedClients]
+    return [BehaviourToCreate, affectedClients]
   }
 
-  public static async DeleteBehavior(projectId: string, objectId, client: string) : Promise<[any, Array<string>]>
+  public static async DeleteBehaviour(projectId: string, BehaviourId: string, client: string) : Promise<[any, Array<string>]>
   {
 
-    RoomManager.FindRoom(projectId)
+    let success = RoomManager.FindRoom(projectId)
                 .GetProject()
-                .DeleteBehavior(objectId);
+                .DeleteBehaviour(BehaviourId);
 
-    TypeORMDatabase.DeleteBehavior(objectId)
+    TypeORMDatabase.DeleteBehaviour(BehaviourId)
 
     let affectedClients: Array<string> = [];
 
@@ -541,20 +497,49 @@ export class StateTracker{
     roomClients.forEach((clients, username, map) => {
       affectedClients = affectedClients.concat(clients)
     })
-
-    return [projectId, affectedClients]
+    if(success)
+      return [BehaviourId, affectedClients];
+    else  
+      return [null, affectedClients];
   }
 
-  public static async ReadBehavior(behaviorId: string, objectId, projectId: string, client: string) : Promise<[any, Array<string>]>
+  public static async LinkNewBehaviorToExistingBehaviors(projectId: string, child: string, parents: Array<string>){
+    let behaviorsToModify = RoomManager.FindRoom(projectId)
+      .GetProject()
+      ._BehaviourList
+      .filter((x) => parents.indexOf(x.Id) !== -1)
+
+    behaviorsToModify.map((x) => x.NextBehaviour.push(child))
+
+    await TypeORMDatabase.LinkNewToOld(projectId, child, parents)
+  }
+
+
+  public static async ReadBehaviour(BehaviourId: string, projectId: string, client: string) : Promise<[any, Array<string>]>
   {
-    let behaviorRead : FlowBehavior = null;
-    let behaviorList = RoomManager.FindRoom(projectId).GetProject().GetBehavior(objectId);
-    behaviorList.forEach(behavior => {
-      if(behavior.Id == behaviorId)
-        behaviorRead = behavior;
-    });
+
+    let BehaviourRead = RoomManager.FindRoom(projectId).GetProject().GetBehaviour(BehaviourId);
     
-    return [behaviorRead, [client]];
+    return [BehaviourRead, [client]];
+  }
+
+  public static async UpdateBehaviour(BehaviourToUpdate : FlowBehaviour, projectId: string,  client: string, saveToDatabase:boolean=false) : Promise<[any, Array<string>]>
+  {  
+    // perform the updates
+    let famSuccess = RoomManager.updateBehaviour(BehaviourToUpdate, projectId, client);
+    if(!famSuccess)
+      return [null, [client]];
+    if(saveToDatabase)
+      TypeORMDatabase.UpdateBehaviour(BehaviourToUpdate);
+
+    // get all of the clients that are in that room so that we can tell them 
+    let affectedClients: Array<string> = [];
+    let roomClients = await RoomManager.getClients(projectId)
+    roomClients.forEach((clients, username, map) => {
+      affectedClients = affectedClients.concat(clients)
+    })
+
+    return [BehaviourToUpdate , affectedClients]
   }
 
   public static async TogglePlayMode(projectId: string, toggle: boolean) : Promise<[any, Array<string>]>

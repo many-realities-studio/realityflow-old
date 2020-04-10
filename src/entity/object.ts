@@ -9,7 +9,7 @@ import {
   } from 'typeorm';
 
   import {Project} from './project'
-import { Behavior } from './behavior';
+import { Behaviour } from './behaviour';
 
 @Entity()
 export class DBObject extends BaseEntity{

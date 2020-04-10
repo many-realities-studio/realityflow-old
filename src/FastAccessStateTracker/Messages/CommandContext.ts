@@ -9,7 +9,7 @@ import { StateTracker } from "../StateTracker";
 
 import { FlowProject } from "../FlowLibrary/FlowProject";
 import { FlowObject } from "../FlowLibrary/FlowObject";
-import { FlowBehavior } from "../FlowLibrary/FlowBehavior";
+import { FlowBehaviour } from "../FlowLibrary/FlowBehaviour";
 
 import { MessageBuilder } from "./MessageBuilder";
 import { TreeChildren } from "typeorm";
@@ -440,7 +440,7 @@ class Command_FinalizedUpdateObject implements ICommand
 {
   async ExecuteCommand(data: any, client:string): Promise<[String, Array<String>]> 
   {
-    let flowObject = new FlowObject(data.flowObject);
+    let flowObject = new FlowObject(data.FlowObject);
     let returnData = await StateTracker.UpdateObject(flowObject, data.ProjectId, client, true);
     let returnContent = {
       "MessageType": "UpdateObject",
@@ -459,13 +459,13 @@ class Command_CreateBehaviour implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let flowBehaviour = StateTracker.listifyBehavior(data.FlowBehaviour)
-    
-    let owner = flowBehaviour[0].ChainOwner;
+    let flowBehaviour = new FlowBehaviour(data.FlowBehaviour);
 
-    let returnData = await StateTracker.CreateBehavior(flowBehaviour, owner, data.ProjectId);
+    let returnData = await StateTracker.CreateBehaviour(flowBehaviour, data.ProjectId);
+    await StateTracker.LinkNewBehaviorToExistingBehaviors(data.ProjectId, flowBehaviour.Id, data.BehaviorsToLinkTo)
     let returnContent = {
       "MessageType": "CreateBehaviour",
+      "BehaviorsToLinkTo": data.BehaviorsToLinkTo,
       "FlowBehaviour": returnData[0],
       "WasSuccessful": (returnData[0] == null) ? false: true
     }
@@ -479,13 +479,29 @@ class Command_DeleteBehaviour implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let flowBehaviour = StateTracker.listifyBehavior(data.FlowBehaviour)    
-    let owner = flowBehaviour[0].ChainOwner;
+    let flowBehaviour = new FlowBehaviour(data.FlowBehaviour);    
 
-    let returnData = await StateTracker.DeleteBehavior(data.ProjectId, owner, client);
+    let returnData = await StateTracker.DeleteBehaviour(data.ProjectId, flowBehaviour.Id, client);
     let returnContent = {
       "MessageType": "DeleteBehaviour",
       "BehaviourId": returnData[0],
+      "WasSuccessful": (returnData[0] == null) ? false: true,
+    }
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
+
+    return returnMessage;
+  }
+}
+
+class Command_UpdateBehaviour implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+  {
+    let flowBehaviour = new FlowBehaviour(data.FlowBehaviour);
+    let returnData = await StateTracker.UpdateBehaviour(flowBehaviour, data.ProjectId, client, true);
+    let returnContent = {
+      "MessageType": "UpdateBehaviour",
+      "FlowBehaviour": returnData[0],
       "WasSuccessful": (returnData[0] == null) ? false: true,
     }
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
@@ -500,10 +516,7 @@ class Command_ReadBehaviour implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
 
-    let flowBehaviour = StateTracker.listifyBehavior(data.FlowBehaviour)    
-    let owner = flowBehaviour[0].ChainOwner;
-
-    let returnData = await StateTracker.ReadBehavior(data.FlowBehaviour.Id, owner, data.ProjectId, client);
+    let returnData = await StateTracker.ReadBehaviour(data.FlowBehaviour.Id, data.ProjectId, client);
     let returnContent = {
       "MessageType": "ReadBehaviour",
       "FlowBehaviour": returnData[0],
@@ -598,6 +611,7 @@ export class CommandContext
       this._CommandList.set("CreateBehaviour", new Command_CreateBehaviour());
       this._CommandList.set("DeleteBehaviour", new Command_DeleteBehaviour());
       this._CommandList.set("ReadBehaviour", new Command_ReadBehaviour());
+      this._CommandList.set("UpdateBehaviour", new Command_UpdateBehaviour());
 
       // PlayMode Commands
       this._CommandList.set("StartPlayMode", new Command_StartPlayMode());
