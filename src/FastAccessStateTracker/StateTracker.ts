@@ -243,7 +243,7 @@ export class StateTracker{
   public static async LogoutUser(Username: string, password: string,  ClientId: string) : Promise<[any, Array<string>]>
   {
     let affectedClients = [];
-    affectedClients.push(ClientId);
+    affectedClients.push();
     // //Authenticate user, I guess. Don't want someone trying to log someone else out
     // if(!TypeORMDatabase.AuthenticateUser(Username, password))
     //   return ['Failure', affectedClients];
