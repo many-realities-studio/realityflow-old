@@ -104,7 +104,7 @@ export class ServerEventDispatcher {
             try {
 
                 const json = JSON.parse(evt);
-                json.user = ws.username     
+                //json.user = ws.username     
 
                 NewMessageProcessor.ParseMessage(ws.ID, json).then((res: any) => {
 

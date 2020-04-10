@@ -400,12 +400,16 @@ class Command_UpdateObject implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
     let flowObject = new FlowObject(data.FlowObject);
-    let returnData = await StateTracker.UpdateObject(flowObject, data.ProjectId, client, data.user);
+    let returnData = await StateTracker.UpdateObject(flowObject, data.ProjectId, client);
     let returnContent = {
       "MessageType": "UpdateObject",
       "FlowObject": returnData[0],
       "WasSuccessful": (returnData[0] == null) ? false: true,
     }
+
+    let index = returnData[1].indexOf(client);
+    returnData[1].splice(index, 1);
+    
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
 
     return returnMessage;
@@ -434,7 +438,7 @@ class Command_FinalizedUpdateObject implements ICommand
   async ExecuteCommand(data: any, client:string): Promise<[String, Array<String>]> 
   {
     let flowObject = new FlowObject(data.flowObject);
-    let returnData = await StateTracker.UpdateObject(flowObject, data.ProjectId, client, data.user, true);
+    let returnData = await StateTracker.UpdateObject(flowObject, data.ProjectId, client, true);
     let returnContent = {
       "MessageType": "UpdateObject",
       "FlowObject": returnData[0],
