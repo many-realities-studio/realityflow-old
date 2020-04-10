@@ -504,7 +504,7 @@ export class StateTracker{
     let behaviorsToModify = RoomManager.FindRoom(projectId)
       .GetProject()
       ._BehaviourList
-      .filter((x) => parents.includes(x.Id))
+      .filter((x) => parents.indexOf(x.Id) !== -1)
 
     behaviorsToModify.map((x) => x.NextBehaviour.push(child))
 
