@@ -38,11 +38,14 @@ export class BehaviourOperations
     }
 
     public static async getBehaviours(projectId: string): Promise<Array<Behaviour>>{
-        return await getConnection(process.env.NODE_ENV).createQueryBuilder()
-            .select()
+        console.log("PROJECTID")
+        console.log(projectId)
+        let query =  getConnection(process.env.NODE_ENV).createQueryBuilder()
+            .select("Behaviour")
             .from(Behaviour, "Behaviour")
-            .where("Project = :owner", {owner: projectId})
-            .getMany()
+            .where("Behaviour.ProjectId = :ProjectId", {ProjectId: projectId})
+        console.log(query.getSql())
+        return await    query.getMany()
     }
 
     public static async updateBehaviour(Behaviour: any){

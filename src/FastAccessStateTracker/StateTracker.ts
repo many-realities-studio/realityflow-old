@@ -466,7 +466,7 @@ export class StateTracker{
     RoomManager.FindRoom(projectId)
                 .GetProject()
                 .AddBehaviour(BehaviourToCreate);
-  
+    
     TypeORMDatabase.CreateBehaviour(BehaviourToCreate);
 
     let affectedClients: Array<string> = [];

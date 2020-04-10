@@ -19,7 +19,7 @@ export class FlowBehaviour
         this.Id = Behaviour.Id;
         this.TriggerObjectId = Behaviour.TriggerObjectId;
         this.TargetObjectId = Behaviour.TargetObjectId;
-        this.Action = new Action(Behaviour.Action);
+        this.Action = new Action(JSON.parse(Behaviour.Action));
         this.NextBehaviour = Behaviour.NextBehaviour;
         this.ProjectId = Behaviour.ProjectId
     }

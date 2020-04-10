@@ -410,9 +410,6 @@ class Command_UpdateObject implements ICommand
       "WasSuccessful": (returnData[0] == null) ? false: true,
     }
 
-    
-
-
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
 
     return returnMessage;
@@ -459,8 +456,10 @@ class Command_CreateBehaviour implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
+    
     let flowBehaviour = new FlowBehaviour(data.FlowBehaviour);
-
+    flowBehaviour.ProjectId = data.ProjectId;
+    
     let returnData = await StateTracker.CreateBehaviour(flowBehaviour, data.ProjectId);
     await StateTracker.LinkNewBehaviorToExistingBehaviors(data.ProjectId, flowBehaviour.Id, data.BehaviorsToLinkTo)
     let returnContent = {

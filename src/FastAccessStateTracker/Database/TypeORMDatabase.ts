@@ -51,9 +51,10 @@ export default class TypeORMDatabase
       return null;
 
     let objects = await ProjectOperations.getObjects(projectId);
+    let behaviours = await BehaviourOperations.getBehaviours(projectId)
     
     let returnProject = new FlowProject(project);
-    
+    returnProject._BehaviourList = behaviours.map((val, index, arr) => new FlowBehaviour(val))
     returnProject._ObjectList = objects.map((val, index, arr) => new FlowObject(val))
     
     return returnProject;
@@ -146,7 +147,7 @@ export default class TypeORMDatabase
     ret.TypeOfTrigger = BehaviourToCreate.TypeOfTrigger
     ret.TriggerObjectId = BehaviourToCreate.TriggerObjectId;
     ret.TargetObjectId = BehaviourToCreate.TargetObjectId;
-    ret.ActionParameters = JSON.stringify(BehaviourToCreate.Action)
+    ret.Action = JSON.stringify(BehaviourToCreate.Action)
     ret.NextBehaviour = JSON.stringify(BehaviourToCreate.NextBehaviour);
     ret.ProjectId = BehaviourToCreate.ProjectId
     console.log(BehaviourToCreate.Action)
@@ -169,7 +170,7 @@ export default class TypeORMDatabase
     ret.TypeOfTrigger = BehaviourToUpdate.TypeOfTrigger
     ret.TriggerObjectId = BehaviourToUpdate.TriggerObjectId;
     ret.TargetObjectId = BehaviourToUpdate.TargetObjectId;
-    ret.ActionParameters = JSON.stringify(BehaviourToUpdate.Action)
+    ret.Action = JSON.stringify(BehaviourToUpdate.Action)
     ret.NextBehaviour = JSON.stringify(BehaviourToUpdate.NextBehaviour);
     ret.ProjectId = BehaviourToUpdate.ProjectId
     await BehaviourOperations.updateBehaviour(ret)
@@ -183,7 +184,7 @@ export default class TypeORMDatabase
       ret.TypeOfTrigger = Behaviour.TypeOfTrigger
       ret.TriggerObjectId = Behaviour.TriggerObjectId;
       ret.TargetObjectId = Behaviour.TargetObjectId;
-      ret.Action = JSON.parse(Behaviour.ActionParameters)
+      ret.Action = JSON.parse(Behaviour.Action)
       ret.NextBehaviour = JSON.parse(Behaviour.NextBehaviour);
       ret.ProjectId = Behaviour.ProjectId
       return ret;

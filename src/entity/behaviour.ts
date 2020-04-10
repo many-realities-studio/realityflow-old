@@ -38,5 +38,5 @@ import { DBObject } from './object';
     public NextBehaviour: string;
 
     @Column()
-    public ActionParameters: string;
+    public Action: string;
   }
