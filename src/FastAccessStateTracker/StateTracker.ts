@@ -243,10 +243,10 @@ export class StateTracker{
   public static async LogoutUser(Username: string, password: string,  ClientId: string) : Promise<[any, Array<string>]>
   {
     let affectedClients = [];
-    affectedClients.push(ClientId);
-    //Authenticate user, I guess. Don't want someone trying to log someone else out
-    if(!TypeORMDatabase.AuthenticateUser(Username, password))
-      return ['Failure', affectedClients];
+    affectedClients.push();
+    // //Authenticate user, I guess. Don't want someone trying to log someone else out
+    // if(!TypeORMDatabase.AuthenticateUser(Username, password))
+    //   return ['Failure', affectedClients];
 
     // check if user is already logged in - 
     // user could be logged in on another client
@@ -305,11 +305,6 @@ export class StateTracker{
     // get all of the clients that are in that room so that we can tell them 
     let clients = await RoomManager.getClients(roomCode)
 
-   /* roomClients.forEach((clients, username, map) => {
-      affectedClients = affectedClients.concat(clients)
-    })
-
-    let clients = RoomManager.getClients(projectToOpenID);*/
     clients.forEach((value: string[], key: string) => {
       
       value.forEach((client: string) => {
@@ -432,10 +427,11 @@ export class StateTracker{
    * @param client client Id to make sure they have the object checked out
    * @param saveToDatabase Flag to save the object update to the database 
    */
-  public static async UpdateObject(objectToUpdate : FlowObject, projectId: string,  client: string, saveToDatabase:boolean=false) : Promise<[any, Array<string>]>
+  public static async UpdateObject(objectToUpdate : FlowObject, projectId: string,  client: string,  saveToDatabase:boolean,user=null) : Promise<[any, Array<string>]>
   {  
     // perform the updates
     let famSuccess = RoomManager.updateObject(objectToUpdate, projectId, client);
+    console.log(RoomManager.ReadObject(projectId, objectToUpdate.Id))
     if(!famSuccess)
       return [null, [client]];
     if(saveToDatabase)
@@ -444,7 +440,14 @@ export class StateTracker{
     // get all of the clients that are in that room so that we can tell them 
     let affectedClients: Array<string> = [];
     let roomClients = await RoomManager.getClients(projectId)
+
     roomClients.forEach((clients, username, map) => {
+      console.log(user)
+      if(!saveToDatabase && username == user){
+        console.log("ding")
+        let index = clients.indexOf(client);
+        clients = clients.splice(index, 1);
+      }
       affectedClients = affectedClients.concat(clients)
     })
 

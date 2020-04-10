@@ -71,7 +71,6 @@ export class ObjectOperations {
      */
     public static async updateObject(objectInfo: any, projectId: string) : Promise<void>
     {
-        let project = getConnection(process.env.NODE_ENV).createQueryBuilder().select().from(Project, "project").where("Id = :id", {id: projectId}).getOne()
 
         await getConnection(process.env.NODE_ENV)
             .createQueryBuilder()
@@ -93,7 +92,7 @@ export class ObjectOperations {
                 A:          objectInfo.A,
                 Prefab:     objectInfo.Prefab
             })
-            .where({id: objectInfo.id})
+            .where("Id = :id", {id: objectInfo.Id})
             .execute();
 
     }
