@@ -400,7 +400,7 @@ class Command_UpdateObject implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
     let flowObject = new FlowObject(data.FlowObject);
-    let returnData = await StateTracker.UpdateObject(flowObject, data.ProjectId, client);
+    let returnData = await StateTracker.UpdateObject(flowObject, data.ProjectId, client, data.user);
     let returnContent = {
       "MessageType": "UpdateObject",
       "FlowObject": returnData[0],
@@ -434,7 +434,7 @@ class Command_FinalizedUpdateObject implements ICommand
   async ExecuteCommand(data: any, client:string): Promise<[String, Array<String>]> 
   {
     let flowObject = new FlowObject(data.flowObject);
-    let returnData = await StateTracker.UpdateObject(flowObject, data.ProjectId, client, true);
+    let returnData = await StateTracker.UpdateObject(flowObject, data.ProjectId, client, data.user, true);
     let returnContent = {
       "MessageType": "UpdateObject",
       "FlowObject": returnData[0],
