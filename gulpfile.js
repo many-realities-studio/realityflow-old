@@ -18,7 +18,7 @@ var tsc = require("gulp-typescript");
 var npid = require('npid');
 
 const paths = {
-    run: './run/',
+    run: './run',
     build: './node/server/bld/',
     remoteDevelopment: '/var/realityflow/development/'
 };
@@ -28,16 +28,17 @@ if(fs.existsSync(`${paths.run}/server.pid`)) {
   // kill(fs.readFileSync(`${paths.run}/server.pid`))
   // fs.unlink(`${paths.run}/server.pid`, function (err) {});
 }
+
+let pid
 try {
-  var pid = npid.create(`${paths.run}/gulp.pid`);
-  pid.removeOnExit();
+  pid = npid.create(`${paths.run}/gulp.pid`);
 } catch (err) {
   console.log("Error, previous run did not exit cleanly.");
-  npid.remove('./run/gulp.pid')
-  var pid = npid.create('./run/gulp.pid');
-  pid.removeOnExit();
+  npid.remove(`${paths.run}/gulp.pid`)
+  pid = npid.create(`${paths.run}/gulp.pid`);
   // process.exit(1);
 }
+pid.removeOnExit();
 
 var rsync = require('gulp-rsync');
 // const webpack_stream = require('webpack-stream')
@@ -84,16 +85,15 @@ function runNodeServer(cb) {
     // We've set up the server and therefore have completed this task:
     cb()
 }
-
-// New deploy to development server
-function deployDev () {
+function deployToDev () {
   return src('.')
-      .pipe(rsync({
+    .pipe(rsync({
           hostname: 'plato.mrl.ai',
           username: 'realityflow_daemon',
           recursive: true,
-          exclude: ['.gitignore', 'package-lock.json', '.github','.vscode','node_modules','.git', 'Client-HL', 'Client-ML','Client-Mobile', 'database','Client-Web', 'UnityPlugin'],
+          exclude: ['.gitignore', 'run', 'package-lock.json', '.github','.vscode', 'node', 'node_modules','.git', 'Client-HL', 'Client-ML','Client-Mobile', 'database','Client-Web', 'UnityPlugin'],
           destination: paths.remoteDevelopment,
+          delete: 'true',
           chmod: "ugo=rwX",
           progress: true,
           archive: true,
@@ -101,20 +101,24 @@ function deployDev () {
           compress: true,
           command: true,
       }))
-      .pipe(
-        exec('ssh realityflow_daemon@plato.mrl.ai "cd development && npm install && gulp"')
-      );
 }
+// New deploy to development server
+exports.deployDev = series(
+    deployToDev,
+      (cb) => {exec('ssh realityflow_daemon@plato.mrl.ai "cd development && npm install"'); cb()})
 
 function watchEverything(cb) {
   console.log("Watching for file changes...")
-  return parallel(
+  return series(
+    buildApp,
+    runNodeServer,
+    parallel(
     () => watch('src/**/*.ts', 
-      { ignoreInitial: false }, 
+      { ignoreInitial: true }, 
       buildApp),
     () => watch('node/**/*.js', 
       { ignoreInitial: true, delay: 500}, 
-      runNodeServer))(cb)
+      runNodeServer)))(cb)
 }
 
 var env = gutil.env.e || "development"
@@ -140,5 +144,5 @@ process.on('exit', function () {
 
 
 exports.default = watchEverything;
+exports.runNodeServer = runNodeServer;
 exports.build = buildApp
-exports.deployDev = deployDev

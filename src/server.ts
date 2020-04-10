@@ -15,6 +15,9 @@ import { RoomManager } from "./FastAccessStateTracker/RoomManager";
 import { UserOperations } from "./ORMCommands/user";
 import { FlowProject } from "./FastAccessStateTracker/FlowLibrary/FlowProject";
 
+var database;
+console.log("Server starting...")
+
 
 //The main Server class
 export class ServerEventDispatcher {
@@ -189,14 +192,17 @@ export class ServerEventDispatcher {
      console.log(process.env.NODE_ENV)
 })()
 
-const app = express();
+// const app = express();
 
-app.use(express.static("./static"));
+// app.use(express.static("./static"));
 
-const server = http.createServer(app);
+const server = http.createServer();
 const sockServ = new ServerEventDispatcher(server);
 
-
+try {
 server.listen(process.env.PORT || 8999, () => {
     console.log("SYSTEM READY");
-});
+})
+} catch (err) {
+  console.log(err)
+}
