@@ -93,7 +93,7 @@ export class ObjectOperations {
                 A:          objectInfo.A,
                 Prefab:     objectInfo.Prefab
             })
-            .where({id: objectInfo.id})
+            .where("Id = :id", {id: objectInfo.id})
             .execute();
 
     }
