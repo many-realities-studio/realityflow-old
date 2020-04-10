@@ -427,10 +427,11 @@ export class StateTracker{
    * @param client client Id to make sure they have the object checked out
    * @param saveToDatabase Flag to save the object update to the database 
    */
-  public static async UpdateObject(objectToUpdate : FlowObject, projectId: string,  client: string, user=null, saveToDatabase:boolean=false) : Promise<[any, Array<string>]>
+  public static async UpdateObject(objectToUpdate : FlowObject, projectId: string,  client: string,  saveToDatabase:boolean,user=null) : Promise<[any, Array<string>]>
   {  
     // perform the updates
     let famSuccess = RoomManager.updateObject(objectToUpdate, projectId, client);
+    console.log(RoomManager.ReadObject(projectId, objectToUpdate.Id))
     if(!famSuccess)
       return ["could not update object", [client]]
     if(saveToDatabase)
@@ -439,11 +440,14 @@ export class StateTracker{
     // get all of the clients that are in that room so that we can tell them 
     let affectedClients: Array<string> = [];
     let roomClients = await RoomManager.getClients(projectId)
-    if(user != null){
-      let l = roomClients.get(user)
-      l = l.filter((x) => x != user)
-    }
+
     roomClients.forEach((clients, username, map) => {
+      console.log(user)
+      if(!saveToDatabase && username == user){
+        console.log("ding")
+        let index = clients.indexOf(client);
+        clients = clients.splice(index, 1);
+      }
       affectedClients = affectedClients.concat(clients)
     })
 

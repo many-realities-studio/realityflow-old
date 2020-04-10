@@ -124,6 +124,8 @@ export default class TypeORMDatabase
 
   /**Update a given object */
   public static async UpdateObject(objectToUpdate: FlowObject, projectId: string): Promise<void> {
+    console.log("typeORM update")
+    console.log(objectToUpdate)
     await ObjectOperations.updateObject(objectToUpdate, projectId);
   }
   

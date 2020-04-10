@@ -172,8 +172,7 @@ class Command_LeaveProject implements ICommand
 
     let returnContent = {
       "MessageType": "LeaveProject",
-      "WasSuccessful": returnData[0],
-      "FlowProject": message
+      "WasSuccessful": returnData[0]
     }
 
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
@@ -347,6 +346,7 @@ class Command_CheckinObject implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
     let object = await StateTracker.ReadObject(data.ObjectId, data.ProjectId, client);
+    console.log(object)
     let finalUpdate =  await StateTracker.UpdateObject(object[0], data.ProjectId, client, true);
 
     let returnData = await StateTracker.CheckinObject(data.ProjectId, data.ObjectId, client)
@@ -355,6 +355,7 @@ class Command_CheckinObject implements ICommand
       "WasSuccessful": ((returnData[0]) && finalUpdate[0] != null) ? true: false,
       "ObjectID": data.ObjectId
     }
+
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
 
     return returnMessage;
@@ -400,12 +401,18 @@ class Command_UpdateObject implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
     let flowObject = new FlowObject(data.FlowObject);
-    let returnData = await StateTracker.UpdateObject(flowObject, data.ProjectId, client, data.user);
+    let returnData = await StateTracker.UpdateObject(flowObject, data.ProjectId, client,false, data.user);
+
+
     let returnContent = {
       "MessageType": "UpdateObject",
       "FlowObject": returnData[0],
       "WasSuccessful": (returnData[0] == null) ? false: true,
     }
+
+    
+
+
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
 
     return returnMessage;
@@ -434,7 +441,7 @@ class Command_FinalizedUpdateObject implements ICommand
   async ExecuteCommand(data: any, client:string): Promise<[String, Array<String>]> 
   {
     let flowObject = new FlowObject(data.flowObject);
-    let returnData = await StateTracker.UpdateObject(flowObject, data.ProjectId, client, data.user, true);
+    let returnData = await StateTracker.UpdateObject(flowObject, data.ProjectId, client, true);
     let returnContent = {
       "MessageType": "UpdateObject",
       "FlowObject": returnData[0],

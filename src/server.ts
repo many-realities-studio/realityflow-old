@@ -63,6 +63,8 @@ export class ServerEventDispatcher {
                 let pass = rawAuth.slice(splitIndex+1)
                 let ID = uuidv4();
 
+
+
                 let message = {
                     "__type": "Login_SendToServer:#Packages.realityflow_package.Runtime.scripts.Messages.UserMessages",
                     "Message": null,
