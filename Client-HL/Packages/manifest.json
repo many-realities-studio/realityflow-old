@@ -1,5 +1,16 @@
 {
+  "scopedRegistries": [
+    {
+      "name": "MS Build for Unity",
+      "url": "https://pkgs.dev.azure.com/UnityDeveloperTools/MSBuildForUnity/_packaging/UnityDeveloperTools/npm/registry",
+      "scopes": [
+        "com.microsoft"
+      ]
+    }
+  ],
   "dependencies": {
+    "com.microsoft.msbuildforunity": "0.9.1-20200131.14",
+    "com.realityflow": "https://github.com/lucidbard/realityflow_package.git",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.2d.tilemap": "1.0.0",
     "com.unity.ads": "2.0.8",
@@ -47,5 +58,11 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
+  },
+  "lock": {
+    "com.realityflow": {
+      "hash": "883d0da7320ea34c8ab14750f48205b9706f554b",
+      "revision": "HEAD"
+    }
   }
 }
