@@ -7,9 +7,9 @@ export class Action{
 
     constructor(data: any) {
         if(!data)
-        return null;
+            return null;
         this.ActionId = data.ActionId;
         this.ActionType = data.ActionType;
-        this.ActionParameters = data.ActionParameters; 
+        this.ActionParameters = data.ActionParameters ? data.ActionParameters : {}; 
     }
 }
