@@ -1,59 +1,167 @@
 import { FlowUser } from "./FlowLibrary/FlowUser";
 import { FlowProject } from "./FlowLibrary/FlowProject";
-import { ConnectionManager } from "./ConnectionManager";
-import { MongooseDatabase } from "./Database/MongooseDatabase";
+
+import { TypeORMDatabase } from "./Database/TypeORMDatabase";
+import { FlowClient } from "./FlowLibrary/FlowClient";
+import { FlowObject } from "./FlowLibrary/FlowObject";
 
 // Look into Pub/Sub architecture
 export class Room
 {
+  
   private _UsersCurrentlyInTheRoom: Array<FlowUser> = [];
-  private _RoomCode: Number;
   private _CurrentProject: FlowProject;
+  private _CurrentProjectId: string;
+  private PlayMode: boolean;
 
-  constructor(roomCode : Number, project: FlowProject)
+  constructor(projectID: string)
   {
-    this._RoomCode = roomCode;
-    this._CurrentProject = project;
+    this._CurrentProjectId = projectID;
+    this.PlayMode = false;
+    
+    TypeORMDatabase.GetProject(this._CurrentProjectId).then((project: FlowProject) =>{
+      this._CurrentProject = project;
+    })
+
   }
 
-  // Notifies all users in the room to a change
-  public NotifyUsersOfChange(data: string) : void
-  {
-    ConnectionManager.SendMessage(data, this._UsersCurrentlyInTheRoom);    
-  }
-
+  // TODO: finished: yes tested: yes
+  // I think I want to have strings passed to these
+ 
   /**
    * Adds the desired user to the list of users in the room
    * @param userJoiningTheRoom the user that will be joining the room
+   * @param clientJoiningTheRoom the client that the user is using
    */
-  public JoinRoom(userJoiningTheRoom: FlowUser) : void
+  public async JoinRoom(userJoiningTheRoom: string, clientJoiningTheRoom: string) : Promise<void>
   {
-    this._UsersCurrentlyInTheRoom.push(userJoiningTheRoom);
+    let user = this._UsersCurrentlyInTheRoom.find(element => element.Username == userJoiningTheRoom)
+
+    //user is not already in this room
+    if(user == undefined){
+      user = await TypeORMDatabase.GetUser(userJoiningTheRoom)
+      this._UsersCurrentlyInTheRoom.push(user);
+    }
+    
+    user.ActiveClients.push(clientJoiningTheRoom)
+    
   }
 
+  // TODO: finished: yes tested: Yes
+  /**
+   * removes a client from a room - if that client was the only one using those credentials,
+   * the room stops keeping track of that username
+   * @param UserName username of the client leaving the room
+   * @param ClientId client id of the client leaving the room
+   */
+  public LeaveRoom(UserName: string, ClientId: string){
+    let userIndex = this._UsersCurrentlyInTheRoom.findIndex(element => element.Username == UserName)
+
+    //user is already not in this room
+    if(userIndex == -1){
+      return;
+    }
+    // user is already in this room
+    else{
+      let clientIndex = this._UsersCurrentlyInTheRoom[userIndex].ActiveClients.findIndex(element => element == ClientId)
+      this._UsersCurrentlyInTheRoom[userIndex].ActiveClients.splice(clientIndex, 1)
+      
+      //if the user doesn't have any more active clients, then remove user from the room
+      if(this._UsersCurrentlyInTheRoom[userIndex].ActiveClients.length == 0)
+        this._UsersCurrentlyInTheRoom.splice(userIndex, 1)
+      
+    }
+
+  }
+
+  // TODO: finished: yes tested: yes
+  /**
+   * returns whether or not any client using this given username is in here
+   * @param username username to search for
+   */
+  public hasUser(username: string){
+    let retval = (this._UsersCurrentlyInTheRoom.find(element => element.Username == username) != undefined)
+    return retval
+  }
+
+
+  public hasClient(username: string, ClientId: string){
+    let user = this._UsersCurrentlyInTheRoom.find(element => element.Username == username)
+    return (this.hasUser(username) && user.ActiveClients.find(element => element == ClientId) != undefined)
+  }
+
+  // TODO: finished: yes tested: yes
   /**
    * Gets the room code of this room
    */
-  public GetRoomCode() : Number
+  public GetRoomCode() : string
   {
-    return this._RoomCode;
+    return this._CurrentProjectId;
   }
 
-  /**
-   * Sets the current project to the desired project from the database
-   * @param projectId 
-   */
-  public SetProject(projectId : number) : void
-  {
-    // TODO: Get project from the database and set that project as the current project of the room
-    throw new console.error("Method not implemented");
-  }
-
+  // TODO: finished: yes tested: yes
   /**
    * Gets the project that is currently being used by the project
+   * Calls to database, use in Async manner
    */
   public GetProject() : FlowProject
   {
-    return this._CurrentProject;
+    return this._CurrentProject; 
   }
+
+  // TODO: finished: yes tested: yes
+  public getClients() : Map<string, Array<string> >{
+    let clients: Map<string, Array<string> > = new Map()
+
+    this._UsersCurrentlyInTheRoom.forEach((user, index, arr) => clients.set(user.Username, user.ActiveClients))
+    return clients
+  }
+
+// TODO: finished: yes tested: no
+  public updateObject(objectToUpdate, client){
+    let success = this._CurrentProject.UpdateFAMObject(objectToUpdate, client);
+    return success;
+  }
+
+  // TODO: finished: yes tested: yes
+  public AddObject(objectToCreate: FlowObject){
+    return this._CurrentProject.AddObject(objectToCreate);
+  }
+
+  // TODO: optimize all of these
+  public DeleteObject(objectId: string, client: string) {
+    let success = this._CurrentProject.DeleteObject(objectId, client)
+    return success;
+  }
+
+  // TODO: finished: yes tested: yes
+  public ReadObject(objectId:string){
+    return this._CurrentProject.GetObject(objectId)
+  }
+
+  // TODO: finished: yes tested: yes
+  public checkinObject(objectId: string, client: string){
+    return this._CurrentProject.CheckinObject(objectId, client)
+  }
+
+  // TODO: finished: yes tested: yes
+  public checkoutObject(objectId: string, client: string): boolean
+  {
+    return this._CurrentProject.CheckoutObject(objectId, client)
+  }
+  public turnOnPlayMode() : boolean
+  {
+    if(this.PlayMode == true)
+      return false;
+    this.PlayMode = true;
+    return true;
+  }
+  public turnOffPlayMode() : boolean
+  {
+    if(this.PlayMode == false)
+      return false;
+    this.PlayMode = false;
+    return true;
+  }
+
 }

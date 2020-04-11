@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RealityFlow.Plugin.Scripts;
+// using RealityFlow.Plugin.Scripts.Events;
 using RuntimeGizmos;
-using Assets.RealityFlow.Scripts.Events;
 
 public class doDelete : MonoBehaviour {
 
@@ -21,8 +22,8 @@ public class doDelete : MonoBehaviour {
     {
         foreach (Transform t in gizmo.targetRootsOrdered)
         {
-            ObjectDeleteEvent del = new ObjectDeleteEvent();
-            del.Send(t.gameObject.GetComponent<FlowObject>().ft._id);
+            //ObjectDeleteEvent del = new ObjectDeleteEvent();
+            //del.Send(t.gameObject.GetComponent<FlowObject>().ft._id);
         }
     }
 }

@@ -1,26 +1,11 @@
-import { IStringable } from "../FlowLibrary/IStringable";
 
 export class MessageBuilder
 {
   
-  public CreateMessage(...param : IStringable[]) : string
+  public static CreateMessage( payload : any, clients: string[]) : [string, Array<string>]
   {
-    let stringArray = param.map(function(currentVal) {
-      return currentVal.ToString();
-    });
+    let returnPayload = JSON.stringify(payload)
     
-    return stringArray.reduce( function(previousVal, currentVal) {
-      return previousVal + "\n" + currentVal;
-    });
-  }
-
-  public SuccessMessage() : string
-  {
-    return "Message successful";
-  }
-
-  public FailureMessage() : string
-  {
-    return "Message failed";
+    return [returnPayload, clients]
   }
 }
