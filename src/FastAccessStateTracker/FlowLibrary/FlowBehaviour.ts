@@ -8,7 +8,7 @@ export class FlowBehaviour
     public Id: string;
     public TriggerObjectId: string;
     public TargetObjectId: string;
-    public Action : string;
+    public Action : any;
     public NextBehaviour: Array<string>;
     public ProjectId: string;
 
@@ -19,8 +19,8 @@ export class FlowBehaviour
         this.Id = Behaviour.Id;
         this.TriggerObjectId = Behaviour.TriggerObjectId;
         this.TargetObjectId = Behaviour.TargetObjectId;
-        this.Action = JSON.stringify(Behaviour.Action);
-        this.NextBehaviour = (typeof(Behaviour.NextBehaviour) == "string") ? JSON.parse(Behaviour.NextBehaviour): Behaviour.NextBehaviour;
+        this.Action = Behaviour.Action;
+        this.NextBehaviour = Behaviour.NextBehaviour;
         this.ProjectId = Behaviour.ProjectId
     }
 
@@ -31,8 +31,8 @@ export class FlowBehaviour
         this.Id = newBehaviour.Id;
         this.TriggerObjectId = newBehaviour.TriggerObjectId;
         this.TargetObjectId = newBehaviour.TargetObjectId;
-        this.Action = JSON.stringify(newBehaviour.Action);
-        this.NextBehaviour = (typeof(newBehaviour.NextBehaviour) == "string") ? JSON.parse(newBehaviour.NextBehaviour): newBehaviour.NextBehaviour;
+        this.Action = newBehaviour.Action;
+        this.NextBehaviour = newBehaviour.NextBehaviour;
         this.ProjectId = newBehaviour.ProjectId
     }
 
