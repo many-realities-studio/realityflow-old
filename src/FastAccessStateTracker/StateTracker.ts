@@ -476,6 +476,7 @@ export class StateTracker{
     roomClients.forEach((clients, username, map) => {
       affectedClients = affectedClients.concat(clients)
     })
+    BehaviourToCreate.Action = JSON.stringify(BehaviourToCreate.Action)
 
     return [BehaviourToCreate, affectedClients]
   }
