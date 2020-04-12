@@ -64,7 +64,7 @@ export default class TypeORMDatabase
       ret.TypeOfTrigger = Behaviour.TypeOfTrigger
       ret.TriggerObjectId = Behaviour.TriggerObjectId;
       ret.TargetObjectId = Behaviour.TargetObjectId;
-      ret.Action = JSON.parse(Behaviour.Action)
+      ret.Action = Behaviour.Action
       ret.NextBehaviour = JSON.parse(Behaviour.NextBehaviour);
       ret.ProjectId = Behaviour.ProjectId
       return new FlowBehaviour(ret);
@@ -197,7 +197,7 @@ export default class TypeORMDatabase
       ret.TypeOfTrigger = Behaviour.TypeOfTrigger
       ret.TriggerObjectId = Behaviour.TriggerObjectId;
       ret.TargetObjectId = Behaviour.TargetObjectId;
-      ret.Action = JSON.parse(Behaviour.Action)
+      ret.Action = Behaviour.Action
       ret.NextBehaviour = JSON.parse(Behaviour.NextBehaviour);
       ret.ProjectId = Behaviour.ProjectId
       return new FlowBehaviour(ret);
