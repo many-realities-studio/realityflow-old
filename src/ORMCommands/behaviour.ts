@@ -61,14 +61,19 @@ export class BehaviourOperations
     public static async LinkNewToOld(projectId: string, child: string, parents: string[]) {
         let list = await getConnection(process.env.NODE_ENV)
             .createQueryBuilder()
-            .select()
-            .from(Behaviour, "behavior")
-            .orWhereInIds(parents)
+            .select("Behaviour")
+            .from(Behaviour, "Behaviour")
+            .where("Behaviour.Id IN (:...parentList)", {parentList: parents})
             .getMany()
-
+        console.log(list)
         //I hate myself for doing this
-        list.map((x) => {
-            return JSON.stringify(JSON.parse(x.NextBehaviour).push(child))
+        list.map((x, index, arr) => {
+            let NextBehaviour: Array<string> = JSON.parse(x.NextBehaviour)
+            NextBehaviour.push(child)
+            x.NextBehaviour = JSON.stringify(NextBehaviour)
+            console.log("HELLO! link behaviour")
+            console.log(x)
+            return x;
         })
         await getConnection(process.env.NODE_ENV).manager.save(list)
     }
