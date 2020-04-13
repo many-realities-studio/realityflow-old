@@ -510,7 +510,10 @@ export class StateTracker{
       ._BehaviourList
       .filter((x) => parents.indexOf(x.Id) !== -1)
 
-    behaviorsToModify.map((x) => x.NextBehaviour.push(child))
+    behaviorsToModify.map((x) => {
+      x.NextBehaviour.push(child)
+      return x;
+    })
 
     await TypeORMDatabase.LinkNewToOld(projectId, child, parents)
   }
