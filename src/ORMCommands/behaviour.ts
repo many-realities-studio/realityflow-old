@@ -29,12 +29,13 @@ export class BehaviourOperations
 
     // TODO: created: yes tested: no
     public static async deleteBehaviour(BehaviourId: Array<string>){
-        await getConnection(process.env.NODE_ENV)
+        let query =  getConnection(process.env.NODE_ENV)
             .createQueryBuilder()
             .delete()
             .from(Behaviour)
-            .where("Id IN (:id)", {id : BehaviourId})
-            .execute()
+            .where("Id IN (:...id)", {id : BehaviourId})
+        console.log(query.getQueryAndParameters()) 
+            await query.execute()
     }
 
     public static async getBehaviours(projectId: string): Promise<Array<Behaviour>>{
