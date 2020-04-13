@@ -477,10 +477,8 @@ class Command_CreateBehaviour implements ICommand
 class Command_DeleteBehaviour implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
-  {
-    let flowBehaviour = new FlowBehaviour(data.FlowBehaviour);    
-
-    let returnData = await StateTracker.DeleteBehaviour(data.ProjectId, flowBehaviour.Id, client);
+  { 
+    let returnData = await StateTracker.DeleteBehaviour(data.ProjectId, data.BehaviourIds, client);
     let returnContent = {
       "MessageType": "DeleteBehaviour",
       "BehaviourId": returnData[0],

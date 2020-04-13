@@ -169,7 +169,7 @@ export default class TypeORMDatabase
   }
 
   /** Delete a Behaviour chain from a project in the database*/
-  public static async DeleteBehaviour(BehaviourId: string): Promise<void> {
+  public static async DeleteBehaviour(BehaviourId: Array<string>): Promise<void> {
     await BehaviourOperations.deleteBehaviour(BehaviourId);
   }
 

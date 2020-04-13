@@ -481,14 +481,14 @@ export class StateTracker{
     return [BehaviourToCreate, affectedClients]
   }
 
-  public static async DeleteBehaviour(projectId: string, BehaviourId: string, client: string) : Promise<[any, Array<string>]>
+  public static async DeleteBehaviour(projectId: string, BehaviourIds: Array<string>, client: string) : Promise<[any, Array<string>]>
   {
 
     let success = RoomManager.FindRoom(projectId)
                 .GetProject()
-                .DeleteBehaviour(BehaviourId);
+                .DeleteBehaviour(BehaviourIds);
 
-    TypeORMDatabase.DeleteBehaviour(BehaviourId)
+    TypeORMDatabase.DeleteBehaviour(BehaviourIds)
 
     let affectedClients: Array<string> = [];
 
@@ -499,7 +499,7 @@ export class StateTracker{
       affectedClients = affectedClients.concat(clients)
     })
     if(success)
-      return [BehaviourId, affectedClients];
+      return [BehaviourIds, affectedClients];
     else  
       return [null, affectedClients];
   }

@@ -28,12 +28,12 @@ export class BehaviourOperations
     }
 
     // TODO: created: yes tested: no
-    public static async deleteBehaviour(BehaviourId: string){
+    public static async deleteBehaviour(BehaviourId: Array<string>){
         await getConnection(process.env.NODE_ENV)
             .createQueryBuilder()
             .delete()
             .from(Behaviour)
-            .where("Id = :id", {id : BehaviourId})
+            .where("Id IN (:id)", {id : BehaviourId})
             .execute()
     }
 

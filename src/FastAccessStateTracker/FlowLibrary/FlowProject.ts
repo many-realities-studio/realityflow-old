@@ -134,14 +134,10 @@ export class FlowProject
    * Delete's Behaviour from project
    * @param BehaviourToRemove the ID of the Behaviour to be removed from the project
    */
-  public DeleteBehaviour(BehaviourToRemove: string): Boolean
+  public DeleteBehaviour(BehaviourToRemove: Array<string>): Boolean
   {
-    let index = this._BehaviourList.findIndex((element) => element.Id == BehaviourToRemove);
-    if(index > -1){
-      this._BehaviourList.splice(index);
-      return true;
-    }
-    else return false
+    this._BehaviourList = this._BehaviourList.filter((Behaviour, index, arr) => BehaviourToRemove.includes(Behaviour.Id) != true)
+    return true
   }
 
   /**
