@@ -136,7 +136,7 @@ export class FlowProject
    */
   public DeleteBehaviour(BehaviourToRemove: Array<string>): Boolean
   {
-    this._BehaviourList = this._BehaviourList.filter((Behaviour, index, arr) => BehaviourToRemove.includes(Behaviour.Id) != true)
+    this._BehaviourList = this._BehaviourList.filter((behaviour, index, arr) => BehaviourToRemove.indexOf(behaviour.Id) == -1)
     return true
   }
 
