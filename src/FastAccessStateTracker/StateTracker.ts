@@ -440,14 +440,9 @@ export class StateTracker{
     // get all of the clients that are in that room so that we can tell them 
     let affectedClients: Array<string> = [];
     let roomClients = await RoomManager.getClients(projectId)
-
+    
     roomClients.forEach((clients, username, map) => {
-      console.log(user)
-      if(!saveToDatabase && username == user){
-        console.log("ding")
-        let index = clients.indexOf(client);
-        clients = clients.splice(index, 1);
-      }
+      // console.log(user)
       affectedClients = affectedClients.concat(clients)
     })
 
