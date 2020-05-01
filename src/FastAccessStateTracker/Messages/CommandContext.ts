@@ -6,13 +6,11 @@
  */
 import { StateTracker } from "../StateTracker";
 
-
 import { FlowProject } from "../FlowLibrary/FlowProject";
 import { FlowObject } from "../FlowLibrary/FlowObject";
 import { FlowBehaviour } from "../FlowLibrary/FlowBehaviour";
 
 import { MessageBuilder } from "./MessageBuilder";
-import { TreeChildren } from "typeorm";
 
 import { v4 as uuidv4 } from 'uuid';
 import { ServerEventDispatcher } from "../../server";
@@ -403,6 +401,8 @@ class Command_UpdateObject implements ICommand
     let flowObject = new FlowObject(data.FlowObject);
     let returnData = await StateTracker.UpdateObject(flowObject, data.ProjectId, client,false, data.user);
 
+    let index = returnData[1].indexOf(client);
+    returnData[1].splice(index,1)
 
     let returnContent = {
       "MessageType": "UpdateObject",
@@ -439,6 +439,10 @@ class Command_FinalizedUpdateObject implements ICommand
   {
     let flowObject = new FlowObject(data.FlowObject);
     let returnData = await StateTracker.UpdateObject(flowObject, data.ProjectId, client, true);
+    
+    let index = returnData[1].indexOf(client);
+    returnData[1].splice(index,1);
+
     let returnContent = {
       "MessageType": "UpdateObject",
       "FlowObject": returnData[0],
