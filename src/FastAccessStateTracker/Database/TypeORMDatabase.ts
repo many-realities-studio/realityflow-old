@@ -22,7 +22,11 @@ export default class TypeORMDatabase
   public constructor(url: string){}
     
 
-  // Project functions
+  /**
+   * Create a project and give a user ownership of the newly-created project
+   * @param projectToCreate 
+   * @param user 
+   */
   public static async CreateProject(projectToCreate: FlowProject, user: string) {
 
     let projectId = await ProjectOperations.createProject(projectToCreate, user);
@@ -32,18 +36,25 @@ export default class TypeORMDatabase
 
   /**
   * Deletes the project and all its objects from the database
-  * This works because deletes cascade
+  * @param projectToDeleteId
   */
   public static async DeleteProject(projectToDeleteId: string): Promise<void> {
     
     await ProjectOperations.deleteProject(projectToDeleteId);
     return;
   }
-
+  /**
+   * Update a project. It's not implemented upstream so I didn't implement it here.
+   * @param projectToUpdate 
+   */
   public static async UpdateProject(projectToUpdate: FlowProject): Promise<void> {
     throw new Error("Method not implemented.");
   }
 
+  /**
+   * Get a project from the database
+   * @param projectId 
+   */
   public static async GetProject(projectId: string): Promise<FlowProject> {
     let project = await ProjectOperations.findProject(projectId);
 
@@ -73,9 +84,10 @@ export default class TypeORMDatabase
     return returnProject;
   }
 
-  // User functions
   /** 
   * Create a User in the database
+  * @param username the username
+  * @param the password
   */
   public static async CreateUser(username: string, password: string): Promise<void> {
     var newUser = await UserOperations.createUser(username, password);
@@ -83,6 +95,7 @@ export default class TypeORMDatabase
 
   /** 
   * Delete a User from the database
+  * @param userToDelete the Id of the user to delete
   */
   public static async DeleteUser(userToDelete: string): Promise<void> {
     await UserOperations.deleteUser(userToDelete);
@@ -91,6 +104,7 @@ export default class TypeORMDatabase
 
   /**
   * Get a user based on their username 
+  * @param Username the username of the user
   */
   public static async GetUser(Username: string): Promise<FlowUser> {
     
@@ -100,6 +114,10 @@ export default class TypeORMDatabase
     return new FlowUser(Username, undefined, projects) 
   }
 
+  /**
+   * Fetch all of the projects that are associated with a given user.
+   * @param Username the username of the user
+   */
   public static async fetchProjects(Username: string): Promise<Array<Project>>{
     return ( await ProjectOperations.fetchProjects(Username))
   }
@@ -111,10 +129,8 @@ export default class TypeORMDatabase
    */
   public static async AuthenticateUser(Username: string, Password: string): Promise<Boolean>{
     let user = await UserOperations.authenticateUser(Username, Password)
-    
     if(!user)
       return false
-
     return true
   }
 
@@ -123,20 +139,28 @@ export default class TypeORMDatabase
 
 
   /**
-  *  Create an object and add it to a pre-existing project in the database
-  *  Assumes that the project already exists
-  */
+   * Create an object and associate a project with that object
+   * @param objectToCreate the FlowObject to use to create the object
+   * @param projectId the id of the project to associate the object with.
+   */
   public static async CreateObject(objectToCreate: FlowObject, projectId: string){
     await ObjectOperations.createObject(objectToCreate, projectId);
   }
 
-  /** Delete an object from a project in the database*/
-
+  /**
+   * Delete an object from a project in the database
+   * @param objectId the object to delete 
+   * @param projectId the project with which the object is associated
+   */
   public static async DeleteObject(objectId:string, projectId: string): Promise<void> {
     await ObjectOperations.deleteObject(objectId, projectId)
   }
 
-  /**Update a given object */
+  /**
+   * update a given object
+   * @param objectToUpdate the Id of the object to update 
+   * @param projectId the project with which the object is associated
+   */
   public static async UpdateObject(objectToUpdate: FlowObject, projectId: string): Promise<void> {
     console.log("typeORM update")
     console.log(objectToUpdate)
@@ -151,9 +175,10 @@ export default class TypeORMDatabase
 
   // Behaviour functions
   /**
-  *  Create an Behaviour and add it to a pre-existing project in the database
-  *  Assumes that the project already exists
-  */
+   * Create an Behaviour and add it to a pre-existing project in the database
+   * Assumes that the project already exists
+   * @param BehaviourToCreate the FlowBehaviour used to create the behaviour
+   */
   public static async CreateBehaviour(BehaviourToCreate: FlowBehaviour){
     let ret:any = {};
     ret.Id = BehaviourToCreate.Id;
@@ -168,15 +193,27 @@ export default class TypeORMDatabase
     await BehaviourOperations.CreateBehaviour(ret);
   }
 
-  /** Delete a Behaviour chain from a project in the database*/
-  public static async DeleteBehaviour(BehaviourId: Array<string>): Promise<void> {
-    await BehaviourOperations.deleteBehaviour(BehaviourId);
+  /** Delete a Behaviour chain from a project in the database
+   * @param BehaviourIds the behaviours to delete
+  */
+  public static async DeleteBehaviour(BehaviourIds: Array<string>): Promise<void> {
+    await BehaviourOperations.deleteBehaviour(BehaviourIds);
   }
 
+  /**
+   * Link a child behavior to one or more parent behaviours
+   * @param projectId the project that the behaviours are in
+   * @param child the id of the child behaviour
+   * @param parents a list of the id(s) of the parent behaviour(s)
+   */
   public static async LinkNewToOld(projectId: string, child: string, parents: string[]) {
     await BehaviourOperations.LinkNewToOld(projectId, child, parents);
   }
 
+  /**
+   * Update a behaviour
+   * @param BehaviourToUpdate 
+   */
   public static async UpdateBehaviour(BehaviourToUpdate): Promise<void>{
     let ret:any = {};
     ret.Id = BehaviourToUpdate.Id;
@@ -189,6 +226,10 @@ export default class TypeORMDatabase
     await BehaviourOperations.updateBehaviour(ret)
   }
 
+  /**
+   * Get all of the behaviours in a given project
+   * @param projectId 
+   */
   public static async getBehaviours(projectId){
     let Behaviours = await BehaviourOperations.getBehaviours(projectId);
     let flowBehaviours = Behaviours.map((Behaviour)=>{

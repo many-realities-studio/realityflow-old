@@ -439,7 +439,6 @@ class Command_FinalizedUpdateObject implements ICommand
   {
     let flowObject = new FlowObject(data.FlowObject);
     let returnData = await StateTracker.UpdateObject(flowObject, data.ProjectId, client, true);
-    
     let index = returnData[1].indexOf(client);
     returnData[1].splice(index,1);
 
