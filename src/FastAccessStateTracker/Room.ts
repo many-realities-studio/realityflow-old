@@ -78,13 +78,19 @@ export class Room
   /**
    * returns whether or not any client using this given username is in here
    * @param username username to search for
+   * @returns whether or not the user is in the room
    */
   public hasUser(username: string){
     let retval = (this._UsersCurrentlyInTheRoom.find(element => element.Username == username) != undefined)
     return retval
   }
 
-
+  /**
+   * Given a username and client Id, checks whether the user is in the room
+   * @param username the username
+   * @param ClientId the client Id
+   * @returns whether or not the client is in the room
+   */
   public hasClient(username: string, ClientId: string){
     let user = this._UsersCurrentlyInTheRoom.find(element => element.Username == username)
     return (this.hasUser(username) && user.ActiveClients.find(element => element == ClientId) != undefined)
@@ -93,6 +99,7 @@ export class Room
   // TODO: finished: yes tested: yes
   /**
    * Gets the room code of this room
+   * @returns the room code/project Id of the room
    */
   public GetRoomCode() : string
   {
@@ -102,7 +109,7 @@ export class Room
   // TODO: finished: yes tested: yes
   /**
    * Gets the project that is currently being used by the project
-   * Calls to database, use in Async manner
+   * @returns the project as a flowproject
    */
   public GetProject() : FlowProject
   {
@@ -112,8 +119,9 @@ export class Room
   // TODO: finished: yes tested: yes
   /**
    * Get all of the clients that are currently in this room
+   * @returns a map of users to array of clients associated with that user
    */
-  public getClients() : Map<string, Array<string> >{
+  public getClients() : Map<string, Array<string>>{
     let clients: Map<string, Array<string> > = new Map()
 
     this._UsersCurrentlyInTheRoom.forEach((user, index, arr) => clients.set(user.Username, user.ActiveClients))
@@ -136,6 +144,7 @@ export class Room
    * update a behaviour
    * @param BehaviourToUpdate the behaviour to update
    * @param client the client sending the update
+   * @returns whether or not the update actually happened
    */
   public updateBehaviour(BehaviourToUpdate, client){
     let success = this._CurrentProject.UpdateBehaviour(BehaviourToUpdate, client);
@@ -146,6 +155,7 @@ export class Room
   /**
    * add an objec to the room
    * @param objectToCreate the object to add to the room
+   * @returns whether the object was created
    */
   public AddObject(objectToCreate: FlowObject){
     return this._CurrentProject.AddObject(objectToCreate);
@@ -156,6 +166,7 @@ export class Room
    * delete an object from the room, iff the client sending the delete call has the object checked out
    * @param objectId 
    * @param client 
+   * @returns success value
    */
   public DeleteObject(objectId: string, client: string) {
     let success = this._CurrentProject.DeleteObject(objectId, client)
@@ -166,6 +177,7 @@ export class Room
   /**
    * Return the data of an object
    * @param objectId the Id of the object that you want
+   * @returns the object to be read
    */
   public ReadObject(objectId:string){
     return this._CurrentProject.GetObject(objectId)
@@ -173,9 +185,10 @@ export class Room
 
   // TODO: finished: yes tested: yes
   /**
-   * check in an object, if the object isn't already checked out
-   * @param objectId 
-   * @param client 
+   * check in an object, if the object is checked out by client
+   * @param objectId the object to be checked in
+   * @param client the client trying to check in the object
+   * @returns success
    */
   public checkinObject(objectId: string, client: string){
     return this._CurrentProject.CheckinObject(objectId, client)
@@ -183,9 +196,10 @@ export class Room
 
   // TODO: finished: yes tested: yes
   /**
-   * check out an object, assuming that the client is the client that has checked in the object
-   * @param objectId 
-   * @param client 
+   * check out an object, assuming that client is open for checkout
+   * @param objectId  object to check out
+   * @param client client who is checking out the object
+   * @returns success
    */
   public checkoutObject(objectId: string, client: string): boolean
   {
@@ -194,6 +208,7 @@ export class Room
 
   /**
    * Turn on play mode
+   * @returns success
    */
   public turnOnPlayMode() : boolean
   {
@@ -205,6 +220,7 @@ export class Room
 
   /**
    * turn off play mode
+   * @returns success
    */
   public turnOffPlayMode() : boolean
   {

@@ -368,7 +368,7 @@ export class StateTracker{
 
   // Object Commands
   /**
-   * create an object in a given room.
+   * create an object in both the Fast Access State Tracker and the Database.
    * @param objectToCreate 
    * @param projectId 
    */
@@ -387,6 +387,12 @@ export class StateTracker{
     return [objectToCreate, affectedClients]
   }
 
+  /**
+   * check out an object from the Fast Access State Tracker
+   * @param projectId 
+   * @param objectId 
+   * @param client 
+   */
   public static async CheckoutObject(projectId: string, objectId: string, client: string) : Promise<[any, Array<string>]>
   {
     // make sure the object is available for checkout
@@ -395,6 +401,12 @@ export class StateTracker{
     return[success, [client]]
   }
 
+  /**
+   * check in an object from the Fast Access State Tracker
+   * @param projectId 
+   * @param objectId 
+   * @param client 
+   */
   public static async CheckinObject(projectId: string, objectId: string, client: string) : Promise<[any, Array<string>]>
   {
     // make sure the actual person that checked an object out is the one checking it back in
@@ -403,6 +415,12 @@ export class StateTracker{
     return[success, [client]]
   }
 
+  /**
+   * Delete an object from both the FAM and the Database
+   * @param objectId 
+   * @param projectId 
+   * @param client 
+   */
   public static async DeleteObject(objectId: string, projectId: string, client: string) : Promise<[any, Array<string>]>
   {
 
@@ -449,12 +467,23 @@ export class StateTracker{
     return [objectToUpdate , affectedClients]
   }
 
+  /**
+   * return the data for a single object
+   * @param objectId the Id of the object
+   * @param projectId the Id of the project that the object is in
+   * @param client the client who wants the object
+   */
   public static async ReadObject(objectId: string, projectId: string, client: string) :  Promise<[any, Array<string>]>
   {
     let objectRead = RoomManager.ReadObject(projectId, objectId)
     return [objectRead, [client]];
   }
 
+  /**
+   * Create a behaviour in both the Database and the Fast Access State Tracker
+   * @param BehaviourToCreate 
+   * @param projectId 
+   */
   public static async CreateBehaviour(BehaviourToCreate : FlowBehaviour, projectId: string) : Promise<[any, Array<string>]>
   {
     console.log(projectId)
@@ -476,9 +505,14 @@ export class StateTracker{
     return [BehaviourToCreate, affectedClients]
   }
 
+  /**
+   * Delete a behaviour from both the Fast Access State Tracker and the database
+   * @param projectId the project that the behaviour is in
+   * @param BehaviourIds the behaviour to delete
+   * @param client the client that is trying to delete the behaviour
+   */
   public static async DeleteBehaviour(projectId: string, BehaviourIds: Array<string>, client: string) : Promise<[any, Array<string>]>
   {
-
     let success = RoomManager.FindRoom(projectId)
                 .GetProject()
                 .DeleteBehaviour(BehaviourIds);
@@ -499,6 +533,13 @@ export class StateTracker{
       return [null, affectedClients];
   }
 
+  // TODO: do this through the Room Manager instead of directly accessing variables
+  /**
+   * link a child behaviour to one or more parent Behaviors in both the Fast Access State tracker and the Database
+   * @param projectId 
+   * @param child 
+   * @param parents 
+   */
   public static async LinkNewBehaviorToExistingBehaviors(projectId: string, child: string, parents: Array<string>){
     let behaviorsToModify = RoomManager.FindRoom(projectId)
       .GetProject()
@@ -514,14 +555,25 @@ export class StateTracker{
   }
 
 
+  /**
+   * Return a single behaviour
+   * @param BehaviourId 
+   * @param projectId 
+   * @param client 
+   */
   public static async ReadBehaviour(BehaviourId: string, projectId: string, client: string) : Promise<[any, Array<string>]>
   {
-
-    let BehaviourRead = RoomManager.FindRoom(projectId).GetProject().GetBehaviour(BehaviourId);
-    
+    let BehaviourRead = RoomManager.FindRoom(projectId).GetProject().GetBehaviour(BehaviourId);    
     return [BehaviourRead, [client]];
   }
 
+  /**
+   * update a behaviour
+   * @param BehaviourToUpdate the Id of the behaviour to update 
+   * @param projectId the project that the behaviour is in 
+   * @param client the client who is trying to update the behaviour
+   * @param saveToDatabase flag for saving to database
+   */
   public static async UpdateBehaviour(BehaviourToUpdate : FlowBehaviour, projectId: string,  client: string, saveToDatabase:boolean=false) : Promise<[any, Array<string>]>
   {  
     // perform the updates
@@ -541,6 +593,11 @@ export class StateTracker{
     return [BehaviourToUpdate , affectedClients]
   }
 
+  /**
+   * turn play mode on or off
+   * @param projectId the id of the project for which play mode needs to be toggled
+   * @param toggle on vs. off
+   */
   public static async TogglePlayMode(projectId: string, toggle: boolean) : Promise<[any, Array<string>]>
   {
     let affectedClients: Array<string> = [];
