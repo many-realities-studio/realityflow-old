@@ -110,6 +110,9 @@ export class Room
   }
 
   // TODO: finished: yes tested: yes
+  /**
+   * Get all of the clients that are currently in this room
+   */
   public getClients() : Map<string, Array<string> >{
     let clients: Map<string, Array<string> > = new Map()
 
@@ -118,41 +121,80 @@ export class Room
   }
 
 // TODO: finished: yes tested: no
+  /**
+   * update an object, assuming the client sending the update is the client that has the object checked in.
+   * @param objectToUpdate the object to update
+   * @param client the id of the client sending the update
+   * @returns success - whether or not the update actually happened in the FAM
+   */
   public updateObject(objectToUpdate, client){
     let success = this._CurrentProject.UpdateFAMObject(objectToUpdate, client);
     return success;
   }
+
+  /**
+   * update a behaviour
+   * @param BehaviourToUpdate the behaviour to update
+   * @param client the client sending the update
+   */
   public updateBehaviour(BehaviourToUpdate, client){
     let success = this._CurrentProject.UpdateBehaviour(BehaviourToUpdate, client);
     return success;
   }
 
   // TODO: finished: yes tested: yes
+  /**
+   * add an objec to the room
+   * @param objectToCreate the object to add to the room
+   */
   public AddObject(objectToCreate: FlowObject){
     return this._CurrentProject.AddObject(objectToCreate);
   }
 
   // TODO: optimize all of these
+  /**
+   * delete an object from the room, iff the client sending the delete call has the object checked out
+   * @param objectId 
+   * @param client 
+   */
   public DeleteObject(objectId: string, client: string) {
     let success = this._CurrentProject.DeleteObject(objectId, client)
     return success;
   }
 
   // TODO: finished: yes tested: yes
+  /**
+   * Return the data of an object
+   * @param objectId the Id of the object that you want
+   */
   public ReadObject(objectId:string){
     return this._CurrentProject.GetObject(objectId)
   }
 
   // TODO: finished: yes tested: yes
+  /**
+   * check in an object, if the object isn't already checked out
+   * @param objectId 
+   * @param client 
+   */
   public checkinObject(objectId: string, client: string){
     return this._CurrentProject.CheckinObject(objectId, client)
   }
 
   // TODO: finished: yes tested: yes
+  /**
+   * check out an object, assuming that the client is the client that has checked in the object
+   * @param objectId 
+   * @param client 
+   */
   public checkoutObject(objectId: string, client: string): boolean
   {
     return this._CurrentProject.CheckoutObject(objectId, client)
   }
+
+  /**
+   * Turn on play mode
+   */
   public turnOnPlayMode() : boolean
   {
     if(this.PlayMode == true)
@@ -160,6 +202,10 @@ export class Room
     this.PlayMode = true;
     return true;
   }
+
+  /**
+   * turn off play mode
+   */
   public turnOffPlayMode() : boolean
   {
     if(this.PlayMode == false)

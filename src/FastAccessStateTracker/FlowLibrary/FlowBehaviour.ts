@@ -24,6 +24,10 @@ export class FlowBehaviour
         this.ProjectId = Behaviour.ProjectId
     }
 
+    /**
+     * Update the properties of a behaviour
+     * @param newBehaviour the new data
+     */
     public UpdateProperties(newBehaviour: FlowBehaviour)
     {
         console.log(newBehaviour)
