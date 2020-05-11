@@ -10,7 +10,7 @@
   ],
   "dependencies": {
     "com.microsoft.msbuildforunity": "0.9.1-20200131.14",
-    "com.realityflow": "https://github.com/lucidbard/realityflow_package.git",
+    "com.realityflow": "https://github.com/lucidbard/realityflow_package.git#behaviours",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.2d.tilemap": "1.0.0",
     "com.unity.ads": "2.0.8",
@@ -61,8 +61,8 @@
   },
   "lock": {
     "com.realityflow": {
-      "hash": "883d0da7320ea34c8ab14750f48205b9706f554b",
-      "revision": "HEAD"
+      "hash": "d95c7ec832f283df0032a8441f89096da82783f4",
+      "revision": "behaviours"
     }
   }
 }

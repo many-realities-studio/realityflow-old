@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using RealityFlow.Plugin.Scripts;
+using System.Collections;
+using UnityEngine;
 
 public class PopulateProjects : MonoBehaviour
 {
@@ -7,21 +9,20 @@ public class PopulateProjects : MonoBehaviour
     public GameObject parentList;
 
     Vector3 addOn;
-    // Start is called before the first frame update
-    void Awake()
-    {
-        Initialize();
-    }
 
-    private void Initialize()
+    public void Initialize()
     {
         var network = flowNetworkManager.GetComponent<NetworkManagerHL>();
 
-        addOn = buttonPrefab.transform.position + new Vector3(0, -38, 0);
+        addOn = new Vector3(0, -15, 0);
 
-        foreach (string project in network.availableProjects)
+        Debug.Log("available projects = " + network.availableProjects.Count);
+
+        foreach (FlowProject project in network._ProjectList)
         {
-            var button = Instantiate(buttonPrefab, addOn, Quaternion.identity, parentList.transform);
+            var button = Instantiate(buttonPrefab, parentList.transform);
+            button.transform.localPosition += addOn;
+            button.SetActive(true);
 
             button.GetComponent<Populator>().Initialize(project, network);
             IncrementButtonPos();
@@ -30,6 +31,6 @@ public class PopulateProjects : MonoBehaviour
 
     private void IncrementButtonPos()
     {
-        addOn += new Vector3(0, -38, 0);
+        addOn += new Vector3(0, -15, 0);
     }
 }

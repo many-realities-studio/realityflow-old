@@ -8,10 +8,12 @@ public class Populator : MonoBehaviour
 {
     public TextMeshProUGUI localText;
     private NetworkManagerHL network;
+    private string id;
 
-    public void Initialize(string project, NetworkManagerHL n)
+    public void Initialize(FlowProject project, NetworkManagerHL n)
     {
-        localText.text = project;
+        localText.text = project.ProjectName;
+        id = project.Id;
         GetComponent<Button>().onClick.AddListener(LoadThisProject);
         network = n;
     }
@@ -19,9 +21,10 @@ public class Populator : MonoBehaviour
 
     public void LoadThisProject()
     {
-        if (localText.text != "Available Projects")
+        if (localText.text != "Prefab")
         {
             transform.root.gameObject.SetActive(false);
+            network.OpenProject(localText.text, id);
         }
     }
 }

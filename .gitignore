@@ -82,13 +82,7 @@ typings/
 
 # Package Lock
 package-lock.json
-/Client-HL/Assets/Assembly-CSharp.msb4u.csproj.meta
-/Client-HL/Assets/Demo - Find Object.Dependencies.msb4u.csproj.meta
-/Client-HL/Assets/Demo - Find Object.msb4u.sln.meta
-/Client-HL/Assets/Dependencies.msb4u.csproj.meta
 /Client-HL/Assets/MixedRealityToolkit.Providers/WindowsMixedReality/Shared/DotNetAdapter/.bin/net46/Microsoft.Windows.MixedReality.DotNetWinRT/Editor/Microsoft.Windows.MixedReality.DotNetWinRT.Init.cs.meta
 /Client-HL/Assets/MixedRealityToolkit.Providers/WindowsMixedReality/Shared/DotNetAdapter/.bin/net46/Microsoft.Windows.MixedReality.DotNetWinRT/Editor/Microsoft.Windows.MixedReality.DotNetWinRT.Init.cs
 /Client-HL/Assets/MixedRealityToolkit.Providers/WindowsMixedReality/Shared/DotNetAdapter/.bin/net46/Microsoft.Windows.MixedReality.DotNetWinRT/Editor/Microsoft.Windows.MixedReality.DotNetWinRT.Editor.asmdef.meta
 /Client-HL/Assets/MixedRealityToolkit.Providers/WindowsMixedReality/Shared/DotNetAdapter/.bin/net46/Microsoft.Windows.MixedReality.DotNetWinRT/Editor/Microsoft.Windows.MixedReality.DotNetWinRT.Editor.asmdef
-/Client-HL/Assets/MixedRealityToolkit.Providers/WindowsMixedReality/Shared/DotNetAdapter/.bin/net46
-/UnityPlugin/Assets/MixedRealityToolkit.Providers/WindowsMixedReality/Shared/DotNetAdapter/.bin/net46/Microsoft.Windows.MixedReality.DotNetWinRT/Editor/Microsoft.Windows.MixedReality.DotNetWinRT.Editor.asmdef.meta
