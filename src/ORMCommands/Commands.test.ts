@@ -3,7 +3,7 @@ import { createConnection, getConnection } from 'typeorm'
 import { User } from '../entity/user'
 import { Project } from '../entity/project'
 import { DBObject } from '../entity/object'
-import { UserSubscriber } from "../entity/UserSubscriber"
+import { UserSubscriber } from "../subscriber/UserSubscriber"
 
 import { UserOperations } from './user'
 import { ProjectOperations } from './project'
@@ -185,7 +185,7 @@ describe("Object", () => {
 
         var object1 = {
             Id:             "createdObjectId",
-            name:           "object1",
+            Name:           "object1",
             X:              3,
             Y:              1,
             Z:              1,
@@ -200,6 +200,7 @@ describe("Object", () => {
             G:              1,
             B:              1,
             A:              1,
+            Prefab:         "prefab"
         }
 
         let x =  await ObjectOperations.createObject(object1, returnedProject.Id)
@@ -234,6 +235,7 @@ describe("Object", () => {
         foundObject.G = 1;
         foundObject.B = 1;
         foundObject.A = 1;
+        foundObject.Prefab = "prefab";
 
         let returnedObject = await getConnection(process.env.NODE_ENV).manager.save(foundObject)
         
@@ -275,6 +277,7 @@ describe("Object", () => {
         foundObject.G = 1;
         foundObject.B = 1;
         foundObject.A = 1;
+        foundObject.Prefab = "prefab"
 
         let returnedObject = await getConnection(process.env.NODE_ENV).manager.save(foundObject)
 
@@ -295,6 +298,7 @@ describe("Object", () => {
         updatedObject.G = 1;
         updatedObject.B = 1;
         updatedObject.A = 1;
+        updatedObject.Prefab = "prefab"
 
         await ObjectOperations.updateObject(updatedObject, createdProject.Id)
 
@@ -338,6 +342,7 @@ describe("Object", () => {
         foundObject.G = 1;
         foundObject.B = 1;
         foundObject.A = 1;
+        foundObject.Prefab = "prefab"
 
         let returnedObject = await getConnection(process.env.NODE_ENV).manager.save(foundObject)
 

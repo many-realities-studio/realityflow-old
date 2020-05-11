@@ -1,6 +1,6 @@
 import { FlowObject } from "./FlowLibrary/FlowObject";
 import { FlowProject } from "./FlowLibrary/FlowProject";
-import { FlowBehavior } from "./FlowLibrary/FlowBehavior";
+import { FlowBehaviour } from "./FlowLibrary/FlowBehaviour";
 
 import { RoomManager } from "./RoomManager";
 import { TypeORMDatabase } from "./Database/TypeORMDatabase"
@@ -243,10 +243,10 @@ export class StateTracker{
   public static async LogoutUser(Username: string, password: string,  ClientId: string) : Promise<[any, Array<string>]>
   {
     let affectedClients = [];
-    affectedClients.push(ClientId);
-    //Authenticate user, I guess. Don't want someone trying to log someone else out
-    if(!TypeORMDatabase.AuthenticateUser(Username, password))
-      return ['Failure', affectedClients];
+    affectedClients.push();
+    // //Authenticate user, I guess. Don't want someone trying to log someone else out
+    // if(!TypeORMDatabase.AuthenticateUser(Username, password))
+    //   return ['Failure', affectedClients];
 
     // check if user is already logged in - 
     // user could be logged in on another client
@@ -305,11 +305,6 @@ export class StateTracker{
     // get all of the clients that are in that room so that we can tell them 
     let clients = await RoomManager.getClients(roomCode)
 
-   /* roomClients.forEach((clients, username, map) => {
-      affectedClients = affectedClients.concat(clients)
-    })
-
-    let clients = RoomManager.getClients(projectToOpenID);*/
     clients.forEach((value: string[], key: string) => {
       
       value.forEach((client: string) => {
@@ -373,7 +368,7 @@ export class StateTracker{
 
   // Object Commands
   /**
-   * create an object in a given room.
+   * create an object in both the Fast Access State Tracker and the Database.
    * @param objectToCreate 
    * @param projectId 
    */
@@ -392,6 +387,12 @@ export class StateTracker{
     return [objectToCreate, affectedClients]
   }
 
+  /**
+   * check out an object from the Fast Access State Tracker
+   * @param projectId 
+   * @param objectId 
+   * @param client 
+   */
   public static async CheckoutObject(projectId: string, objectId: string, client: string) : Promise<[any, Array<string>]>
   {
     // make sure the object is available for checkout
@@ -400,6 +401,12 @@ export class StateTracker{
     return[success, [client]]
   }
 
+  /**
+   * check in an object from the Fast Access State Tracker
+   * @param projectId 
+   * @param objectId 
+   * @param client 
+   */
   public static async CheckinObject(projectId: string, objectId: string, client: string) : Promise<[any, Array<string>]>
   {
     // make sure the actual person that checked an object out is the one checking it back in
@@ -408,6 +415,12 @@ export class StateTracker{
     return[success, [client]]
   }
 
+  /**
+   * Delete an object from both the FAM and the Database
+   * @param objectId 
+   * @param projectId 
+   * @param client 
+   */
   public static async DeleteObject(objectId: string, projectId: string, client: string) : Promise<[any, Array<string>]>
   {
 
@@ -432,25 +445,34 @@ export class StateTracker{
    * @param client client Id to make sure they have the object checked out
    * @param saveToDatabase Flag to save the object update to the database 
    */
-  public static async UpdateObject(objectToUpdate : FlowObject, projectId: string,  client: string, saveToDatabase:boolean=false) : Promise<[any, Array<string>]>
+  public static async UpdateObject(objectToUpdate : FlowObject, projectId: string,  client: string,  saveToDatabase:boolean,user=null) : Promise<[any, Array<string>]>
   {  
     // perform the updates
     let famSuccess = RoomManager.updateObject(objectToUpdate, projectId, client);
+    console.log(RoomManager.ReadObject(projectId, objectToUpdate.Id))
     if(!famSuccess)
-      return ["could not update object", [client]]
+      return [null, [client]];
     if(saveToDatabase)
       TypeORMDatabase.UpdateObject(objectToUpdate, projectId)
 
     // get all of the clients that are in that room so that we can tell them 
     let affectedClients: Array<string> = [];
     let roomClients = await RoomManager.getClients(projectId)
+    
     roomClients.forEach((clients, username, map) => {
+      // console.log(user)
       affectedClients = affectedClients.concat(clients)
     })
 
     return [objectToUpdate , affectedClients]
   }
 
+  /**
+   * return the data for a single object
+   * @param objectId the Id of the object
+   * @param projectId the Id of the project that the object is in
+   * @param client the client who wants the object
+   */
   public static async ReadObject(objectId: string, projectId: string, client: string) :  Promise<[any, Array<string>]>
   {
     let objectRead = RoomManager.ReadObject(projectId, objectId)
@@ -458,57 +480,18 @@ export class StateTracker{
   }
 
   /**
-   * unfuckify the bizarre recursive data structure is put into it
-   * @param behavior 
+   * Create a behaviour in both the Database and the Fast Access State Tracker
+   * @param BehaviourToCreate 
+   * @param projectId 
    */
-  public static listifyBehavior(behavior: any){
-    let counter: number = 0;
-    let temp: any = behavior;
-    let retArr: Array<FlowBehavior> = []
-    let owner = temp.TriggerObjectID;
-
-    while(temp != null){
-      retArr.push(new FlowBehavior({
-        Name: temp.Name,
-        Id: temp.Id,
-        Trigger: temp.TriggerObjectID,
-        Target: temp.TargetObjectID,
-        Index: counter,
-        ChainOwner: owner
-      }));
-
-      counter ++;
-      temp = temp.FlowBehaviour;
-    }
-    return retArr
-  } 
-
-  public static reconstitute(behaviors: Array<FlowBehavior>){
-    let retBehavior: any = {}
-
-    let temp: any = retBehavior;
-
-    behaviors.forEach((behavior, index, arr) => {
-      temp.Name = behavior.Name;
-      temp.TriggerObjectID = behavior.Trigger;
-      temp.TargetObjectID = behavior.Target;
-      if (index === arr.length - 1)
-        temp.BehaviourChain = null
-      else
-        temp.BehaviourChain = {}
-
-      temp = temp.BehaviourChain
-    })
-    
-  }
-
-  public static async CreateBehavior(behaviorToCreate : Array<FlowBehavior>, objectId:string, projectId: string) : Promise<[any, Array<string>]>
+  public static async CreateBehaviour(BehaviourToCreate : FlowBehaviour, projectId: string) : Promise<[any, Array<string>]>
   {
+    console.log(projectId)
     RoomManager.FindRoom(projectId)
                 .GetProject()
-                .AddBehavior(objectId, behaviorToCreate);
-  
-    TypeORMDatabase.CreateBehavior(behaviorToCreate, objectId)
+                .AddBehaviour(BehaviourToCreate);
+    
+    TypeORMDatabase.CreateBehaviour(BehaviourToCreate);
 
     let affectedClients: Array<string> = [];
 
@@ -517,18 +500,24 @@ export class StateTracker{
     roomClients.forEach((clients, username, map) => {
       affectedClients = affectedClients.concat(clients)
     })
+    BehaviourToCreate.Action = JSON.stringify(BehaviourToCreate.Action)
 
-    return [behaviorToCreate, affectedClients]
+    return [BehaviourToCreate, affectedClients]
   }
 
-  public static async DeleteBehavior(projectId: string, objectId, client: string) : Promise<[any, Array<string>]>
+  /**
+   * Delete a behaviour from both the Fast Access State Tracker and the database
+   * @param projectId the project that the behaviour is in
+   * @param BehaviourIds the behaviour to delete
+   * @param client the client that is trying to delete the behaviour
+   */
+  public static async DeleteBehaviour(projectId: string, BehaviourIds: Array<string>, client: string) : Promise<[any, Array<string>]>
   {
-
-    RoomManager.FindRoom(projectId)
+    let success = RoomManager.FindRoom(projectId)
                 .GetProject()
-                .DeleteBehavior(objectId);
+                .DeleteBehaviour(BehaviourIds);
 
-    TypeORMDatabase.DeleteBehavior(objectId)
+    TypeORMDatabase.DeleteBehaviour(BehaviourIds)
 
     let affectedClients: Array<string> = [];
 
@@ -538,22 +527,77 @@ export class StateTracker{
     roomClients.forEach((clients, username, map) => {
       affectedClients = affectedClients.concat(clients)
     })
-
-    return [projectId, affectedClients]
+    if(success)
+      return [BehaviourIds, affectedClients];
+    else  
+      return [null, affectedClients];
   }
 
-  public static async ReadBehavior(behaviorId: string, objectId, projectId: string, client: string) : Promise<[any, Array<string>]>
+  // TODO: do this through the Room Manager instead of directly accessing variables
+  /**
+   * link a child behaviour to one or more parent Behaviors in both the Fast Access State tracker and the Database
+   * @param projectId 
+   * @param child 
+   * @param parents 
+   */
+  public static async LinkNewBehaviorToExistingBehaviors(projectId: string, child: string, parents: Array<string>){
+    let behaviorsToModify = RoomManager.FindRoom(projectId)
+      .GetProject()
+      ._BehaviourList
+      .filter((x) => parents.indexOf(x.Id) !== -1)
+
+    behaviorsToModify.map((x) => {
+      x.NextBehaviour.push(child)
+      return x;
+    })
+
+    await TypeORMDatabase.LinkNewToOld(projectId, child, parents)
+  }
+
+
+  /**
+   * Return a single behaviour
+   * @param BehaviourId 
+   * @param projectId 
+   * @param client 
+   */
+  public static async ReadBehaviour(BehaviourId: string, projectId: string, client: string) : Promise<[any, Array<string>]>
   {
-    let behaviorRead : FlowBehavior = null;
-    let behaviorList = RoomManager.FindRoom(projectId).GetProject().GetBehavior(objectId);
-    behaviorList.forEach(behavior => {
-      if(behavior.Id == behaviorId)
-        behaviorRead = behavior;
-    });
-    
-    return [behaviorRead, [client]];
+    let BehaviourRead = RoomManager.FindRoom(projectId).GetProject().GetBehaviour(BehaviourId);    
+    return [BehaviourRead, [client]];
   }
 
+  /**
+   * update a behaviour
+   * @param BehaviourToUpdate the Id of the behaviour to update 
+   * @param projectId the project that the behaviour is in 
+   * @param client the client who is trying to update the behaviour
+   * @param saveToDatabase flag for saving to database
+   */
+  public static async UpdateBehaviour(BehaviourToUpdate : FlowBehaviour, projectId: string,  client: string, saveToDatabase:boolean=false) : Promise<[any, Array<string>]>
+  {  
+    // perform the updates
+    let famSuccess = RoomManager.updateBehaviour(BehaviourToUpdate, projectId, client);
+    if(!famSuccess)
+      return [null, [client]];
+    if(saveToDatabase)
+      TypeORMDatabase.UpdateBehaviour(BehaviourToUpdate);
+
+    // get all of the clients that are in that room so that we can tell them 
+    let affectedClients: Array<string> = [];
+    let roomClients = await RoomManager.getClients(projectId)
+    roomClients.forEach((clients, username, map) => {
+      affectedClients = affectedClients.concat(clients)
+    })
+
+    return [BehaviourToUpdate , affectedClients]
+  }
+
+  /**
+   * turn play mode on or off
+   * @param projectId the id of the project for which play mode needs to be toggled
+   * @param toggle on vs. off
+   */
   public static async TogglePlayMode(projectId: string, toggle: boolean) : Promise<[any, Array<string>]>
   {
     let affectedClients: Array<string> = [];

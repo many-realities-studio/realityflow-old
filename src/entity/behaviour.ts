@@ -13,7 +13,7 @@ import { DBObject } from './object';
 
 
   @Entity()
-  export class Behavior extends BaseEntity{
+  export class Behaviour extends BaseEntity{
     // ignore, for the most part
     @PrimaryGeneratedColumn()
     public _id: number;
@@ -23,18 +23,20 @@ import { DBObject } from './object';
     public Id: string;
 
     @Column()
-    public Name: string;
+    public TypeOfTrigger: string;
 
     @Column()
-    public Trigger: string;
+    public TriggerObjectId: string;
     
     @Column()
-    public Target: string;
-    
-    // Chaining-related stuff
-    @Column()
-    public ChainOwner: string;
+    public TargetObjectId: string;
 
     @Column()
-    public Index: number;
+    public ProjectId: string;
+
+    @Column()
+    public NextBehaviour: string;
+
+    @Column()
+    public Action: string;
   }

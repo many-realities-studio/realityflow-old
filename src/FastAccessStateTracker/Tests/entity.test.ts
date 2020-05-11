@@ -1,11 +1,11 @@
 import { createConnection, getConnection } from 'typeorm'
 
-import { User } from './user'
-import { Project } from './project'
-import { DBObject } from './object'
-import { UserSubscriber } from "./UserSubscriber"
+import { User } from '../../entity/user'
+import { Project } from '../../entity/project'
+import { DBObject } from '../../entity/object'
+import { UserSubscriber } from "../../subscriber/UserSubscriber"
 import * as bcrypt from 'bcrypt'
-import { Behavior } from './behavior'
+import { Behaviour } from '../../entity/behaviour'
 
 beforeAll( async () => {
     await createConnection(    {
@@ -18,7 +18,8 @@ beforeAll( async () => {
         "entities": [
            DBObject,
            User,
-           Project
+           Project,
+           Behaviour
         ],
         subscribers: [
             UserSubscriber
@@ -326,6 +327,7 @@ describe ('Object', () => {
         newObject.G = 1;
         newObject.B = 1;
         newObject.A = 1;
+        newObject.Prefab = "prefab";
         // act
         let returnedObject = await conn.manager.save(newObject)
         // assert
@@ -355,7 +357,7 @@ describe ('Object', () => {
         foundObject.G = 1;
         foundObject.B = 1;
         foundObject.A = 1;
-
+        foundObject.Prefab = "prefab";
         let returnedObject = await conn.manager.save(foundObject)
         // assert 
         expect(returnedObject.Id).toEqual("foundObjectId")
@@ -386,6 +388,7 @@ describe ('Object', () => {
         updatedObject.G = 1;
         updatedObject.B = 1;
         updatedObject.A = 1;
+        updatedObject.Prefab = "prefab";
         
         let returnedObject = await conn.manager.save(updatedObject)
 
@@ -423,6 +426,7 @@ describe ('Object', () => {
         deletedObject.G = 1;
         deletedObject.B = 1;
         deletedObject.A = 1;
+        deletedObject.Prefab = "prefab";
 
         let returnedObject = await conn.manager.save(deletedObject)
 
@@ -453,54 +457,62 @@ describe ('Object', () => {
 })
 
 // TODO: has not been run yet
-describe ('Behavior', () =>{
+describe ('Behaviour', () =>{
     
-    it("can be created", () =>{
+    it("can be created", async () =>{
         let conn = getConnection("test")
 
-        let behavior = new Behavior()
-        behavior.Id = "behaviorId"
-        behavior.Name = "behaviorName"
+        let Behaviour = new Behaviour()
+        Behaviour.Id = "BehaviourId"
+        Behaviour.Name = "BehaviourName"
+        Behaviour.Trigger = "Trigger"
+        Behaviour.Target = "target"
+        Behaviour.ChainOwner = "chainOwner"
+        Behaviour.Index = 0
 
-        conn.manager.save(behavior)
+        await conn.manager.save(Behaviour)
 
-        let check = conn.manager.createQueryBuilder()
-            .select("behavior")
-            .from(Behavior, "behavior")
-            .where("behavior.Id = :id", {id: behavior.Id})
+        let check = await conn.manager.createQueryBuilder()
+            .select("Behaviour")
+            .from(Behaviour, "Behaviour")
+            .where("Id = :id", {id: Behaviour.Id})
             .getOne();
 
-        expect(check).toEqual(behavior.Id)
+        expect(check.Id).toEqual(Behaviour.Id)
     })
 
     it("can be deleted", async () => {
 
         let conn = getConnection("test")
 
-        let behavior = new Behavior()
-        behavior.Id = "deleteBehaviorId"
-        behavior.Name = "behaviorName"
+        let Behaviour = new Behaviour()
+        Behaviour.Id = "deleteBehaviourId"
+        Behaviour.Name = "BehaviourName"
+        Behaviour.Trigger = "Trigger"
+        Behaviour.Target = "target"
+        Behaviour.ChainOwner = "chainOwner"
+        Behaviour.Index = 0
 
-        conn.manager.save(behavior)
+        await conn.manager.save(Behaviour)
 
         let check = await conn.manager.createQueryBuilder()
-            .select("behavior")
-            .from(Behavior, "behavior")
-            .where("behavior.Id = :id", {id: behavior.Id})
+            .select("Behaviour")
+            .from(Behaviour, "Behaviour")
+            .where("Behaviour.Id = :id", {id: Behaviour.Id})
             .getOne();
 
-        expect(check.Id).toEqual(behavior.Id)
+        expect(check.Id).toEqual(Behaviour.Id)
 
         await conn.manager.createQueryBuilder()
             .delete()
-            .from(Behavior)
-            .where("Id = :id", {id: behavior.Id})
+            .from(Behaviour)
+            .where("Id = :id", {id: Behaviour.Id})
             .execute()
         
         let deleteCheck = await conn.manager.createQueryBuilder()
-            .select("behavior")
-            .from(Behavior, "behavior")
-            .where("behavior.Id = :id", {id: behavior.Id})
+            .select("Behaviour")
+            .from(Behaviour, "Behaviour")
+            .where("Behaviour.Id = :id", {id: Behaviour.Id})
             .getOne();
 
         expect(deleteCheck).toBeFalsy()

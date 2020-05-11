@@ -34,16 +34,12 @@ export class ProjectOperations
      * Fetch all of the projects for a given user
      * @param usernameToFetch Username whose projects we want to fetch
      */
-    public static async fetchProjects(usernameToFetch: string) : Promise<Array<Project>>{
-        
-        // TODO: Make sure this works
+    public static async fetchProjects(usernameToFetch: string) : Promise<Array<Project>>{        
         let projects = await getConnection(process.env.NODE_ENV).createQueryBuilder()
             .select("project")
             .from(Project, "project")
             .where("project.ownerUsername = :username", {username: usernameToFetch})
             .getMany()
-
-        // console.log(projects)
 
         return projects;
     }
@@ -63,6 +59,10 @@ export class ProjectOperations
 
     }
 
+    /**
+     * get the objects of a specific project
+     * @param projectId the Id of the project from you want to get the objects 
+     */
     public static async getObjects(projectId: string){
         let objects = await getConnection(process.env.NODE_ENV).createQueryBuilder()
             .select("object")

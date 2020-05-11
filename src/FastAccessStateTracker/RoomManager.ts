@@ -1,5 +1,6 @@
 import { Room } from "./Room";
 import { FlowObject } from "./FlowLibrary/FlowObject";
+import { FlowBehaviour } from "./FlowLibrary/FlowBehaviour";
 
 // TODO: Make a check for how many people are in a room and delete the room if there is nobody inside
 export class RoomManager
@@ -13,6 +14,7 @@ export class RoomManager
   /**
    * Creates a new room. This room must be tied to a project.
    * @param projectId aka the room code
+   * @returns the project Id
    */
   public static CreateRoom(projectID : string) : string
   {
@@ -24,21 +26,22 @@ export class RoomManager
     return projectID;
   }
 
-  // TODO: Finished: yes Tested: yes
+  
+  // TODO: perhaps find a way to do this that doesn't return undefined
   /**
    * Searches all active rooms for a room with an associated room code
-   * If found, the room with said room code is returned. Otherwise, 
-   * FindRoom returns undefined
    * @param roomCode 
+   * @returns if found, the Room; else, undefined 
    */
   public static FindRoom(roomCode: string) : Room
   {
     return this._RoomList.find(element => element.GetRoomCode() == roomCode);
   }
 
-  // TODO: Finished: Yes Tested: yes 
+  
   /**
    * @param roomCode the code of the room to destroy
+   * @returns a map of the users to arrays of the associated clients that were in the room
    */
   public static DestroyRoom(roomCode: string): Map<string, Array<string>> {
     let clients = RoomManager.getClients(roomCode)
@@ -88,6 +91,7 @@ export class RoomManager
   /**
    * given a room, return a map of usernames with all of the users and their clients
    * @param roomCode 
+   * @returns a map of usernames to their clients that are in the room
    */
   public static getClients(roomCode: string){
 
@@ -95,29 +99,81 @@ export class RoomManager
     return room.getClients();
   }
 
+  /**
+   * update an object, iff client is allowed to check out
+   * @param objectToUpdate object to update
+   * @param projectId id of the project the object is in
+   * @param client the client who is trying to update the object
+   * @return success
+   */
   public static updateObject(objectToUpdate: FlowObject, projectId: string, client:string){
     let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
     return room.updateObject(objectToUpdate, client)
   }
 
+  /**
+   * Update a behaviour
+   * @param BehaviourToUpdate behaviour to update 
+   * @param projectId the project that the object is in
+   * @param client the client who is trying to update the object
+   * @returns success
+   */
+  public static updateBehaviour(BehaviourToUpdate: FlowBehaviour, projectId: string, client:string){
+    let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
+    return room.updateBehaviour(BehaviourToUpdate, client)
+  }
+
+  /**
+   * add an object to a specific room
+   * @param objectToCreate 
+   * @param projectId 
+   * @returns success
+   */
   public static AddObject(objectToCreate: FlowObject, projectId:string){
     return this._RoomList.find(element => element.GetRoomCode() == projectId).AddObject(objectToCreate)
   }
 
+  /**
+   * delete an object from the Fast Access State Tracker
+   * @param projectId the id of the project from which to delete the obejct
+   * @param objectId the Id of the object to delete
+   * @param client the client who wants to delete the object
+   * @returns success
+   */
   public static DeleteObject(projectId: string, objectId: string, client:string){
     let success = this._RoomList.find(element => element.GetRoomCode() == projectId).DeleteObject(objectId, client);
     return success
   }
 
+  /**
+   * return the data of a given object
+   * @param projectId the id of the project that the object is in
+   * @param objectId the Id of the object to delete
+   * @returns the object
+   */
   public static ReadObject(projectId:string, objectId:string){
     return this._RoomList.find(element => element.GetRoomCode() == projectId).ReadObject(objectId);
   }
 
+  /**
+   * checkout an object, iff the client is allowed to check it out
+   * @param projectId the Id of the project that the object is in
+   * @param objectId the Id of the  object to check out
+   * @param client the Id of the client who wants to check out the object
+   * @returns success
+   */
   public static checkoutObject(projectId: string, objectId: string, client: string){
     let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
     return room.checkoutObject(objectId, client);
   }
 
+  /**
+   * check in an object iff the client is allowed to check out the object
+   * @param projectId the project the object is in
+   * @param objectId the object to be checked in
+   * @param client the client who is trying to check in the object
+   * @returns success
+   */
   public static checkinObject(projectId: string, objectId: string,  client: string){
     let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
     return room.checkinObject(objectId, client)

@@ -82,6 +82,13 @@ typings/
 
 # Package Lock
 package-lock.json
+
+
+# Node Build Files
+node/server/bld/
+
+database/prod.db
+.vscode/settings.json
 /Client-HL/Assets/MixedRealityToolkit.Providers/WindowsMixedReality/Shared/DotNetAdapter/.bin/net46/Microsoft.Windows.MixedReality.DotNetWinRT/Editor/Microsoft.Windows.MixedReality.DotNetWinRT.Init.cs.meta
 /Client-HL/Assets/MixedRealityToolkit.Providers/WindowsMixedReality/Shared/DotNetAdapter/.bin/net46/Microsoft.Windows.MixedReality.DotNetWinRT/Editor/Microsoft.Windows.MixedReality.DotNetWinRT.Init.cs
 /Client-HL/Assets/MixedRealityToolkit.Providers/WindowsMixedReality/Shared/DotNetAdapter/.bin/net46/Microsoft.Windows.MixedReality.DotNetWinRT/Editor/Microsoft.Windows.MixedReality.DotNetWinRT.Editor.asmdef.meta
