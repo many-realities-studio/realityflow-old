@@ -16,8 +16,8 @@ Features on the roadmap include recording analytics data.
 Project has been developed by UCF Senior Design students, including:
 
 ## 2020-2021
- - Owen Mak
- - 
+ - Victor Solal
+ - Morgan Wilkinson
 
 ## 2019-2020
  - Matthew Kurtz
