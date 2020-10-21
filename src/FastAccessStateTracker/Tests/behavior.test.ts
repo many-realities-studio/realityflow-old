@@ -109,7 +109,7 @@ describe("entity", () => {
             ChainOwner: "Trigger"
         })
         
-        let check = await BehaviourOperations.CreateBehaviour([Behaviour1, Behaviour2], "Trigger")
+        let check = await BehaviourOperations.CreateBehaviour([Behaviour1, Behaviour2])
         expect(check).toBeTruthy()
         
         let find = await getConnection(process.env.NODE_ENV).createQueryBuilder()
@@ -124,14 +124,14 @@ describe("entity", () => {
     })
 
     it("can be referenced by its owning object", async () =>{
-        let check = await BehaviourOperations.getBehaviour("Trigger");
+        let check = await BehaviourOperations.getBehaviours("Trigger");
         expect(check).toBeTruthy()
-        expect(check[0].Name).toEqual("Name")
+        expect(check[0].Id).toEqual("TestBehaviourId2")
     })
 
     it("can be deleted", async () => {
-        await BehaviourOperations.deleteBehaviour("Trigger")
-        let check = await BehaviourOperations.getBehaviour("Trigger");
+        await BehaviourOperations.deleteBehaviour(["Trigger"])
+        let check = await BehaviourOperations.getBehaviours("createObjectProjectId");
         expect(check).toBeTruthy()
         expect(check.length).toEqual(0)
 

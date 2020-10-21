@@ -1,5 +1,4 @@
 import "reflect-metadata"
-import * as express from "express";
 import * as http from "http";
 const WebSocket = require("ws")
 
@@ -14,8 +13,8 @@ import {ProjectOperations} from "./ORMCommands/project";
 import { RoomManager } from "./FastAccessStateTracker/RoomManager";
 import { UserOperations } from "./ORMCommands/user";
 import { FlowProject } from "./FastAccessStateTracker/FlowLibrary/FlowProject";
+import {isNullOrUndefined} from "util";
 
-var database;
 console.log("Server starting...")
 
 
@@ -32,7 +31,6 @@ export class ServerEventDispatcher {
     //This function simply takes in whatever JSON payload and sends it to the connection
     public static send(payloadString: any, connection: any){
 
-        // let payload = Buffer.alloc(payloadString.length, payloadString);
 
          connection.send(payloadString, function ack(err: any){
 
@@ -42,6 +40,34 @@ export class ServerEventDispatcher {
           });
     }
 
+    public static async authenticate(auth_header: string): Promise<[boolean, string, string, string]>{
+	    if(isNullOrUndefined(auth_header) || auth_header == ""){
+            console.log("authentication header not sent")
+            return [false, "", "", ""]
+        }
+        
+        let rawAuth: string = Buffer.from(auth_header.replace('Basic ', ''), 'base64').toString()
+        let splitIndex = rawAuth.indexOf(":")
+        let user = rawAuth.slice(0, splitIndex)
+        let pass = rawAuth.slice(splitIndex+1)
+        let message = {
+            "__type": "Login_SendToServer:#Packages.realityflow_package.Runtime.scripts.Messages.UserMessages",
+            "Message": null,
+            "MessageType": "LoginUser",
+            "FlowUser": {
+            "Password": pass,
+            "Username": user
+            }
+        }
+        
+        let id = uuidv4();
+        let res = await NewMessageProcessor.ParseMessage(id, message)
+        console.log(res)
+        let payload = JSON.parse(res[0])
+        console.log(payload)
+
+        return [payload["WasSuccessful"], id, user, payload] 
+    }
 
     constructor(server: http.Server) {
 
@@ -56,38 +82,18 @@ export class ServerEventDispatcher {
         ServerEventDispatcher.wss.on('connection', this.connection)
           
         server.on("upgrade", async (request, socket, head) => {
-           
-                let rawAuth: string = Buffer.from(request.headers.authorization.replace('Basic ', ''), 'base64').toString()
-                let splitIndex = rawAuth.indexOf(":")
-                let user = rawAuth.slice(0, splitIndex)
-                let pass = rawAuth.slice(splitIndex+1)
-                let ID = uuidv4();
+                let auth_header = request.headers.authorization 
+                let [authenticated, id, user, payload] = await ServerEventDispatcher.authenticate(auth_header)
 
-
-
-                let message = {
-                    "__type": "Login_SendToServer:#Packages.realityflow_package.Runtime.scripts.Messages.UserMessages",
-                    "Message": null,
-                    "MessageType": "LoginUser",
-                    "FlowUser": {
-                    "Password": pass,
-                    "Username": user
-                    }
-                }
-                let res = await NewMessageProcessor.ParseMessage(ID, message)
-                console.log(res)
-                let payload = JSON.parse(res[0])
-                console.log(payload)
-
-                if(payload["WasSuccessful"])
+                if(authenticated)
                     ServerEventDispatcher.wss.handleUpgrade(request, socket, head, function done (ws){
                         ServerEventDispatcher.wss.emit('connection', ws, request);
-                        ws.ID = ID;
+                        ws.ID = id;
                         ws.username = user;
-                        ws.send(res[0])
-
+                        ws.send(payload)
+                    
                         // Assign this connection an ID and store it
-                        ServerEventDispatcher.SocketConnections.set(ID, ws);
+                        ServerEventDispatcher.SocketConnections.set(id, ws);
                     
                     })
                 else    
@@ -99,7 +105,7 @@ export class ServerEventDispatcher {
     }
 
     private connection(ws, req): void {
-        
+       	console.log("tried connect") 
         function onMessageEvent(evt: any) {
         
             console.log(evt)
@@ -195,16 +201,14 @@ export class ServerEventDispatcher {
      console.log(process.env.NODE_ENV)
 })()
 
-// const app = express();
-
-// app.use(express.static("./static"));
 
 const server = http.createServer();
 const sockServ = new ServerEventDispatcher(server);
 
 try {
-server.listen(process.env.PORT || 8999, () => {
+server.listen({"port": process.env.PORT || 8999, "host": "localhost"}, () => {
     console.log("SYSTEM READY");
+
 })
 } catch (err) {
   console.log(err)
