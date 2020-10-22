@@ -50,7 +50,8 @@ export class ServerEventDispatcher {
         let splitIndex = rawAuth.indexOf(":")
         let user = rawAuth.slice(0, splitIndex)
         let pass = rawAuth.slice(splitIndex+1)
-        let message = {
+        console.log("user is " + user)
+	let message = {
             "__type": "Login_SendToServer:#Packages.realityflow_package.Runtime.scripts.Messages.UserMessages",
             "Message": null,
             "MessageType": "LoginUser",
@@ -63,7 +64,7 @@ export class ServerEventDispatcher {
         let id = uuidv4();
         let res = await NewMessageProcessor.ParseMessage(id, message)
         console.log(res)
-        let payload = JSON.parse(res[0])
+        let payload = res[0]
         console.log(payload)
 
         return [payload["WasSuccessful"], id, user, payload] 
