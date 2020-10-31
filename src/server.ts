@@ -1,23 +1,21 @@
 import "reflect-metadata"
-import * as express from "express";
 import * as http from "http";
-import { Server } from "ws";
+const WebSocket = require("ws")
+
 import { v4 as uuidv4 } from 'uuid';
+
 import {NewMessageProcessor} from "./FastAccessStateTracker/Messages/NewMessageProcessor";
 import {createConnection} from 'typeorm';
 
 // DB API
 import {ProjectOperations} from "./ORMCommands/project";
-import { DBObject } from "./entity/object";
-import { User } from "./entity/user";
-import { Project } from "./entity/project";
-import { UserSubscriber } from "./entity/UserSubscriber";
-import { Behavior } from "./entity/behavior"
 
 import { RoomManager } from "./FastAccessStateTracker/RoomManager";
 import { UserOperations } from "./ORMCommands/user";
 import { FlowProject } from "./FastAccessStateTracker/FlowLibrary/FlowProject";
-var database;
+import {isNullOrUndefined} from "util";
+
+console.log("Server starting...")
 
 
 //The main Server class
@@ -25,7 +23,7 @@ export class ServerEventDispatcher {
     //This array contains objects that have the client ID and corresponding
     //connection object, so something like [{clientId:whatever, connection: connectionObject }]
     public static connections: any[] = [];
-    public static wss: Server;
+    public static wss;
     public static callbacks: Function[][];
 
     public static SocketConnections = new Map<String, any>();
@@ -33,7 +31,6 @@ export class ServerEventDispatcher {
     //This function simply takes in whatever JSON payload and sends it to the connection
     public static send(payloadString: any, connection: any){
 
-        // let payload = Buffer.alloc(payloadString.length, payloadString);
 
          connection.send(payloadString, function ack(err: any){
 
@@ -43,32 +40,80 @@ export class ServerEventDispatcher {
           });
     }
 
+    public static async authenticate(auth_header: string): Promise<[boolean, string, string, string]>{
+	    if(isNullOrUndefined(auth_header) || auth_header == ""){
+            console.log("authentication header not sent")
+            return [false, "", "", ""]
+        }
+        
+        let rawAuth: string = Buffer.from(auth_header.replace('Basic ', ''), 'base64').toString()
+        let splitIndex = rawAuth.indexOf(":")
+        let user = rawAuth.slice(0, splitIndex)
+        let pass = rawAuth.slice(splitIndex+1)
+        console.log("user is " + user)
+	let message = {
+            "__type": "Login_SendToServer:#Packages.realityflow_package.Runtime.scripts.Messages.UserMessages",
+            "Message": null,
+            "MessageType": "LoginUser",
+            "FlowUser": {
+            "Password": pass,
+            "Username": user
+            }
+        }
+        
+        let id = uuidv4();
+        let res = await NewMessageProcessor.ParseMessage(id, message)
+        console.log(res)
+        let payload = res[0]
+        console.log(payload)
+
+        return [payload["WasSuccessful"], id, user, payload] 
+    }
 
     constructor(server: http.Server) {
-        
-        ServerEventDispatcher.wss = new Server({ server }, function (err: any) {
 
+        ServerEventDispatcher.wss = new WebSocket.Server({ 
+            noServer: true,
         });
         ServerEventDispatcher.wss.on("error", (err) => {
+            console.log()
         });
 
         ServerEventDispatcher.callbacks = [];
-        ServerEventDispatcher.wss.on("connection", this.connection);
+        ServerEventDispatcher.wss.on('connection', this.connection)
+          
+        server.on("upgrade", async (request, socket, head) => {
+                let auth_header = request.headers.authorization 
+                let [authenticated, id, user, payload] = await ServerEventDispatcher.authenticate(auth_header)
+
+                if(authenticated)
+                    ServerEventDispatcher.wss.handleUpgrade(request, socket, head, function done (ws){
+                        ServerEventDispatcher.wss.emit('connection', ws, request);
+                        ws.ID = id;
+                        ws.username = user;
+                        ws.send(payload)
+                    
+                        // Assign this connection an ID and store it
+                        ServerEventDispatcher.SocketConnections.set(id, ws);
+                    
+                    })
+                else    
+                    socket.destroy()
+                
+                    
+        })
+        
     }
 
-    private connection(ws: any, arg?: any): void {
-
-        // Assign this connection an ID and store it
-        ws.ID = uuidv4();
-
-        ServerEventDispatcher.SocketConnections.set(ws.ID, ws);
-
+    private connection(ws, req): void {
+       	console.log("tried connect") 
         function onMessageEvent(evt: any) {
         
-            
+            console.log(evt)
             try {
 
-                const json = JSON.parse(evt.data);     
+                const json = JSON.parse(evt);
+                json.user = ws.username     
 
                 NewMessageProcessor.ParseMessage(ws.ID, json).then((res: any) => {
 
@@ -94,17 +139,35 @@ export class ServerEventDispatcher {
         }
 
 
-        function onCloseEvent(evt: any): any {
-
+        function onCloseEvent(): any {
+           NewMessageProcessor.ParseMessage(ws.ID,
+            {
+                "FlowUser": {
+                  "Username": ws.username,
+                  "Password": "pass"
+                },
+                "MessageType": "LogoutUser"
+              }
+               
+           )
            ServerEventDispatcher.SocketConnections.delete(ws.ID);
         }
 
         function onErrorEvent(evt: any) {
         }
 
-        ws.onmessage = onMessageEvent;
-        ws.onclose = onCloseEvent;
-        ws.onerror = onErrorEvent;
+        ws.on('message', onMessageEvent);
+        ws.on('close', () => {
+            let logoutMessage = JSON.stringify({
+                "FlowUser": {
+                  "Username": ws.username,
+                  "Password": "pass"
+                },
+                "MessageType": "LogoutUser"
+            })
+            ws.emit('message', logoutMessage)
+        });
+
     }
 
 };
@@ -112,22 +175,7 @@ export class ServerEventDispatcher {
 
 (async () => {
     try {
-    await createConnection({
-        "name": "prod",
-        "type": "sqlite",
-        "database": "./database/prod.db", 
-        "logging": true,
-        "synchronize": true,
-        "entities": [
-           DBObject,
-           User,
-           Project,
-           Behavior
-        ],
-        subscribers: [
-            UserSubscriber
-        ]
-     }).then(async (res)=>{
+    await createConnection("prod").then(async (res)=>{
         // await res.synchronize();
         process.env.NODE_ENV = "prod" 
         console.log("Is connected", res.isConnected)
@@ -154,13 +202,15 @@ export class ServerEventDispatcher {
      console.log(process.env.NODE_ENV)
 })()
 
-const app = express();
 
-app.use(express.static("./static"));
-
-const server = http.createServer(app);
+const server = http.createServer();
 const sockServ = new ServerEventDispatcher(server);
 
-server.listen(process.env.PORT || 8999, () => {
+try {
+server.listen({"port": process.env.PORT || 8999, "host": "localhost"}, () => {
     console.log("SYSTEM READY");
-});
+
+})
+} catch (err) {
+  console.log(err)
+}

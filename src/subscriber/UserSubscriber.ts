@@ -1,5 +1,5 @@
 import { EventSubscriber, EntitySubscriberInterface, UpdateEvent } from "typeorm";
-import { User } from "./user";
+import { User } from "../entity/user";
 import *  as bcrypt from "bcrypt"
 const SALT_WORK_FACTOR = 10;
 

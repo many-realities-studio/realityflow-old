@@ -9,7 +9,7 @@ import {
   } from 'typeorm';
 
   import {Project} from './project'
-import { Behavior } from './behavior';
+import { Behaviour } from './behaviour';
 
 @Entity()
 export class DBObject extends BaseEntity{
@@ -64,6 +64,9 @@ export class DBObject extends BaseEntity{
 
     @Column()
     A: number
+
+    @Column()
+    Prefab:string
 
     @ManyToOne(type=>Project, proj => proj.ObjectList, {onDelete: "CASCADE", onUpdate: "CASCADE"})
     Project: Project;

@@ -6,13 +6,11 @@
  */
 import { StateTracker } from "../StateTracker";
 
-
 import { FlowProject } from "../FlowLibrary/FlowProject";
 import { FlowObject } from "../FlowLibrary/FlowObject";
-import { FlowBehavior } from "../FlowLibrary/FlowBehavior";
+import { FlowBehaviour } from "../FlowLibrary/FlowBehaviour";
 
 import { MessageBuilder } from "./MessageBuilder";
-import { TreeChildren } from "typeorm";
 
 import { v4 as uuidv4 } from 'uuid';
 import { ServerEventDispatcher } from "../../server";
@@ -172,8 +170,7 @@ class Command_LeaveProject implements ICommand
 
     let returnContent = {
       "MessageType": "LeaveProject",
-      "WasSuccessful": returnData[0],
-      "FlowProject": message
+      "WasSuccessful": returnData[0]
     }
 
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
@@ -346,12 +343,17 @@ class Command_CheckinObject implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
+    let object = await StateTracker.ReadObject(data.ObjectId, data.ProjectId, client);
+    console.log(object)
+    let finalUpdate =  await StateTracker.UpdateObject(object[0], data.ProjectId, client, true);
+
     let returnData = await StateTracker.CheckinObject(data.ProjectId, data.ObjectId, client)
     let returnContent = {
       "MessageType": "CheckinObject",
-      "WasSuccessful": returnData[0],
+      "WasSuccessful": ((returnData[0]) && finalUpdate[0] != null) ? true: false,
       "ObjectID": data.ObjectId
     }
+
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
 
     return returnMessage;
@@ -397,12 +399,17 @@ class Command_UpdateObject implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
     let flowObject = new FlowObject(data.FlowObject);
-    let returnData = await StateTracker.UpdateObject(flowObject, data.ProjectId, client);
+    let returnData = await StateTracker.UpdateObject(flowObject, data.ProjectId, client,false, data.user);
+
+    let index = returnData[1].indexOf(client);
+    returnData[1].splice(index,1)
+
     let returnContent = {
       "MessageType": "UpdateObject",
       "FlowObject": returnData[0],
       "WasSuccessful": (returnData[0] == null) ? false: true,
     }
+
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
 
     return returnMessage;
@@ -420,7 +427,6 @@ class Command_ReadObject implements ICommand
       "WasSuccessful": (returnData[0] == null) ? false: true,
     }
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
-
     return returnMessage;
 
   }
@@ -431,8 +437,11 @@ class Command_FinalizedUpdateObject implements ICommand
 {
   async ExecuteCommand(data: any, client:string): Promise<[String, Array<String>]> 
   {
-    let flowObject = new FlowObject(data.flowObject);
+    let flowObject = new FlowObject(data.FlowObject);
     let returnData = await StateTracker.UpdateObject(flowObject, data.ProjectId, client, true);
+    let index = returnData[1].indexOf(client);
+    returnData[1].splice(index,1);
+
     let returnContent = {
       "MessageType": "UpdateObject",
       "FlowObject": returnData[0],
@@ -450,13 +459,15 @@ class Command_CreateBehaviour implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let flowBehaviour = StateTracker.listifyBehavior(data.FlowBehaviour)
     
-    let owner = flowBehaviour[0].ChainOwner;
-
-    let returnData = await StateTracker.CreateBehavior(flowBehaviour, owner, data.ProjectId);
+    let flowBehaviour = new FlowBehaviour(data.FlowBehaviour);
+    flowBehaviour.ProjectId = data.ProjectId;
+    
+    let returnData = await StateTracker.CreateBehaviour(flowBehaviour, data.ProjectId);
+    await StateTracker.LinkNewBehaviorToExistingBehaviors(data.ProjectId, flowBehaviour.Id, data.BehavioursToLinkTo)
     let returnContent = {
       "MessageType": "CreateBehaviour",
+      "BehaviorsToLinkTo": data.BehaviorsToLinkTo,
       "FlowBehaviour": returnData[0],
       "WasSuccessful": (returnData[0] == null) ? false: true
     }
@@ -469,14 +480,28 @@ class Command_CreateBehaviour implements ICommand
 class Command_DeleteBehaviour implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
-  {
-    let flowBehaviour = StateTracker.listifyBehavior(data.FlowBehaviour)    
-    let owner = flowBehaviour[0].ChainOwner;
-
-    let returnData = await StateTracker.DeleteBehavior(data.ProjectId, owner, client);
+  { 
+    let returnData = await StateTracker.DeleteBehaviour(data.ProjectId, data.BehaviourIds, client);
     let returnContent = {
       "MessageType": "DeleteBehaviour",
       "BehaviourId": returnData[0],
+      "WasSuccessful": (returnData[0] == null) ? false: true,
+    }
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
+
+    return returnMessage;
+  }
+}
+
+class Command_UpdateBehaviour implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+  {
+    let flowBehaviour = new FlowBehaviour(data.FlowBehaviour);
+    let returnData = await StateTracker.UpdateBehaviour(flowBehaviour, data.ProjectId, client, true);
+    let returnContent = {
+      "MessageType": "UpdateBehaviour",
+      "FlowBehaviour": returnData[0],
       "WasSuccessful": (returnData[0] == null) ? false: true,
     }
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
@@ -491,10 +516,7 @@ class Command_ReadBehaviour implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
 
-    let flowBehaviour = StateTracker.listifyBehavior(data.FlowBehaviour)    
-    let owner = flowBehaviour[0].ChainOwner;
-
-    let returnData = await StateTracker.ReadBehavior(data.FlowBehaviour.Id, owner, data.ProjectId, client);
+    let returnData = await StateTracker.ReadBehaviour(data.FlowBehaviour.Id, data.ProjectId, client);
     let returnContent = {
       "MessageType": "ReadBehaviour",
       "FlowBehaviour": returnData[0],
@@ -589,6 +611,7 @@ export class CommandContext
       this._CommandList.set("CreateBehaviour", new Command_CreateBehaviour());
       this._CommandList.set("DeleteBehaviour", new Command_DeleteBehaviour());
       this._CommandList.set("ReadBehaviour", new Command_ReadBehaviour());
+      this._CommandList.set("UpdateBehaviour", new Command_UpdateBehaviour());
 
       // PlayMode Commands
       this._CommandList.set("StartPlayMode", new Command_StartPlayMode());
