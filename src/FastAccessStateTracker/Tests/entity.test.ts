@@ -457,68 +457,68 @@ describe ('Object', () => {
 })
 
 // TODO: has not been run yet
-describe ('Behaviour', () =>{
+// describe ('Behaviour', () =>{
     
-    it("can be created", async () =>{
-        let conn = getConnection("test")
+//     it("can be created", async () =>{
+//         let conn = getConnection("test")
 
-        let Behaviour = new Behaviour()
-        Behaviour.Id = "BehaviourId"
-        Behaviour.Name = "BehaviourName"
-        Behaviour.Trigger = "Trigger"
-        Behaviour.Target = "target"
-        Behaviour.ChainOwner = "chainOwner"
-        Behaviour.Index = 0
+//         let behaviour = new Behaviour()
+//         behaviour.Id = "BehaviourId"
+//         behaviour.Name = "BehaviourName"
+//         behaviour.Trigger = "Trigger"
+//         behaviour.Target = "target"
+//         behaviour.ChainOwner = "chainOwner"
+//         behaviour.Index = 0
 
-        await conn.manager.save(Behaviour)
+//         await conn.manager.save(Behaviour)
 
-        let check = await conn.manager.createQueryBuilder()
-            .select("Behaviour")
-            .from(Behaviour, "Behaviour")
-            .where("Id = :id", {id: Behaviour.Id})
-            .getOne();
+//         let check = await conn.manager.createQueryBuilder()
+//             .select("Behaviour")
+//             .from(Behaviour, "Behaviour")
+//             .where("Id = :id", {id: Behaviour.Id})
+//             .getOne();
 
-        expect(check.Id).toEqual(Behaviour.Id)
-    })
+//         expect(check.Id).toEqual(Behaviour.Id)
+//     })
 
-    it("can be deleted", async () => {
+//     it("can be deleted", async () => {
 
-        let conn = getConnection("test")
+//         let conn = getConnection("test")
 
-        let Behaviour = new Behaviour()
-        Behaviour.Id = "deleteBehaviourId"
-        Behaviour.Name = "BehaviourName"
-        Behaviour.Trigger = "Trigger"
-        Behaviour.Target = "target"
-        Behaviour.ChainOwner = "chainOwner"
-        Behaviour.Index = 0
+//         let Behaviour = new Behaviour()
+//         Behaviour.Id = "deleteBehaviourId"
+//         Behaviour.Name = "BehaviourName"
+//         Behaviour.Trigger = "Trigger"
+//         Behaviour.Target = "target"
+//         Behaviour.ChainOwner = "chainOwner"
+//         Behaviour.Index = 0
 
-        await conn.manager.save(Behaviour)
+//         await conn.manager.save(Behaviour)
 
-        let check = await conn.manager.createQueryBuilder()
-            .select("Behaviour")
-            .from(Behaviour, "Behaviour")
-            .where("Behaviour.Id = :id", {id: Behaviour.Id})
-            .getOne();
+//         let check = await conn.manager.createQueryBuilder()
+//             .select("Behaviour")
+//             .from(Behaviour, "Behaviour")
+//             .where("Behaviour.Id = :id", {id: Behaviour.Id})
+//             .getOne();
 
-        expect(check.Id).toEqual(Behaviour.Id)
+//         expect(check.Id).toEqual(Behaviour.Id)
 
-        await conn.manager.createQueryBuilder()
-            .delete()
-            .from(Behaviour)
-            .where("Id = :id", {id: Behaviour.Id})
-            .execute()
+//         await conn.manager.createQueryBuilder()
+//             .delete()
+//             .from(Behaviour)
+//             .where("Id = :id", {id: Behaviour.Id})
+//             .execute()
         
-        let deleteCheck = await conn.manager.createQueryBuilder()
-            .select("Behaviour")
-            .from(Behaviour, "Behaviour")
-            .where("Behaviour.Id = :id", {id: Behaviour.Id})
-            .getOne();
+//         let deleteCheck = await conn.manager.createQueryBuilder()
+//             .select("Behaviour")
+//             .from(Behaviour, "Behaviour")
+//             .where("Behaviour.Id = :id", {id: Behaviour.Id})
+//             .getOne();
 
-        expect(deleteCheck).toBeFalsy()
-    })
+//         expect(deleteCheck).toBeFalsy()
+//     })
 
-    it("can be chained", () => {
+//     it("can be chained", () => {
         
-    })
-})
+//     })
+// })
