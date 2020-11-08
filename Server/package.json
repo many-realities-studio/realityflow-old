@@ -39,6 +39,7 @@
     "mongoose": "^4.13.18",
     "nodemon": "^1.4.1",
     "npid": "^0.4.0",
+    "pm2": "^4.5.0",
     "redis-url": "^1.2.1",
     "reflect-metadata": "^0.1.13",
     "run-sequence": "^1.2.2",

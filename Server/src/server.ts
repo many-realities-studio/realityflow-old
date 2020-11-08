@@ -14,6 +14,7 @@ import { RoomManager } from "./FastAccessStateTracker/RoomManager";
 import { UserOperations } from "./ORMCommands/user";
 import { FlowProject } from "./FastAccessStateTracker/FlowLibrary/FlowProject";
 import {isNullOrUndefined} from "util";
+var pm2 = require('pm2');
 
 console.log("Server starting...")
 
@@ -27,6 +28,7 @@ export class ServerEventDispatcher {
     public static callbacks: Function[][];
 
     public static SocketConnections = new Map<String, any>();
+    public static dashboardConnections = new Map<String, any>();
 
     //This function simply takes in whatever JSON payload and sends it to the connection
     public static send(payloadString: any, connection: any){
@@ -45,7 +47,7 @@ export class ServerEventDispatcher {
             console.log("authentication header not sent")
             return [false, "", "", ""]
         }
-        
+
         let rawAuth: string = Buffer.from(auth_header.replace('Basic ', ''), 'base64').toString()
         let splitIndex = rawAuth.indexOf(":")
         let user = rawAuth.slice(0, splitIndex)
@@ -64,7 +66,7 @@ export class ServerEventDispatcher {
         let id = uuidv4();
         let res = await NewMessageProcessor.ParseMessage(id, message)
         console.log(res)
-        let payload = res[0]
+        let payload = JSON.parse(res[0])
         console.log(payload)
 
         return [payload["WasSuccessful"], id, user, payload] 
@@ -83,7 +85,16 @@ export class ServerEventDispatcher {
         ServerEventDispatcher.wss.on('connection', this.connection)
           
         server.on("upgrade", async (request, socket, head) => {
-                let auth_header = request.headers.authorization 
+                //console.log(request.headers.cookie);
+                let auth_header;
+                let dashboardConnection = false;
+                if (isNullOrUndefined(request.headers.authorization)) {
+                    auth_header = request.headers.cookie;
+                    dashboardConnection = true;
+                }
+                else
+                    auth_header = request.headers.authorization
+
                 let [authenticated, id, user, payload] = await ServerEventDispatcher.authenticate(auth_header)
 
                 if(authenticated)
@@ -91,9 +102,13 @@ export class ServerEventDispatcher {
                         ServerEventDispatcher.wss.emit('connection', ws, request);
                         ws.ID = id;
                         ws.username = user;
-                        ws.send(payload)
+                        ws.send(JSON.stringify(payload))
                     
                         // Assign this connection an ID and store it
+                        if (dashboardConnection) {
+                            ServerEventDispatcher.dashboardConnections.set(id, ws);
+                            ws.dashboard = true;
+                        }
                         ServerEventDispatcher.SocketConnections.set(id, ws);
                     
                     })
@@ -166,6 +181,20 @@ export class ServerEventDispatcher {
                 "MessageType": "LogoutUser"
             })
             ws.emit('message', logoutMessage)
+        });
+
+        pm2.connect(function(err) {
+            if (err) {
+                console.error(err);
+                process.exit(2);
+            }
+            pm2.launchBus(function (err, bus) {
+                console.log("connected bus")
+                bus.on('log:out', function(packet) {
+                    if (ws.dashboard)
+                        ws.send(JSON.stringify(packet));
+                });
+            });
         });
 
     }
