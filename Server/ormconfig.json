@@ -1,0 +1,24 @@
+[
+
+    {
+       "name": "prod",
+       "type": "sqlite",
+       "database": "src/database/prod.db", 
+       "synchronize": true,
+       "logging": true,
+       "entities": [
+          "node/server/bld/entity/**/*.js"
+       ],
+       "migrations": [
+          "node/server/bld/migration/**/*.js"
+       ],
+       "subscribers": [
+          "node/server/bld/subscriber/**/*.js"
+       ],
+       "cli": {
+          "entitiesDir": "src/entity",
+          "migrationsDir": "src/migration",
+          "subscribersDir": "src/subscriber"
+       }
+    }
+ ]
