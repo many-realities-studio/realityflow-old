@@ -88,7 +88,7 @@ export class ServerEventDispatcher {
                 //console.log(request.headers.cookie);
                 let auth_header;
                 let dashboardConnection = false;
-                if (isNullOrUndefined(request.headers.authorization)) {
+                if (request.headers.authorization === null || request.headers.authorization === undefined) {
                     auth_header = request.headers.cookie;
                     dashboardConnection = true;
                 }
@@ -172,17 +172,9 @@ export class ServerEventDispatcher {
         }
 
         ws.on('message', onMessageEvent);
-        ws.on('close', () => {
-            let logoutMessage = JSON.stringify({
-                "FlowUser": {
-                  "Username": ws.username,
-                  "Password": "pass"
-                },
-                "MessageType": "LogoutUser"
-            })
-            ws.emit('message', logoutMessage)
-        });
 
+        //if (ws.dashboard) {
+        // Open pm2 connection and launch bus for sending log files to dashboard
         pm2.connect(function(err) {
             if (err) {
                 console.error(err);
@@ -196,7 +188,19 @@ export class ServerEventDispatcher {
                 });
             });
         });
+        //}
 
+        ws.on('close', () => {
+            pm2.disconnect();
+            let logoutMessage = JSON.stringify({
+                "FlowUser": {
+                  "Username": ws.username,
+                  "Password": "pass"
+                },
+                "MessageType": "LogoutUser"
+            })
+            ws.emit('message', logoutMessage)
+        });
     }
 
 };
