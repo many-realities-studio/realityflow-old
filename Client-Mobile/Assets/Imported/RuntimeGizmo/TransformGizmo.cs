@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using System.Collections;
 using CommandUndoRedo;
 using UnityEngine.EventSystems;
+using Packages.realityflow_package.Runtime.scripts;
+using RealityFlow.Plugin.Scripts;
+using MobileConfiguration;
+using Config = MobileConfiguration.Config;
 // susing System.Collections.ObjectModel;
 
 namespace RuntimeGizmos
@@ -130,7 +134,7 @@ namespace RuntimeGizmos
 			myCamera = GetComponent<Camera>();
 			SetMaterial();
 
-            // Initialize outlinerManager
+            // Initialize outlinerManager and slideMenuManager
             outlinerManager = GameObject.FindGameObjectWithTag("Outliner").GetComponent<OutlinerManager>();
 			slideMenuManager = GameObject.FindGameObjectWithTag("SlideMenuButtons").GetComponent<SlideMenuManager>();
 
@@ -486,7 +490,7 @@ namespace RuntimeGizmos
 		{
             // When testing in editor, comment out IsPointerOverGameObject() with no parameters. When building for mobile, user 
             // version that tests with fingerId.
-			if(nearAxis == Axis.None && Input.GetMouseButtonDown(0) && /*!EventSystem.current.IsPointerOverGameObject()*/!EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
+			if(nearAxis == Axis.None && Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() /*!EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)*/)
 			{
 				bool isAdding = Input.GetKey(AddSelection);
 				bool isRemoving = Input.GetKey(RemoveSelection);
@@ -520,27 +524,39 @@ namespace RuntimeGizmos
         // NOTE (Jon): This is the function that is called when an object is selected. 
 		public void AddTarget(Transform target, bool addCommand = true)
 		{
-			
+			Debug.Log("The target's name is " + target.name);
 
-			// Target should be the GameObject selected. Use this to reference the object and reverse look up
-			// its ID.
+			// Find the selected object's id by searching through the game object mapping
+			foreach (FlowTObject flowT in FlowTObject.idToGameObjectMapping.Values)
+			{
+				if (target.gameObject.Equals(flowT.AttachedGameObject))
+				{
+
+					Config.CurrentSelectedObjectId = flowT.Id;
+					break;
+				} 
+			}
+
+			Debug.Log("current selected object is " +
+				(Config.CurrentSelectedObjectId == null ?
+				"nothing" : FlowTObject.idToGameObjectMapping[Config.CurrentSelectedObjectId].Name));
+
 			if (target != null)
 			{
-                //Debug.Log(target.root.name);
-				if(targetRoots.ContainsKey(target)) return;
-				if(children.Contains(target)) return;
-                // Only allow user to select one object at a time
-                if (targetRoots.Count >= 1) return;
+				//Debug.Log(target.root.name);
+				if (targetRoots.ContainsKey(target)) return;
+				if (children.Contains(target)) return;
+				// Only allow user to select one object at a time
+				if (targetRoots.Count >= 1) return;
 
-				if(addCommand) UndoRedoManager.Insert(new AddTargetCommand(this, target, targetRootsOrdered));
+				if (addCommand) UndoRedoManager.Insert(new AddTargetCommand(this, target, targetRootsOrdered));
 
 				AddTargetRoot(target);
 				AddTargetHighlightedRenderers(target);
 
+				//outlinerManager.selectedInWorld(target);
 
-				
-
-				outlinerManager.selectedInWorld(target);
+				// Toggle the menu buttons since an object was selected
 				slideMenuManager.ToggleMenuButtons(true);
 
 				SetPivotPoint();
@@ -549,9 +565,12 @@ namespace RuntimeGizmos
 
 		public void RemoveTarget(Transform target, bool addCommand = true)
 		{
+			Debug.Log("we are in removeTarget");
+			
 			if(target != null)
 			{
-				if(!targetRoots.ContainsKey(target)) return;
+				//Debug.Log("deselected " + target.name);
+				if (!targetRoots.ContainsKey(target)) return;
 
 				if(addCommand) UndoRedoManager.Insert(new RemoveTargetCommand(this, target));
 
@@ -566,11 +585,23 @@ namespace RuntimeGizmos
 
 		public void ClearTargets(bool addCommand = true)
 		{
-			if(addCommand) UndoRedoManager.Insert(new ClearTargetsCommand(this, targetRootsOrdered));
+			Debug.Log("deselected " );
+			Config.CurrentSelectedObjectId = null;
+			Debug.Log("current selected object is " + 
+				(Config.CurrentSelectedObjectId == null ? 
+				"nothing" : FlowTObject.idToGameObjectMapping[Config.CurrentSelectedObjectId].Name));
+
+			if (addCommand) UndoRedoManager.Insert(new ClearTargetsCommand(this, targetRootsOrdered));
 			ClearAllHighlightedRenderers();
+
+			if(slideMenuManager != null)
+			{
+				slideMenuManager.ToggleMenuButtons(false);
+			}
+			
 			targetRoots.Clear();
 			targetRootsOrdered.Clear();
-			slideMenuManager.ToggleMenuButtons(false);
+
 			//observableTargets.Clear();
 			//children.Clear();
 		}

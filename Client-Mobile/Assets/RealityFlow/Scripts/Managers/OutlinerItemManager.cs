@@ -8,6 +8,7 @@ public class OutlinerItemManager : MonoBehaviour {
 
     public string objName;
     public GameObject obj;
+    public string id;
     public int index;
     public OutlinerManager manager;
 

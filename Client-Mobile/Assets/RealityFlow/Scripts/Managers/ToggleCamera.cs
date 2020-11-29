@@ -9,6 +9,10 @@ public class ToggleCamera : MonoBehaviour
     public const int TOP = 1;
     public const int ANGLED = 2;
 
+    /// <summary>
+    /// Switches the camera angles based on which camera button was pressed
+    /// </summary>
+    /// <param name="x"></param>
     public void SwitchCam(int x)
     {
 
@@ -28,7 +32,7 @@ public class ToggleCamera : MonoBehaviour
                 break;
 
             case ANGLED:
-                transform.position = new Vector3(203f, 340f, -361f);
+                transform.position = new Vector3(20.0f, 31f, -45f);
                 newRotation = Quaternion.Euler(34.842f, -30.75f, 0.8470001f);
                 transform.rotation = newRotation;
                 break;

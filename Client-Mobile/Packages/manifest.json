@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.realityflow": "https://github.com/nyashafrank/realityflow_package.git#behaviours",
+    "com.realityflow": "https://github.com/nyashafrank/realityflow_package.git",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.2d.tilemap": "1.0.0",
     "com.unity.ads": "2.0.8",
@@ -51,8 +51,8 @@
   },
   "lock": {
     "com.realityflow": {
-      "hash": "12c7a5e9e754bf2ca7e8a3a99d052710d45a8044",
-      "revision": "behaviours"
+      "hash": "110d34bf78e76238b56ac9a7451a27cf1ff0f953",
+      "revision": "HEAD"
     }
   }
 }

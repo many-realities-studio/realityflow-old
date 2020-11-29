@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using RealityFlow.Plugin.Scripts;
 using Packages.realityflow_package.Runtime.scripts;
+using Behaviours;
+using Packages.realityflow_package.Runtime.scripts.Structures.Actions;
 
 public class InteractionManager : MonoBehaviour
 {
@@ -16,25 +17,12 @@ public class InteractionManager : MonoBehaviour
     public TMP_Dropdown enableDropdown;
     public TMP_Dropdown disableDropdown;
 
-    private FlowBehaviour headBehaviour = null;
-
-    private string projectId = "dtr54e4";
     Dictionary<string, string> objectList;
 
     // Start is called before the first frame update
     void Start()
     {
-        CreateFakeObjects();    
-    }
-
-    private void CreateFakeObjects()
-    {
-        objectList = new Dictionary<string, string>();
-
-        objectList.Add("The square", "123445");
-        objectList.Add("Object 34", "jwe2335");
-        objectList.Add("Sphere", "34h3o5o");
-        objectList.Add("enemy 1", "kj23iij35");
+      objectList = new Dictionary<string, string>();    
     }
 
     public void InteractionSelection(int button)
@@ -68,6 +56,14 @@ public class InteractionManager : MonoBehaviour
     private void PopulateDropDownMenu(TMP_Dropdown dropdown)
     {
         dropdown.options.Clear();
+
+        objectList.Clear();
+
+        foreach (FlowTObject k in FlowTObject.idToGameObjectMapping.Values)
+        {
+            objectList.Add(k.Name, k.Id);
+        }
+
         foreach(string k in objectList.Keys)
         {
             dropdown.options.Add(new TMP_Dropdown.OptionData(k));
@@ -84,6 +80,13 @@ public class InteractionManager : MonoBehaviour
         dropdown1.options.Clear();
         dropdown2.options.Clear();
 
+        objectList.Clear();
+
+        foreach (FlowTObject k in FlowTObject.idToGameObjectMapping.Values)
+        {
+            objectList.Add(k.Name, k.Id);
+        }
+
         foreach (string k in objectList.Keys)
         {
             TMP_Dropdown.OptionData item = new TMP_Dropdown.OptionData(k);
@@ -93,10 +96,9 @@ public class InteractionManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Creates a teleport behaviour
+    /// Creates a teleport behaviour using the coordinates of object2
     /// </summary>
-    /// <param name="addingChain"></param>
-    public void SendTeleport(int addingChain)
+    public void CreateTeleport()
     {
         int index1 = teleportDropdown1.value;
         int index2 = teleportDropdown2.value;
@@ -107,42 +109,25 @@ public class InteractionManager : MonoBehaviour
         objectList.TryGetValue(object1name, out string firstObjectId);
         objectList.TryGetValue(object2name, out string secondObjectId);
 
-        FlowBehaviour fb = new FlowBehaviour("Teleport", "1", firstObjectId, secondObjectId, null, firstObjectId);
+        // Find second game object so we can create the teleport coordinates based off it
+        GameObject go = FlowTObject.idToGameObjectMapping[secondObjectId].AttachedGameObject;
 
-        AddBehaviour(fb, addingChain == 0 ? false : true);
+        TeleportCoordinates teleportCoordinates = new TeleportCoordinates(go.transform.position, go.transform.rotation, go.transform.localScale, false);
+        TeleportAction teleportAction = new TeleportAction(teleportCoordinates);
+
+        FlowBehaviour fb = new FlowBehaviour("Immediate", Guid.NewGuid().ToString(), firstObjectId, firstObjectId, teleportAction);
+        AddBehaviour(fb);
     }
+
 
     /// <summary>
-    /// Adds a behaviour to the current chain. If addingChain is false,
-    /// then the final FlowBehaviour is sent to the server.
+    /// Creates a SnapZone behaviour using the coordinates of object2
     /// </summary>
-    /// <param name="fb">The flow behaviour to add to the current chain</param>
-    /// <param name="addingChain">Boolean to determine if another behaviour will be added later</param>
-    public void AddBehaviour(FlowBehaviour fb, Boolean addingChain)
+    public void CreateSnapZone()
     {
-        if (headBehaviour == null)
-        {
-            headBehaviour = fb;
-            Debug.Log("Making " + fb.Name + " the head behaviour");
-        }
-        else
-        {
-            FlowBehaviour head;
-            for (head = headBehaviour; head.BehaviourChain != null; head = head.BehaviourChain) { }
-
-            head.BehaviourChain = fb;
-            Debug.Log("making " + fb.Name + " the chain behaviour");
-        }
-
-        if (!addingChain)
-        {
-            Operations.CreateBehaviour(headBehaviour, projectId, (_, e) =>
-            {
-                if (e.message.WasSuccessful == true)
-                { }
-            });
-        }
+        
     }
+
 
     /// <summary>
     /// Creates an on Click behaviour. A chain must always be created
@@ -155,38 +140,76 @@ public class InteractionManager : MonoBehaviour
 
         objectList.TryGetValue(object1name, out string firstObjectId);
 
-        FlowBehaviour fb = new FlowBehaviour("Click", "1", firstObjectId, firstObjectId, null, firstObjectId);
-        AddBehaviour(fb, true);
+        FlowBehaviour fb = new FlowBehaviour("Click", Guid.NewGuid().ToString(), firstObjectId, firstObjectId, null);
+        AddBehaviour(fb);
     }
 
     /// <summary>
     /// Creates an on Enable behaviour
     /// </summary>
-    /// <param name="addingChain"></param>
-    public void CreateEnable(int addingChain)
+    public void CreateEnable()
     {
         int index1 = enableDropdown.value;
         string object1name = enableDropdown.options[index1].text;
 
         objectList.TryGetValue(object1name, out string firstObjectId);
 
-        FlowBehaviour fb = new FlowBehaviour("Enable", "1", firstObjectId, firstObjectId, null, firstObjectId);
-        AddBehaviour(fb, addingChain == 0 ? false : true);
+        FlowAction flowAction = new FlowAction();
+        flowAction.ActionType = "Enable";
+
+        FlowBehaviour fb = new FlowBehaviour("Immediate", Guid.NewGuid().ToString(), firstObjectId, firstObjectId, flowAction);
+        AddBehaviour(fb);
     }
+
 
     /// <summary>
     /// Creates an on Disable behaviour
     /// </summary>
-    /// <param name="addingChain"></param>
-    public void CreateDisable(int addingChain)
+    public void CreateDisable()
     {
         int index1 = disableDropdown.value;
         string object1name = disableDropdown.options[index1].text;
 
         objectList.TryGetValue(object1name, out string firstObjectId);
 
-        FlowBehaviour fb = new FlowBehaviour("Disable", "1", firstObjectId, firstObjectId, null, firstObjectId);
-        AddBehaviour(fb, addingChain == 0 ? false : true);
+        FlowAction flowAction = new FlowAction();
+        flowAction.ActionType = "Disable";
+
+        FlowBehaviour fb = new FlowBehaviour("Immediate", Guid.NewGuid().ToString(), firstObjectId, firstObjectId, flowAction);
+        AddBehaviour(fb);
+    }
+
+
+
+    /// <summary>
+    /// If not adding on to the behaviour chain, then sends a CreateBehaviour request to server.
+    /// If adding on to the behaviour chain, then adds the flowBehaviour to the end of the current chain
+    /// </summary>
+    /// <param name="flowbehaviour"></param>
+    private void AddBehaviour(FlowBehaviour newFlowBehaviour)
+    {
+
+        // Create the list of behaviours that need to add newFlowBehaviour to their chain 
+        List<string> behavioursToLinkTo = new List<string>();
+        if (BehaviourEventManager.PreviousBehaviourId != null)
+        {
+            behavioursToLinkTo.Add(BehaviourEventManager.PreviousBehaviourId);
+        }
+
+        // Create the new behaviour
+        Operations.CreateBehaviour(newFlowBehaviour, ConfigurationSingleton.SingleInstance.CurrentProject.Id, behavioursToLinkTo, (sender, e) =>
+        {
+            if (e.message.WasSuccessful == true)
+            {
+                // Update the Previous behaviour Id
+                BehaviourEventManager.PreviousBehaviourId = e.message.flowBehaviour.Id;
+            }
+
+            else
+            {
+                Debug.LogWarning("Failed to create behaviour");
+            }
+        });
     }
 }
 

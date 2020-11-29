@@ -14,7 +14,6 @@ using System;
 
 public class ProjectListManager : MonoBehaviour {
 
-    private bool populated;
     //private bool createPending;
     public ProjectDataList projects/* = new ProjectDataList()*/;
     public GameObject ProjectPanelPrefab;
@@ -53,7 +52,6 @@ public class ProjectListManager : MonoBehaviour {
     {
         ProjectDataList projects = new ProjectDataList();
         projectListEntries = new List<ProjectListItem>();
-        populated = false;
         //Config.projectId = PROJECT_UNSET;
     }
 
@@ -68,7 +66,6 @@ public class ProjectListManager : MonoBehaviour {
     {
         // user is logging out, reset all variables
         usernameSet = false;
-        populated = false;
         projectListEntries.Clear();
 
         // clear the project list items 
@@ -79,11 +76,6 @@ public class ProjectListManager : MonoBehaviour {
         }
     }
 
-    public void setGreeting(string name)
-    {
-        greeting = GameObject.Find("Greeting").GetComponent<Text>();
-        greeting.text = "Hello " + name + "!";
-    }
 
     private void Update()
     {

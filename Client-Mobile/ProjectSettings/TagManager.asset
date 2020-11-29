@@ -13,6 +13,7 @@ TagManager:
   - TopCamera
   - SlideMenuButtons
   - Picker2
+  - Greeting
   layers:
   - Default
   - TransparentFX
