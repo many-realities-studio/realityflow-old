@@ -22,21 +22,23 @@ public class ToolManager : MonoBehaviour
     public void selectTool(int selected)
     {
         RuntimeGizmos.TransformGizmo transformGizmo = mainCamera.GetComponent<RuntimeGizmos.TransformGizmo>();
-        for (int i = 0; i < toolButtons.Length; i++)
-        {
-            toggleButton toggle = toolButtons[i].GetComponent<toggleButton>();
-            // If we've reached the index of the tool the user wants to use, activate it if it is not already active.
-            if (i == selected && toggle != null && !toggle.IsPressed)
-            {
-                toggle.changeState();
-                transformGizmo.transformType = getTransformType(i, transformGizmo.transformType);
-            }
-            // Otherwise, deactivate the tool at this index.
-            else if (toggle != null & toggle.IsPressed)
-            {
-                toggle.changeState();
-            }
-        }
+        transformGizmo.transformType = getTransformType(selected, transformGizmo.transformType);
+
+        //for (int i = 0; i < toolButtons.Length; i++)
+        //{
+        //    toggleButton toggle = toolButtons[i].GetComponent<toggleButton>();
+        //    // If we've reached the index of the tool the user wants to use, activate it if it is not already active.
+        //    if (i == selected && toggle != null && !toggle.IsPressed)
+        //    {
+        //        toggle.changeState();
+                
+        //    }
+        //    // Otherwise, deactivate the tool at this index.
+        //    else if (toggle != null & toggle.IsPressed)
+        //    {
+        //        toggle.changeState();
+        //    }
+        //}
     }
 
     private RuntimeGizmos.TransformType getTransformType(int i, RuntimeGizmos.TransformType current)

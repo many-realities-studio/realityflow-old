@@ -1,10 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
-// using RealityFlow.Plugin.Scripts.Events;
-using RealityFlow.Plugin.Scripts;
+using Packages.realityflow_package.Runtime.scripts;
 using System;
+using RealityFlow.Plugin.Scripts;
+using Config = MobileConfiguration.Config;
+using WebSocketSharp;
 
 public class MainMenuManager : MonoBehaviour {
 
@@ -12,82 +12,53 @@ public class MainMenuManager : MonoBehaviour {
     public const int REDIRECT_PANEL = 0;
     public const int REGISTER_PANEL = 1;
     public const int LOGIN_PANEL = 2;
-    public const int PROJECT_PANEL = 3;
+    public const int USERHUB_PANEL = 3;
     public const int ERROR_PANEL = 4;
     public const int NUM_PANELS = 5;
 
-    // Sentinel id to indicate that no user is currently logged in
-    public const string NO_USER = "-9999";
-    // Error strings for when login or register attempts fail
-    public const string LOGIN_ERR = "Invalid login.";
-    public const string REGISTER_ERR = "User already exists or passwords does not match.";
-
     // Panels
     public GameObject [] panels = new GameObject[NUM_PANELS];
-    private int activePanel;
+    public static int activePanel = REDIRECT_PANEL;
 
-    // Housekeeping variables
-    private bool requestPending;
-    private bool registerPending;
-    private string error;
+    // Register Buttons and Panels
+    public GameObject registerPanel;
+    public GameObject registerErrorPanel;
+    public GameObject registerSuccessPanel;
+    public Button registerButton;
 
-    // Form variables
-    public InputField username;
-    public InputField password;
-    public InputField confirm;
+    // Login Buttons and Panels
+    public GameObject loginPanel;
+    public GameObject loginErrorPanel;
+    public Button loginButton;
+
+    private string uname = null;
+    private string pword = null;
+
+    // private const string url = "ws://68e6e63b.ngrok.io";
+    // private const string url = "ws://localhost:8999/";
+     private const string url = "ws://plato.mrl.ai:8999";
 
 
-    public void Awake()
+    void Start()
     {
-       /* if (Config.leftProject)
-        {
-            setActivePanel(PROJECT_PANEL);
-            Config.leftProject = false;
-        }
-        */
-    }
-
-    public void Start()
-    {
+        // Operations.ConnectToServer(url);
         //activePanel = REDIRECT_PANEL;
-        //Config.userId = NO_USER;
-        //requestPending = false;
+        Debug.Log("I'm starting");
 
-        //if (GameObject.FindGameObjectWithTag("NetworkManager") == null)
-        //{
-        //    GameObject manager = new GameObject();
-        //    FlowNetworkManager component = manager.AddComponent<FlowNetworkManager>();
-        //    manager.AddComponent<DoOnMainThread>();
-        //    manager.AddComponent<DontDestroyOnLoad_RF>();
-        //    component._debug = true;
-
-        //    manager.name = "NetworkManager";
-        //    manager.tag = "NetworkManager";
-        //}
-        //FlowNetworkManager manager_component = GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<FlowNetworkManager>();
-        //manager_component.mainGameCamera = GameObject.FindGameObjectWithTag("MainCamera");
-        //manager_component.eventSystem = GameObject.FindGameObjectWithTag("EventSystem");
+        if(Config.LeftProject == true)
+        {
+            // Config.LeftProject = false;
+            setActivePanel(USERHUB_PANEL);
+            SetGreeting(ConfigurationSingleton.SingleInstance.CurrentUser.Username);
+        }
     }
 
-    private void Update()
-    {
-        // If a login is pending and a response has been recieved from the server...
-        if (requestPending /*&& Config.userId != NO_USER*/)
-        {
-            //// ... and the userId has been set to a valid Id, load the projects panel.
-            //if (Config.userId != NO_USER /*""*/)
-            //{
-            //    panels[PROJECT_PANEL].SetActive(true);
-            //    panels[activePanel].SetActive(false);
-            //    activePanel = PROJECT_PANEL;
-            //    requestPending = false;
-            //}
-            //// ... otherwise, display an error message and reset the userId to NO_USER.
-            //else
-            //{
-            //    //Debug.Log(error);
-            //}
 
+    void Update()
+    {
+        if(FlowWebsocket.websocket != null)
+        {
+            Unity.EditorCoroutines.Editor.EditorCoroutineUtility.StartCoroutine(Operations._FlowWebsocket.ReceiveMessage(), Operations._FlowWebsocket);
         }
     }
 
@@ -95,71 +66,122 @@ public class MainMenuManager : MonoBehaviour {
 
     public void setActivePanel(int panel)
     {
-        //user is logging out
-        if (activePanel == PROJECT_PANEL && panel == 0)
-            Logout();
+
+        if(activePanel == panel)
+        {
+            panels[activePanel].SetActive(false);
+            panels[panel].SetActive(true);
+            Debug.Log("Active panel = " + activePanel + " \tNext Panel = " + panel);
+            return;
+        }
 
         panels[panel].SetActive(true);
         panels[activePanel].SetActive(false);
+        Debug.Log("Active panel = " + activePanel + " \tNext Panel = " + panel);
         activePanel = panel;
+    }
 
-        // initialize text fields
-        switch (panel)
+   
+
+    /// <summary>
+    /// Sends a request to the server to create a new account. Redirects to login screen
+    /// if successful.
+    /// </summary>
+    public void Signup()
+    {
+        string username = registerPanel.transform.Find("UsernameField").GetComponent<InputField>().text;
+        string password = registerPanel.transform.Find("PasswordField").GetComponent<InputField>().text;
+        string confirm = registerPanel.transform.Find("ConfirmField").GetComponent<InputField>().text;
+
+        if (!password.Equals(confirm))
         {
-            case (REDIRECT_PANEL):
-                username = null;
-                password = null;
-                confirm = null;
-                break;
-            case (REGISTER_PANEL):
-                username = panels[activePanel].transform.Find("UsernameField").GetComponent<InputField>();
-                password = panels[activePanel].transform.Find("PasswordField").GetComponent<InputField>();
-                confirm = panels[activePanel].transform.Find("ConfirmField").GetComponent<InputField>();
-                break;
-            case (LOGIN_PANEL):
-                username = panels[activePanel].transform.Find("UsernameField").GetComponent<InputField>();
-                password = panels[activePanel].transform.Find("PasswordField").GetComponent<InputField>();
-                break;
-            case (PROJECT_PANEL):
-                break;
+            registerErrorPanel.SetActive(true);
+            registerButton.interactable = false;
+            return;
+        }
+  
+        Operations.Register(username, password, url, (sender, e) =>
+        {
+            
+            Debug.Log(e.message);
+            if (e.message.WasSuccessful == true)
+            {
+               // ConfigurationSingleton.isConnected = false;
+            }
+        });
+
+        //if(ConfigurationSingleton.RegisterError == false)
+        //{
+            uname = username; pword = password;
+            setActivePanel(LOGIN_PANEL);
+            registerSuccessPanel.SetActive(true);
+       // }
+
+    }
+
+
+
+    /// <summary>
+    /// Sends a request to server to login. Redirects to the UserHub page if successful.
+    /// </summary>
+    public void Login()
+    {
+
+        string username = loginPanel.transform.Find("UsernameField").GetComponent<InputField>().text;
+        string password = loginPanel.transform.Find("PasswordField").GetComponent<InputField>().text;
+
+        FlowUser user = new FlowUser(username, password);
+        Operations.Login(user, url, (sender, e) =>
+        {
+            Debug.Log("login callback: " + e.message.WasSuccessful.ToString());
+            if (e.message.WasSuccessful == true)
+            {
+                uname = username; pword = password;
+                Config.projects = e.message.Projects;
+                setActivePanel(USERHUB_PANEL);
+                SetGreeting(username);
+            }
+        });
+
+        if(FlowWebsocket.websocket.ReadyState != WebSocketState.Open)
+        {
+            loginButton.interactable = false;
+            loginErrorPanel.SetActive(true);
         }
     }
 
-    private void Logout()
+
+
+    /// <summary>
+    /// Sends a request to the server to logout. Redirects to the signup/login page
+    /// </summary>
+    public void Logout()
     {
         //// clear the username and projectList so the next user to login will have a newly populated list
         //Config.ResetValues();
-        
+
         // SEND Logout event to server maybe
+        FlowUser user = new FlowUser(uname, pword);
+        Operations.Logout(user);
+ 
+        setActivePanel(REDIRECT_PANEL);
     }
 
-    public void login()
-    {
-        //// send json with entered username and password
-        //UserLoginEvent login = new UserLoginEvent();
-        //login.Send(username.text, password.text, FlowClient.CLIENT_MOBILE);
 
-        // mark that a login is pending
-        requestPending = true;
-        error = LOGIN_ERR;
-    }
 
-    public void signup()
+    /// <summary>
+    /// Sets the greeting on the user hub page with the user's name
+    /// </summary>
+    /// <param name="name"></param>
+    public void SetGreeting(string name)
     {
-        if (confirm.text != password.text)
+        Text greeting = GameObject.FindGameObjectWithTag("Greeting").GetComponent<Text>();
+        if(greeting == null)
         {
-            // error
-            if (panels[ERROR_PANEL] != null) panels[ERROR_PANEL].SetActive(true);
+            Debug.Log("Greeting is null");
             return;
         }
-        // send json with entered username, email, and password
-        //UserRegisterEvent register = new UserRegisterEvent();
-        //register.Send(username.text, password.text, FlowClient.CLIENT_MOBILE);
-
-        // return to main menu on recieve?
-        // No; userId and clientId are both set in the same way as a login, so redirect the user to the
-        // project selection screen
-        requestPending = true;
-        error = REGISTER_ERR;
+        //Text greeting = GameObject.Find("Greeting").GetComponent<Text>();
+        greeting.text = "Hello " + name + "!";
     }
 }
