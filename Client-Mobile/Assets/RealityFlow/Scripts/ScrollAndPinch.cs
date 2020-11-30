@@ -1,13 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
-/*
 
-Set this on an empty game object positioned at (0,0,0) and attach your active camera.
-The script only runs on mobile devices or the remote app.
-
-*/
-
-
+/// <summary>
+/// Set this on an empty game object positioned at (0,0,0) and attach your active camera.
+// The script only runs on mobile devices or the remote app.
+// Source: https://www.youtube.com/watch?v=KkYco_7-ULA&t=260s
+/// </summary>
 class ScrollAndPinch : MonoBehaviour
 {
     public Camera Camera;
@@ -22,6 +20,7 @@ class ScrollAndPinch : MonoBehaviour
             Camera = Camera.main;
         }
 
+        // Save camera's initial position
         camPosition = Camera.transform.position;
             
     }
@@ -29,14 +28,16 @@ class ScrollAndPinch : MonoBehaviour
     private void Update()
     {
 
-        //Update Plane
+        // Update Plane
         if (Input.touchCount >= 2)
+        {
             Plane.SetNormalAndPosition(transform.up, transform.position);
+        }
 
         var Delta1 = Vector3.zero;
         var Delta2 = Vector3.zero;
 
-        //Scroll
+        // 2-finger scroll detected, change the number to change what types of touches trigger a scroll
         if (Input.touchCount >= 2)
         {
             Delta1 = PlanePositionDelta(Input.GetTouch(0));
@@ -44,7 +45,7 @@ class ScrollAndPinch : MonoBehaviour
                 Camera.transform.Translate(Delta1, Space.World);
         }
 
-        //Pinch
+        // 2-finger pinch detected
         if (Input.touchCount >= 2)
         {
             var pos1 = PlanePosition(Input.GetTouch(0).position);
@@ -52,19 +53,20 @@ class ScrollAndPinch : MonoBehaviour
             var pos1b = PlanePosition(Input.GetTouch(0).position - Input.GetTouch(0).deltaPosition);
             var pos2b = PlanePosition(Input.GetTouch(1).position - Input.GetTouch(1).deltaPosition);
 
-            //calc zoom
+            // Calculate zoom
             var zoom = Vector3.Distance(pos1, pos2) /
                        Vector3.Distance(pos1b, pos2b);
 
-            //edge case
+            // Edge case
             if (zoom == 0 || zoom > 10)
                 return;
 
-            //Move cam amount the mid ray
+            // Move camera amount the mid ray
             Vector3 lerp = Vector3.LerpUnclamped(pos1, Camera.transform.position, 1 / zoom);
+
+            // Camera is outside of clipping plane
             if (float.IsNaN(lerp.x))
             {
-                Debug.Log("the lerp" + lerp);
                 Camera.transform.position = camPosition;
             }
             else
@@ -72,36 +74,43 @@ class ScrollAndPinch : MonoBehaviour
                 Camera.transform.position = lerp;
             }
                 
-
             if (Rotate && pos2b != pos2)
+            {
                 Camera.transform.RotateAround(pos1, Plane.normal, Vector3.SignedAngle(pos2 - pos1, pos2b - pos1b, Plane.normal));
+            }
         }
-
     }
 
     protected Vector3 PlanePositionDelta(Touch touch)
     {
-        //not moved
+        // Not moved
         if (touch.phase != TouchPhase.Moved)
+        {
             return Vector3.zero;
+        }
+            
 
-        //delta
+        // Delta
         var rayBefore = Camera.ScreenPointToRay(touch.position - touch.deltaPosition);
         var rayNow = Camera.ScreenPointToRay(touch.position);
         if (Plane.Raycast(rayBefore, out var enterBefore) && Plane.Raycast(rayNow, out var enterNow))
+        {
             return rayBefore.GetPoint(enterBefore) - rayNow.GetPoint(enterNow);
-
-        //not on plane
+        }
+            
+        // Not on plane
         return Vector3.zero;
     }
 
     protected Vector3 PlanePosition(Vector2 screenPos)
     {
-        //position
+        // Position
         var rayNow = Camera.ScreenPointToRay(screenPos);
         if (Plane.Raycast(rayNow, out var enterNow))
+        {
             return rayNow.GetPoint(enterNow);
-
+        }
+            
         return Vector3.zero;
     }
 

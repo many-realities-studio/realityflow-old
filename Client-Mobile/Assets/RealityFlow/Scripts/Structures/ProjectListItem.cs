@@ -7,7 +7,7 @@ public class ProjectListItem : MonoBehaviour {
     public string projectName;
     public string id;
     public int index;
-    public ProjectListManager manager;
+    public UserHubManager manager;
 
     public void select()
     {
