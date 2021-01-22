@@ -13,7 +13,7 @@ jobs:
       uses: burnett01/rsync-deployments@4.1
       with:
         switches: -avzr --delete
-        path: realityflow/Server
+        path: Server
         remote_path: /var/realityflow/development
         remote_host: ada.mrl.ai
         remote_user: realityflow
