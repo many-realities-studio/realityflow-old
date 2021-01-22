@@ -130,7 +130,8 @@ export class RoomManager
    * @returns success
    */
   public static AddObject(objectToCreate: FlowObject, projectId:string){
-    return this._RoomList.find(element => element.GetRoomCode() == projectId).AddObject(objectToCreate)
+    let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
+    return room.AddObject(objectToCreate)
   }
 
   /**
