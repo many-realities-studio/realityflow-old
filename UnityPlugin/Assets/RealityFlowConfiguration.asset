@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: RealityFlowConfiguration
   m_EditorClassIdentifier: 
   s_currentProject:
-    _id: 58628f7b-5c88-4c2a-8c15-0089055a194c
+    _id: 226dc172-b3bb-4dfc-a0c5-a52bc0db2342
     _description: description
     _dateModified: 0
-    _projectName: abc
+    _projectName: Testy
   s_currentUser:
-    _username: abc
-    _password: abc
+    _username: Godot
+    _password: waitingfor
