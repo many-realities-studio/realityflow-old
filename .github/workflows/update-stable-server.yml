@@ -1,8 +1,8 @@
-name: Update Dev Server Action
+name: Update Stable Server Action
 on:
   push:
     branches:
-    - development
+    - main
 
 jobs:
   deploy:
@@ -14,7 +14,7 @@ jobs:
       with:
         switches: -avzr --exclude "Server/run" --delete
         path: Server/
-        remote_path: /var/realityflow/development
+        remote_path: /var/realityflow/stable
         remote_host: ada.mrl.ai
         remote_user: realityflow
         remote_key: ${{ secrets.ADA_REALITYFLOW_SSH_SECRET }}
