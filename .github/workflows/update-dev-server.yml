@@ -12,7 +12,7 @@ jobs:
     - name: rsync deployments
       uses: burnett01/rsync-deployments@4.1
       with:
-        switches: -avzr --exclude "Server/run" --delete
+        switches: -avzr --exclude "run" --exclude "node_modules" --delete
         path: Server/
         remote_path: /var/realityflow/development
         remote_host: ada.mrl.ai
