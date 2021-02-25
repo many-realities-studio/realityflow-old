@@ -4,6 +4,7 @@ import { FlowProject } from "./FlowLibrary/FlowProject";
 import { TypeORMDatabase } from "./Database/TypeORMDatabase";
 import { FlowClient } from "./FlowLibrary/FlowClient";
 import { FlowObject } from "./FlowLibrary/FlowObject";
+import { FlowVSGraph } from "./FlowLibrary/FlowVSGraph";
 
 // Look into Pub/Sub architecture
 export class Room
@@ -205,6 +206,75 @@ export class Room
   {
     return this._CurrentProject.CheckoutObject(objectId, client)
   }
+
+  // Visual Scripting Graph section
+
+  // TODO: finished: no tested: no
+  // /**
+  //  * update a graph, assuming the client sending the update is the client that has the graph checked in.
+  //  * @param vsGraphToUpdate the graph to update
+  //  * @param client the id of the client sending the update
+  //  * @returns success - whether or not the update actually happened in the FAM
+  //  */
+  // public updateVSGraph(vsGraphToUpdate, client){
+  //   let success = this._CurrentProject.UpdateFAMVSGraph(vsGraphToUpdate, client);
+  //   return success;
+  // }
+
+  // // TODO: finished: no tested: no
+  // /**
+  //  * add a graph to the room
+  //  * @param vsGraphToCreate the graph to add to the room
+  //  * @returns whether the graph was created
+  //  */
+  // public AddVSGraph(vsGraphToCreate: FlowVSGraph){
+  //   return this._CurrentProject.AddVSGraph(vsGraphToCreate);
+  // }
+
+  // // TODO: optimize all of these
+  // /**
+  //  * delete a graph from the room, iff the client sending the delete call has the graph checked out
+  //  * @param objectId 
+  //  * @param client 
+  //  * @returns success value
+  //  */
+  // public DeleteVSGraph(vsGraphId: string, client: string) {
+  //   let success = this._CurrentProject.DeleteVSGraph(vsGraphId, client)
+  //   return success;
+  // }
+
+  // // TODO: finished: no tested: no
+  // /**
+  //  * Return the data of a graph
+  //  * @param vsGraphId the Id of the graph that you want
+  //  * @returns the graph to be read
+  //  */
+  // public ReadVSGraph(vsGraphId:string){
+  //   return this._CurrentProject.GetVSGraph(vsGraphId)
+  // }
+
+  // // TODO: finished: no tested: no
+  // /**
+  //  * check in a graph, if the graph is checked out by client
+  //  * @param vsGraphId the graph to be checked in
+  //  * @param client the client trying to check in the graph
+  //  * @returns success
+  //  */
+  // public checkinVSGraph(vsGraphId: string, client: string){
+  //   return this._CurrentProject.CheckinVSGraph(vsGraphId, client)
+  // }
+
+  // // TODO: finished: no tested: no
+  // /**
+  //  * check out a graph, assuming that client is open for checkout
+  //  * @param vsGraphId  object to check out
+  //  * @param client client who is checking out the graph
+  //  * @returns success
+  //  */
+  // public checkoutVSGraph(vsGraphId: string, client: string): boolean
+  // {
+  //   return this._CurrentProject.CheckoutVSGraph(vsGraphId, client)
+  // }
 
   /**
    * Turn on play mode

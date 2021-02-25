@@ -9,6 +9,7 @@ import { StateTracker } from "../StateTracker";
 import { FlowProject } from "../FlowLibrary/FlowProject";
 import { FlowObject } from "../FlowLibrary/FlowObject";
 import { FlowBehaviour } from "../FlowLibrary/FlowBehaviour";
+import { FlowVSGraph } from "../FlowLibrary/FlowVSGraph";
 
 import { MessageBuilder } from "./MessageBuilder";
 
@@ -559,6 +560,142 @@ class Command_EndPlayMode implements ICommand
   }
 }
 
+// Visual Scripting Graph Commands
+// class Command_CreateVSGraph implements ICommand
+// {
+//   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+//   {
+//     let flowVSGraph = new FlowVSGraph(data.FlowVSGraph);
+    
+//     console.log(flowVSGraph)
+
+//     let returnData = await StateTracker.CreateVSGraph(flowVSGraph, data.ProjectId);
+//     let returnContent = {
+//       "MessageType": "CreateVSGraph",
+//       "FlowObject": returnData[0],
+//       "WasSuccessful": (returnData[0] == null) ? false: true
+//     }
+//     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
+
+//     return returnMessage;
+//   }
+// }
+
+// class Command_CheckinVSGraph implements ICommand
+// {
+//   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+//   {
+//     let vsGraph = await StateTracker.ReadVSGraph(data.VSGraphId, data.ProjectId, client);
+//     console.log(vsGraph)
+//     let finalUpdate =  await StateTracker.UpdateVSGraph(vsGraph[0], data.ProjectId, client, true);
+
+//     let returnData = await StateTracker.CheckinVSGraph(data.ProjectId, data.VSGraphId, client)
+//     let returnContent = {
+//       "MessageType": "CheckinVSGraph",
+//       "WasSuccessful": ((returnData[0]) && finalUpdate[0] != null) ? true: false,
+//       "VSGraphID": data.VSGraphId
+//     }
+
+//     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
+
+//     return returnMessage;
+
+//   }
+// }
+
+// class Command_CheckoutVSGraph implements ICommand
+// {
+//   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+//   {
+//     let returnData = await StateTracker.CheckoutVSGraph(data.ProjectId, data.VSGraphId, client)
+//     let returnContent = {
+//       "MessageType": "CheckoutVSGraph",
+//       "WasSuccessful": returnData[0],
+//       "VSGraphID": data.VSGraphId
+//     }
+//     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
+
+//     return returnMessage;
+
+//   }
+// }
+
+// class Command_DeleteVSGraph implements ICommand
+// {
+//   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+//   {
+//     let returnData = await StateTracker.DeleteVSGraph(data.VSGraphId, data.ProjectId, client);
+//     let returnContent = {
+//       "MessageType": "DeleteVSGraph",
+//       "VSGraphId": returnData[0],
+//       "WasSuccessful": (returnData[0] == null) ? false: true,
+//     }
+//     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
+
+//     return returnMessage;
+//   }
+// }
+
+// class Command_UpdateVSGraph implements ICommand
+// {
+//   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+//   {
+//     let flowVSGraph = new FlowVSGraph(data.FlowVSGraph);
+//     let returnData = await StateTracker.UpdateVSGraph(flowVSGraph, data.ProjectId, client,false, data.user);
+
+//     let index = returnData[1].indexOf(client);
+//     returnData[1].splice(index,1)
+
+//     let returnContent = {
+//       "MessageType": "UpdateVSGraph",
+//       "FlowVSGraph": returnData[0],
+//       "WasSuccessful": (returnData[0] == null) ? false: true,
+//     }
+
+//     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
+
+//     return returnMessage;
+//   }
+// }
+
+// class Command_ReadVSGraph implements ICommand
+// {
+//   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+//   {
+//     let returnData = await StateTracker.ReadVSGraph(data.FlowVSGraph.Id, data.ProjectId, client);
+//     let returnContent = {
+//       "MessageType": "ReadVSGraph",
+//       "FlowVSGraph": returnData[0],
+//       "WasSuccessful": (returnData[0] == null) ? false: true,
+//     }
+//     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
+//     return returnMessage;
+
+//   }
+// }
+
+
+// class Command_FinalizedUpdateVSGraph implements ICommand
+// {
+//   async ExecuteCommand(data: any, client:string): Promise<[String, Array<String>]> 
+//   {
+//     let flowVSGraph = new FlowVSGraph(data.FlowVSGraph);
+//     let returnData = await StateTracker.UpdateVSGraph(flowVSGraph, data.ProjectId, client, true);
+//     let index = returnData[1].indexOf(client);
+//     returnData[1].splice(index,1);
+
+//     let returnContent = {
+//       "MessageType": "UpdateVSGraph",
+//       "FlowVSGraph": returnData[0],
+//       "WasSuccessful": (returnData[0] == null) ? false: true,
+//     }
+//     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
+    
+//     return returnMessage;
+
+//   }
+// }
+
 /**
  * Holds the set of commands that can be executed and executes said commands 
  * with the provided data (JSON)
@@ -606,6 +743,15 @@ export class CommandContext
       this._CommandList.set("ReadObject", new Command_ReadObject());
       this._CommandList.set("CheckinObject", new Command_CheckinObject());
       this._CommandList.set("CheckoutObject", new Command_CheckoutObject());
+
+      // Visual Scripting Graph Commands
+      // this._CommandList.set("CreateVSGraph", new Command_CreateVSGraph());
+      // this._CommandList.set("DeleteVSGraph", new Command_DeleteVSGraph());
+      // this._CommandList.set("UpdateVSGraph", new Command_UpdateVSGraph());
+      // this._CommandList.set("FinalizedUpdateVSGraph", new Command_FinalizedUpdateVSGraph());
+      // this._CommandList.set("ReadVSGraph", new Command_ReadVSGraph());
+      // this._CommandList.set("CheckinVSGraph", new Command_CheckinVSGraph());
+      // this._CommandList.set("CheckoutVSGraph", new Command_CheckoutVSGraph());
 
       // behaviour Commands
       this._CommandList.set("CreateBehaviour", new Command_CreateBehaviour());

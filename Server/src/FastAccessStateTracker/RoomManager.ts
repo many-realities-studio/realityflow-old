@@ -1,5 +1,6 @@
 import { Room } from "./Room";
 import { FlowObject } from "./FlowLibrary/FlowObject";
+import { FlowVSGraph } from "./FlowLibrary/FlowVSGraph";
 import { FlowBehaviour } from "./FlowLibrary/FlowBehaviour";
 
 // TODO: Make a check for how many people are in a room and delete the room if there is nobody inside
@@ -179,5 +180,76 @@ export class RoomManager
     let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
     return room.checkinObject(objectId, client)
   }
+
+  // Visual Scripting Graph section
+
+  // /**
+  //  * update a graph, iff client is allowed to check out
+  //  * @param vsGraphToUpdate graph to update
+  //  * @param projectId id of the project the graph is in
+  //  * @param client the client who is trying to update the graph
+  //  * @return success
+  //  */
+  // public static updateVSGraph(vsGraphToUpdate: FlowVSGraph, projectId: string, client:string){
+  //   let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
+  //   return room.updateVSGraph(vsGraphToUpdate, client)
+  // }
+
+  // /**
+  //  * add a graph to a specific room
+  //  * @param vsGraphToCreate 
+  //  * @param projectId 
+  //  * @returns success
+  //  */
+  // public static AddVSGraph(vsGraphToCreate: FlowVSGraph, projectId:string){
+  //   let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
+  //   return room.AddVSGraph(vsGraphToCreate)
+  // }
+
+  // /**
+  //  * delete a graph from the Fast Access State Tracker
+  //  * @param projectId the id of the project from which to delete the graph
+  //  * @param vsGraphId the Id of the graph to delete
+  //  * @param client the client who wants to delete the graph
+  //  * @returns success
+  //  */
+  // public static DeleteVSGraph(projectId: string, vsGraphId: string, client:string){
+  //   let success = this._RoomList.find(element => element.GetRoomCode() == projectId).DeleteVSGraph(vsGraphId, client);
+  //   return success
+  // }
+
+  // /**
+  //  * return the data of a given graph
+  //  * @param projectId the id of the project that the graph is in
+  //  * @param objectId the Id of the graph to delete
+  //  * @returns the graph
+  //  */
+  // public static ReadVSGraph(projectId:string, vsGraphId:string){
+  //   return this._RoomList.find(element => element.GetRoomCode() == projectId).ReadVSGraph(vsGraphId);
+  // }
+
+  // /**
+  //  * checkout a graph, iff the client is allowed to check it out
+  //  * @param projectId the Id of the project that the graph is in
+  //  * @param vsGraphId the Id of the graph to check out
+  //  * @param client the Id of the client who wants to check out the graph
+  //  * @returns success
+  //  */
+  // public static checkoutVSGraph(projectId: string, vsGraphId: string, client: string){
+  //   let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
+  //   return room.checkoutVSGraph(vsGraphId, client);
+  // }
+
+  // /**
+  //  * check in a graph iff the client is allowed to check out the graph
+  //  * @param projectId the project the graph is in
+  //  * @param vsGraphId the graph to be checked in
+  //  * @param client the client who is trying to check in the graph
+  //  * @returns success
+  //  */
+  // public static checkinVSGraph(projectId: string, vsGraphId: string,  client: string){
+  //   let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
+  //   return room.checkinVSGraph(vsGraphId, client)
+  // }
 
 }
