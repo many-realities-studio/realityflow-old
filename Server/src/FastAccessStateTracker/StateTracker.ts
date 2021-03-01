@@ -1,4 +1,5 @@
 import { FlowObject } from "./FlowLibrary/FlowObject";
+import { FlowVSGraph } from "./FlowLibrary/FlowVSGraph";
 import { FlowProject } from "./FlowLibrary/FlowProject";
 import { FlowBehaviour } from "./FlowLibrary/FlowBehaviour";
 
@@ -592,6 +593,120 @@ export class StateTracker{
 
     return [BehaviourToUpdate , affectedClients]
   }
+
+  // Visual Scripting Graph Commands
+
+  // /**
+  //  * create a graph in both the Fast Access State Tracker and the Database.
+  //  * @param vsGraphToCreate 
+  //  * @param projectId 
+  //  */
+  // public static async CreateVSGraph(vsGraphToCreate : FlowVSGraph, projectId: string) : Promise<[any, Array<string>]>
+  // {
+  //   let FAMSucccess = RoomManager.AddVSGraph(vsGraphToCreate, projectId);
+  //   TypeORMDatabase.CreateVSGraph(vsGraphToCreate, projectId)
+
+  //   // get all of the clients that are in that room so that we can tell them 
+  //   let affectedClients: Array<string> = [];
+  //   let roomClients = await RoomManager.getClients(projectId)  
+  //   roomClients.forEach((clients, username, map) => {
+  //     affectedClients = affectedClients.concat(clients)
+  //   })
+
+  //   return [vsGraphToCreate, affectedClients]
+  // }
+
+  // /**
+  //  * check out a graph from the Fast Access State Tracker
+  //  * @param projectId 
+  //  * @param vsGraphId 
+  //  * @param client 
+  //  */
+  // public static async CheckoutVSGraph(projectId: string, vsGraphId: string, client: string) : Promise<[any, Array<string>]>
+  // {
+  //   // make sure the graph is available for checkout
+  //   let success = RoomManager.checkoutVSGraph(projectId, vsGraphId, client);
+    
+  //   return[success, [client]]
+  // }
+
+  // /**
+  //  * check in a graph from the Fast Access State Tracker
+  //  * @param projectId 
+  //  * @param vsGraphId 
+  //  * @param client 
+  //  */
+  // public static async CheckinVSGraph(projectId: string, vsGraphId: string, client: string) : Promise<[any, Array<string>]>
+  // {
+  //   // make sure the actual person that checked a graph out is the one checking it back in
+  //   let success = RoomManager.checkinVSGraph(projectId, vsGraphId, client)
+     
+  //   return[success, [client]]
+  // }
+
+  // /**
+  //  * Delete a graph from both the FAM and the Database
+  //  * @param vsGraphId 
+  //  * @param projectId 
+  //  * @param client 
+  //  */
+  // public static async DeleteVSGraph(vsGraphId: string, projectId: string, client: string) : Promise<[any, Array<string>]>
+  // {
+
+  //   // Perform the delete in both the FAM and the Database
+  //   RoomManager.DeleteVSGraph(projectId, vsGraphId, client);
+  //   TypeORMDatabase.DeleteVSGraph(vsGraphId, projectId)
+
+  //   // get all of the clients that are in that room so that we can tell them 
+  //   let affectedClients: Array<string> = [];
+  //   let roomClients = await RoomManager.getClients(projectId)
+  //   roomClients.forEach((clients, username, map) => {
+  //     affectedClients = affectedClients.concat(clients)
+  //   })
+
+  //   return [vsGraphId, affectedClients]
+  // }
+
+  // /**
+  //  * update a graph in the FAM (and, if necessary, in the database)
+  //  * @param vsGraphToUpdate the graph data to update - includes the Id of the graph
+  //  * @param projectId project Id that the client is in
+  //  * @param client client Id to make sure they have the graph checked out
+  //  * @param saveToDatabase Flag to save the graph update to the database 
+  //  */
+  // public static async UpdateVSGraph(vsGraphToUpdate : FlowVSGraph, projectId: string,  client: string,  saveToDatabase:boolean,user=null) : Promise<[any, Array<string>]>
+  // {  
+  //   // perform the updates
+  //   let famSuccess = RoomManager.updateVSGraph(vsGraphToUpdate, projectId, client);
+  //   console.log(RoomManager.ReadVSGraph(projectId, vsGraphToUpdate.Id))
+  //   if(!famSuccess)
+  //     return [null, [client]];
+  //   if(saveToDatabase)
+  //     TypeORMDatabase.UpdateVSGraph(vsGraphToUpdate, projectId)
+
+  //   // get all of the clients that are in that room so that we can tell them 
+  //   let affectedClients: Array<string> = [];
+  //   let roomClients = await RoomManager.getClients(projectId)
+    
+  //   roomClients.forEach((clients, username, map) => {
+  //     // console.log(user)
+  //     affectedClients = affectedClients.concat(clients)
+  //   })
+
+  //   return [vsGraphToUpdate , affectedClients]
+  // }
+
+  // /**
+  //  * return the data for a single graph
+  //  * @param vsGraphId the Id of the graph
+  //  * @param projectId the Id of the project that the graph is in
+  //  * @param client the client who wants the object
+  //  */
+  // public static async ReadVSGraph(vsGraphId: string, projectId: string, client: string) :  Promise<[any, Array<string>]>
+  // {
+  //   let vsGraphRead = RoomManager.ReadVSGraph(projectId, vsGraphId)
+  //   return [vsGraphRead, [client]];
+  // }
 
   /**
    * turn play mode on or off
