@@ -21,29 +21,9 @@ public class NodeManipulation : MonoBehaviour//,IMixedRealityPointerHandler
         graph = rfgv.graph;
         position = this.transform.position;
         rotation = this.transform.rotation;
-    }
-    void OnCollisionEnter(Collision col)
-    {
-        if(col.gameObject.tag == "Canvas")
-            Debug.LogError("COLLISION!");
+        Physics.IgnoreLayerCollision(3, 3);
     }
 
-   
-   /* public void OnPointerDown(MixedRealityPointerEventData eventData)
-    {
-        if (eventData.Pointer is SpherePointer)
-        {
-            Debug.Log($"Grab start from {eventData.Pointer.PointerName}");
-        }
-        if (eventData.Pointer is PokePointer)
-        {
-            Debug.Log($"Touch start from {eventData.Pointer.PointerName}");
-        }
-    }
-
-    public void OnPointerClicked(MixedRealityPointerEventData eventData) {}
-    public void OnPointerDragged(MixedRealityPointerEventData eventData) {}
-    public void OnPointerUp(MixedRealityPointerEventData eventData) {}*/
     public void NodeRaycastCreation()
     {
         GameObject node = gameObject.transform.GetChild(0).gameObject;
@@ -56,6 +36,7 @@ public class NodeManipulation : MonoBehaviour//,IMixedRealityPointerHandler
         }
         else
         {
+            Destroy(node);
             //Debug.DrawRay(node.transform.position, node.transform.TransformDirection(Vector3.forward) * 1000, Color.red);
             Debug.Log("Did not Hit");
         }
@@ -63,8 +44,35 @@ public class NodeManipulation : MonoBehaviour//,IMixedRealityPointerHandler
 
     public void AttachNodeToGraph()
     {
-        rfgv.AddNodeCommand();
-        Destroy(this.gameObject);
+        switch(this.transform.GetChild(0).tag)
+        {
+            case "TextNode":
+                rfgv.AddNodeCommand("TextNode");
+                Destroy(this.gameObject);
+                break;
+            case "FloatNode":
+                rfgv.AddNodeCommand("FloatNode");
+                Destroy(this.gameObject);
+                break;
+            case "IntNode":
+                rfgv.AddNodeCommand("IntNode");
+                Destroy(this.gameObject);
+                break;
+            case "BoolNode":
+                rfgv.AddNodeCommand("BoolNode");
+                Destroy(this.gameObject);
+                break;
+            case "ConditionalNode":
+                rfgv.AddNodeCommand("ConditionalNode");
+                Destroy(this.gameObject);
+                break;
+            default:
+                Debug.LogError("Invalid Node");
+                break;
+        }
+       
+            //rfgv.AddNodeCommand();
+            //Destroy(this.gameObject);
     }
     public void RefreshPalette()
     {

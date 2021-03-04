@@ -7,6 +7,14 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using System.Linq;
 
+public enum NodesTypes{
+	TextNodes,
+	FloatNodes,
+	IntNodes,
+	BoolNodes,
+	ConditionalNodes
+}
+
 public class RealityFlowGraphView : MonoBehaviour {
 	public BaseGraph graph;
 	public BaseGraph graph1;
@@ -87,8 +95,8 @@ public class RealityFlowGraphView : MonoBehaviour {
 		JsonUtility.FromJsonOverwrite(cmd.GetGraphState(), graph);
 		graph.Deserialize();
 	}
-
-	public void AddNodeCommand(){
+ 
+	public void AddNodeCommand(string nodeTag){
 		// serialize the current version of the graph
 		// savePoint = JsonSerializer.Serialize(graph);
 		string tmp = JsonUtility.ToJson(graph);
@@ -97,10 +105,36 @@ public class RealityFlowGraphView : MonoBehaviour {
 		commandPalette.AddCommandToStack(new AddNodeCommand("Add Node", tmp));
 
 		// perform the actual command action
-        TextNode tn = BaseNode.CreateFromType<TextNode> (new Vector2 ());
-		graph.AddNode (tn);
-		tn.output = "Hello World";
-		NodeView.instance.AddNode(tn);
+        //TextNode tn = BaseNode.CreateFromType<TextNode> (new Vector2 ());
+
+		switch(nodeTag)
+		{
+			case "TextNode":
+				TextNode tn = BaseNode.CreateFromType<TextNode> (new Vector2 ());
+				graph.AddNode (tn);
+				tn.output = "Hello World";
+				NodeView.instance.AddNode(tn);
+				break;
+			case "FloatNode":
+				FloatNode fn = BaseNode.CreateFromType<FloatNode> (new Vector2 ());
+				graph.AddNode (fn);
+				NodeView.instance.AddNode(fn);
+				break;
+			case "IntNode":
+				//IntNode in = BaseNode.CreateFromType<IntNode> (new Vector2 ());
+				break;
+			case "BoolNode":
+				//BoolNode bn = BaseNode.CreateFromType<BoolNode> (new Vector2 ());	
+				break;
+			case "ConditionalNode":
+				//ConditionalNode cn = BaseNode.CreateFromType<ConditionalNode> (new Vector2 ());	
+				break;
+			default:
+				Debug.Log("This case of addnode did not use a tag");
+				break; 
+		}
+
+		
 	}
 	public void DeleteSelection(){
 		// serialize the current version of the graph
