@@ -2,13 +2,22 @@
     "name": "RealityFlowPackage",
     "rootNamespace": "",
     "references": [
+        "GUID:ca937d03ee5dd4d699091438dc0f3ae6",
+        "GUID:a432eb0a70c5c4a37ab50d59671586f8",
         "GUID:e17503c5970822145b5a209830bea58c",
         "GUID:bdb69e86781d2754094dc2948e0e76e8",
         "GUID:89c5b62ba1e7dc848928ad4f52372038",
         "GUID:8efbda679fc833a41b98c59b684bbb58",
         "GUID:48e157a8428092e4a86a37102846e0e2",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:a7a4c34601384f9389d5c4207f3c6331",
         "GUID:8b7cc3e86d77403b8b984c08cbaeaf8f",
-        "GUID:6055be8ebefd69e48b49212b09b47b2f"
+        "GUID:829e63f67f814aae828de5ab51326cf6",
+        "GUID:674cca1f741b27d48b6916b453e60d3e",
+        "GUID:f64c9ebcd7899c3448a08dc9f9ddbe30",
+        "GUID:4af21795022437d4bb139a86514b9ff9",
+        "GUID:98e59139cb1d58f479acd4770a4c850d",
+        "GUID:46547311d23d2804da15ac510ac3b726"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

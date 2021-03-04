@@ -18,12 +18,6 @@ URL: https://poly.google.com/view/8_e2sYzz8gg
 License: Creative Commons CC-BY
 https://creativecommons.org/licenses/by/3.0/legalcode
 
-Title: Falcon
-Author: Thomas Burmeister
-URL: https://poly.google.com/view/4yrT5seQ0m9
-License: Creative Commons CC-BY
-https://creativecommons.org/licenses/by/3.0/legalcode
-
 Title: Fox
 Author: Jake Blakeley
 URL: https://poly.google.com/view/1DsQKS4G-aj
