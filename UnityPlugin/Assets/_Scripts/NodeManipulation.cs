@@ -10,15 +10,13 @@ public class NodeManipulation : MonoBehaviour//,IMixedRealityPointerHandler
     // Start is called before the first frame update
     Vector3 position;
     Quaternion rotation;
-
-    public GameObject rfgvGameObject; // realityflowgraphview script
+    public static NodeManipulation instance;
+    GameObject rfgvGameObject; // realityflowgraphview script
     public RealityFlowGraphView rfgv;
-    public BaseGraph graph;
-    void Start()
+    BaseGraph graph;
+    void Awake()
     {
-        rfgvGameObject = GameObject.Find("RuntimeGraph");
-        rfgv = rfgvGameObject.GetComponent<RealityFlowGraphView>();
-        graph = rfgv.graph;
+        instance = this;
         position = this.transform.position;
         rotation = this.transform.rotation;
         Physics.IgnoreLayerCollision(3, 3);
@@ -32,6 +30,13 @@ public class NodeManipulation : MonoBehaviour//,IMixedRealityPointerHandler
         {
             //Debug.DrawRay(node.transform.position, node.transform.TransformDirection(Vector3.forward) * hit.distance, Color.green);
             Debug.Log("Did Hit");
+            if(GameObject.FindGameObjectWithTag("Canvas"))
+            {
+                rfgvGameObject = GameObject.FindGameObjectWithTag("Canvas").transform.GetChild(5).gameObject;
+                rfgv = rfgvGameObject.GetComponent<RealityFlowGraphView>();
+                graph = rfgv.graph;
+                Debug.Log("rfgv set, game object: "+rfgvGameObject+", rfgv: "+rfgv+", graph: "+rfgv.graph);
+            }
             AttachNodeToGraph();
         }
         else

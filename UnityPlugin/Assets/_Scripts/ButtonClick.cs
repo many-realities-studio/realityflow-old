@@ -12,6 +12,13 @@ public class ButtonClick : MonoBehaviour
 	{
 		GameObject WhiteBoard = Instantiate(Canvas, Canvas.transform.position, Canvas.transform.rotation);
 		WhiteBoard.transform.parent = GameObject.FindGameObjectsWithTag("Player")[0].transform;
-		Debug.Log("Canvas should have been created");
+		//GameObject WhiteBoard2 = Instantiate(Canvas, Canvas.transform.position, Canvas.transform.rotation);
+		//WhiteBoard2.transform.parent = GameObject.FindGameObjectsWithTag("Player")[0].transform;
+		// find the graph from the canvas gameobject
+		GameObject rfgvGameObject = GameObject.FindGameObjectWithTag("Canvas").transform.GetChild(5).gameObject; // = ___
+		RealityFlowGraphView rfgv = rfgvGameObject.GetComponent<RealityFlowGraphView>();
+		BaseGraph graph = rfgv.graph;
+		NodeUI.instance.Setup(graph);
+		
 	}
 }

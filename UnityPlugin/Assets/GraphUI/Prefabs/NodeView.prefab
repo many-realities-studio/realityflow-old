@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curGraph: {fileID: 11400000, guid: 2ddca6522ce0f5c44aa0b888b6737d8c, type: 2}
-  contentPanel: {fileID: 7323538335790569173, guid: 341b2fa27ae9eb14d8226302b5857670,
+  contentPanel: {fileID: 7726265419898755610, guid: 341b2fa27ae9eb14d8226302b5857670,
     type: 3}
   nodeView: {fileID: 7188062422076971066, guid: 8a3a205c4308c8d48a8d08b0f4d4c7c6,
     type: 3}

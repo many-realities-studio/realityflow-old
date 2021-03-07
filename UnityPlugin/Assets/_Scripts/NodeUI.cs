@@ -10,10 +10,14 @@ public class NodeUI : MonoBehaviour
     public GameObject inputPanel;
     public GameObject outputPanel;
     public BaseNode node;
-    public BaseGraph graph;
+
+    // TODO: Make sure this is the best way to do this. I think this is really hacky -John
+    static public BaseGraph graph;
 
     public GameObject rfgvGameObject; // realityflowgraphview script
     public RealityFlowGraphView rfgv;
+
+    public static NodeUI instance;
 
     static List <BaseNode> deletionList;
 
@@ -23,22 +27,28 @@ public class NodeUI : MonoBehaviour
         this.node = node;
         this.GUID.text = GUID;
     }*/
+    void Awake()
+    {
+        instance = this;
+    }
     void Start()
     {   
-
-        //graph = RealityFlowGraphView.instance.graph;
-        rfgvGameObject = GameObject.Find("RuntimeGraph");
-        rfgv = rfgvGameObject.GetComponent<RealityFlowGraphView>();
-        // TODO: Find a way to fill this reference to RealityFlowGraphView object before we start working on a way to instantiate them
-        graph = rfgv.graph;
         deletionList = new List<BaseNode>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Setup(BaseGraph g)
     {
-        
+        graph = g;
+        // if(GameObject.FindGameObjectWithTag("Canvas"))
+        // {
+        //     rfgvGameObject = GameObject.FindGameObjectWithTag("Canvas").transform.GetChild(5).gameObject;
+        //     rfgv = rfgvGameObject.GetComponent<RealityFlowGraphView>();
+        //     // TODO: Find a way to fill this reference to RealityFlowGraphView object before we start working on a way to instantiate them
+        //     graph = rfgv.graph;
+        // }
     }
+
+
 
     public void Delete(){
         graph.RemoveNode(node);
