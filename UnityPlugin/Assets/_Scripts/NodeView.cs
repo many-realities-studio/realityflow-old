@@ -23,10 +23,9 @@ public class NodeView : MonoBehaviour {
         // Loading from graph is working, need to have it accept any type of node type though
         Debug.Log("Loading Graph");
         Debug.Log(JsonUtility.ToJson(graph));
-        if(GameObject.FindGameObjectWithTag("Canvas"))
+        foreach(GameObject w in ButtonClick.WhiteBoards)
         {
-            contentPanel = GameObject.FindGameObjectWithTag("Canvas").transform.GetChild(0).GetChild(0)
-            .GetChild(0).GetChild(0).gameObject;
+            contentPanel = w.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject;
             foreach (BaseNode node in graph.nodes){
                 AddNode(node);
             }

@@ -118,16 +118,25 @@ public class RealityFlowGraphView : MonoBehaviour {
 			case "FloatNode":
 				FloatNode fn = BaseNode.CreateFromType<FloatNode> (new Vector2 ());
 				graph.AddNode (fn);
+				fn.output = 0.5f;
 				NodeView.instance.AddNode(fn);
 				break;
 			case "IntNode":
-				//IntNode in = BaseNode.CreateFromType<IntNode> (new Vector2 ());
+				IntNode intn = BaseNode.CreateFromType<IntNode> (new Vector2 ());
+				graph.AddNode (intn);
+				intn.output = 1;
+				NodeView.instance.AddNode(intn);
 				break;
 			case "BoolNode":
-				//BoolNode bn = BaseNode.CreateFromType<BoolNode> (new Vector2 ());	
+				BoolNode bn = BaseNode.CreateFromType<BoolNode> (new Vector2 ());
+				graph.AddNode(bn);
+				bn.output = true;
+				NodeView.instance.AddNode(bn);
 				break;
 			case "ConditionalNode":
-				//ConditionalNode cn = BaseNode.CreateFromType<ConditionalNode> (new Vector2 ());	
+				IfNode cn = BaseNode.CreateFromType<IfNode> (new Vector2 ());
+				graph.AddNode(cn);
+				NodeView.instance.AddNode(cn);
 				break;
 			default:
 				Debug.Log("This case of addnode did not use a tag");
