@@ -30,12 +30,12 @@ public class NodeManipulation : MonoBehaviour//,IMixedRealityPointerHandler
         {
             //Debug.DrawRay(node.transform.position, node.transform.TransformDirection(Vector3.forward) * hit.distance, Color.green);
             Debug.Log("Did Hit");
-            if(GameObject.FindGameObjectWithTag("Canvas"))
+            foreach(GameObject w in ButtonClick.WhiteBoards)
             {
                 rfgvGameObject = GameObject.FindGameObjectWithTag("Canvas").transform.GetChild(5).gameObject;
                 rfgv = rfgvGameObject.GetComponent<RealityFlowGraphView>();
                 graph = rfgv.graph;
-                Debug.Log("rfgv set, game object: "+rfgvGameObject+", rfgv: "+rfgv+", graph: "+rfgv.graph);
+                //Debug.Log("rfgv set, game object: "+rfgvGameObject+", rfgv: "+rfgv+", graph: "+rfgv.graph);
             }
             AttachNodeToGraph();
         }

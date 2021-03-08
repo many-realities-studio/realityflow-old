@@ -12,10 +12,10 @@ public class NodeUI : MonoBehaviour
     public BaseNode node;
 
     // TODO: Make sure this is the best way to do this. I think this is really hacky -John
-    static public BaseGraph graph;
+    public static BaseGraph graph;
 
     public GameObject rfgvGameObject; // realityflowgraphview script
-    public RealityFlowGraphView rfgv;
+    public static RealityFlowGraphView rfgv;
 
     public static NodeUI instance;
 
@@ -36,9 +36,10 @@ public class NodeUI : MonoBehaviour
         deletionList = new List<BaseNode>();
     }
 
-    public void Setup(BaseGraph g)
+    public void Setup(RealityFlowGraphView rfgvi)
     {
-        graph = g;
+        rfgv=rfgvi;
+        graph = rfgvi.graph;
         // if(GameObject.FindGameObjectWithTag("Canvas"))
         // {
         //     rfgvGameObject = GameObject.FindGameObjectWithTag("Canvas").transform.GetChild(5).gameObject;
@@ -58,6 +59,7 @@ public class NodeUI : MonoBehaviour
 
     public void Select(){
        rfgv.AddToSelection(node);
+       this.GetComponent<CanvasRenderer>().SetColor(Color.green);
     }
     /*
     public void Delete() {
