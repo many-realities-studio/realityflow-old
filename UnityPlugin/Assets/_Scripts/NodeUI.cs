@@ -40,13 +40,6 @@ public class NodeUI : MonoBehaviour
     {
         rfgv=rfgvi;
         graph = rfgvi.graph;
-        // if(GameObject.FindGameObjectWithTag("Canvas"))
-        // {
-        //     rfgvGameObject = GameObject.FindGameObjectWithTag("Canvas").transform.GetChild(5).gameObject;
-        //     rfgv = rfgvGameObject.GetComponent<RealityFlowGraphView>();
-        //     // TODO: Find a way to fill this reference to RealityFlowGraphView object before we start working on a way to instantiate them
-        //     graph = rfgv.graph;
-        // }
     }
 
 

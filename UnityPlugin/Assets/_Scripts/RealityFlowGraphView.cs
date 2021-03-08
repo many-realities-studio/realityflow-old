@@ -49,6 +49,9 @@ public class RealityFlowGraphView : MonoBehaviour {
 		// 	// processor = new ProcessGraphProcessor (graph1);
 		// 	// graph1.SetParameterValue ("LabelContainer", Labeled);
 		// }
+		// TODO: have it create a new empty graph and use that as the graph
+		graph = new BaseGraph();
+		graph.name = "TEST GRAPH "+graph.GetInstanceID();
 		commandPalette = GameObject.Find("CommandPalette").GetComponent<CommandPalette>();
 		// commandPalette = new CommandPalette();
         graph.onGraphChanges += GraphChangesCallback;

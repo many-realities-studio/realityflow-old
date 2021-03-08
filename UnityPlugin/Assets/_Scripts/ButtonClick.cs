@@ -25,7 +25,7 @@ public class ButtonClick : MonoBehaviour
 		{
 			GameObject rfgvGameObject = GameObject.FindGameObjectWithTag("Canvas").transform.GetChild(5).gameObject;
 			RealityFlowGraphView rfgv = rfgvGameObject.GetComponent<RealityFlowGraphView>();
-			BaseGraph graph = rfgv.graph;
+			//BaseGraph graph = rfgv.graph;
 			NodeUI.instance.Setup(rfgv);
 		}
 	}
