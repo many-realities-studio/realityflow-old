@@ -53,6 +53,7 @@ public class NodeUI : MonoBehaviour
 
     public void Delete(){
         graph.RemoveNode(node);
+        // _____?.Invoke(node);
         //graph.SetDirty();
         Destroy(this.gameObject);
     }

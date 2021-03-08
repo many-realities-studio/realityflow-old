@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 35907444900398511}
   - component: {fileID: 35907444900398509}
   - component: {fileID: 35907444900398510}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 35907444922289866}
   - component: {fileID: 35907444922289867}
   - component: {fileID: 35907444922289868}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: RunGraphButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -202,7 +202,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3819596621230639176}
+      - m_Target: {fileID: 7321679493497848582}
         m_TargetAssemblyTypeName: RealityFlowGraphView, RealityFlowPackage
         m_MethodName: DoProcessing
         m_Mode: 1
@@ -226,7 +226,7 @@ GameObject:
   - component: {fileID: 35907445056276955}
   - component: {fileID: 35907445056276956}
   - component: {fileID: 35907445056276957}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Scrollbar Vertical
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -349,7 +349,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 35907445115803050}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Sliding Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -388,13 +388,13 @@ GameObject:
   - component: {fileID: 35907445185918871}
   - component: {fileID: 35907445185918856}
   - component: {fileID: 35907445185918857}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: MoveNode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &35907445185918858
 RectTransform:
   m_ObjectHideFlags: 0
@@ -410,10 +410,10 @@ RectTransform:
   m_Father: {fileID: 35907446374218784}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 30}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 187.5, y: -15}
+  m_SizeDelta: {x: 75, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &35907445185918871
 CanvasRenderer:
@@ -521,7 +521,7 @@ GameObject:
   - component: {fileID: 35907445198381508}
   - component: {fileID: 35907445198381509}
   - component: {fileID: 35907445198381510}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Viewport
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -612,7 +612,7 @@ GameObject:
   - component: {fileID: 35907445209886634}
   - component: {fileID: 35907445209886635}
   - component: {fileID: 35907445209886636}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: AddTextNodeButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -766,7 +766,7 @@ GameObject:
   - component: {fileID: 35907445221362979}
   - component: {fileID: 35907445221362980}
   - component: {fileID: 35907445221362981}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Scroll View
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -894,13 +894,13 @@ GameObject:
   - component: {fileID: 35907445267035388}
   - component: {fileID: 35907445267035389}
   - component: {fileID: 35907445267035390}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: AddNodeCommand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &35907445267035391
 RectTransform:
   m_ObjectHideFlags: 0
@@ -916,10 +916,10 @@ RectTransform:
   m_Father: {fileID: 35907446374218784}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 30}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 90, y: -15}
+  m_SizeDelta: {x: 60, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &35907445267035388
 CanvasRenderer:
@@ -1003,7 +1003,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3819596621230639176}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: RealityFlowGraphView, RealityFlowPackage
         m_MethodName: AddNodeCommand
         m_Mode: 5
@@ -1027,7 +1027,7 @@ GameObject:
   - component: {fileID: 35907445311619489}
   - component: {fileID: 35907445311619490}
   - component: {fileID: 35907445311619491}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Nodes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1130,7 +1130,7 @@ GameObject:
   - component: {fileID: 35907445434312338}
   - component: {fileID: 35907445434312336}
   - component: {fileID: 35907445434312337}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1207,7 +1207,7 @@ GameObject:
   - component: {fileID: 35907445525376436}
   - component: {fileID: 35907445525376434}
   - component: {fileID: 35907445525376435}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1282,7 +1282,7 @@ GameObject:
   - component: {fileID: 35907445657245529}
   - component: {fileID: 35907445657245543}
   - component: {fileID: 35907445657245528}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1363,7 +1363,7 @@ GameObject:
   - component: {fileID: 35907445667166557}
   - component: {fileID: 35907445667166558}
   - component: {fileID: 35907445667166559}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: AddGameObjectReferenceButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1504,7 +1504,7 @@ GameObject:
   - component: {fileID: 35907445708100740}
   - component: {fileID: 35907445708100741}
   - component: {fileID: 35907445708100742}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: ClearGraph
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1613,7 +1613,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3819596621230639176}
+      - m_Target: {fileID: 7321679493497848582}
         m_TargetAssemblyTypeName: RealityFlowGraphView, RealityFlowPackage
         m_MethodName: ClearGraph
         m_Mode: 1
@@ -1639,10 +1639,9 @@ GameObject:
   - component: {fileID: 35907445737233448}
   - component: {fileID: 35907445737233460}
   - component: {fileID: 35907445737233459}
-  - component: {fileID: 35907445737233457}
   - component: {fileID: 35907445737233456}
   - component: {fileID: 35907445737233458}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Canvas
   m_TagString: Canvas
   m_Icon: {fileID: 0}
@@ -1761,25 +1760,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   eventsToReceive: 0
   debounceThreshold: 0.01
---- !u!114 &35907445737233457
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 35907445737233449}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b55691ad5b034fe6966763a6e23818d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  trackedTargetType: 0
-  trackedHandness: 3
-  trackedHandJoint: 2
-  transformOverride: {fileID: 0}
-  additionalOffset: {x: 0, y: 0, z: 0}
-  additionalRotation: {x: 0, y: 0, z: 0}
-  updateSolvers: 1
 --- !u!65 &35907445737233456
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1821,7 +1801,7 @@ GameObject:
   - component: {fileID: 35907445739908889}
   - component: {fileID: 35907445739908890}
   - component: {fileID: 35907445739908891}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Undo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1930,7 +1910,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3819596621230639176}
+      - m_Target: {fileID: 7321679493497848582}
         m_TargetAssemblyTypeName: RealityFlowGraphView, RealityFlowPackage
         m_MethodName: UndoLastCommand
         m_Mode: 1
@@ -1953,7 +1933,7 @@ GameObject:
   - component: {fileID: 35907445836081813}
   - component: {fileID: 35907445836081811}
   - component: {fileID: 35907445836081812}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2032,7 +2012,7 @@ GameObject:
   - component: {fileID: 35907445982285176}
   - component: {fileID: 35907445982285062}
   - component: {fileID: 35907445982285063}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: UndoText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2113,7 +2093,7 @@ GameObject:
   - component: {fileID: 35907446061027483}
   - component: {fileID: 35907446061027481}
   - component: {fileID: 35907446061027482}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: OutputLabel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2193,7 +2173,7 @@ GameObject:
   - component: {fileID: 35907446225843017}
   - component: {fileID: 35907446225843018}
   - component: {fileID: 35907446225843019}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Delete Selected
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2302,7 +2282,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3819596621230639176}
+      - m_Target: {fileID: 7321679493497848582}
         m_TargetAssemblyTypeName: RealityFlowGraphView, RealityFlowPackage
         m_MethodName: DeleteSelection
         m_Mode: 1
@@ -2325,7 +2305,7 @@ GameObject:
   - component: {fileID: 35907446357410656}
   - component: {fileID: 35907446357410670}
   - component: {fileID: 35907446357410671}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Output
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2404,7 +2384,7 @@ GameObject:
   - component: {fileID: 35907446361572659}
   - component: {fileID: 35907446361572657}
   - component: {fileID: 35907446361572658}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2483,7 +2463,7 @@ GameObject:
   - component: {fileID: 35907446374218784}
   - component: {fileID: 35907446374218798}
   - component: {fileID: 35907446374218799}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2574,7 +2554,7 @@ GameObject:
   - component: {fileID: 35907446413232373}
   - component: {fileID: 35907446413232374}
   - component: {fileID: 35907446413232375}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: PrintStack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2683,7 +2663,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3819596621230639176}
+      - m_Target: {fileID: 7321679493497848582}
         m_TargetAssemblyTypeName: RealityFlowGraphView, RealityFlowPackage
         m_MethodName: PrintCommandStack
         m_Mode: 1
@@ -2707,7 +2687,7 @@ GameObject:
   - component: {fileID: 35907446440058128}
   - component: {fileID: 35907446440058129}
   - component: {fileID: 35907446440058130}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: CreateGraphButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2816,7 +2796,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3819596621230639176}
+      - m_Target: {fileID: 7321679493497848582}
         m_TargetAssemblyTypeName: RealityFlowGraphView, RealityFlowPackage
         m_MethodName: CreateGraph
         m_Mode: 1
@@ -2839,7 +2819,7 @@ GameObject:
   - component: {fileID: 35907446461392265}
   - component: {fileID: 35907446461392279}
   - component: {fileID: 35907446461392264}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2918,7 +2898,7 @@ GameObject:
   - component: {fileID: 35907446542064662}
   - component: {fileID: 35907446542064660}
   - component: {fileID: 35907446542064661}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2997,7 +2977,7 @@ GameObject:
   - component: {fileID: 35907446590630624}
   - component: {fileID: 35907446590630638}
   - component: {fileID: 35907446590630639}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3076,7 +3056,7 @@ GameObject:
   - component: {fileID: 35907446636534618}
   - component: {fileID: 35907446636534616}
   - component: {fileID: 35907446636534617}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Delete Selected Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3155,7 +3135,7 @@ GameObject:
   - component: {fileID: 35907446719577131}
   - component: {fileID: 35907446719577129}
   - component: {fileID: 35907446719577130}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3232,9 +3212,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3819596621230639177}
-  - component: {fileID: 3819596621230639176}
-  - component: {fileID: 3819596621230639191}
-  m_Layer: 0
+  - component: {fileID: 7321679493497848582}
+  m_Layer: 6
   m_Name: RuntimeGraph
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3255,7 +3234,7 @@ Transform:
   m_Father: {fileID: 35907445737233461}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3819596621230639176
+--- !u!114 &7321679493497848582
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3268,26 +3247,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000, guid: 9978faab71ef9bb48b5dd858387dc9e1, type: 2}
-  graph1: {fileID: 11400000, guid: 2ddca6522ce0f5c44aa0b888b6737d8c, type: 2}
-  inputGraph: 1
-  Labeled: {fileID: 0}
   listener: {fileID: 0}
---- !u!114 &3819596621230639191
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3819596621230639178}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6bbf94fd03a9ec4087a40f998ace155, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  curGraph: {fileID: 11400000, guid: 2ddca6522ce0f5c44aa0b888b6737d8c, type: 2}
-  nodeView: {fileID: 7188062422076971066, guid: 8a3a205c4308c8d48a8d08b0f4d4c7c6,
-    type: 3}
+  Labeled: {fileID: 0}
+  contentPanel: {fileID: 8726740727317316505}
   nodePortView: {fileID: 8411453318253863390, guid: 28881f12401db5d44b673fa6f9346913,
+    type: 3}
+  nodeView: {fileID: 7188062422076971066, guid: 8a3a205c4308c8d48a8d08b0f4d4c7c6,
     type: 3}
   nodeViewList: []
 --- !u!1001 &1306792669218724227
@@ -3407,11 +3372,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7726265419898755610, guid: 341b2fa27ae9eb14d8226302b5857670,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 341b2fa27ae9eb14d8226302b5857670, type: 3}
 --- !u!224 &8726740727317316506 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7726265419898755609, guid: 341b2fa27ae9eb14d8226302b5857670,
+    type: 3}
+  m_PrefabInstance: {fileID: 1306792669218724227}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8726740727317316505 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7726265419898755610, guid: 341b2fa27ae9eb14d8226302b5857670,
     type: 3}
   m_PrefabInstance: {fileID: 1306792669218724227}
   m_PrefabAsset: {fileID: 0}

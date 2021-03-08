@@ -12,8 +12,8 @@ public class ButtonClick : MonoBehaviour
 	public void CreateCanvas()
 	{
 		GameObject WhiteBoard = Instantiate(Canvas, Canvas.transform.position, Canvas.transform.rotation);
-		WhiteBoard.transform.parent = GameObject.FindGameObjectsWithTag("Player")[0].transform;
-		//GameObject WhiteBoard2 = Instantiate(Canvas, Canvas.transform.position, Canvas.transform.rotation);
+		//WhiteBoard.transform.parent = GameObject.FindGameObjectsWithTag("Player")[0].transform;
+		GameObject WhiteBoard2 = Instantiate(Canvas, new Vector3(Canvas.transform.position.x-1.2f,Canvas.transform.position.y,Canvas.transform.position.z), Canvas.transform.rotation);
 		//WhiteBoard2.transform.parent = GameObject.FindGameObjectsWithTag("Player")[0].transform;
 		WhiteBoards = GameObject.FindGameObjectsWithTag("Canvas");
 		// find the graph from the canvas gameobject
