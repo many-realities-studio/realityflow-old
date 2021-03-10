@@ -334,7 +334,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 35907445525376435}
   m_HandleRect: {fileID: 35907445525376436}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -844,7 +844,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Content: {fileID: 0}
+  m_Content: {fileID: 8726740727317316506}
   m_Horizontal: 1
   m_Vertical: 1
   m_MovementType: 1
@@ -3255,6 +3255,7 @@ MonoBehaviour:
   nodeView: {fileID: 7188062422076971066, guid: 8a3a205c4308c8d48a8d08b0f4d4c7c6,
     type: 3}
   nodeViewList: []
+  selectedNV: []
 --- !u!1001 &1306792669218724227
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3371,6 +3372,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7726265419898755609, guid: 341b2fa27ae9eb14d8226302b5857670,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.066278346
+      objectReference: {fileID: 0}
+    - target: {fileID: 7726265419898755609, guid: 341b2fa27ae9eb14d8226302b5857670,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.010483708
       objectReference: {fileID: 0}
     - target: {fileID: 7726265419898755610, guid: 341b2fa27ae9eb14d8226302b5857670,
         type: 3}

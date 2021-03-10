@@ -12,14 +12,14 @@ public class NodeUI : MonoBehaviour
     public BaseNode node;
 
     // TODO: Make sure this is the best way to do this. I think this is really hacky -John
-    public static BaseGraph graph;
+    // public BaseGraph graph;
 
-    public GameObject rfgvGameObject; // realityflowgraphview script
-    public static RealityFlowGraphView rfgv;
+    // public GameObject rfgvGameObject; // realityflowgraphview script
+    public RealityFlowGraphView rfgv;
 
     public static NodeUI instance;
 
-    static List <BaseNode> deletionList;
+    // static List <BaseNode> deletionList;
 
     // Start is called before the first frame update
     /*public NodeUI(string title, BaseNode node, string GUID){
@@ -33,26 +33,27 @@ public class NodeUI : MonoBehaviour
     }
     void Start()
     {   
-        deletionList = new List<BaseNode>();
+        // deletionList = new List<BaseNode>();
     }
 
-    public void Setup(RealityFlowGraphView rfgvi)
-    {
-        rfgv=rfgvi;
-        graph = rfgvi.graph;
-    }
+    // public void Setup(RealityFlowGraphView rfgvi)
+    // {
+    //     rfgv=rfgvi;
+    //     graph = rfgvi.graph;
+    // }
 
 
 
     public void Delete(){
-        graph.RemoveNode(node);
+        rfgv.graph.RemoveNode(node);
         // _____?.Invoke(node);
         //graph.SetDirty();
         Destroy(this.gameObject);
     }
 
     public void Select(){
-       rfgv.AddToSelection(node);
+    //    rfgv.AddToSelection(node);
+       rfgv.AddToSelectionNV(this);
        this.GetComponent<CanvasRenderer>().SetColor(Color.green);
     }
     /*

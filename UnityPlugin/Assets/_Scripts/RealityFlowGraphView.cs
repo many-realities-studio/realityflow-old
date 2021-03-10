@@ -26,7 +26,8 @@ public class RealityFlowGraphView : MonoBehaviour {
 	public GameObject nodeView;
 
 	public List<NodeUI> nodeViewList = new List<NodeUI> ();
-
+	public List<NodeUI> selectedNV = new List<NodeUI>();
+	public List<BaseNode> selected = new List<BaseNode>();
 
 
 	// protected virtual EdgeListener CreateEdgeConnectorListener()
@@ -34,7 +35,6 @@ public class RealityFlowGraphView : MonoBehaviour {
 
     //public RealityFlowGraphView instance;
 
-	List<BaseNode> selected;
 
 	private void Start () {
 		InitializeGraph();
@@ -56,7 +56,7 @@ public class RealityFlowGraphView : MonoBehaviour {
 		// commandPalette = new CommandPalette();
         graph.onGraphChanges += GraphChangesCallback;
 		savePoint = JsonSerializer.Serialize(graph);
-		selected = new List<BaseNode>();
+		// selected =
 		Debug.Log("hello");
 		// NodeView.instance.LoadGraph(graph);
 		LoadGraph(graph);
@@ -166,10 +166,18 @@ public class RealityFlowGraphView : MonoBehaviour {
 		commandPalette.AddCommandToStack(new DeleteNodeCommand("Delete Selection of Nodes", tmp));
 
 		// 3. Perform the command's action
-		foreach( BaseNode n in selected){
-			graph.RemoveNode(n);
+		Debug.Log(selectedNV.Count);
+		// foreach( BaseNode n in selected){
+		// 	graph.RemoveNode(n);
+		// }
+		// selected.Clear();
+		// TODO: Change deletion process so we use the NodeUI.guid to delete specific dictionary indicies instead of using a list (Requires we change our NodeView List into a dictionary).
+		foreach( NodeUI n in selectedNV){
+			n.Delete();
 		}
-
+		selectedNV.Clear();
+		nodeViewList.RemoveAll(nv => nv==null);
+		
 		// BaseGraph postCmd = graph;
 		// JsonUtility.FromJsonOverwrite(tmp, postCmd);
 		// iterate over list
@@ -185,6 +193,10 @@ public class RealityFlowGraphView : MonoBehaviour {
 
 	public void AddToSelection(BaseNode n){
 		selected.Add(n);
+	}
+
+	public void AddToSelectionNV(NodeUI n){
+		selectedNV.Add(n);
 	}
 
 	public void CreateGraph () {
@@ -244,6 +256,7 @@ public class RealityFlowGraphView : MonoBehaviour {
         newView.title.text = node.name;
         newView.node = node;
         newView.GUID.text = node.GUID.Substring (node.GUID.Length - 5);
+		newView.rfgv = this;
         contentPanel.GetComponent<ContentSizeFitter>().enabled = false;
         foreach (NodePort input in node.inputPorts) {
             newView.GetComponent<ContentSizeFitter>().enabled = false;
@@ -265,7 +278,7 @@ public class RealityFlowGraphView : MonoBehaviour {
             LayoutRebuilder.MarkLayoutForRebuild ((RectTransform) newView.transform);
             newView.GetComponent<ContentSizeFitter>().enabled = true;
         }
-        // nodeViewList.Add (newView);
+        nodeViewList.Add (newView);
         LayoutRebuilder.MarkLayoutForRebuild ((RectTransform) newView.transform);
         newView.gameObject.GetComponent<RectTransform> ().SetAsLastSibling ();
         contentPanel.GetComponent<VerticalLayoutGroup>().enabled = false;
