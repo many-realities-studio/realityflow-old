@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.UIElements;
-using GraphProcessor;
+using RealityFlow.Plugin.Contrib;
 
 public class CommandPalette : MonoBehaviour
 {
