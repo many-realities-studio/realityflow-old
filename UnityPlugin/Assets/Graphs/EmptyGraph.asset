@@ -12,20 +12,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31390c44c9f3a3d40b424bf6821999a2, type: 3}
   m_Name: EmptyGraph
   m_EditorClassIdentifier: 
-  serializedNodes: []
+  serializedNodes:
+  - type: TextNode, RealityFlowPackage, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    jsonDatas: '{"GUID":"d2915644-694d-4fbc-a7ea-95fe759c46f0","computeOrder":0,"position":{"serializedVersion":"2","x":0.0,"y":0.0,"width":100.0,"height":100.0},"expanded":false,"debug":false,"nodeLock":false,"output":"Hello
+      World"}'
+  - type: SetLabelNode, RealityFlowPackage, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    jsonDatas: '{"GUID":"f17b27eb-0453-48ed-a6b1-c44d7ea7caa2","computeOrder":2,"position":{"serializedVersion":"2","x":0.0,"y":0.0,"width":100.0,"height":100.0},"expanded":false,"debug":false,"nodeLock":false,"newLabel":"","input":{"instanceID":0}}'
+  - type: GraphProcessor.ParameterNode, com.alelievr.NodeGraphProcessor.Runtime,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    jsonDatas: '{"GUID":"d1c7282f-91fc-4315-84b5-3f55bf5321d6","computeOrder":1,"position":{"serializedVersion":"2","x":0.0,"y":0.0,"width":100.0,"height":100.0},"expanded":false,"debug":false,"nodeLock":false,"parameterGUID":"2ff67e12-627b-447e-9439-b567c8bb1691","accessor":0}'
   edges:
-  - GUID: a285273c-2fbf-4da5-8f41-85905794e668
+  - GUID: 54777eda-c5c1-43e0-bff8-0d7347c43bfb
     owner: {fileID: 11400000}
-    inputNodeGUID: 8f3e9c50-4abc-457f-a222-abf93bd1bcad
-    outputNodeGUID: 543c6c02-3da2-47de-9afb-769c04240204
+    inputNodeGUID: f17b27eb-0453-48ed-a6b1-c44d7ea7caa2
+    outputNodeGUID: d2915644-694d-4fbc-a7ea-95fe759c46f0
     inputFieldName: newLabel
     outputFieldName: output
     inputPortIdentifier: 
     outputPortIdentifier: 
-  - GUID: 6ab83734-0bd2-4b33-8920-a2eea7b62a6a
+  - GUID: dacbac95-410f-476e-9e27-fcb956b6443a
     owner: {fileID: 11400000}
-    inputNodeGUID: 8f3e9c50-4abc-457f-a222-abf93bd1bcad
-    outputNodeGUID: a732a072-2864-45f1-9866-3fab3b7aa649
+    inputNodeGUID: f17b27eb-0453-48ed-a6b1-c44d7ea7caa2
+    outputNodeGUID: d1c7282f-91fc-4315-84b5-3f55bf5321d6
     inputFieldName: input
     outputFieldName: output
     inputPortIdentifier: 
@@ -63,7 +71,19 @@ MonoBehaviour:
     editorType:
       serializedType: GraphProcessor.ProcessorView, com.alelievr.NodeGraphProcessor.Editor,
         Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-  exposedParameters: []
+  exposedParameters:
+  - guid: 2ff67e12-627b-447e-9439-b567c8bb1691
+    name: LabelContainer
+    type: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    serializedValue:
+      serializedType: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      serializedName: 
+      serializedValue: '{"value":{"instanceID":31380}}'
+    input: 1
+    settings:
+      isHidden: 0
   stickyNotes: []
   position: {x: 555, y: 300, z: 0}
   scale: {x: 0.65751624, y: 0.65751624, z: 1}

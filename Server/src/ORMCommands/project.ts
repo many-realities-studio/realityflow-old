@@ -3,6 +3,7 @@ import {getConnection} from 'typeorm'
 import { Project } from "../entity/project";
 import { User } from "../entity/user"
 import { DBObject } from "../entity/object"
+import { VSGraph } from "../entity/vsgraph"
 import { FlowProject } from '../FastAccessStateTracker/FlowLibrary/FlowProject';
 
 export class ProjectOperations
@@ -71,6 +72,20 @@ export class ProjectOperations
             .getMany()
 
         return objects
+    }
+
+    /**
+     * get the graphs of a specific project
+     * @param projectId the Id of the project from which you want to get the graphs
+     */
+     public static async getVSGraphs(projectId: string){
+        let vsGraphs = await getConnection(process.env.NODE_ENV).createQueryBuilder()
+            .select("vsgraph")
+            .from(VSGraph, "vsgraph")
+            .where("vsgraph.projectId = :id", {id: projectId})
+            .getMany()
+
+        return vsGraphs
     }
 
     /**

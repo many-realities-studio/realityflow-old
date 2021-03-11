@@ -9,12 +9,12 @@ import { FlowBehaviour } from "../FlowLibrary/FlowBehaviour";
 
 import { ProjectOperations } from "../../ORMCommands/project"
 import { ObjectOperations } from "../../ORMCommands/object"
-//import { VSGraphOperations } from "../../ORMCommands/vsGraph"
+import { VSGraphOperations } from "../../ORMCommands/vsgraph"
 import { UserOperations } from "../../ORMCommands/user"
 import { BehaviourOperations } from "../../ORMCommands/behaviour"
 
 import { DBObject } from "../../entity/object";
-//import { VSGraph } from "../../entity/vsgraph";
+import { VSGraph } from "../../entity/vsgraph";
 import { Project } from "../../entity/project";
 /**
  * Implementation of Mongoose Database
@@ -65,12 +65,14 @@ export default class TypeORMDatabase
       return null;
 
     let objects = await ProjectOperations.getObjects(projectId);
+    let vsgraphs = await ProjectOperations.getVSGraphs(projectId);
     let behaviours = await BehaviourOperations.getBehaviours(projectId)
     
     
     let returnProject = new FlowProject(project);
     
     returnProject._ObjectList = objects.map((val, index, arr) => new FlowObject(val))
+    returnProject._VSGraphList = vsgraphs.map((val, index, arr) => new FlowVSGraph(val))
     
     returnProject._BehaviourList = behaviours.map((Behaviour)=>{
       let ret:any = {};
@@ -250,38 +252,38 @@ export default class TypeORMDatabase
   }
 
   // Visual Scripting Graph functions
-  //  /**
-  //  * Create an object and associate a project with that object
-  //  * @param vsGraphToCreate the FlowGraph to use to create the graph
-  //  * @param projectId the id of the project to associate the graph with.
-  //  */
-  // public static async CreateVSGraph(vsGraphToCreate: FlowVSGraph, projectId: string){
-  //   await VSGraphOperations.createVSGraph(vsGraphToCreate, projectId);
-  // }
+   /**
+   * Create a graph and associate a project with that graph
+   * @param vsGraphToCreate the FlowGraph to use to create the graph
+   * @param projectId the id of the project to associate the graph with.
+   */
+  public static async CreateVSGraph(vsGraphToCreate: FlowVSGraph, projectId: string){
+    await VSGraphOperations.createVSGraph(vsGraphToCreate, projectId);
+  }
 
-  // /**
-  //  * Delete an object from a project in the database
-  //  * @param graphId the graph to delete 
-  //  * @param projectId the project with which the graph is associated
-  //  */
-  // public static async DeleteVSGraph(graphId:string, projectId: string): Promise<void> {
-  //   await VSGraphOperations.deleteVSGraph(graphId, projectId)
-  // }
+  /**
+   * Delete a graph from a project in the database
+   * @param graphId the graph to delete 
+   * @param projectId the project with which the graph is associated
+   */
+  public static async DeleteVSGraph(graphId:string, projectId: string): Promise<void> {
+    await VSGraphOperations.deleteVSGraph(graphId, projectId)
+  }
 
-  // /**
-  //  * update a given graph
-  //  * @param vsGraphToUpdate the Id of the graph to update 
-  //  * @param projectId the project with which the graph is associated
-  //  */
-  // public static async UpdateVSGraph(vsGraphToUpdate: FlowVSGraph, projectId: string): Promise<void> {
-  //   console.log("typeORM VSGRAPH update")
-  //   console.log(vsGraphToUpdate)
-  //   await VSGraphOperations.updateVSGraph(vsGraphToUpdate, projectId);
-  // }
+  /**
+   * update a given graph
+   * @param vsGraphToUpdate the Id of the graph to update 
+   * @param projectId the project with which the graph is associated
+   */
+  public static async UpdateVSGraph(vsGraphToUpdate: FlowVSGraph, projectId: string): Promise<void> {
+    console.log("typeORM VSGRAPH update")
+    console.log(vsGraphToUpdate)
+    await VSGraphOperations.updateVSGraph(vsGraphToUpdate, projectId);
+  }
   
-  // /**Get a graph from the database */
-  // public static async GetVSGraph(VSGraphId: string, projectId: string): Promise<FlowVSGraph> {
-  //   return new FlowVSGraph(await VSGraphOperations.findVSGraph(VSGraphId, projectId))
-  // }
+  /**Get a graph from the database */
+  public static async GetVSGraph(VSGraphId: string, projectId: string): Promise<FlowVSGraph> {
+    return new FlowVSGraph(await VSGraphOperations.findVSGraph(VSGraphId, projectId))
+  }
 }
 export {TypeORMDatabase};
