@@ -334,8 +334,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 35907445525376435}
   m_HandleRect: {fileID: 35907445525376436}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 1
+  m_Value: 0
+  m_Size: 0.9998813
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3248,7 +3248,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   graph: {fileID: 0}
   listener: {fileID: 0}
-  Labeled: {fileID: 0}
+  Labeled: {fileID: 35907446357410657}
   contentPanel: {fileID: 8726740727317316505}
   nodePortView: {fileID: 8411453318253863390, guid: 28881f12401db5d44b673fa6f9346913,
     type: 3}
@@ -3376,12 +3376,12 @@ PrefabInstance:
     - target: {fileID: 7726265419898755609, guid: 341b2fa27ae9eb14d8226302b5857670,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.066278346
+      value: -0.057081155
       objectReference: {fileID: 0}
     - target: {fileID: 7726265419898755609, guid: 341b2fa27ae9eb14d8226302b5857670,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.010483708
+      value: -0.024811413
       objectReference: {fileID: 0}
     - target: {fileID: 7726265419898755610, guid: 341b2fa27ae9eb14d8226302b5857670,
         type: 3}
