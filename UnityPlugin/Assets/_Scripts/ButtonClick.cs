@@ -7,81 +7,26 @@ using NodeGraphProcessor.Examples;
 
 public class ButtonClick : MonoBehaviour
 {
-	public BaseGraph graph;
-	public BaseGraph graph1;
-	public bool inputGraph;
-	public ProcessGraphProcessor processor;
-
-	public GameObject Labeled;
-
-    public Button nodeButton;
-    // Start is called before the first frame update
-    void Start()
-    {
-		if (inputGraph) {
-			// graph1.AddExposedParameter ("LabelContainer", typeof (GameObject), Labeled);
-			processor = new ProcessGraphProcessor (graph1);
-			graph1.SetParameterValue ("LabelContainer", Labeled);
+	public GameObject Canvas;
+	public static GameObject[] WhiteBoards;
+	public void CreateCanvas()
+	{
+		GameObject WhiteBoard = Instantiate(Canvas, Canvas.transform.position, Canvas.transform.rotation);
+		//WhiteBoard.transform.parent = GameObject.FindGameObjectsWithTag("Player")[0].transform;
+		GameObject WhiteBoard2 = Instantiate(Canvas, new Vector3(Canvas.transform.position.x-1.2f,Canvas.transform.position.y,Canvas.transform.position.z), Canvas.transform.rotation);
+		//WhiteBoard2.transform.parent = GameObject.FindGameObjectsWithTag("Player")[0].transform;
+		WhiteBoards = GameObject.FindGameObjectsWithTag("Canvas");
+		// find the graph from the canvas gameobject
+		//GameObject rfgvGameObject = GameObject.FindGameObjectWithTag("Canvas").transform.GetChild(5).gameObject;
+		//RealityFlowGraphView rfgv = rfgvGameObject.GetComponent<RealityFlowGraphView>();
+		//BaseGraph graph = rfgv.graph;
+		//NodeUI.instance.Setup(graph);
+		foreach(GameObject w in WhiteBoards)
+		{
+			GameObject rfgvGameObject = GameObject.FindGameObjectWithTag("Canvas").transform.GetChild(5).gameObject;
+			RealityFlowGraphView rfgv = rfgvGameObject.GetComponent<RealityFlowGraphView>();
+			//BaseGraph graph = rfgv.graph;
+			//NodeUI.instance.Setup(rfgv);
 		}
-        CreateGraph();
-        //AddNode();
-        //GenerateGraph();
-        Button btn = nodeButton.GetComponent<Button>();
-		btn.onClick.AddListener(RunGraph);
-    }
-    void RunGraph()
-    {
-        //ProcessGraphProcessor processor = new ProcessGraphProcessor(graph);
-        processor.Run();
-    }
-    void GenerateGraph()
-    {
-        TextNode tn = BaseNode.CreateFromType<TextNode> (new Vector2 ());
-		graph.AddNode (tn);
-    }
-    
-    	public void CreateGraph () {
-		// graph.SetDirty();
-		graph.AddExposedParameter ("LabelContainer", typeof (GameObject), Labeled);
-		TextNode tn = BaseNode.CreateFromType<TextNode> (new Vector2 ());
-		graph.AddNode (tn);
-		tn.output = "Hello World";
-		NodeView.instance.AddNode(tn);
-		SetLabelNode sln = BaseNode.CreateFromType<SetLabelNode> (new Vector2 ());
-		graph.AddNode (sln);
-		graph.Connect (sln.GetPort ("newLabel", null), tn.GetPort ("output", null));
-		NodeView.instance.AddNode(sln);
-		ParameterNode pn = BaseNode.CreateFromType<ParameterNode> (new Vector2 ());
-
-		pn.parameterGUID = graph.GetExposedParameter ("LabelContainer").guid;
-		graph.AddNode (pn);
-		graph.Connect (sln.GetPort ("input", ""), pn.GetPort ("output", "output"));
-		NodeView.instance.AddNode(pn);
-		graph.UpdateComputeOrder ();
-		// graph.ed
-		// graph.SetParameterValue ("LabelContainer", Labeled);
-		processor = new ProcessGraphProcessor (graph);
-		NodeView.instance.curGraph = graph;
-    }
-	public void ClearGraph () {
-		while (graph.nodes.Count > 0) {
-			graph.RemoveNode (graph.nodes[0]);
-		}
-		while (graph.exposedParameters.Count > 0) {
-			graph.RemoveExposedParameter (graph.exposedParameters[0]);
-		}
-			//graph.SetDirty();
-        // EditorWindow.GetWindow<CustomToolbarGraphWindow> ().InitializeGraph (graph as BaseGraph)
-    }
-
-    public void AddNode() {
-		TextNode tn = BaseNode.CreateFromType<TextNode> (new Vector2 ());
-		graph.AddNode (tn);
-		tn.output = "Hello World";
-        if(NodeView.instance==null)
-        {
-            Debug.Log("NodeView is NULL");
-        }
-		NodeView.instance.AddNode(tn);
-    }
+	}
 }

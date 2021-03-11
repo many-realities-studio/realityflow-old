@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class NodeView : MonoBehaviour {
     public BaseGraph curGraph;
-    public GameObject contentPanel;
+    GameObject contentPanel;
     public GameObject nodeView;
     public GameObject nodePortView;
     public List<NodeUI> nodeViewList = new List<NodeUI> ();
@@ -19,15 +19,19 @@ public class NodeView : MonoBehaviour {
         StartCoroutine (AddNodeCoroutine(node));
     }
 
-    public void LoadGraph(BaseGraph graph){
+    /*public void LoadGraph(BaseGraph graph){
         // Loading from graph is working, need to have it accept any type of node type though
         Debug.Log("Loading Graph");
         Debug.Log(JsonUtility.ToJson(graph));
-        foreach (BaseNode node in graph.nodes ){
-            AddNode(node);
+        foreach(GameObject w in ButtonClick.WhiteBoards)
+        {
+            contentPanel = w.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject;
+            foreach (BaseNode node in graph.nodes){
+                AddNode(node);
+            }
         }
         // TODO: fill this method to load graphs from input graph
-    }
+    }*/
 
     public IEnumerator AddNodeCoroutine (BaseNode node) {
         //NodeUI newView = new NodeUI(node.name,node,node.GUID.Substring (node.GUID.Length - 5));
@@ -57,7 +61,7 @@ public class NodeView : MonoBehaviour {
             LayoutRebuilder.MarkLayoutForRebuild ((RectTransform) newView.transform);
             newView.GetComponent<ContentSizeFitter>().enabled = true;
         }
-        nodeViewList.Add (newView);
+        // nodeViewList.Add (newView);
         LayoutRebuilder.MarkLayoutForRebuild ((RectTransform) newView.transform);
         newView.gameObject.GetComponent<RectTransform> ().SetAsLastSibling ();
         contentPanel.GetComponent<VerticalLayoutGroup>().enabled = false;
@@ -66,4 +70,5 @@ public class NodeView : MonoBehaviour {
         contentPanel.GetComponent<ContentSizeFitter>().enabled = true;
         LayoutRebuilder.MarkLayoutForRebuild ((RectTransform) contentPanel.transform);
     }
+
 }
