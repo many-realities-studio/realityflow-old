@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
-using GraphProcessor;
+using RealityFlow.Plugin.Contrib;
 
 [NodeCustomEditor(typeof(IntNode))]
 public class IntNodeView : BaseNodeView

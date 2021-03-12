@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using GraphProcessor;
+using RealityFlow.Plugin.Contrib;
 
 [System.Serializable, NodeMenuItem("Primitives/Int")]
 public class IntNode : BaseNode
