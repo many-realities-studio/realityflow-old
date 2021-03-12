@@ -10,12 +10,16 @@ public class NodeUI : MonoBehaviour
     public GameObject inputPanel;
     public GameObject outputPanel;
     public BaseNode node;
-    public BaseGraph graph;
 
-    public GameObject rfgvGameObject; // realityflowgraphview script
+    // TODO: Make sure this is the best way to do this. I think this is really hacky -John
+    // public BaseGraph graph;
+
+    // public GameObject rfgvGameObject; // realityflowgraphview script
     public RealityFlowGraphView rfgv;
 
-    static List <BaseNode> deletionList;
+    public static NodeUI instance;
+
+    // static List <BaseNode> deletionList;
 
     // Start is called before the first frame update
     /*public NodeUI(string title, BaseNode node, string GUID){
@@ -23,31 +27,34 @@ public class NodeUI : MonoBehaviour
         this.node = node;
         this.GUID.text = GUID;
     }*/
+    void Awake()
+    {
+        instance = this;
+    }
     void Start()
     {   
-
-        //graph = RealityFlowGraphView.instance.graph;
-        rfgvGameObject = GameObject.Find("RuntimeGraph");
-        rfgv = rfgvGameObject.GetComponent<RealityFlowGraphView>();
-        // TODO: Find a way to fill this reference to RealityFlowGraphView object before we start working on a way to instantiate them
-        graph = rfgv.graph;
-        deletionList = new List<BaseNode>();
+        // deletionList = new List<BaseNode>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    // public void Setup(RealityFlowGraphView rfgvi)
+    // {
+    //     rfgv=rfgvi;
+    //     graph = rfgvi.graph;
+    // }
+
+
 
     public void Delete(){
-        graph.RemoveNode(node);
+        rfgv.graph.RemoveNode(node);
+        // _____?.Invoke(node);
         //graph.SetDirty();
         Destroy(this.gameObject);
     }
 
     public void Select(){
-       rfgv.AddToSelection(node);
+    //    rfgv.AddToSelection(node);
+       rfgv.AddToSelectionNV(this);
+       this.GetComponent<CanvasRenderer>().SetColor(Color.green);
     }
     /*
     public void Delete() {
