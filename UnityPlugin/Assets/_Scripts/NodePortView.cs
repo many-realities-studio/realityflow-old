@@ -9,11 +9,8 @@ public class NodePortView : MonoBehaviour
     public Text fieldName;
     public Text currentNodeGUID;
     public NodePort port;
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
+    public EdgeListener listener;
+    public string type;
 
     void RebuildUI(){
         fieldName.text = port.fieldName;
@@ -30,6 +27,20 @@ public class NodePortView : MonoBehaviour
                 currentNodeGUID.text = outputGUID.Substring(outputGUID.Length - 5);
             }
         }
+    }
+
+    public void SelectEdge(){
+        Debug.Log("Selected port of type" + this.port.owner.name);
+        switch (type)
+        {
+            case "input":
+                listener.SelectInputPort(this);
+                break;
+            case "output":
+                listener.SelectOutputPort(this);
+                break;
+        }
+
     }
 
     public void Init(NodePort np)

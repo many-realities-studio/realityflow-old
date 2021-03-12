@@ -33,7 +33,7 @@ public class NodeManipulation : MonoBehaviour//,IMixedRealityPointerHandler
             //Debug.DrawRay(node.transform.position, node.transform.TransformDirection(Vector3.forward) * hit.distance, Color.green);
             Debug.Log("Did Hit");
             //rfgvGameObject = GameObject.FindGameObjectWithTag("Canvas").transform.GetChild(5).gameObject;
-            rfgvGameObject = hit.collider.gameObject.transform.GetChild(5).gameObject;
+            rfgvGameObject = hit.collider.gameObject.transform.GetChild(2).gameObject;
             Debug.Log("rfgv object name is "+rfgvGameObject.name);
             rfgv = rfgvGameObject.GetComponent<RealityFlowGraphView>();
             graph = rfgv.graph;

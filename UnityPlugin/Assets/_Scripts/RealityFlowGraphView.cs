@@ -8,6 +8,10 @@ using UnityEngine.UI;
 using UnityEngine.UIElements;
 using System.Linq;
 
+public struct Edge {
+	NodePort input;
+	NodePort output;
+};
 
 public class RealityFlowGraphView : MonoBehaviour {
 	public BaseGraph graph;
@@ -16,8 +20,9 @@ public class RealityFlowGraphView : MonoBehaviour {
 	// public bool inputGraph;
 	public ProcessGraphProcessor processor;
 
+	public EdgeListener connectorListener;
+
 	public static CommandPalette commandPalette;
-	public EdgeListener listener; // create a variable for edge listening
 
 	public GameObject Labeled;
 	public GameObject contentPanel;
@@ -29,9 +34,10 @@ public class RealityFlowGraphView : MonoBehaviour {
 	public List<NodeUI> selectedNV = new List<NodeUI>();
 	public List<BaseNode> selected = new List<BaseNode>();
 
+	public List<Edge> edges = new List<Edge>();
 
 	// protected virtual EdgeListener CreateEdgeConnectorListener()
-		//  => new EdgeListener(this);
+	// 	 => new EdgeListener(this);
 
     //public RealityFlowGraphView instance;
 
@@ -42,7 +48,8 @@ public class RealityFlowGraphView : MonoBehaviour {
 
 	void InitializeGraph(){
 
-		// listener = CreateEdgeConnectorListener();
+		// connectorListener = new EdgeListener(this);
+		// Debug.Log(connectorListener);
 		//instance = this;
 		// if (inputGraph) {
 		// 	// graph1.AddExposedParameter ("LabelContainer", typeof (GameObject), Labeled);
@@ -56,6 +63,7 @@ public class RealityFlowGraphView : MonoBehaviour {
 		// commandPalette = new CommandPalette();
         graph.onGraphChanges += GraphChangesCallback;
 		savePoint = JsonSerializer.Serialize(graph);
+		
 		// selected =
 		Debug.Log("hello");
 		// NodeView.instance.LoadGraph(graph);
@@ -222,7 +230,9 @@ public class RealityFlowGraphView : MonoBehaviour {
 		processor = new ProcessGraphProcessor (graph);
     }
 	
-
+	public void ConnectEdges(NodePort input, NodePort output){
+		graph.Connect(input, output, true);
+	}
 	
 	public void ClearGraph () {
 
@@ -263,16 +273,21 @@ public class RealityFlowGraphView : MonoBehaviour {
             NodePortView npv = Instantiate (nodePortView).GetComponent<NodePortView> ();
             npv.gameObject.transform.SetParent (newView.inputPanel.transform, false);
             npv.gameObject.GetComponent<RectTransform> ().SetAsLastSibling ();
+			npv.listener = connectorListener;
+			npv.type = "input";
             yield return new WaitForSeconds (.01f);
             npv.Init (input);
             LayoutRebuilder.MarkLayoutForRebuild ((RectTransform) newView.transform);
             newView.GetComponent<ContentSizeFitter>().enabled = true;
         }
         foreach (NodePort output in node.outputPorts) {
+			Debug.Log(output.portData);
             newView.GetComponent<ContentSizeFitter>().enabled = false;
             NodePortView npv = Instantiate (nodePortView).GetComponent<NodePortView> ();
             npv.gameObject.transform.SetParent (newView.outputPanel.transform,false);
             npv.gameObject.GetComponent<RectTransform> ().SetAsLastSibling ();
+			npv.listener = connectorListener;
+			npv.type = "output";
             yield return new WaitForSeconds (.01f);
             npv.Init (output);
             LayoutRebuilder.MarkLayoutForRebuild ((RectTransform) newView.transform);
