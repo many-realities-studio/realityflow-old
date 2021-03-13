@@ -37,7 +37,7 @@ public class NodeManipulation : MonoBehaviour//,IMixedRealityPointerHandler
             Debug.Log("rfgv object name is "+rfgvGameObject.name);
             rfgv = rfgvGameObject.GetComponent<RealityFlowGraphView>();
             graph = rfgv.graph;
-            AttachNodeToGraph();
+            AttachNodeToGraph(node.transform.GetComponent<RectTransform>().anchoredPosition);
         }
         else
         {
@@ -47,9 +47,9 @@ public class NodeManipulation : MonoBehaviour//,IMixedRealityPointerHandler
         }
     }
 
-    public void AttachNodeToGraph()
+    public void AttachNodeToGraph(Vector3 pos)
     {
-        rfgv.AddNodeCommand(this.transform.GetChild(0).tag);
+        rfgv.AddNodeCommand(this.transform.GetChild(0).tag, this.transform.GetChild(0).GetComponent<RectTransform>().anchoredPosition);
         Destroy(this.gameObject);
     }
     public void RefreshPalette()
