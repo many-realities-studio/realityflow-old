@@ -3,22 +3,17 @@ import { Color } from "./Color";
 export class FlowVSGraph
 {
   // Data the FlowVSGraph stores
-  public Name:           string;
-  public X:              Number;
-  public Y:              Number;
-  public Z:              Number;
-  public Q_x:            Number;
-  public Q_y:            Number;
-  public Q_z:            Number;
-  public Q_w:            Number;
-  public S_x:            Number; // TODO: Will graph scale be handled as well?
-  public S_y:            Number;
-  public S_z:            Number;
-//   public R:              Number;
-//   public G:              Number;
-//   public B:              Number;
-//   public A:              Number;
-//   public Prefab:         string;
+  public Name:                string;
+  public SerializedNodes:     string;
+  public Edges:               string;
+  public Groups:              string;
+  public StackNodes:          string;
+  public PinnedElements:      string;
+  public ExposedParameters:   string;
+  public StickyNotes:         string;
+  public Position:            string;
+  public Scale:               string;
+  public References:          string;
 
   // Fields used for tracking this graph in the FAM
 
@@ -28,24 +23,19 @@ export class FlowVSGraph
   public CurrentCheckout: string; // TODO: Entire graphs are not checked out/in, nodes are, but for now the graph itself can be
 
   constructor(json: any)
-  {    
+  {
     this.Id = json.Id;
     this.Name = json.Name;
-    this.X = json.X;
-    this.Y = json.Y;
-    this.Z = json.Z;
-    this.Q_x = json.Q_x;
-    this.Q_y = json.Q_y;
-    this.Q_z = json.Q_z;
-    this.Q_w = json.Q_w;
-    this.S_x = json.S_x;
-    this.S_y = json.S_y;
-    this.S_z = json.S_z;
-    // this.R = json.R;
-    // this.G = json.G;
-    // this.B = json.B;
-    // this.A = json.A;
-    // this.Prefab = json.Prefab;
+    this.SerializedNodes = JSON.stringify(json.serializedNodes);
+    this.Edges = JSON.stringify(json.edges);
+    this.Groups = JSON.stringify(json.groups);
+    this.StackNodes = JSON.stringify(json.stackNodes);
+    this.PinnedElements = JSON.stringify(json.pinnedElements);
+    this.ExposedParameters = JSON.stringify(json.exposedParameters);
+    this.StickyNotes = JSON.stringify(json.stickyNotes);
+    this.Position = JSON.stringify(json.position);
+    this.Scale = JSON.stringify(json.scale);
+    this.References = JSON.stringify(json.references);
     this.CurrentCheckout = null;
 }
 
@@ -56,16 +46,15 @@ export class FlowVSGraph
   public UpdateProperties(newVSGraph: FlowVSGraph)
   {    
     this.Name = newVSGraph.Name;
-    this.X = newVSGraph.X;
-    this.Y = newVSGraph.Y;
-    this.Z = newVSGraph.Z;
-    this.Q_x = newVSGraph.Q_x;
-    this.Q_y = newVSGraph.Q_y;
-    this.Q_z = newVSGraph.Q_z;
-    this.Q_w = newVSGraph.Q_w;
-    this.S_x = newVSGraph.S_x;
-    this.S_y = newVSGraph.S_y;
-    this.S_z = newVSGraph.S_z;
-    // this.Prefab = newVSGraph.Prefab;
+    this.SerializedNodes = newVSGraph.SerializedNodes;
+    this.Edges = newVSGraph.Edges;
+    this.Groups = newVSGraph.Groups;
+    this.StackNodes = newVSGraph.StackNodes;
+    this.PinnedElements = newVSGraph.PinnedElements;
+    this.ExposedParameters = newVSGraph.ExposedParameters;
+    this.StickyNotes = newVSGraph.StickyNotes;
+    this.Position = newVSGraph.Position;
+    this.Scale = newVSGraph.Scale;
+    this.References = newVSGraph.References;
   }
 }
