@@ -26,7 +26,7 @@ export class FlowObject
   public CurrentCheckout: string;
 
   constructor(json: any)
-  {    
+  {
     this.Id = json.Id;
     this.Name = json.Name;
     this.X = json.X;

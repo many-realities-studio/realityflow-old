@@ -52,7 +52,19 @@ MonoBehaviour:
     editorType:
       serializedType: GraphProcessor.ProcessorView, com.alelievr.NodeGraphProcessor.Editor,
         Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-  exposedParameters: []
+  exposedParameters:
+  - guid: 2ff67e12-627b-447e-9439-b567c8bb1691
+    name: LabelContainer
+    type: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    serializedValue:
+      serializedType: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      serializedName: 
+      serializedValue: '{"value":{"instanceID":31380}}'
+    input: 1
+    settings:
+      isHidden: 0
   stickyNotes: []
   position: {x: 296, y: 128, z: 0}
   scale: {x: 0.43232757, y: 0.43232757, z: 1}

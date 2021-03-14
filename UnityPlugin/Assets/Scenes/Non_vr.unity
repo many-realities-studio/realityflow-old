@@ -431,9 +431,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd05ce8eaaa021f4bb7cc62b6c9e2d92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rfgvGameObject: {fileID: 0}
   rfgv: {fileID: 0}
-  graph: {fileID: 0}
 --- !u!1 &122329494
 GameObject:
   m_ObjectHideFlags: 0
@@ -621,10 +619,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000, guid: 9978faab71ef9bb48b5dd858387dc9e1, type: 2}
-  graph1: {fileID: 11400000, guid: 2ddca6522ce0f5c44aa0b888b6737d8c, type: 2}
-  inputGraph: 1
-  Labeled: {fileID: 1886266278}
   listener: {fileID: 0}
+  Labeled: {fileID: 1886266278}
+  contentPanel: {fileID: 1068335957}
+  nodePortView: {fileID: 8411453318253863390, guid: 28881f12401db5d44b673fa6f9346913,
+    type: 3}
+  nodeView: {fileID: 7188062422076971066, guid: 8a3a205c4308c8d48a8d08b0f4d4c7c6,
+    type: 3}
+  nodeViewList: []
+  selectedNV: []
 --- !u!114 &122751696
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -638,7 +641,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curGraph: {fileID: 11400000, guid: 9978faab71ef9bb48b5dd858387dc9e1, type: 2}
-  contentPanel: {fileID: 1068335957}
   nodeView: {fileID: 7188062422076971066, guid: 8a3a205c4308c8d48a8d08b0f4d4c7c6,
     type: 3}
   nodePortView: {fileID: 8411453318253863390, guid: 28881f12401db5d44b673fa6f9346913,
@@ -1248,8 +1250,6 @@ MonoBehaviour:
   GUID: {fileID: 0}
   inputPanel: {fileID: 0}
   outputPanel: {fileID: 0}
-  graph: {fileID: 0}
-  rfgvGameObject: {fileID: 0}
   rfgv: {fileID: 0}
 --- !u!4 &195253255
 Transform:
@@ -5635,15 +5635,15 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 122751695}
-        m_TargetAssemblyTypeName: RuntimeGraph, Assembly-CSharp
+        m_TargetAssemblyTypeName: RealityFlowGraphView, com.RealityFlow
         m_MethodName: AddNodeCommand
-        m_Mode: 1
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: TextNode
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1064047674
