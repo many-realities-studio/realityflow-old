@@ -585,6 +585,7 @@ GameObject:
   - component: {fileID: 122751694}
   - component: {fileID: 122751696}
   - component: {fileID: 122751695}
+  - component: {fileID: 122751697}
   m_Layer: 0
   m_Name: RuntimeGraph
   m_TagString: Untagged
@@ -615,11 +616,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 122751693}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb433113c287354498986677e7aabbfd, type: 3}
+  m_Script: {fileID: 11500000, guid: be8e04350133a974bbfbd09ee5fd333a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000, guid: 9978faab71ef9bb48b5dd858387dc9e1, type: 2}
-  listener: {fileID: 0}
+  connectorListener: {fileID: 122751697}
   Labeled: {fileID: 1886266278}
   contentPanel: {fileID: 1068335957}
   nodePortView: {fileID: 8411453318253863390, guid: 28881f12401db5d44b673fa6f9346913,
@@ -646,6 +647,19 @@ MonoBehaviour:
   nodePortView: {fileID: 8411453318253863390, guid: 28881f12401db5d44b673fa6f9346913,
     type: 3}
   nodeViewList: []
+--- !u!114 &122751697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 122751693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8cd24bfb90559f4c8a360482258f218, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  graphView: {fileID: 122751695}
 --- !u!1 &129234845
 GameObject:
   m_ObjectHideFlags: 0
@@ -4957,7 +4971,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 122751695}
         m_TargetAssemblyTypeName: RuntimeGraph, Assembly-CSharp
-        m_MethodName: MoveNodeCommand
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
