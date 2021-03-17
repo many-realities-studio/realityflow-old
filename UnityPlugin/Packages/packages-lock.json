@@ -1,5 +1,11 @@
 {
   "dependencies": {
+    "com.alelievr.node-graph-processor": {
+      "version": "file:../../NGP Master/Assets/com.alelievr.NodeGraphProcessor",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
     "com.realityflow": {
       "version": "file:RealityFlow",
       "depth": 0,
