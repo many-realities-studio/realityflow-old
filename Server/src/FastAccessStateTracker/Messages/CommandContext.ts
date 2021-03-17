@@ -202,7 +202,7 @@ class Command_DeleteUser implements ICommand
 {
   async ExecuteCommand(data: any): Promise<[String, Array<String>]>
   {
-    let returnData = await StateTracker.DeleteUser(data.Username, data.Password);
+    let returnData = await StateTracker.DeleteUser(data.FlowUser.Username, data.FlowUser.Password);
     let returnContent = {
       "MessageType": "DeleteUser",
       "WasSuccessful": returnData[0]
