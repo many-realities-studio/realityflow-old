@@ -101,7 +101,6 @@ GameObject:
   - component: {fileID: 945883628356578506}
   - component: {fileID: 945883628356578507}
   - component: {fileID: 945883628356578500}
-  - component: {fileID: 945883628356578501}
   m_Layer: 3
   m_Name: FloatNode
   m_TagString: FloatNode
@@ -381,44 +380,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &945883628356578501
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 945883628356578503}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7e736ec19b1c5543a9bb27c150f94fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isFocusRequired: 1
-  MarkEventsAsUsed: 0
-  OnPointerDown:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 945883628610334831}
-        m_TargetAssemblyTypeName: NodeManipulation, Assembly-CSharp
-        m_MethodName: AttachNodeToGraph
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnPointerUp:
-    m_PersistentCalls:
-      m_Calls: []
-  OnPointerClicked:
-    m_PersistentCalls:
-      m_Calls: []
-  OnPointerDragged:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &945883628517641057
 GameObject:
   m_ObjectHideFlags: 0
@@ -503,7 +464,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &945883628517641065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -574,9 +535,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 945883628531462832}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd05ce8eaaa021f4bb7cc62b6c9e2d92, type: 3}
+  m_Script: {fileID: 11500000, guid: efb79b967e48fa348ab7fd626f1b47e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 104
   rfgv: {fileID: 0}
 --- !u!1 &945883628610334825
 GameObject:
@@ -619,9 +583,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 945883628610334825}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd05ce8eaaa021f4bb7cc62b6c9e2d92, type: 3}
+  m_Script: {fileID: 11500000, guid: efb79b967e48fa348ab7fd626f1b47e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 104
   rfgv: {fileID: 0}
 --- !u!1 &945883628795297328
 GameObject:
@@ -664,9 +631,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 945883628795297328}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd05ce8eaaa021f4bb7cc62b6c9e2d92, type: 3}
+  m_Script: {fileID: 11500000, guid: efb79b967e48fa348ab7fd626f1b47e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 104
   rfgv: {fileID: 0}
 --- !u!1 &945883628916736774
 GameObject:
@@ -774,7 +744,6 @@ GameObject:
   - component: {fileID: 945883629031733087}
   - component: {fileID: 945883629031733081}
   - component: {fileID: 945883629031733085}
-  - component: {fileID: 945883629031733091}
   - component: {fileID: 945883629031733082}
   - component: {fileID: 945883629031733083}
   m_Layer: 5
@@ -1027,44 +996,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTetherWhenManipulating: 0
   IsBoundsHandles: 0
---- !u!114 &945883629031733091
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 945883629031733072}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7e736ec19b1c5543a9bb27c150f94fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isFocusRequired: 1
-  MarkEventsAsUsed: 0
-  OnPointerDown:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 945883630005157392}
-        m_TargetAssemblyTypeName: NodeManipulation, Assembly-CSharp
-        m_MethodName: AttachNodeToGraph
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnPointerUp:
-    m_PersistentCalls:
-      m_Calls: []
-  OnPointerClicked:
-    m_PersistentCalls:
-      m_Calls: []
-  OnPointerDragged:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!65 &945883629031733082
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1444,9 +1375,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 945883629786895181}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd05ce8eaaa021f4bb7cc62b6c9e2d92, type: 3}
+  m_Script: {fileID: 11500000, guid: efb79b967e48fa348ab7fd626f1b47e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 104
   rfgv: {fileID: 0}
 --- !u!1 &945883629855688859
 GameObject:
@@ -1549,7 +1483,6 @@ GameObject:
   - component: {fileID: 945883629897857206}
   - component: {fileID: 945883629897857207}
   - component: {fileID: 945883629897857200}
-  - component: {fileID: 945883629897857201}
   m_Layer: 3
   m_Name: BooleanNode
   m_TagString: BoolNode
@@ -1829,44 +1762,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &945883629897857201
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 945883629897857203}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7e736ec19b1c5543a9bb27c150f94fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isFocusRequired: 1
-  MarkEventsAsUsed: 0
-  OnPointerDown:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 945883629786895187}
-        m_TargetAssemblyTypeName: NodeManipulation, Assembly-CSharp
-        m_MethodName: AttachNodeToGraph
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnPointerUp:
-    m_PersistentCalls:
-      m_Calls: []
-  OnPointerClicked:
-    m_PersistentCalls:
-      m_Calls: []
-  OnPointerDragged:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &945883629975849606
 GameObject:
   m_ObjectHideFlags: 0
@@ -1987,9 +1882,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 945883630005157394}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd05ce8eaaa021f4bb7cc62b6c9e2d92, type: 3}
+  m_Script: {fileID: 11500000, guid: efb79b967e48fa348ab7fd626f1b47e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 0
   rfgv: {fileID: 0}
 --- !u!1 &945883630068644453
 GameObject:
@@ -2011,7 +1909,6 @@ GameObject:
   - component: {fileID: 945883630068644456}
   - component: {fileID: 945883630068644457}
   - component: {fileID: 945883630068644458}
-  - component: {fileID: 945883630068644459}
   m_Layer: 3
   m_Name: IntNode
   m_TagString: IntNode
@@ -2291,44 +2188,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &945883630068644459
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 945883630068644453}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7e736ec19b1c5543a9bb27c150f94fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isFocusRequired: 1
-  MarkEventsAsUsed: 0
-  OnPointerDown:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 945883628795297334}
-        m_TargetAssemblyTypeName: NodeManipulation, Assembly-CSharp
-        m_MethodName: AttachNodeToGraph
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnPointerUp:
-    m_PersistentCalls:
-      m_Calls: []
-  OnPointerClicked:
-    m_PersistentCalls:
-      m_Calls: []
-  OnPointerDragged:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &945883630157592006
 GameObject:
   m_ObjectHideFlags: 0
@@ -2430,7 +2289,6 @@ GameObject:
   - component: {fileID: 945883630451580437}
   - component: {fileID: 945883630451580438}
   - component: {fileID: 945883630451580439}
-  - component: {fileID: 945883630451580432}
   m_Layer: 3
   m_Name: ConditionalNode
   m_TagString: ConditionalNode
@@ -2710,41 +2568,3 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &945883630451580432
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 945883630451580434}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7e736ec19b1c5543a9bb27c150f94fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isFocusRequired: 1
-  MarkEventsAsUsed: 0
-  OnPointerDown:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 945883628531462838}
-        m_TargetAssemblyTypeName: NodeManipulation, Assembly-CSharp
-        m_MethodName: AttachNodeToGraph
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnPointerUp:
-    m_PersistentCalls:
-      m_Calls: []
-  OnPointerClicked:
-    m_PersistentCalls:
-      m_Calls: []
-  OnPointerDragged:
-    m_PersistentCalls:
-      m_Calls: []
