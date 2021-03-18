@@ -335,7 +335,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 35907445525376436}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9998813
+  m_Size: 0.9998201
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1642,7 +1642,7 @@ GameObject:
   - component: {fileID: 35907445737233456}
   - component: {fileID: 35907445737233458}
   m_Layer: 6
-  m_Name: Canvas
+  m_Name: WhiteBoard
   m_TagString: Canvas
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3244,19 +3244,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 3819596621230639178}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb433113c287354498986677e7aabbfd, type: 3}
+  m_Script: {fileID: 11500000, guid: be8e04350133a974bbfbd09ee5fd333a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  graph: {fileID: 0}
-  connectorListener: {fileID: 0}
+  graph: {fileID: 11400000, guid: 9978faab71ef9bb48b5dd858387dc9e1, type: 2}
+  connectorListener: {fileID: 875642797260704423}
   Labeled: {fileID: 35907446357410657}
   contentPanel: {fileID: 8726740727317316505}
+  parameterContent: {fileID: 0}
   nodePortView: {fileID: 8411453318253863390, guid: 28881f12401db5d44b673fa6f9346913,
     type: 3}
   nodeView: {fileID: 7188062422076971066, guid: 8a3a205c4308c8d48a8d08b0f4d4c7c6,
     type: 3}
+  paramView: {fileID: 0}
   nodeViewList: []
   selectedNV: []
+  paramList: []
 --- !u!114 &875642797260704423
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3266,7 +3269,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3819596621230639178}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d5f018d490deb145b1827da3c7589b5, type: 3}
+  m_Script: {fileID: 11500000, guid: a8cd24bfb90559f4c8a360482258f218, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   graphView: {fileID: 7321679493497848582}
@@ -3390,12 +3393,12 @@ PrefabInstance:
     - target: {fileID: 7726265419898755609, guid: 341b2fa27ae9eb14d8226302b5857670,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.087289505
+      value: -0.05646594
       objectReference: {fileID: 0}
     - target: {fileID: 7726265419898755609, guid: 341b2fa27ae9eb14d8226302b5857670,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.05242733
+      value: -0.0559318
       objectReference: {fileID: 0}
     - target: {fileID: 7726265419898755610, guid: 341b2fa27ae9eb14d8226302b5857670,
         type: 3}
