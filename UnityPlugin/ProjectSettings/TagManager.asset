@@ -6,15 +6,21 @@ TagManager:
   tags:
   - imported
   - ObjManager
+  - Canvas
+  - TextNode
+  - BoolNode
+  - FloatNode
+  - IntNode
+  - ConditionalNode
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Nodes
   - Water
   - UI
-  - 
-  - 
+  - WhiteBoard
+  - ParameterCanvas
   - PostProcessing
   - 
   - 

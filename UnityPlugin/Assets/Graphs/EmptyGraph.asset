@@ -12,8 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31390c44c9f3a3d40b424bf6821999a2, type: 3}
   m_Name: EmptyGraph
   m_EditorClassIdentifier: 
-  serializedNodes: []
-  nodes: []
+  serializedNodes:
+  - type: TextNode, RealityFlowPackage, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    jsonDatas: '{"GUID":"fc5647fd-bcb6-4f5b-a87d-cccd6a134f28","computeOrder":-1,"position":{"serializedVersion":"2","x":0.0,"y":0.0,"width":100.0,"height":100.0},"expanded":false,"debug":false,"nodeLock":false,"output":"Hello
+      World"}'
+  - type: BoolNode, RealityFlowPackage, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    jsonDatas: '{"GUID":"48a78ab9-193e-466b-87d2-43811dbd6109","computeOrder":-1,"position":{"serializedVersion":"2","x":0.0,"y":0.0,"width":100.0,"height":100.0},"expanded":false,"debug":false,"nodeLock":false,"output":true,"input":false}'
   edges: []
   groups: []
   stackNodes: []
@@ -40,18 +44,29 @@ MonoBehaviour:
         Culture=neutral, PublicKeyToken=null
   - position:
       serializedVersion: 2
-      x: 212
-      y: 286
+      x: 72
+      y: 254
       width: 150
       height: 200
-    opened: 0
+    opened: 1
     editorType:
       serializedType: GraphProcessor.ProcessorView, com.alelievr.NodeGraphProcessor.Editor,
         Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-  exposedParameters: []
-  serializedParameterList: []
+  exposedParameters:
+  - guid: 2ff67e12-627b-447e-9439-b567c8bb1691
+    name: LabelContainer
+    type: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    serializedValue:
+      serializedType: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      serializedName: 
+      serializedValue: '{"value":{"instanceID":31380}}'
+    input: 1
+    settings:
+      isHidden: 0
   stickyNotes: []
-  position: {x: 605, y: 230, z: 0}
-  scale: {x: 0.65751624, y: 0.65751624, z: 1}
+  position: {x: 296, y: 128, z: 0}
+  scale: {x: 0.43232757, y: 0.43232757, z: 1}
   references:
     version: 1

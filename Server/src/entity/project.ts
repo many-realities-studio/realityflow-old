@@ -9,6 +9,7 @@ import {
   } from 'typeorm';
 import { User } from './user';
 import { DBObject } from './object'
+import { VSGraph } from './vsgraph';
 
 @Entity()
 export class Project extends BaseEntity{
@@ -27,6 +28,9 @@ export class Project extends BaseEntity{
 
     @OneToMany(type => DBObject, object => object.Project)
     ObjectList: DBObject[]
+
+    @OneToMany(type => VSGraph, vsGraph => vsGraph.Project)
+    VSGraphList: VSGraph[]
 
     @ManyToOne(type => User, user => user.Projects, {onDelete: "CASCADE", onUpdate: "CASCADE"})
     Owner: User

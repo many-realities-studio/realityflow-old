@@ -29,7 +29,7 @@ MonoBehaviour:
         Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   exposedParameters: []
   stickyNotes: []
-  position: {x: -910, y: 959, z: 0}
-  scale: {x: 0.8695652, y: 0.8695652, z: 1}
+  position: {x: 543, y: 295, z: 0}
+  scale: {x: 0.05, y: 0.05, z: 1}
   references:
     version: 1

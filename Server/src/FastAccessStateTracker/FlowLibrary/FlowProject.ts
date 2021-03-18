@@ -8,6 +8,8 @@ export class FlowProject
   public _ObjectList: Array<FlowObject> = [];
   //TODO: list of FlowBehaviours
   public _BehaviourList: Array<FlowBehaviour> = [];
+  // TODO: list of VSGraphs
+  public _VSGraphList: Array<FlowVSGraph> = [];
   
   // Used for identification in the FAM
   
@@ -158,90 +160,90 @@ export class FlowProject
 
   // Visual Scripting Graph project functions
 
-  // /**
-  //  * Adds a graph to a project, saving it to both FAM and the database
-  //  * @param vsGraphToAdd The graph which should be added to the project
-  //  */
-  // public AddVSGraph(vsGraphToAdd: FlowVSGraph) 
-  // {
-  //   this._VSGraphList.push(vsGraphToAdd);
-  //   return true;
-  // }
+  /**
+   * Adds a graph to a project, saving it to both FAM and the database
+   * @param vsGraphToAdd The graph which should be added to the project
+   */
+  public AddVSGraph(vsGraphToAdd: FlowVSGraph) 
+  {
+    this._VSGraphList.push(vsGraphToAdd);
+    return true;
+  }
 
-  // /**
-  //  * Removes a graph from the list of available graphs
-  //  * @param vsGraphToRemove 
-  //  */
-  // public DeleteVSGraph(vsGraphToRemove: string, client: string) 
-  // {
-  //   let index = this._VSGraphList.findIndex((element) => element.Id == vsGraphToRemove);
-  //   if(index > -1 && this._VSGraphList[index].CurrentCheckout == client){
-  //     this._VSGraphList.splice(index);
-  //     return true;
-  //   }
-  //   else return false
-  // }
+  /**
+   * Removes a graph from the list of available graphs
+   * @param vsGraphToRemove 
+   */
+  public DeleteVSGraph(vsGraphToRemove: string, client: string) 
+  {
+    let index = this._VSGraphList.findIndex((element) => element.Id == vsGraphToRemove);
+    if(index > -1 && this._VSGraphList[index].CurrentCheckout == client){
+      this._VSGraphList.splice(index);
+      return true;
+    }
+    else return false
+  }
 
-  // /**
-  //  * Returns FlowVSGraph with the given ID number 
-  //  * @param vsGraphId 
-  //  */
-  // public GetVSGraph(vsGraphId: string) : FlowVSGraph
-  // {
-  //   return this._VSGraphList.find(element => element.Id == vsGraphId);
-  // }
+  /**
+   * Returns FlowVSGraph with the given ID number 
+   * @param vsGraphId 
+   */
+  public GetVSGraph(vsGraphId: string) : FlowVSGraph
+  {
+    return this._VSGraphList.find(element => element.Id == vsGraphId);
+  }
 
-  // /**
-  //  * sets a graph to "checked out," preventing another user from checking out/editing that graph
-  //  * This will need to be modified as graphs themselves are not going to be checked out. Individual nodes are.
-  //  * @param vsGraphId 
-  //  * @param userName 
-  //  * @param client 
-  //  */
-  // public CheckoutVSGraph(vsGraphId: string, client: string){
-  //   let grph = this._VSGraphList.find(element => element.Id == vsGraphId);
+  /**
+   * sets a graph to "checked out," preventing another user from checking out/editing that graph
+   * TODO: This will need to be modified as graphs themselves are not going to be checked out. Individual nodes are.
+   * @param vsGraphId 
+   * @param userName 
+   * @param client 
+   */
+  public CheckoutVSGraph(vsGraphId: string, client: string){
+    let grph = this._VSGraphList.find(element => element.Id == vsGraphId);
     
-  //   if (grph != undefined && grph.CurrentCheckout == null){
-  //     this._VSGraphList.find(element => element.Id == vsGraphId).CurrentCheckout = client;
-  //     return true
-  //   }
+    if (grph != undefined && grph.CurrentCheckout == null){
+      this._VSGraphList.find(element => element.Id == vsGraphId).CurrentCheckout = client;
+      return true
+    }
     
-  //   else return false
-  // }
+    else return false
+  }
 
-  // /**
-  //  * sets an graph to "checked in," preventing another user from checking out/editing that graph
-  //  * @param vsGraphId 
-  //  */
-  // public CheckinVSgraph(vsGraphId: string, client){
-  //   let grph = this._VSGraphList.find(element => element.Id == vsGraphId);
-  //   if(grph != undefined && grph.CurrentCheckout == client){
-  //     grph.CurrentCheckout = null;
-  //     return true;
-  //   }
-  //   else return false;
-  // }
+  /**
+   * sets an graph to "checked in," preventing another user from checking out/editing that graph
+   * @param vsGraphId 
+   */
+  public CheckinVSGraph(vsGraphId: string, client){
+    let grph = this._VSGraphList.find(element => element.Id == vsGraphId);
+    if(grph != undefined && grph.CurrentCheckout == client){
+      grph.CurrentCheckout = null;
+      return true;
+    }
+    else return false;
+  }
 
-  //   /**
-  //  * find out who has checked out the graph in question
-  //  * @param vsGraphId 
-  //  */
-  // public GetVSGraphHolder(vsGraphId: string){
-  //   return this._VSGraphList.find(element => element.Id == vsGraphId).CurrentCheckout
-  // }
+    /**
+   * find out who has checked out the graph in question
+   * @param vsGraphId 
+   */
+  public GetVSGraphHolder(vsGraphId: string){
+    return this._VSGraphList.find(element => element.Id == vsGraphId).CurrentCheckout
+  }
 
-  // /**
-  //  * Updates the graph in the FAM without saving to the database
-  //  * @param newVSGraph 
-  //  */
-  // public UpdateFAMVSGraph(newVSGraph: FlowVSGraph, client: string) 
-  // {
-  //   // Get the graph that we are changing from the specified project
-  //   var oldVSGraph: FlowVSGraph = this._VSGraphList.find(element => element.Id == newVSGraph.Id);
-  //   if(oldVSGraph != undefined && oldVSGraph.CurrentCheckout == client){
-  //     oldVSGraph.UpdateProperties(newVSGraph);
-  //     return true;
-  //   }
-  //   else return false;
-  // }
+  /**
+   * Updates the graph in the FAM without saving to the database
+   * @param newVSGraph 
+   */
+  public UpdateFAMVSGraph(newVSGraph: FlowVSGraph, client: string) 
+  {
+    // Get the graph that we are changing from the specified project
+    var oldVSGraph: FlowVSGraph = this._VSGraphList.find(element => element.Id == newVSGraph.Id);
+    if(oldVSGraph != undefined && oldVSGraph.CurrentCheckout == client){
+      oldVSGraph.UpdateProperties(newVSGraph);
+      return true;
+    }
+    else return false;
+  }
 }
