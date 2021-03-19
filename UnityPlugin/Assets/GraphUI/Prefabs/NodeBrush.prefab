@@ -538,9 +538,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efb79b967e48fa348ab7fd626f1b47e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 104
   rfgv: {fileID: 0}
 --- !u!1 &945883628610334825
 GameObject:
@@ -586,9 +583,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efb79b967e48fa348ab7fd626f1b47e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 104
   rfgv: {fileID: 0}
 --- !u!1 &945883628795297328
 GameObject:
@@ -634,9 +628,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efb79b967e48fa348ab7fd626f1b47e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 104
   rfgv: {fileID: 0}
 --- !u!1 &945883628916736774
 GameObject:
@@ -1378,9 +1369,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efb79b967e48fa348ab7fd626f1b47e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 104
   rfgv: {fileID: 0}
 --- !u!1 &945883629855688859
 GameObject:
@@ -1885,9 +1873,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efb79b967e48fa348ab7fd626f1b47e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 0
   rfgv: {fileID: 0}
 --- !u!1 &945883630068644453
 GameObject:

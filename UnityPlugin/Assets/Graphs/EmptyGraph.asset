@@ -9,15 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31390c44c9f3a3d40b424bf6821999a2, type: 3}
+  m_Script: {fileID: 11500000, guid: 0db6557f99236c3438c0dff7e0e8f03e, type: 3}
   m_Name: EmptyGraph
   m_EditorClassIdentifier: 
+  Name: 
+  Id: 15586981-1259-4568-b03f-1525988f2539
   serializedNodes:
-  - type: TextNode, RealityFlowPackage, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    jsonDatas: '{"GUID":"fc5647fd-bcb6-4f5b-a87d-cccd6a134f28","computeOrder":-1,"position":{"serializedVersion":"2","x":0.0,"y":0.0,"width":100.0,"height":100.0},"expanded":false,"debug":false,"nodeLock":false,"output":"Hello
-      World"}'
-  - type: BoolNode, RealityFlowPackage, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    jsonDatas: '{"GUID":"48a78ab9-193e-466b-87d2-43811dbd6109","computeOrder":-1,"position":{"serializedVersion":"2","x":0.0,"y":0.0,"width":100.0,"height":100.0},"expanded":false,"debug":false,"nodeLock":false,"output":true,"input":false}'
+  - type: GraphProcessor.ParameterNode, com.alelievr.NodeGraphProcessor.Runtime,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    jsonDatas: '{"GUID":"8d32cae4-2a3b-4c4d-804f-3b989b545fc1","computeOrder":0,"position":{"serializedVersion":"2","x":394.7826232910156,"y":233.91305541992188,"width":100.0,"height":100.0},"expanded":false,"debug":false,"nodeLock":false,"parameterGUID":"65e7d1db-e017-47fd-9877-78b54b5efc11","accessor":0}'
   edges: []
   groups: []
   stackNodes: []
@@ -25,48 +25,48 @@ MonoBehaviour:
   - position:
       serializedVersion: 2
       x: 0
-      y: 87
-      width: 226.99998
-      height: 100
+      y: 84
+      width: 150
+      height: 200
     opened: 1
     editorType:
       serializedType: GraphProcessor.ExposedParameterView, com.alelievr.NodeGraphProcessor.Editor,
         Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   - position:
       serializedVersion: 2
-      x: 17
-      y: 221
-      width: 150
-      height: 200
-    opened: 0
-    editorType:
-      serializedType: ConditionalProcessorView, Assembly-CSharp-Editor, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
-  - position:
-      serializedVersion: 2
-      x: 72
-      y: 254
+      x: 1
+      y: 298
       width: 150
       height: 200
     opened: 1
     editorType:
       serializedType: GraphProcessor.ProcessorView, com.alelievr.NodeGraphProcessor.Editor,
         Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - position:
+      serializedVersion: 2
+      x: 163
+      y: 309
+      width: 150
+      height: 200
+    opened: 1
+    editorType:
+      serializedType: ConditionalProcessorView, com.RealityFlow.Contrib.NGP, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
   exposedParameters:
-  - guid: 2ff67e12-627b-447e-9439-b567c8bb1691
-    name: LabelContainer
+  - guid: 65e7d1db-e017-47fd-9877-78b54b5efc11
+    name: New GameObjectParam
     type: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
     serializedValue:
       serializedType: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
       serializedName: 
-      serializedValue: '{"value":{"instanceID":31380}}'
+      serializedValue: 
     input: 1
     settings:
       isHidden: 0
   stickyNotes: []
-  position: {x: 296, y: 128, z: 0}
-  scale: {x: 0.43232757, y: 0.43232757, z: 1}
+  position: {x: 32, y: -94, z: 0}
+  scale: {x: 1.15, y: 1.15, z: 1}
   references:
     version: 1

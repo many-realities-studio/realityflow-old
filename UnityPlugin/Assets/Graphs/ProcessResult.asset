@@ -9,27 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31390c44c9f3a3d40b424bf6821999a2, type: 3}
+  m_Script: {fileID: 11500000, guid: 0db6557f99236c3438c0dff7e0e8f03e, type: 3}
   m_Name: ProcessResult
   m_EditorClassIdentifier: 
+  Name: 
+  Id: b75a35b1-7813-4b44-9b85-fdff5b29a303
   serializedNodes: []
   edges: []
   groups: []
   stackNodes: []
-  pinnedElements:
-  - position:
-      serializedVersion: 2
-      x: 36
-      y: 28
-      width: 271
-      height: 183
-    opened: 1
-    editorType:
-      serializedType: GraphProcessor.ExposedParameterView, com.alelievr.NodeGraphProcessor.Editor,
-        Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  pinnedElements: []
   exposedParameters: []
   stickyNotes: []
-  position: {x: 543, y: 295, z: 0}
-  scale: {x: 0.05, y: 0.05, z: 1}
+  position: {x: 0, y: 0, z: 0}
+  scale: {x: 1, y: 1, z: 1}
   references:
     version: 1
