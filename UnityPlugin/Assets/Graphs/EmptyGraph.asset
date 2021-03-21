@@ -42,6 +42,9 @@ MonoBehaviour:
   - type: NodeGraphProcessor.Examples.Comparison, com.RealityFlow.Contrib.NGP, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
     jsonDatas: '{"GUID":"fad5e985-2efd-43e3-83de-a6406cc2d98d","computeOrder":3,"position":{"serializedVersion":"2","x":-567.3161010742188,"y":377.0,"width":241.0,"height":164.0},"expanded":false,"debug":false,"nodeLock":false,"inA":0.0,"inB":0.0,"compared":true,"compareFunction":8}'
+  - type: BoolNode, com.RealityFlow.Contrib.NGP, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    jsonDatas: '{"GUID":"1b2c2e8c-b93d-49a1-9f39-5dc0a34101af","computeOrder":9,"position":{"serializedVersion":"2","x":1060.64501953125,"y":252.59750366210938,"width":100.0,"height":100.0},"expanded":false,"debug":false,"nodeLock":false,"inA":0.0,"inB":0.0,"compared":false,"compareFunction":""}'
   edges:
   - GUID: 5db34bd1-a0d3-46a2-85d0-46bee9df9da3
     owner: {fileID: 11400000}
@@ -149,7 +152,7 @@ MonoBehaviour:
       serializedType: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
       serializedName: 
-      serializedValue: '{"value":{"instanceID":-93702}}'
+      serializedValue: '{"value":{"instanceID":-10952}}'
     input: 1
     settings:
       isHidden: 0
@@ -178,7 +181,7 @@ MonoBehaviour:
     settings:
       isHidden: 0
   stickyNotes: []
-  position: {x: 843, y: 46, z: 0}
-  scale: {x: 0.8695652, y: 0.8695652, z: 1}
+  position: {x: -558, y: -69, z: 0}
+  scale: {x: 1, y: 1, z: 1}
   references:
     version: 1
