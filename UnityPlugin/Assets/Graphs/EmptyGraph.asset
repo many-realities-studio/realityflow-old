@@ -12,7 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0db6557f99236c3438c0dff7e0e8f03e, type: 3}
   m_Name: EmptyGraph
   m_EditorClassIdentifier: 
-  serializedNodes: []
+  serializedNodes:
+  - type: GameObjectManipulationNode, com.RealityFlow.Contrib.NGP, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    jsonDatas: '{"GUID":"ba682a48-97ed-437f-ae39-af804f8cbbec","computeOrder":0,"position":{"serializedVersion":"2","x":135.0,"y":12.32000732421875,"width":196.0,"height":365.0},"expanded":false,"debug":false,"nodeLock":false,"vector4":{"x":0.0,"y":0.0,"z":0.0,"w":0.0},"vector3":{"x":0.0,"y":0.0,"z":0.0},"vector2":{"x":0.0,"y":0.0},"floatInput":0.0,"intInput":0,"intInput2":0,"stringInput":"","color":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"gameObject":{"instanceID":0},"animationCurve":{"serializedVersion":"2","m_Curve":[],"m_PreInfinity":2,"m_PostInfinity":2,"m_RotationOrder":4},"rigidbody":{"instanceID":0},"layerMask":{"serializedVersion":"2","m_Bits":0}}'
+  - type: DrawerFieldTestNode, com.RealityFlow.Contrib.NGP, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    jsonDatas: '{"GUID":"8e76bcc8-ab42-4186-98cb-dec86f7e99ab","computeOrder":1,"position":{"serializedVersion":"2","x":524.6799926757813,"y":12.0,"width":146.0,"height":341.0},"expanded":false,"debug":false,"nodeLock":false,"vector4":{"x":0.0,"y":0.0,"z":0.0,"w":0.0},"vector3":{"x":0.0,"y":0.0,"z":0.0},"vector2":{"x":0.0,"y":0.0},"floatInput":0.0,"intInput":0,"intInput2":0,"stringInput":"","color":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"gameObject":{"instanceID":0},"animationCurve":{"serializedVersion":"2","m_Curve":[],"m_PreInfinity":2,"m_PostInfinity":2,"m_RotationOrder":4},"rigidbody":{"instanceID":0},"layerMask":{"serializedVersion":"2","m_Bits":0}}'
   edges: []
   groups: []
   stackNodes: []
@@ -49,7 +55,7 @@ MonoBehaviour:
         Culture=neutral, PublicKeyToken=null
   exposedParameters: []
   stickyNotes: []
-  position: {x: 505, y: 187, z: 0}
-  scale: {x: 0.18690714, y: 0.18690714, z: 1}
+  position: {x: 178, y: 84, z: 0}
+  scale: {x: 1, y: 1, z: 1}
   references:
     version: 1
