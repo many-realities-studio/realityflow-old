@@ -60,33 +60,6 @@ namespace GraphProcessor
 		public static readonly int invalidComputeOrder = -1;
 
 		/// <summary>
-		/// Graph name (Serialized)
-		/// </summary>
-		/// <typeparam name="string"></typeparam>
-		/// <returns></returns>
-		[SerializeField]
-		public string									Name = "";
-
-		// /// <summary>
-		// /// Graph Reality Flow Message Type, blank at start (Serialized)
-		// /// </summary>
-		// /// <typeparam name="string"></typeparam>
-		// /// <returns></returns>
-		// [SerializeField]
-		// public string									MessageType = "";
-
-		// /// <summary>
-		// /// Graph RF project ID (Serialized)
-		// /// </summary>
-		// /// <typeparam name="string"></typeparam>
-		// /// <returns></returns>
-		// [SerializeField]
-		// public string									ProjectId = "";
-
-		[SerializeField]
-        private string Id = Guid.NewGuid().ToString();
-
-		/// <summary>
 		/// Json list of nodes (Serialized)
 		/// </summary>
 		/// <typeparam name="JsonElement"></typeparam>

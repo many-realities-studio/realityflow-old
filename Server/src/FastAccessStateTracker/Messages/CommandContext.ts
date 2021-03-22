@@ -566,14 +566,16 @@ class Command_CreateVSGraph implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
     //console.log("INSIDE COMMANDCONTEXT -> Command_CreateVSGraph");
+    let parsedGraph = data.FlowVSGraph;
     let flowVSGraph = new FlowVSGraph(data.FlowVSGraph);
     
     console.log(flowVSGraph)
 
     let returnData = await StateTracker.CreateVSGraph(flowVSGraph, data.ProjectId);
+
     let returnContent = {
       "MessageType": "CreateVSGraph",
-      "FlowVSGraph": returnData[0],
+      "FlowVSGraph": parsedGraph,
       "WasSuccessful": (returnData[0] == null) ? false: true
     }
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
