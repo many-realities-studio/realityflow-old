@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0db6557f99236c3438c0dff7e0e8f03e, type: 3}
   m_Name: EmptyGraph
   m_EditorClassIdentifier: 
-  Name: 
-  Id: 15586981-1259-4568-b03f-1525988f2539
   serializedNodes:
   - type: GameObjectManipulationNode, com.RealityFlow.Contrib.NGP, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
@@ -35,16 +33,16 @@ MonoBehaviour:
     jsonDatas: '{"GUID":"24df74d8-cde0-4fbe-b829-374a0a9f7d68","computeOrder":7,"position":{"serializedVersion":"2","x":470.99993896484377,"y":713.5626220703125,"width":127.0,"height":39.0},"expanded":false,"debug":false,"nodeLock":false,"parameterGUID":"052b31e4-d4aa-4b2b-87c5-55a51be63d0c","accessor":0}'
   - type: IfNode, com.RealityFlow.Contrib.NGP, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
-    jsonDatas: '{"GUID":"1b518d63-09a2-4c90-964f-4bee1b3d9b15","computeOrder":4,"position":{"serializedVersion":"2","x":-150.81707763671876,"y":377.0,"width":153.0,"height":116.0},"expanded":false,"debug":false,"nodeLock":false,"condition":true,"compareOperator":0}'
+    jsonDatas: '{"GUID":"1b518d63-09a2-4c90-964f-4bee1b3d9b15","computeOrder":4,"position":{"serializedVersion":"2","x":-150.81707763671876,"y":377.0,"width":153.0,"height":116.0},"expanded":false,"debug":false,"nodeLock":false,"condition":false,"compareOperator":0}'
   - type: NodeGraphProcessor.Examples.StartNode, com.RealityFlow.Contrib.NGP, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
     jsonDatas: '{"GUID":"8740c908-30da-45a7-92dd-8460995c6356","computeOrder":2,"position":{"serializedVersion":"2","x":-261.958251953125,"y":548.0,"width":88.0,"height":77.0},"expanded":false,"debug":false,"nodeLock":false}'
   - type: NodeGraphProcessor.Examples.Comparison, com.RealityFlow.Contrib.NGP, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-    jsonDatas: '{"GUID":"fad5e985-2efd-43e3-83de-a6406cc2d98d","computeOrder":3,"position":{"serializedVersion":"2","x":-567.3161010742188,"y":377.0,"width":241.0,"height":164.0},"expanded":false,"debug":false,"nodeLock":false,"inA":0.0,"inB":0.0,"compared":true,"compareFunction":8}'
+    jsonDatas: '{"GUID":"fad5e985-2efd-43e3-83de-a6406cc2d98d","computeOrder":3,"position":{"serializedVersion":"2","x":-567.3161010742188,"y":377.0,"width":241.0,"height":164.0},"expanded":false,"debug":false,"nodeLock":false,"inA":0.0,"inB":0.0,"compared":false,"compareFunction":1}'
   - type: BoolNode, com.RealityFlow.Contrib.NGP, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
-    jsonDatas: '{"GUID":"1b2c2e8c-b93d-49a1-9f39-5dc0a34101af","computeOrder":9,"position":{"serializedVersion":"2","x":1060.64501953125,"y":252.59750366210938,"width":100.0,"height":100.0},"expanded":false,"debug":false,"nodeLock":false,"inA":0.0,"inB":0.0,"compared":false,"compareFunction":""}'
+    jsonDatas: '{"GUID":"1b2c2e8c-b93d-49a1-9f39-5dc0a34101af","computeOrder":9,"position":{"serializedVersion":"2","x":1060.64501953125,"y":252.59750366210938,"width":100.0,"height":100.0},"expanded":false,"debug":false,"nodeLock":false,"inA":0.0,"inB":0.0,"compared":true,"compareFunction":""}'
   edges:
   - GUID: 5db34bd1-a0d3-46a2-85d0-46bee9df9da3
     owner: {fileID: 11400000}
@@ -152,7 +150,7 @@ MonoBehaviour:
       serializedType: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
       serializedName: 
-      serializedValue: '{"value":{"instanceID":-10952}}'
+      serializedValue: '{"value":{"instanceID":-5958}}'
     input: 1
     settings:
       isHidden: 0
@@ -181,7 +179,7 @@ MonoBehaviour:
     settings:
       isHidden: 0
   stickyNotes: []
-  position: {x: -558, y: -69, z: 0}
-  scale: {x: 1, y: 1, z: 1}
+  position: {x: 633, y: -112, z: 0}
+  scale: {x: 0.65751624, y: 0.65751624, z: 1}
   references:
     version: 1
