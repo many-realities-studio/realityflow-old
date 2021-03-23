@@ -478,7 +478,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7225467683399844887}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: NodeUI, Assembly-CSharp
         m_MethodName: Select
         m_Mode: 1
@@ -920,8 +920,8 @@ GameObject:
   - component: {fileID: 7188062422076971070}
   - component: {fileID: 7188062422076971071}
   - component: {fileID: 7188062422076971064}
-  - component: {fileID: 7225467683399844887}
   - component: {fileID: 2254012215184393270}
+  - component: {fileID: 4299831363607047131}
   m_Layer: 5
   m_Name: NodeUX
   m_TagString: Untagged
@@ -1014,23 +1014,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &7225467683399844887
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7188062422076971066}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7847c09f97ab00140bb5ae307fd2737e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  title: {fileID: 7188062421850509852}
-  GUID: {fileID: 1511984297549755426}
-  inputPanel: {fileID: 4694861305367758876}
-  outputPanel: {fileID: 8767910034630851522}
-  graph: {fileID: 0}
 --- !u!114 &2254012215184393270
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1045,6 +1028,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 0
+--- !u!114 &4299831363607047131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7188062422076971066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6bbf94fd03a9ec4087a40f998ace155, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: {fileID: 7188062421850509852}
+  GUID: {fileID: 1511984297549755426}
+  inputPanel: {fileID: 4694861305367758876}
+  outputPanel: {fileID: 8767910034630851522}
+  rfgv: {fileID: 0}
 --- !u!1 &7188062422117782422
 GameObject:
   m_ObjectHideFlags: 0
@@ -1407,7 +1407,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7225467683399844887}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: Delete
         m_Mode: 1
