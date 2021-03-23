@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.3731193, g: 0.38073996, b: 0.35872698, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -320,9 +320,12 @@ MonoBehaviour:
   nodeView: {fileID: 7188062422076971066, guid: 8a3a205c4308c8d48a8d08b0f4d4c7c6,
     type: 3}
   paramView: {fileID: 0}
+  edgeView: {fileID: 0}
   nodeViewList: []
   selectedNV: []
   paramList: []
+  edges: []
+  canvasDimensions: {x: 2560, y: 1080}
 --- !u!114 &122751696
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -335,12 +338,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6bbf94fd03a9ec4087a40f998ace155, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  curGraph: {fileID: 11400000, guid: 9978faab71ef9bb48b5dd858387dc9e1, type: 2}
-  nodeView: {fileID: 2866486406765876879, guid: 5c2dbc1429c916a43984d1a1795c59e6,
-    type: 3}
-  nodePortView: {fileID: 8411453318253863390, guid: 28881f12401db5d44b673fa6f9346913,
-    type: 3}
-  nodeViewList: []
+  title: {fileID: 0}
+  GUID: {fileID: 0}
+  inputPanel: {fileID: 0}
+  outputPanel: {fileID: 0}
+  rfgv: {fileID: 0}
 --- !u!114 &122751697
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -582,11 +584,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7847c09f97ab00140bb5ae307fd2737e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  title: {fileID: 0}
-  GUID: {fileID: 0}
-  inputPanel: {fileID: 0}
-  outputPanel: {fileID: 0}
-  rfgv: {fileID: 0}
 --- !u!4 &195253255
 Transform:
   m_ObjectHideFlags: 0
@@ -964,7 +961,7 @@ PrefabInstance:
     - target: {fileID: 5183264439111980508, guid: 7d681403ad29c7a4cb99641db449fc46,
         type: 3}
       propertyPath: m_RenderMode
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5183264439111980508, guid: 7d681403ad29c7a4cb99641db449fc46,
         type: 3}
@@ -1119,12 +1116,12 @@ PrefabInstance:
     - target: {fileID: 6899134521416531258, guid: 7d681403ad29c7a4cb99641db449fc46,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -3311.72
+      value: -0.0000464484
       objectReference: {fileID: 0}
     - target: {fileID: 6899134521416531258, guid: 7d681403ad29c7a4cb99641db449fc46,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 5559.3154
+      value: -0.00002193451
       objectReference: {fileID: 0}
     - target: {fileID: 8018557205645839953, guid: 7d681403ad29c7a4cb99641db449fc46,
         type: 3}
