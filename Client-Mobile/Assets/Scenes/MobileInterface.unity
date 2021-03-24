@@ -40642,7 +40642,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c0ad0e8e55c95c4e931911c4b943a64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slideMenuManager: {fileID: 0}
+  outlinerManager: {fileID: 2107756580}
+  slideMenuManager: {fileID: 1206095301}
   space: 0
   transformType: 0
   pivot: 0

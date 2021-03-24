@@ -20,7 +20,7 @@ namespace RuntimeGizmos
 	public class TransformGizmo : MonoBehaviour
 	{
         // Support for outliner
-        OutlinerManager outlinerManager;
+        public OutlinerManager outlinerManager;
 
 		public SlideMenuManager slideMenuManager;
 
