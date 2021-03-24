@@ -12,6 +12,7 @@ TagManager:
   - FloatNode
   - IntNode
   - ConditionalNode
+  - GameObjectManipulationNode
   layers:
   - Default
   - TransparentFX

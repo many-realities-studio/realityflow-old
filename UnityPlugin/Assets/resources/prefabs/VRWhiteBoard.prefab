@@ -1060,7 +1060,7 @@ MonoBehaviour:
   SelectComparisonCanvas: {fileID: 2137392424276652683}
   nodePortView: {fileID: 8411453318253863390, guid: 28881f12401db5d44b673fa6f9346913,
     type: 3}
-  nodeView: {fileID: 3446242523934461078, guid: 966f558058dac3c4c86d74a77dbac50b,
+  nodeView: {fileID: 1566273422334750335, guid: 442be4980aeb8e24690444fa43d79319,
     type: 3}
   paramView: {fileID: 1277387871551327435, guid: e3f2b22194be31c45ba31088fcf61dfc,
     type: 3}
@@ -1521,7 +1521,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &7370409612422302776
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4326,7 +4326,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.011943008, y: 0.0125302775}
+  m_AnchoredPosition: {x: 0.0006526774, y: 0.01525243}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &9086282448321111246
