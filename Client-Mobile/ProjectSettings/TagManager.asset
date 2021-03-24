@@ -17,6 +17,8 @@ TagManager:
   - Canvas
   - NodeOptionsDropdown
   - GraphCommandsDropdown
+  - PanelDropdown
+  - ObjectInteractionItems
   layers:
   - Default
   - TransparentFX
