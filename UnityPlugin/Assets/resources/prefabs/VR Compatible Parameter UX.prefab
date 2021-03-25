@@ -261,9 +261,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1277387871551327435}
         m_TargetAssemblyTypeName: NodeUI, Assembly-CSharp
-        m_MethodName: Select
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -652,7 +652,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1277387871551327435}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5afd5316c63705643b3daba5a6e923bd, type: 3}
   m_Name: 
@@ -860,9 +860,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: Delete
+      - m_Target: {fileID: 5108656166428225165}
+        m_TargetAssemblyTypeName: ParameterView, com.RealityFlow
+        m_MethodName: deleteParam
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
