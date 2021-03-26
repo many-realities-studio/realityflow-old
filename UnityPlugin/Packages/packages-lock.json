@@ -7,9 +7,9 @@
       "dependencies": {}
     },
     "com.microsoft.mixedreality.webrtc": {
-      "version": "file:../../com.microsoft.mixedreality.webrtc-2.0.2.tgz",
+      "version": "file:C:/Users/owenm/Desktop/Spring2021/clean2/realityflow/MRTK-WebRTC",
       "depth": 0,
-      "source": "local-tarball",
+      "source": "local",
       "dependencies": {}
     },
     "com.realityflow": {
