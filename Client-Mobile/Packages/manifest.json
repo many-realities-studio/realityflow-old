@@ -11,6 +11,7 @@
     "com.microsoft.mixedreality.toolkit.testutilities": "file:MixedReality/com.microsoft.mixedreality.toolkit.testutilities-2.5.3.tgz",
     "com.microsoft.mixedreality.toolkit.tools": "file:MixedReality/com.microsoft.mixedreality.toolkit.tools-2.5.3.tgz",
     "com.realityflow": "https://github.com/many-realities-lab-ucf/realityflow_package.git#pluginDevelopment",
+    "com.unity.cinemachine": "2.6.4",
     "com.unity.collab-proxy": "1.3.9",
     "com.unity.ide.rider": "2.0.7",
     "com.unity.ide.visualstudio": "2.0.5",
