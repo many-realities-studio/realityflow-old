@@ -12,7 +12,7 @@ TagManager:
   - FloatNode
   - IntNode
   - ConditionalNode
-  - GameObjectManipulationNode
+  - VSGraph
   layers:
   - Default
   - TransparentFX
