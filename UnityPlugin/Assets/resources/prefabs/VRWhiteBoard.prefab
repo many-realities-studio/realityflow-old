@@ -3132,6 +3132,8 @@ MonoBehaviour:
       m_Image: {fileID: 0}
     - m_Text: Bool
       m_Image: {fileID: 0}
+    - m_Text: Color
+      m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -4912,7 +4914,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.00281592, y: 0.007490676}
+  m_AnchoredPosition: {x: 0.00011579294, y: 0.0067014135}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &6127368782420504793

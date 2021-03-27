@@ -15,15 +15,26 @@ MonoBehaviour:
   serializedNodes:
   - type: GameObjectManipulationNode, com.RealityFlow.Contrib.NGP, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-    jsonDatas: '{"GUID":"c8690cdf-03fa-44c6-8505-06a6ee07270a","computeOrder":0,"position":{"serializedVersion":"2","x":251.2575225830078,"y":-82.55612182617188,"width":196.0,"height":365.0},"expanded":false,"debug":false,"nodeLock":false,"vector4":{"x":0.0,"y":0.0,"z":0.0,"w":0.0},"vector3":{"x":0.0,"y":0.0,"z":0.0},"vector2":{"x":0.0,"y":0.0},"floatInput":0.0,"intInput":0,"intInput2":0,"stringInput":"","color":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"gameObject":{"instanceID":0},"animationCurve":{"serializedVersion":"2","m_Curve":[],"m_PreInfinity":2,"m_PostInfinity":2,"m_RotationOrder":4},"rigidbody":{"instanceID":0},"layerMask":{"serializedVersion":"2","m_Bits":0}}'
-  edges: []
+    jsonDatas: '{"GUID":"c8690cdf-03fa-44c6-8505-06a6ee07270a","computeOrder":1,"position":{"serializedVersion":"2","x":251.2575225830078,"y":-82.55612182617188,"width":196.0,"height":365.0},"expanded":false,"debug":false,"nodeLock":false,"vector4":{"x":0.0,"y":0.0,"z":0.0,"w":0.0},"vector3":{"x":0.0,"y":0.0,"z":0.0},"vector2":{"x":0.0,"y":0.0},"floatInput":0.0,"intInput":0,"intInput2":0,"stringInput":"","color":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"gameObject":{"instanceID":0},"animationCurve":{"serializedVersion":"2","m_Curve":[],"m_PreInfinity":2,"m_PostInfinity":2,"m_RotationOrder":4},"rigidbody":{"instanceID":0},"layerMask":{"serializedVersion":"2","m_Bits":0}}'
+  - type: GraphProcessor.ParameterNode, com.alelievr.NodeGraphProcessor.Runtime,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    jsonDatas: '{"GUID":"3d7a61e7-34c9-4a3a-8dcb-62483230cc99","computeOrder":0,"position":{"serializedVersion":"2","x":-181.8091583251953,"y":21.699357986450197,"width":162.0,"height":39.0},"expanded":false,"debug":false,"nodeLock":false,"parameterGUID":"634fd429-6445-40a9-81f9-6e028215d64e","accessor":0}'
+  edges:
+  - GUID: ca4eb0b6-23ab-410d-90d6-b1486d44f4d4
+    owner: {fileID: 11400000}
+    inputNodeGUID: c8690cdf-03fa-44c6-8505-06a6ee07270a
+    outputNodeGUID: 3d7a61e7-34c9-4a3a-8dcb-62483230cc99
+    inputFieldName: gameObject
+    outputFieldName: output
+    inputPortIdentifier: 
+    outputPortIdentifier: output
   groups: []
   stackNodes: []
   pinnedElements:
   - position:
       serializedVersion: 2
-      x: 0
-      y: 84
+      x: 132
+      y: 73
       width: 150
       height: 200
     opened: 1
@@ -76,7 +87,7 @@ MonoBehaviour:
     settings:
       isHidden: 0
   stickyNotes: []
-  position: {x: 312, y: 241, z: 0}
+  position: {x: 915, y: 308, z: 0}
   scale: {x: 1.520875, y: 1.520875, z: 1}
   references:
     version: 1
