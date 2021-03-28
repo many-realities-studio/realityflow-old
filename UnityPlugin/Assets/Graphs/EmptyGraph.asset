@@ -15,106 +15,26 @@ MonoBehaviour:
   serializedNodes:
   - type: GameObjectManipulationNode, com.RealityFlow.Contrib.NGP, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-    jsonDatas: '{"GUID":"78ddb6c4-0801-4198-850f-82f7d725086f","computeOrder":5,"position":{"serializedVersion":"2","x":740.0,"y":69.80000305175781,"width":146.0,"height":365.0},"expanded":false,"debug":false,"nodeLock":false,"vector4":{"x":0.0,"y":0.0,"z":0.0,"w":0.0},"vector3":{"x":0.0,"y":0.0,"z":0.0},"vector2":{"x":0.0,"y":0.0},"floatInput":0.0,"intInput":0,"intInput2":0,"stringInput":"","color":{"r":0.0,"g":1.0,"b":0.3763396739959717,"a":0.0},"gameObject":{"instanceID":0},"animationCurve":{"serializedVersion":"2","m_Curve":[],"m_PreInfinity":2,"m_PostInfinity":2,"m_RotationOrder":4},"rigidbody":{"instanceID":0},"layerMask":{"serializedVersion":"2","m_Bits":0}}'
+    jsonDatas: '{"GUID":"c8690cdf-03fa-44c6-8505-06a6ee07270a","computeOrder":1,"position":{"serializedVersion":"2","x":251.2575225830078,"y":-82.55612182617188,"width":196.0,"height":365.0},"expanded":false,"debug":false,"nodeLock":false,"vector4":{"x":0.0,"y":0.0,"z":0.0,"w":0.0},"vector3":{"x":0.0,"y":0.0,"z":0.0},"vector2":{"x":0.0,"y":0.0},"floatInput":0.0,"intInput":0,"intInput2":0,"stringInput":"","color":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"gameObject":{"instanceID":0},"animationCurve":{"serializedVersion":"2","m_Curve":[],"m_PreInfinity":2,"m_PostInfinity":2,"m_RotationOrder":4},"rigidbody":{"instanceID":0},"layerMask":{"serializedVersion":"2","m_Bits":0}}'
   - type: GraphProcessor.ParameterNode, com.alelievr.NodeGraphProcessor.Runtime,
       Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    jsonDatas: '{"GUID":"3f6e8425-bd76-413d-848a-4a50699f7939","computeOrder":0,"position":{"serializedVersion":"2","x":421.8499755859375,"y":306.35003662109377,"width":162.0,"height":39.0},"expanded":false,"debug":false,"nodeLock":false,"parameterGUID":"65e7d1db-e017-47fd-9877-78b54b5efc11","accessor":0}'
-  - type: GraphProcessor.ParameterNode, com.alelievr.NodeGraphProcessor.Runtime,
-      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    jsonDatas: '{"GUID":"6b8c6aaa-3b58-4897-9fdc-dc3e6da4d016","computeOrder":1,"position":{"serializedVersion":"2","x":422.0,"y":247.0,"width":137.0,"height":39.0},"expanded":false,"debug":false,"nodeLock":false,"parameterGUID":"520d86b5-fa57-4b48-be70-182f7b787791","accessor":0}'
-  - type: GameObjectManipulationNode, com.RealityFlow.Contrib.NGP, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-    jsonDatas: '{"GUID":"f501cc56-ea95-4a11-ab8a-ca02c7289d95","computeOrder":8,"position":{"serializedVersion":"2","x":788.8965454101563,"y":548.0267333984375,"width":146.0,"height":365.0},"expanded":false,"debug":false,"nodeLock":false,"vector4":{"x":0.0,"y":0.0,"z":0.0,"w":0.0},"vector3":{"x":0.0,"y":0.0,"z":0.0},"vector2":{"x":0.0,"y":0.0},"floatInput":0.0,"intInput":0,"intInput2":0,"stringInput":"","color":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"gameObject":{"instanceID":0},"animationCurve":{"serializedVersion":"2","m_Curve":[],"m_PreInfinity":2,"m_PostInfinity":2,"m_RotationOrder":4},"rigidbody":{"instanceID":0},"layerMask":{"serializedVersion":"2","m_Bits":0}}'
-  - type: GraphProcessor.ParameterNode, com.alelievr.NodeGraphProcessor.Runtime,
-      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    jsonDatas: '{"GUID":"823a0464-bcd8-4d8b-bf27-571c3a78948b","computeOrder":6,"position":{"serializedVersion":"2","x":470.8966064453125,"y":784.0267333984375,"width":162.0,"height":39.0},"expanded":false,"debug":false,"nodeLock":false,"parameterGUID":"65e7d1db-e017-47fd-9877-78b54b5efc11","accessor":0}'
-  - type: GraphProcessor.ParameterNode, com.alelievr.NodeGraphProcessor.Runtime,
-      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    jsonDatas: '{"GUID":"24df74d8-cde0-4fbe-b829-374a0a9f7d68","computeOrder":7,"position":{"serializedVersion":"2","x":470.99993896484377,"y":713.5626220703125,"width":127.0,"height":39.0},"expanded":false,"debug":false,"nodeLock":false,"parameterGUID":"052b31e4-d4aa-4b2b-87c5-55a51be63d0c","accessor":0}'
-  - type: IfNode, com.RealityFlow.Contrib.NGP, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-    jsonDatas: '{"GUID":"1b518d63-09a2-4c90-964f-4bee1b3d9b15","computeOrder":4,"position":{"serializedVersion":"2","x":-150.81707763671876,"y":377.0,"width":153.0,"height":116.0},"expanded":false,"debug":false,"nodeLock":false,"condition":false,"compareOperator":0}'
-  - type: NodeGraphProcessor.Examples.StartNode, com.RealityFlow.Contrib.NGP, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-    jsonDatas: '{"GUID":"8740c908-30da-45a7-92dd-8460995c6356","computeOrder":2,"position":{"serializedVersion":"2","x":-261.958251953125,"y":548.0,"width":88.0,"height":77.0},"expanded":false,"debug":false,"nodeLock":false}'
-  - type: NodeGraphProcessor.Examples.Comparison, com.RealityFlow.Contrib.NGP, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-    jsonDatas: '{"GUID":"fad5e985-2efd-43e3-83de-a6406cc2d98d","computeOrder":3,"position":{"serializedVersion":"2","x":-567.3161010742188,"y":377.0,"width":241.0,"height":164.0},"expanded":false,"debug":false,"nodeLock":false,"inA":0.0,"inB":0.0,"compared":false,"compareFunction":1}'
-  - type: BoolNode, com.RealityFlow.Contrib.NGP, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-    jsonDatas: '{"GUID":"1b2c2e8c-b93d-49a1-9f39-5dc0a34101af","computeOrder":9,"position":{"serializedVersion":"2","x":1060.64501953125,"y":252.59750366210938,"width":100.0,"height":100.0},"expanded":false,"debug":false,"nodeLock":false,"inA":0.0,"inB":0.0,"compared":true,"compareFunction":""}'
+    jsonDatas: '{"GUID":"3d7a61e7-34c9-4a3a-8dcb-62483230cc99","computeOrder":0,"position":{"serializedVersion":"2","x":-181.8091583251953,"y":21.699357986450197,"width":162.0,"height":39.0},"expanded":false,"debug":false,"nodeLock":false,"parameterGUID":"634fd429-6445-40a9-81f9-6e028215d64e","accessor":0}'
   edges:
-  - GUID: 5db34bd1-a0d3-46a2-85d0-46bee9df9da3
+  - GUID: ca4eb0b6-23ab-410d-90d6-b1486d44f4d4
     owner: {fileID: 11400000}
-    inputNodeGUID: 78ddb6c4-0801-4198-850f-82f7d725086f
-    outputNodeGUID: 3f6e8425-bd76-413d-848a-4a50699f7939
+    inputNodeGUID: c8690cdf-03fa-44c6-8505-06a6ee07270a
+    outputNodeGUID: 3d7a61e7-34c9-4a3a-8dcb-62483230cc99
     inputFieldName: gameObject
     outputFieldName: output
     inputPortIdentifier: 
     outputPortIdentifier: output
-  - GUID: 37cbc08c-813c-4b41-98f6-6bb0754f4162
-    owner: {fileID: 11400000}
-    inputNodeGUID: 78ddb6c4-0801-4198-850f-82f7d725086f
-    outputNodeGUID: 6b8c6aaa-3b58-4897-9fdc-dc3e6da4d016
-    inputFieldName: color
-    outputFieldName: output
-    inputPortIdentifier: 
-    outputPortIdentifier: output
-  - GUID: 105f9781-32d9-4c15-b0fd-4fa53aae9df5
-    owner: {fileID: 11400000}
-    inputNodeGUID: f501cc56-ea95-4a11-ab8a-ca02c7289d95
-    outputNodeGUID: 823a0464-bcd8-4d8b-bf27-571c3a78948b
-    inputFieldName: gameObject
-    outputFieldName: output
-    inputPortIdentifier: 
-    outputPortIdentifier: output
-  - GUID: e9ce9e1d-223d-4e58-b120-f2d49b2bfd7c
-    owner: {fileID: 11400000}
-    inputNodeGUID: f501cc56-ea95-4a11-ab8a-ca02c7289d95
-    outputNodeGUID: 24df74d8-cde0-4fbe-b829-374a0a9f7d68
-    inputFieldName: color
-    outputFieldName: output
-    inputPortIdentifier: 
-    outputPortIdentifier: output
-  - GUID: c17b62e7-81a3-445a-8c1f-d1f278a0c5f0
-    owner: {fileID: 11400000}
-    inputNodeGUID: f501cc56-ea95-4a11-ab8a-ca02c7289d95
-    outputNodeGUID: 1b518d63-09a2-4c90-964f-4bee1b3d9b15
-    inputFieldName: condition
-    outputFieldName: false
-    inputPortIdentifier: 
-    outputPortIdentifier: 
-  - GUID: 9623288f-9d61-4052-b83c-31cc58669024
-    owner: {fileID: 11400000}
-    inputNodeGUID: 78ddb6c4-0801-4198-850f-82f7d725086f
-    outputNodeGUID: 1b518d63-09a2-4c90-964f-4bee1b3d9b15
-    inputFieldName: condition
-    outputFieldName: true
-    inputPortIdentifier: 
-    outputPortIdentifier: 
-  - GUID: c1b9d949-1cd6-4f7d-a742-5b67d2ec7d55
-    owner: {fileID: 11400000}
-    inputNodeGUID: 1b518d63-09a2-4c90-964f-4bee1b3d9b15
-    outputNodeGUID: 8740c908-30da-45a7-92dd-8460995c6356
-    inputFieldName: executed
-    outputFieldName: executes
-    inputPortIdentifier: 
-    outputPortIdentifier: 
-  - GUID: a680fe13-39ad-4789-aa34-854a1bbe0290
-    owner: {fileID: 11400000}
-    inputNodeGUID: 1b518d63-09a2-4c90-964f-4bee1b3d9b15
-    outputNodeGUID: fad5e985-2efd-43e3-83de-a6406cc2d98d
-    inputFieldName: condition
-    outputFieldName: compared
-    inputPortIdentifier: 
-    outputPortIdentifier: 
   groups: []
   stackNodes: []
   pinnedElements:
   - position:
       serializedVersion: 2
-      x: 0
-      y: 84
+      x: 132
+      y: 73
       width: 150
       height: 200
     opened: 1
@@ -142,19 +62,19 @@ MonoBehaviour:
       serializedType: ConditionalProcessorView, com.RealityFlow.Contrib.NGP, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
   exposedParameters:
-  - guid: 65e7d1db-e017-47fd-9877-78b54b5efc11
+  - guid: 634fd429-6445-40a9-81f9-6e028215d64e
     name: New GameObjectParam
     type: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
     serializedValue:
-      serializedType: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
+      serializedType: UnityEngine.Object, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
       serializedName: 
-      serializedValue: '{"value":{"instanceID":-5958}}'
+      serializedValue: '{"value":{"instanceID":-103028}}'
     input: 1
     settings:
       isHidden: 0
-  - guid: 052b31e4-d4aa-4b2b-87c5-55a51be63d0c
+  - guid: d2e4b49d-d9d0-4975-a699-20ba669e5d8a
     name: New ColorParam
     type: UnityEngine.Color, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
@@ -166,20 +86,8 @@ MonoBehaviour:
     input: 1
     settings:
       isHidden: 0
-  - guid: 520d86b5-fa57-4b48-be70-182f7b787791
-    name: New ColorParam 0
-    type: UnityEngine.Color, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-    serializedValue:
-      serializedType: UnityEngine.Color, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
-      serializedName: 
-      serializedValue: '{"r":0.0,"g":1.0,"b":0.3763396739959717,"a":0.0}'
-    input: 1
-    settings:
-      isHidden: 0
   stickyNotes: []
-  position: {x: 633, y: -112, z: 0}
-  scale: {x: 0.65751624, y: 0.65751624, z: 1}
+  position: {x: 915, y: 308, z: 0}
+  scale: {x: 1.520875, y: 1.520875, z: 1}
   references:
     version: 1
