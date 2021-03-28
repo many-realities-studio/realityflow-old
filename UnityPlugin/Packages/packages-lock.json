@@ -6,6 +6,12 @@
       "source": "local",
       "dependencies": {}
     },
+    "com.microsoft.mixedreality.webrtc": {
+      "version": "file:../../MRTK-WebRTC",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
     "com.realityflow": {
       "version": "file:RealityFlow",
       "depth": 0,
