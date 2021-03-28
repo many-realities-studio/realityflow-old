@@ -1,16 +1,8 @@
 {
-  "scopedRegistries": [
-    {
-      "name": "Microsoft Mixed Reality",
-      "url": "https://pkgs.dev.azure.com/aipmr/MixedReality-Unity-Packages/_packaging/Unity-packages/npm/registry/",
-      "scopes": [
-        "com.microsoft.mixedreality",
-        "com.microsoft.spatialaudio"
-      ]
-    }
-  ],
+  "scopedRegistries": [],
   "dependencies": {
     "com.alelievr.node-graph-processor": "file:../../NGP Master/Assets/com.alelievr.NodeGraphProcessor",
+    "com.microsoft.mixedreality.webrtc": "file:../../MRTK-WebRTC",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.2d.tilemap": "1.0.0",
     "com.unity.ads": "3.5.2",
