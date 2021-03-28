@@ -1559,7 +1559,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PeerConnection: {fileID: 1546976930}
-  AutoLogErrors: 1
+  AutoLogErrors: 0
   LocalPeerId: 
   RemotePeerId: 
   HttpServerAddress: http://127.0.0.1:3000/
@@ -2455,6 +2455,11 @@ PrefabInstance:
     - target: {fileID: 4147466145231933660, guid: 6b5dc551fbb15b4468833d6e7032260f,
         type: 3}
       propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6127368782420504793, guid: 6b5dc551fbb15b4468833d6e7032260f,
+        type: 3}
+      propertyPath: m_ChildControlWidth
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7370409612422302757, guid: 6b5dc551fbb15b4468833d6e7032260f,

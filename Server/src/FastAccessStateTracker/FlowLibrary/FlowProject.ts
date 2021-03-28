@@ -177,11 +177,11 @@ export class FlowProject
   public DeleteVSGraph(vsGraphToRemove: string, client: string) 
   {
     let index = this._VSGraphList.findIndex((element) => element.Id == vsGraphToRemove);
-    if(index > -1 && this._VSGraphList[index].CurrentCheckout == client){
+    // if(index > -1 && this._VSGraphList[index].CurrentCheckout == client){
       this._VSGraphList.splice(index);
       return true;
-    }
-    else return false
+    // }
+    // else return false
   }
 
   /**
@@ -240,10 +240,10 @@ export class FlowProject
   {
     // Get the graph that we are changing from the specified project
     var oldVSGraph: FlowVSGraph = this._VSGraphList.find(element => element.Id == newVSGraph.Id);
-    if(oldVSGraph != undefined && oldVSGraph.CurrentCheckout == client){
-      oldVSGraph.UpdateProperties(newVSGraph);
-      return true;
-    }
-    else return false;
+    // if(oldVSGraph != undefined /*&& oldVSGraph.CurrentCheckout == client*/){
+    oldVSGraph.UpdateProperties(newVSGraph);
+    return true;
+    // }
+    // else return false;
   }
 }

@@ -643,6 +643,7 @@ class Command_UpdateVSGraph implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
+    let parsedGraph = data.FlowVSGraph;
     let flowVSGraph = new FlowVSGraph(data.FlowVSGraph);
     let returnData = await StateTracker.UpdateVSGraph(flowVSGraph, data.ProjectId, client,false, data.user);
 
@@ -651,7 +652,7 @@ class Command_UpdateVSGraph implements ICommand
 
     let returnContent = {
       "MessageType": "UpdateVSGraph",
-      "FlowVSGraph": returnData[0],
+      "FlowVSGraph": parsedGraph,
       "WasSuccessful": (returnData[0] == null) ? false: true,
     }
 
