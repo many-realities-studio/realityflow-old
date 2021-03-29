@@ -76,6 +76,12 @@
         "com.microsoft.mixedreality.toolkit.foundation": "2.5.3"
       }
     },
+    "com.microsoft.mixedreality.webrtc": {
+      "version": "file:MixedReality/com.microsoft.mixedreality.webrtc-2.0.2.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {}
+    },
     "com.realityflow": {
       "version": "https://github.com/many-realities-lab-ucf/realityflow_package.git#pluginDevelopment",
       "depth": 0,
