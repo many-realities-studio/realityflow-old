@@ -26,16 +26,16 @@ export class VSGraphOperations {
 
             newVSGraph.Id =                          vsGraphInfo.Id;
             newVSGraph.Name =                        vsGraphInfo.Name;
-            newVSGraph.SerializedNodes =             vsGraphInfo.SerializedNodes;
-            newVSGraph.Edges =                       vsGraphInfo.Edges;
-            newVSGraph.Groups =                      vsGraphInfo.Groups;
-            newVSGraph.StackNodes =                  vsGraphInfo.StackNodes;
-            newVSGraph.PinnedElements =              vsGraphInfo.PinnedElements;
-            newVSGraph.ExposedParameters =           vsGraphInfo.ExposedParameters;
-            newVSGraph.StickyNotes =                 vsGraphInfo.StickyNotes;
-            newVSGraph.Position =                    vsGraphInfo.Position;
-            newVSGraph.Scale =                       vsGraphInfo.Scale;
-            newVSGraph.References =                  vsGraphInfo.References;
+            newVSGraph.serializedNodes =             vsGraphInfo.serializedNodes;
+            newVSGraph.edges =                       vsGraphInfo.edges;
+            newVSGraph.groups =                      vsGraphInfo.groups;
+            newVSGraph.stackNodes =                  vsGraphInfo.stackNodes;
+            newVSGraph.pinnedElements =              vsGraphInfo.pinnedElements;
+            newVSGraph.exposedParameters =           vsGraphInfo.exposedParameters;
+            newVSGraph.stickyNotes =                 vsGraphInfo.stickyNotes;
+            newVSGraph.position =                    vsGraphInfo.position;
+            newVSGraph.scale =                       vsGraphInfo.scale;
+            newVSGraph.references =                  vsGraphInfo.references;
             newVSGraph.Project =                     project;
             
 
@@ -72,16 +72,16 @@ export class VSGraphOperations {
             .createQueryBuilder()
             .update(VSGraph)
             .set({
-                SerializedNodes:          vsGraphInfo.SerializedNodes,
-                Edges:                    vsGraphInfo.Edges,
-                Groups:                   vsGraphInfo.Groups,
-                StackNodes:               vsGraphInfo.StackNodes,
-                PinnedElements:           vsGraphInfo.PinnedElements,
-                ExposedParameters:        vsGraphInfo.ExposedParameters,
-                StickyNotes:              vsGraphInfo.StickyNotes,
-                Position:                 vsGraphInfo.Position,
-                Scale:                    vsGraphInfo.Scale,
-                References:               vsGraphInfo.References
+                serializedNodes:          vsGraphInfo.serializedNodes,
+                edges:                    vsGraphInfo.edges,
+                groups:                   vsGraphInfo.groups,
+                stackNodes:               vsGraphInfo.stackNodes,
+                pinnedElements:           vsGraphInfo.pinnedElements,
+                exposedParameters:        vsGraphInfo.exposedParameters,
+                stickyNotes:              vsGraphInfo.stickyNotes,
+                position:                 vsGraphInfo.position,
+                scale:                    vsGraphInfo.scale,
+                references:               vsGraphInfo.references
             })
             .where("Id = :id", {id: vsGraphInfo.Id})
             .execute();
