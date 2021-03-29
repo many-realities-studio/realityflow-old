@@ -261,9 +261,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1277387871551327435}
-        m_TargetAssemblyTypeName: NodeUI, Assembly-CSharp
-        m_MethodName: 
+      - m_Target: {fileID: 5108656166428225165}
+        m_TargetAssemblyTypeName: ParameterView, com.RealityFlow
+        m_MethodName: ModifyParameterValue
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -681,6 +681,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26b6bc03298b19e4e9e8ed07cc0963e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sphere: {fileID: 8805047765927123613, guid: 9eaa4af50447c334ab5e7143a257cf6f, type: 3}
   rfgv: {fileID: 0}
   pn:
     guid: 
@@ -693,6 +694,7 @@ MonoBehaviour:
     input: 1
     settings:
       isHidden: 0
+  s: {fileID: 0}
   title: {fileID: 1377000712093489277}
   type: {fileID: 1156717517339667664}
   guid: {fileID: 3682385704753049208}
@@ -708,11 +710,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a8af4e85766c184bae152c24cd72ac7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 8
-  nodeObject: {fileID: 0}
-  nodeView: {fileID: 0}
+  pv: {fileID: 0}
 --- !u!1 &1954411650561643798
 GameObject:
   m_ObjectHideFlags: 0
@@ -791,7 +789,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Select
+  m_Text: Modify value
 --- !u!1 &1975216515811600629
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,6 +13,7 @@ TagManager:
   - IntNode
   - ConditionalNode
   - VSGraph
+  - GameObjectManipulationNode
   layers:
   - Default
   - TransparentFX
@@ -23,7 +24,7 @@ TagManager:
   - WhiteBoard
   - ParameterCanvas
   - PostProcessing
-  - 
+  - RFObject
   - 
   - 
   - 
