@@ -4,16 +4,16 @@ export class FlowVSGraph
 {
   // Data the FlowVSGraph stores
   public Name:                string;
-  public serializedNodes:     string;
-  public edges:               string;
-  public groups:              string;
-  public stackNodes:          string;
-  public pinnedElements:      string;
-  public exposedParameters:   string;
-  public stickyNotes:         string;
-  public position:            string;
-  public scale:               string;
-  public references:          string;
+  public serializedNodes:     Array<any>;
+  public edges:               Array<any>;
+  public groups:              Array<any>;
+  public stackNodes:          Array<any>;
+  public pinnedElements:      Array<any>;
+  public exposedParameters:   Array<any>;
+  public stickyNotes:         Array<any>;
+  public position:            any;
+  public scale:               any;
+  public references:          any;
 
   // Fields used for tracking this graph in the FAM
 
@@ -26,16 +26,16 @@ export class FlowVSGraph
   {
     this.Id = json.Id;
     this.Name = json.Name;
-    this.serializedNodes = JSON.stringify(json.serializedNodes);
-    this.edges = JSON.stringify(json.edges);
-    this.groups = JSON.stringify(json.groups);
-    this.stackNodes = JSON.stringify(json.stackNodes);
-    this.pinnedElements = JSON.stringify(json.pinnedElements);
-    this.exposedParameters = JSON.stringify(json.exposedParameters);
-    this.stickyNotes = JSON.stringify(json.stickyNotes);
-    this.position = JSON.stringify(json.position);
-    this.scale = JSON.stringify(json.scale);
-    this.references = JSON.stringify(json.references);
+    this.serializedNodes = json.serializedNodes;
+    this.edges = json.edges;
+    this.groups = json.groups;
+    this.stackNodes = json.stackNodes;
+    this.pinnedElements = json.pinnedElements;
+    this.exposedParameters = json.exposedParameters;
+    this.stickyNotes = json.stickyNotes;
+    this.position = json.position;
+    this.scale = json.scale;
+    this.references = json.references;
     this.CurrentCheckout = null;
 }
 

@@ -26,16 +26,16 @@ export class VSGraphOperations {
 
             newVSGraph.Id =                          vsGraphInfo.Id;
             newVSGraph.Name =                        vsGraphInfo.Name;
-            newVSGraph.serializedNodes =             vsGraphInfo.serializedNodes;
-            newVSGraph.edges =                       vsGraphInfo.edges;
-            newVSGraph.groups =                      vsGraphInfo.groups;
-            newVSGraph.stackNodes =                  vsGraphInfo.stackNodes;
-            newVSGraph.pinnedElements =              vsGraphInfo.pinnedElements;
-            newVSGraph.exposedParameters =           vsGraphInfo.exposedParameters;
-            newVSGraph.stickyNotes =                 vsGraphInfo.stickyNotes;
-            newVSGraph.position =                    vsGraphInfo.position;
-            newVSGraph.scale =                       vsGraphInfo.scale;
-            newVSGraph.references =                  vsGraphInfo.references;
+            newVSGraph.serializedNodes =             JSON.stringify(vsGraphInfo.serializedNodes);
+            newVSGraph.edges =                       JSON.stringify(vsGraphInfo.edges);
+            newVSGraph.groups =                      JSON.stringify(vsGraphInfo.groups);
+            newVSGraph.stackNodes =                  JSON.stringify(vsGraphInfo.stackNodes);
+            newVSGraph.pinnedElements =              JSON.stringify(vsGraphInfo.pinnedElements);
+            newVSGraph.exposedParameters =           JSON.stringify(vsGraphInfo.exposedParameters);
+            newVSGraph.stickyNotes =                 JSON.stringify(vsGraphInfo.stickyNotes);
+            newVSGraph.position =                    JSON.stringify(vsGraphInfo.position);
+            newVSGraph.scale =                       JSON.stringify(vsGraphInfo.scale);
+            newVSGraph.references =                  JSON.stringify(vsGraphInfo.references);
             newVSGraph.Project =                     project;
             
 
@@ -72,16 +72,16 @@ export class VSGraphOperations {
             .createQueryBuilder()
             .update(VSGraph)
             .set({
-                serializedNodes:          vsGraphInfo.serializedNodes,
-                edges:                    vsGraphInfo.edges,
-                groups:                   vsGraphInfo.groups,
-                stackNodes:               vsGraphInfo.stackNodes,
-                pinnedElements:           vsGraphInfo.pinnedElements,
-                exposedParameters:        vsGraphInfo.exposedParameters,
-                stickyNotes:              vsGraphInfo.stickyNotes,
-                position:                 vsGraphInfo.position,
-                scale:                    vsGraphInfo.scale,
-                references:               vsGraphInfo.references
+                serializedNodes:          JSON.stringify(vsGraphInfo.serializedNodes),
+                edges:                    JSON.stringify(vsGraphInfo.edges),
+                groups:                   JSON.stringify(vsGraphInfo.groups),
+                stackNodes:               JSON.stringify(vsGraphInfo.stackNodes),
+                pinnedElements:           JSON.stringify(vsGraphInfo.pinnedElements),
+                exposedParameters:        JSON.stringify(vsGraphInfo.exposedParameters),
+                stickyNotes:              JSON.stringify(vsGraphInfo.stickyNotes),
+                position:                 JSON.stringify(vsGraphInfo.position),
+                scale:                    JSON.stringify(vsGraphInfo.scale),
+                references:               JSON.stringify(vsGraphInfo.references)
             })
             .where("Id = :id", {id: vsGraphInfo.Id})
             .execute();
