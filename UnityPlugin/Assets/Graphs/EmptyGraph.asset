@@ -34,6 +34,9 @@ MonoBehaviour:
   - type: GraphProcessor.ParameterNode, com.alelievr.NodeGraphProcessor.Runtime,
       Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     jsonDatas: '{"GUID":"b5da9624-9710-4cb1-a715-b91786cebf7a","computeOrder":3,"position":{"serializedVersion":"2","x":411.0164489746094,"y":-195.88868713378907,"width":100.0,"height":100.0},"expanded":false,"debug":false,"nodeLock":false,"parameterGUID":"df3b0844-1e3e-420e-aba3-5e4bd77cee5f","accessor":0}'
+  - type: GameObjectManipulationNode, com.RealityFlow.Contrib.NGP, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    jsonDatas: '{"GUID":"ece42bdd-c0eb-46e6-9890-b935aad69c9d","computeOrder":7,"position":{"serializedVersion":"2","x":397.6729431152344,"y":1116.5433349609375,"width":100.0,"height":100.0},"expanded":false,"debug":false,"nodeLock":false,"color":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"gameObject":{"instanceID":0}}'
   edges:
   - GUID: a8de20fe-585f-424d-8d16-9d80b94ca533
     owner: {fileID: 11400000}
@@ -129,7 +132,7 @@ MonoBehaviour:
     settings:
       isHidden: 0
   stickyNotes: []
-  position: {x: 373, y: -110, z: 0}
-  scale: {x: 0.43232757, y: 0.43232757, z: 1}
+  position: {x: -128, y: -1027, z: 0}
+  scale: {x: 1.15, y: 1.15, z: 1}
   references:
     version: 1
