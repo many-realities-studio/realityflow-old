@@ -8,7 +8,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 9196464884303861836}
+  - component: {fileID: 5433339668395697328}
   - component: {fileID: 3318626050568404385}
   - component: {fileID: 1936699160199264712}
   - component: {fileID: 6318031652731492017}
@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 3400756928648607905}
   - component: {fileID: 2914080334698131561}
   - component: {fileID: 6656574509787764066}
+  - component: {fileID: 1675083328833220061}
   m_Layer: 0
   m_Name: ParameterDrag
   m_TagString: Untagged
@@ -23,8 +24,8 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &9196464884303861836
-Transform:
+--- !u!224 &5433339668395697328
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -37,6 +38,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!33 &3318626050568404385
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -125,7 +131,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 181cd563a8349c34ea8978b0bc8d9c7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hostTransform: {fileID: 9196464884303861836}
+  hostTransform: {fileID: 5433339668395697328}
   manipulationType: 3
   twoHandedManipulationType: 7
   allowFarManipulation: 1
@@ -192,3 +198,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pv: {fileID: 0}
+--- !u!222 &1675083328833220061
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8805047765927123613}
+  m_CullTransparentMesh: 1
