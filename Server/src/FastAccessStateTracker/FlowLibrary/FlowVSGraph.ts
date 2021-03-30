@@ -4,16 +4,16 @@ export class FlowVSGraph
 {
   // Data the FlowVSGraph stores
   public Name:                string;
-  public SerializedNodes:     string;
-  public Edges:               string;
-  public Groups:              string;
-  public StackNodes:          string;
-  public PinnedElements:      string;
-  public ExposedParameters:   string;
-  public StickyNotes:         string;
-  public Position:            string;
-  public Scale:               string;
-  public References:          string;
+  public serializedNodes:     Array<any>;
+  public edges:               Array<any>;
+  public groups:              Array<any>;
+  public stackNodes:          Array<any>;
+  public pinnedElements:      Array<any>;
+  public exposedParameters:   Array<any>;
+  public stickyNotes:         Array<any>;
+  public position:            any;
+  public scale:               any;
+  public references:          any;
 
   // Fields used for tracking this graph in the FAM
 
@@ -26,16 +26,16 @@ export class FlowVSGraph
   {
     this.Id = json.Id;
     this.Name = json.Name;
-    this.SerializedNodes = JSON.stringify(json.serializedNodes);
-    this.Edges = JSON.stringify(json.edges);
-    this.Groups = JSON.stringify(json.groups);
-    this.StackNodes = JSON.stringify(json.stackNodes);
-    this.PinnedElements = JSON.stringify(json.pinnedElements);
-    this.ExposedParameters = JSON.stringify(json.exposedParameters);
-    this.StickyNotes = JSON.stringify(json.stickyNotes);
-    this.Position = JSON.stringify(json.position);
-    this.Scale = JSON.stringify(json.scale);
-    this.References = JSON.stringify(json.references);
+    this.serializedNodes = json.serializedNodes;
+    this.edges = json.edges;
+    this.groups = json.groups;
+    this.stackNodes = json.stackNodes;
+    this.pinnedElements = json.pinnedElements;
+    this.exposedParameters = json.exposedParameters;
+    this.stickyNotes = json.stickyNotes;
+    this.position = json.position;
+    this.scale = json.scale;
+    this.references = json.references;
     this.CurrentCheckout = null;
 }
 
@@ -46,15 +46,15 @@ export class FlowVSGraph
   public UpdateProperties(newVSGraph: FlowVSGraph)
   {    
     this.Name = newVSGraph.Name;
-    this.SerializedNodes = newVSGraph.SerializedNodes;
-    this.Edges = newVSGraph.Edges;
-    this.Groups = newVSGraph.Groups;
-    this.StackNodes = newVSGraph.StackNodes;
-    this.PinnedElements = newVSGraph.PinnedElements;
-    this.ExposedParameters = newVSGraph.ExposedParameters;
-    this.StickyNotes = newVSGraph.StickyNotes;
-    this.Position = newVSGraph.Position;
-    this.Scale = newVSGraph.Scale;
-    this.References = newVSGraph.References;
+    this.serializedNodes = newVSGraph.serializedNodes;
+    this.edges = newVSGraph.edges;
+    this.groups = newVSGraph.groups;
+    this.stackNodes = newVSGraph.stackNodes;
+    this.pinnedElements = newVSGraph.pinnedElements;
+    this.exposedParameters = newVSGraph.exposedParameters;
+    this.stickyNotes = newVSGraph.stickyNotes;
+    this.position = newVSGraph.position;
+    this.scale = newVSGraph.scale;
+    this.references = newVSGraph.references;
   }
 }

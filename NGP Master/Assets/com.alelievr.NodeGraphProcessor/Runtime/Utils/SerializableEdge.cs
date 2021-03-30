@@ -10,12 +10,12 @@ namespace GraphProcessor
 		public string	GUID;
 
 		[SerializeField]
-		BaseGraph		owner;
+		public BaseGraph		owner;
 
 		[SerializeField]
-		string			inputNodeGUID;
+		public string			inputNodeGUID;
 		[SerializeField]
-		string			outputNodeGUID;
+		public string			outputNodeGUID;
 
 		[System.NonSerialized]
 		public BaseNode	inputNode;
