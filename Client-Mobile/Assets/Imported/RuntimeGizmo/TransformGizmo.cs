@@ -20,7 +20,7 @@ namespace RuntimeGizmos
 	public class TransformGizmo : MonoBehaviour
 	{
         // Support for outliner
-        OutlinerManager outlinerManager;
+        public OutlinerManager outlinerManager;
 
 		public SlideMenuManager slideMenuManager;
 
@@ -135,8 +135,8 @@ namespace RuntimeGizmos
 			SetMaterial();
 
             // Initialize outlinerManager and slideMenuManager
-            outlinerManager = GameObject.FindGameObjectWithTag("Outliner").GetComponent<OutlinerManager>();
-			slideMenuManager = GameObject.FindGameObjectWithTag("SlideMenuButtons").GetComponent<SlideMenuManager>();
+            //outlinerManager = GameObject.FindGameObjectWithTag("Outliner").GetComponent<OutlinerManager>();
+			//slideMenuManager = GameObject.FindGameObjectWithTag("SlideMenuButtons").GetComponent<SlideMenuManager>();
 
 		}
 

@@ -5,8 +5,16 @@ using UnityEngine;
 public class PlayerInput : MonoBehaviour
 {
     CameraHandler cameraHand;
-    public FixedJoystick movement;
-    public FixedJoystick rotMovement;
+    
+    [Header("List Canvas")]
+    public GameObject listCanvas;
+    public FixedJoystick listMovement;
+    public FixedJoystick listRotMovement;
+
+    [Header("Graph Canvas")]
+    public GameObject graphCanvas;
+    public FixedJoystick graphMovement;
+    public FixedJoystick graphRotMovement;
 
     Vector3 moveInput;
     Vector3 rotInput;
@@ -22,23 +30,45 @@ public class PlayerInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Recieve input in update;
-        float horizontal = movement.Horizontal; //Input.GetAxisRaw("Horizontal");
-        float vertical = movement.Vertical; //Input.GetAxisRaw("Vertical");
-        float up = Input.GetAxisRaw("ZAxis");
-
-        float rotHorizontal = rotMovement.Horizontal;
-        float rotVertical = -rotMovement.Vertical;
-        float rotUp = Input.GetAxisRaw("Mouse ZAxis");
-
-        moveInput = new Vector3(horizontal, up, vertical);
-        rotInput = new Vector3(rotVertical, rotHorizontal, rotUp);
-
-        if (Input.GetKeyDown(KeyCode.P))
+        if(listCanvas.activeInHierarchy)
         {
-            powered = !powered;
+            // Recieve input in update;
+            float horizontal = listMovement.Horizontal; //Input.GetAxisRaw("Horizontal");
+            float vertical = listMovement.Vertical; //Input.GetAxisRaw("Vertical");
+            float up = Input.GetAxisRaw("ZAxis");
+
+            float rotHorizontal = listRotMovement.Horizontal;
+            float rotVertical = -listRotMovement.Vertical;
+            float rotUp = Input.GetAxisRaw("Mouse ZAxis");
+
+            moveInput = new Vector3(horizontal, up, vertical);
+            rotInput = new Vector3(rotVertical, rotHorizontal, rotUp);
+
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                powered = !powered;
+            }
         }
-        
+
+        else if(graphCanvas.activeInHierarchy)
+        {
+            // Recieve input in update;
+            float horizontal = graphMovement.Horizontal; //Input.GetAxisRaw("Horizontal");
+            float vertical = graphMovement.Vertical; //Input.GetAxisRaw("Vertical");
+            float up = Input.GetAxisRaw("ZAxis");
+
+            float rotHorizontal = graphRotMovement.Horizontal;
+            float rotVertical = -graphRotMovement.Vertical;
+            float rotUp = Input.GetAxisRaw("Mouse ZAxis");
+
+            moveInput = new Vector3(horizontal, up, vertical);
+            rotInput = new Vector3(rotVertical, rotHorizontal, rotUp);
+
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                powered = !powered;
+            }
+        }
     }
 
     void FixedUpdate()
