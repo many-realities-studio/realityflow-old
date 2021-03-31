@@ -66,8 +66,20 @@ export default class TypeORMDatabase
 
     let objects = await ProjectOperations.getObjects(projectId);
     let vsgraphs = await ProjectOperations.getVSGraphs(projectId);
-    let behaviours = await BehaviourOperations.getBehaviours(projectId)
+    let behaviours = await BehaviourOperations.getBehaviours(projectId);
     
+    vsgraphs.forEach(function(vsGraph) {
+      vsGraph.serializedNodes = JSON.parse(vsGraph.serializedNodes);
+      vsGraph.edges = JSON.parse(vsGraph.edges);
+      vsGraph.groups = JSON.parse(vsGraph.groups);
+      vsGraph.stackNodes = JSON.parse(vsGraph.stackNodes);
+      vsGraph.pinnedElements = JSON.parse(vsGraph.pinnedElements);
+      vsGraph.exposedParameters = JSON.parse(vsGraph.exposedParameters);
+      vsGraph.stickyNotes = JSON.parse(vsGraph.stickyNotes);
+      vsGraph.position = JSON.parse(vsGraph.position);
+      vsGraph.scale = JSON.parse(vsGraph.scale);
+      vsGraph.references = JSON.parse(vsGraph.references);
+    });
     
     let returnProject = new FlowProject(project);
     

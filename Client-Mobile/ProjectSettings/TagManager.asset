@@ -14,6 +14,11 @@ TagManager:
   - SlideMenuButtons
   - Picker2
   - Greeting
+  - Canvas
+  - NodeOptionsDropdown
+  - GraphCommandsDropdown
+  - PanelDropdown
+  - ObjectInteractionItems
   layers:
   - Default
   - TransparentFX
