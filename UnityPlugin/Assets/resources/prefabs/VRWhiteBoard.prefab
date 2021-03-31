@@ -1510,6 +1510,7 @@ MonoBehaviour:
   nodeViewList: []
   selectedNV: []
   edgeViews: []
+  paramViews: []
   paramList: []
   canvasDimensions: {x: 2560, y: 1080}
   padding: 0.1
@@ -2250,7 +2251,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &7370409612422302776
 MonoBehaviour:
   m_ObjectHideFlags: 0
