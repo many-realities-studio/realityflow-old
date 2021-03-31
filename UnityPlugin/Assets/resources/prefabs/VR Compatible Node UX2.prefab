@@ -377,6 +377,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 3300302344630200336}
+        m_TargetAssemblyTypeName: NodeView, com.RealityFlow
+        m_MethodName: RedrawEdges
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onHoverEntered:
     m_PersistentCalls:
       m_Calls: []
@@ -799,7 +811,7 @@ GameObject:
   - component: {fileID: 8617751277842715945}
   - component: {fileID: 1826860382603289707}
   m_Layer: 3
-  m_Name: Children
+  m_Name: InputChildren
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1380,7 +1392,7 @@ GameObject:
   - component: {fileID: 8318017216999657005}
   - component: {fileID: 3998124051423772758}
   m_Layer: 3
-  m_Name: Children
+  m_Name: OutputChildren
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
