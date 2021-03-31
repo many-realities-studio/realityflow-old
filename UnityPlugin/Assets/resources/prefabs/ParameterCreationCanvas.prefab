@@ -926,6 +926,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rfgv: {fileID: 0}
   typeDropdown: {fileID: 8465905135890077917}
+  nameField: {fileID: 0}
 --- !u!1 &4843427305046903919
 GameObject:
   m_ObjectHideFlags: 0

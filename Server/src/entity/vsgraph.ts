@@ -25,34 +25,34 @@ export class VSGraph extends BaseEntity{
     Name: string;
 
     @Column()
-    SerializedNodes: string;
+    serializedNodes: string;
     
     @Column()
-    Edges: string;
+    edges: string;
     
     @Column()
-    Groups: string;
+    groups: string;
 
     @Column()
-    StackNodes: string;
+    stackNodes: string;
 
     @Column()
-    PinnedElements: string;
+    pinnedElements: string;
 
     @Column()
-    ExposedParameters: string;
+    exposedParameters: string;
 
     @Column()
-    StickyNotes: string;
+    stickyNotes: string;
     
     @Column()
-    Position: string;
+    position: string;
     
     @Column()
-    Scale: string;
+    scale: string;
     
     @Column()
-    References: string;
+    references: string;
 
     @ManyToOne(type=>Project, proj => proj.VSGraphList, {onDelete: "CASCADE", onUpdate: "CASCADE"})
     Project: Project;
