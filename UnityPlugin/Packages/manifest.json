@@ -1,8 +1,8 @@
 {
-  "scopedRegistries": [ ],
+  "scopedRegistries": [],
   "dependencies": {
     "com.alelievr.node-graph-processor": "file:../../NGP Master/Assets/com.alelievr.NodeGraphProcessor",
-    "com.microsoft.mixedreality.webrtc": "file:MixedReality/com.microsoft.mixedreality.webrtc-2.0.2.tgz",
+    "com.microsoft.mixedreality.webrtc": "file:../../MRTK-WebRTC",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.2d.tilemap": "1.0.0",
     "com.unity.ads": "3.5.2",
@@ -51,8 +51,6 @@
     "com.unity.modules.video": "1.0.0",
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
-    "com.unity.modules.xr": "1.0.0",
-    "com.microsoft.mixedreality.toolkit.foundation": "file:MixedReality/com.microsoft.mixedreality.toolkit.foundation-2.5.3.tgz",
-    "com.microsoft.mixedreality.toolkit.standardassets": "file:MixedReality/com.microsoft.mixedreality.toolkit.standardassets-2.5.3.tgz"
+    "com.unity.modules.xr": "1.0.0"
   }
 }
