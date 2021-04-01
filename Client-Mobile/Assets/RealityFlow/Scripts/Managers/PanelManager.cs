@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class PanelManager : MonoBehaviour
 {
+    private Vector3 mainCameraOriginPos;
+
     [Header("Canvas")]
     // Canvas
     public GameObject graphViewCanvas;
@@ -14,11 +16,19 @@ public class PanelManager : MonoBehaviour
     // Toggles
     public Toggle outputToggel;
     public Toggle paramToggel;
+    public Toggle cameraFollowToggel;
 
     // Panels
     public GameObject outputPanel;
     public GameObject paramPanel;
 
+    // Camera Follow
+    public GameObject cameraFollow;
+    
+    void Start() 
+    {
+        mainCameraOriginPos = GameObject.Find("Main Camera").transform.position;
+    }
     public void OutputPanelToggel(){
         outputPanel.SetActive(!outputPanel.activeInHierarchy);
     }
@@ -29,6 +39,14 @@ public class PanelManager : MonoBehaviour
     public void ToggleListViewGraphView(){
         listViewCanvas.SetActive(!listViewCanvas.activeInHierarchy);
         graphViewCanvas.SetActive(!graphViewCanvas.activeInHierarchy);
+    }
 
+    public void ToggleCameraFollower()
+    {
+        cameraFollow.SetActive(!cameraFollow.activeInHierarchy);
+        if(cameraFollow.activeInHierarchy == false)
+        {
+             GameObject.Find("Main Camera").transform.position = mainCameraOriginPos;
+        }
     }
 }

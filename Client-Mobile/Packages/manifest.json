@@ -2,7 +2,7 @@
   "dependencies": {
     "com.alelievr.node-graph-processor": "file:C:/Users/Morgan/Documents/Development/Fork-realityflow/NGP Master/Assets/com.alelievr.NodeGraphProcessor",
     "com.microsoft.mixedreality.webrtc": "file:C:/Users/Morgan/Documents/Development/Fork-realityflow/MRTK-WebRTC",
-    "com.realityflow": "https://github.com/many-realities-lab-ucf/realityflow_package.git#GraphUpdates",
+    "com.realityflow": "https://github.com/many-realities-lab-ucf/realityflow_package.git#Demo-package",
     "com.unity.cinemachine": "2.6.4",
     "com.unity.collab-proxy": "1.3.9",
     "com.unity.ide.rider": "2.0.7",
