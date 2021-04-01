@@ -105,42 +105,7 @@ MonoBehaviour:
     editorType:
       serializedType: ConditionalProcessorView, com.RealityFlow.Contrib.NGP, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-  exposedParameters:
-  - guid: aba9324e-36b6-47b1-bd28-085721612438
-    name: dhe
-    type: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-    serializedValue:
-      serializedType: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
-      serializedName: 
-      serializedValue: '{"value":{"instanceID":-8342}}'
-    input: 1
-    settings:
-      isHidden: 0
-  - guid: f670a6fb-4ccc-4797-b6be-bb88d9e78292
-    name: abhhjk
-    type: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-    serializedValue:
-      serializedType: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
-      serializedName: 
-      serializedValue: '{"value":{"instanceID":-8342}}'
-    input: 1
-    settings:
-      isHidden: 0
-  - guid: 3b0943e6-a782-4b92-ab12-08c146d57c3b
-    name: asddddddddddddwawdaaaaaaaaawdvvvvvvvvvv
-    type: System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
-    serializedValue:
-      serializedType: System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-        PublicKeyToken=b77a5c561934e089
-      serializedName: 
-      serializedValue: '"qwerty"'
-    input: 1
-    settings:
-      isHidden: 0
+  exposedParameters: []
   stickyNotes: []
   position: {x: 412, y: -432, z: 0}
   scale: {x: 0.57175326, y: 0.57175326, z: 1}
