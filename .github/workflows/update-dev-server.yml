@@ -3,7 +3,7 @@ on:
   push:
     branches:
     - development
-    - Demo
+    - Demo3
 
 jobs:
   deploy:
