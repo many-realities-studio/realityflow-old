@@ -61,6 +61,21 @@ export class ProjectOperations
     }
 
     /**
+     * Find a specfic project as a flowproject given the last 5 digits of its ID, used for joining projects
+     * @param projectId
+     */
+     public static async findProjectShortCode(projectId: string){
+        let project = await getConnection(process.env.NODE_ENV).createQueryBuilder().
+            select("project").
+            from(Project, "project").
+            where("Id like :id", {id: `%${projectId}`})
+            .getOne();
+
+        return project;
+
+    }
+
+    /**
      * get the objects of a specific project
      * @param projectId the Id of the project from you want to get the objects 
      */

@@ -59,7 +59,17 @@ export default class TypeORMDatabase
    * @param projectId 
    */
   public static async GetProject(projectId: string): Promise<FlowProject> {
-    let project = await ProjectOperations.findProject(projectId);
+    let idLength = projectId.length;
+    let project;
+    
+    if (idLength == 5)
+    {
+      project = await ProjectOperations.findProjectShortCode(projectId);
+    }
+    else
+    {
+      project = await ProjectOperations.findProject(projectId);
+    }
 
     if(!project)
       return null;
