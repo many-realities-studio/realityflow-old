@@ -1,0 +1,107 @@
+# Creating a custom scalar for representing time.
+scalar DateTime
+scalar JSON
+
+type Query {
+  behaviour: [behaviour!]!
+  user: [user!]!
+  project: [project!]!
+  object: [db_object!]!
+}
+
+type Mutation {
+  createBehaviour(Id: String!, TypeOfTrigger: String!, TriggerObjectId: String!, TargetObjectId: String!,
+                  ProjectId: String!, NextBehaviour: String!, Action: JSON!): behaviour!
+
+  updateBehaviour(Id: String!, TypeOfTrigger: String, TriggerObjectId: String, TargetObjectId: String,
+                  ProjectId: String, NextBehaviour: String, Action: String): behaviour!
+
+  deleteBehaviour(Id: String!): behaviour!
+  
+
+  createUser(Username: String!, Password: String!, input:[ProjectInput]): user!
+  updateUser(Username: String, Password: String): user!
+  deleteUser(Username: String!): user!
+
+  createProject(Id: String!, ProjectName: String!, Description: String!, ownerUsername: String!): project!
+  updateProject(Id: String!, ProjectName: String, Description: String, DateModified: DateTime, ownerUsername: String): project! 
+  deleteProject(Id: String!): project!
+
+  createObject(Id: String!, Name: String!, X: Int!, Y: Int!, Z: Int!, Q_x: Int!, Q_y: Int!, Q_z: Int!
+                Q_w: Int!, S_x: Int!, S_y: Int!, S_z: Int!, R: Int!, G: Int!, B: Int!
+                A: Int!, Prefab: String!, projectId: String!): db_object!
+
+  updateObject(Id: String! Name: String, X: Int, Y: Int, Z: Int, Q_x: Int, Q_y: Int, Q_z: Int
+                Q_w: Int, S_x: Int, S_y: Int, S_z: Int, R: Int, G: Int, B: Int, A: Int,
+                Prefab: String, projectId: String): db_object!
+
+  deleteObject(Id: String!): db_object!
+}
+
+# Inputs
+input UserInput {
+  id: ID
+  Username: String
+  Password: String
+  project: [ProjectInput] 
+}
+
+input ProjectInput {
+    Description: String!
+    ProjectName: String!
+    DateModified: DateTime
+    User: UserInput
+}
+
+# Object definitions
+type behaviour {
+  Id: String!
+  TypeOfTrigger: String!
+  TriggerObjectId: String!
+  TargetObjectId: String!
+  ProjectId: String!
+  NextBehaviour: String!
+  Action: JSON!
+}
+
+type user{
+  Username: String!
+  Password: String!
+  project: [project!]
+}
+
+type project{
+    # Actual Data Fields
+    Id: String!
+    Description: String!
+    DateModified: DateTime
+    ProjectName: String!
+    ownerUsername: String
+    db_object: [db_object!]####
+    # Relational Fields
+    user: user!
+}
+
+type db_object{
+  id: Int!
+  Id: String!
+  Name: String!
+  X: Int!
+  Y: Int!
+  Z: Int!
+  Q_x: Int!
+  Q_y: Int!
+  Q_z: Int!
+  Q_w: Int!
+  S_x: Int!
+  S_y: Int!
+  S_z: Int!
+  R: Int!
+  G: Int!
+  B: Int!
+  A: Int!
+  Prefab: String!
+  project: project!
+  # Relational Field
+  projectId: String!
+}
