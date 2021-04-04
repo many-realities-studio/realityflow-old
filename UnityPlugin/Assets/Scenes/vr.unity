@@ -1797,6 +1797,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: VRMenus
       objectReference: {fileID: 0}
+    - target: {fileID: 6162358959515878003, guid: dd2813018b361ff488e1874c61488b55,
+        type: 3}
+      propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 854396138}
+    - target: {fileID: 6162358959515878003, guid: dd2813018b361ff488e1874c61488b55,
+        type: 3}
+      propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PresentKeyboard
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dd2813018b361ff488e1874c61488b55, type: 3}
 --- !u!1 &572079930
