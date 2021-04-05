@@ -36,6 +36,7 @@ export class VSGraphOperations {
             newVSGraph.position =                    JSON.stringify(vsGraphInfo.position);
             newVSGraph.scale =                       JSON.stringify(vsGraphInfo.scale);
             newVSGraph.references =                  JSON.stringify(vsGraphInfo.references);
+            newVSGraph.paramIdToObjId =              JSON.stringify(vsGraphInfo.paramIdToObjId);
             newVSGraph.Project =                     project;
             
 
@@ -81,7 +82,8 @@ export class VSGraphOperations {
                 stickyNotes:              JSON.stringify(vsGraphInfo.stickyNotes),
                 position:                 JSON.stringify(vsGraphInfo.position),
                 scale:                    JSON.stringify(vsGraphInfo.scale),
-                references:               JSON.stringify(vsGraphInfo.references)
+                references:               JSON.stringify(vsGraphInfo.references),
+                paramIdToObjId:           JSON.stringify(vsGraphInfo.paramIdToObjId)
             })
             .where("Id = :id", {id: vsGraphInfo.Id})
             .execute();

@@ -14,6 +14,7 @@ export class FlowVSGraph
   public position:            any;
   public scale:               any;
   public references:          any;
+  public paramIdToObjId:      any;
 
   // Fields used for tracking this graph in the FAM
 
@@ -36,6 +37,7 @@ export class FlowVSGraph
     this.position = json.position;
     this.scale = json.scale;
     this.references = json.references;
+    this.paramIdToObjId = json.paramIdToObjId;
     this.CurrentCheckout = null;
 }
 
@@ -56,5 +58,6 @@ export class FlowVSGraph
     this.position = newVSGraph.position;
     this.scale = newVSGraph.scale;
     this.references = newVSGraph.references;
+    this.paramIdToObjId = newVSGraph.paramIdToObjId;
   }
 }
