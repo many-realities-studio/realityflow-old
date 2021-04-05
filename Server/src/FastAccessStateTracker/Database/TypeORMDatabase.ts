@@ -89,6 +89,7 @@ export default class TypeORMDatabase
       vsGraph.position = JSON.parse(vsGraph.position);
       vsGraph.scale = JSON.parse(vsGraph.scale);
       vsGraph.references = JSON.parse(vsGraph.references);
+      vsGraph.paramIdToObjId = vsGraph.paramIdToObjId;
     });
     
     let returnProject = new FlowProject(project);
