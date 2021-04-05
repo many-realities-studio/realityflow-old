@@ -12,7 +12,9 @@ public class GraphOptionsManager : MonoBehaviour
     TMP_Dropdown graphCommandsMenu;
 
     public RealityFlowGraphView realityFlowGraphView;
-    
+    public VSGraphSelectionDropdown vsGraph;
+    public SelectComparison boolSelection;
+
     // The reason this is being used is because in RealityFlowGraphView the node position is multiplied by this hardcoded
     // canvas dimensions. So in order to compansate for this I am dividing by the canvas hardcoded dimensions.
     public Vector2 canvasDimensions = new Vector2(2000, 1080); // FOR NOW, dont have these hardcoded in final demo
@@ -79,6 +81,10 @@ public class GraphOptionsManager : MonoBehaviour
                 realityFlowGraphView.ClearGraph();
                 Debug.Log("Clear Graph called from GraphOptionsSwitch");
 				break;
+            case "Load Graph":
+                vsGraph.LoadGraphs();
+                Debug.Log("Load Graph called from GraphOptionsSwitch");
+				break;
 			default:
 				Debug.Log("No valid option selected.");
 				break; 
@@ -104,7 +110,7 @@ public class GraphOptionsManager : MonoBehaviour
             {
                 yield return null;
             }
-            Debug.Log("Yak " + nodePosition);   
+            Debug.Log("Node placement: " + nodePosition);   
             realityFlowGraphView.SetNewNodeLocation(nodePosition);
         
             switch(addNodeTypeMenu.options[addNodeTypeMenu.value].text.ToString())
@@ -143,5 +149,33 @@ public class GraphOptionsManager : MonoBehaviour
             yield return null;
         }
         Debug.Log(nodePosition);    
+    }
+
+    public void SetNodePositionStarter()
+    {
+        StartCoroutine("NodePositionSetter");
+    }
+    private IEnumerator NodePositionSetter()
+    {
+        // Turns on node placement popup
+        nodePlacementPopup.SetActive(!nodePlacementPopup.activeInHierarchy);
+        Debug.Log(startDetectingTouch);
+        
+        while(nodePlacementPopup.activeInHierarchy)
+        {
+            yield return null;
+        }
+
+        if(!nodePlacementPopup.activeInHierarchy)
+        {
+            startDetectingTouch = true;
+            while(startDetectingTouch)
+            {
+                yield return null;
+            }
+            Debug.Log("Node placement: " + nodePosition);   
+            realityFlowGraphView.SetNewNodeLocation(nodePosition);
+            boolSelection.GetDropDownValue();
+        }
     }
 }
