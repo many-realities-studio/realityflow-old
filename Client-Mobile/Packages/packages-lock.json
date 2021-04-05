@@ -1,13 +1,13 @@
 {
   "dependencies": {
     "com.alelievr.node-graph-processor": {
-      "version": "file:C:/Users/Morgan/Documents/Development/Fork-realityflow/NGP Master/Assets/com.alelievr.NodeGraphProcessor",
+      "version": "file:../../NGP Master/Assets/com.alelievr.NodeGraphProcessor",
       "depth": 0,
       "source": "local",
       "dependencies": {}
     },
     "com.microsoft.mixedreality.webrtc": {
-      "version": "file:C:/Users/Morgan/Documents/Development/Fork-realityflow/MRTK-WebRTC",
+      "version": "file:../../MRTK-WebRTC",
       "depth": 0,
       "source": "local",
       "dependencies": {}
