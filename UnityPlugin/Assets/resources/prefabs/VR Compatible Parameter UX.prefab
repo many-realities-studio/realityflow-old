@@ -682,6 +682,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sphere: {fileID: 8805047765927123613, guid: 9eaa4af50447c334ab5e7143a257cf6f, type: 3}
+  modificationInput: {fileID: 0}
+  modificationDropdown: {fileID: 0}
+  modificationColor: {fileID: 0}
   rfgv: {fileID: 0}
   pn:
     guid: 
@@ -914,7 +917,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 5108656166428225165}
         m_TargetAssemblyTypeName: ParameterView, com.RealityFlow
-        m_MethodName: deleteParam
+        m_MethodName: DeleteParam
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
