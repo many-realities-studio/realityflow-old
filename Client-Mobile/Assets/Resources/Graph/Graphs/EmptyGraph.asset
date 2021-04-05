@@ -9,52 +9,140 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31390c44c9f3a3d40b424bf6821999a2, type: 3}
+  m_Script: {fileID: 11500000, guid: 0db6557f99236c3438c0dff7e0e8f03e, type: 3}
   m_Name: EmptyGraph
   m_EditorClassIdentifier: 
   serializedNodes:
-  - type: TextNode, RealityFlowPackage, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    jsonDatas: '{"GUID":"fc5647fd-bcb6-4f5b-a87d-cccd6a134f28","computeOrder":-1,"position":{"serializedVersion":"2","x":0.0,"y":0.0,"width":100.0,"height":100.0},"expanded":false,"debug":false,"nodeLock":false,"output":"Hello
-      World"}'
-  - type: BoolNode, RealityFlowPackage, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    jsonDatas: '{"GUID":"48a78ab9-193e-466b-87d2-43811dbd6109","computeOrder":-1,"position":{"serializedVersion":"2","x":0.0,"y":0.0,"width":100.0,"height":100.0},"expanded":false,"debug":false,"nodeLock":false,"output":true,"input":false}'
-  edges: []
+  - type: BoolNode, com.RealityFlow.Contrib.NGP, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    jsonDatas: '{"GUID":"1127e466-a164-476e-94f7-4e2144dc97c7","computeOrder":0,"position":{"serializedVersion":"2","x":-40.0,"y":-177.0,"width":179.0,"height":164.0},"expanded":false,"debug":false,"nodeLock":false,"inA":0.0,"inB":0.0,"compared":true,"compareFunction":"=="}'
+  - type: IfNode, com.RealityFlow.Contrib.NGP, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    jsonDatas: '{"GUID":"ca876793-06ab-4cfa-a5d6-3bf6721acc99","computeOrder":2,"position":{"serializedVersion":"2","x":310.0,"y":0.0,"width":153.0,"height":116.0},"expanded":false,"debug":false,"nodeLock":false,"condition":true,"compareOperator":0}'
+  - type: NodeGraphProcessor.Examples.StartNode, com.RealityFlow.Contrib.NGP, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    jsonDatas: '{"GUID":"c5e36d0b-7386-4713-b6aa-ae2a6c4f377f","computeOrder":1,"position":{"serializedVersion":"2","x":113.0,"y":176.0,"width":88.0,"height":77.0},"expanded":false,"debug":false,"nodeLock":false}'
+  - type: ConditionalPrintNode, com.RealityFlow.Contrib.NGP, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    jsonDatas: '{"GUID":"0361f27a-b047-4666-b8bf-e303f2fc9542","computeOrder":3,"position":{"serializedVersion":"2","x":620.0,"y":-107.0,"width":170.0,"height":116.0},"expanded":false,"debug":false,"nodeLock":false}'
+  - type: ConditionalPrintNode, com.RealityFlow.Contrib.NGP, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    jsonDatas: '{"GUID":"c5b62d96-9fa6-4197-939e-0d9bfb5c1546","computeOrder":5,"position":{"serializedVersion":"2","x":645.322509765625,"y":242.0,"width":170.0,"height":116.0},"expanded":true,"debug":false,"nodeLock":false}'
+  - type: StringNode, com.RealityFlow.Contrib.NGP, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    jsonDatas: '{"GUID":"1c7eae51-634b-4c28-b870-5cf54b578807","computeOrder":4,"position":{"serializedVersion":"2","x":321.0,"y":358.0,"width":214.0,"height":179.0},"expanded":false,"debug":false,"nodeLock":false,"output":"H"}'
+  edges:
+  - GUID: a8de20fe-585f-424d-8d16-9d80b94ca533
+    owner: {fileID: 11400000}
+    inputNodeGUID: ca876793-06ab-4cfa-a5d6-3bf6721acc99
+    outputNodeGUID: 1127e466-a164-476e-94f7-4e2144dc97c7
+    inputFieldName: condition
+    outputFieldName: compared
+    inputPortIdentifier: 
+    outputPortIdentifier: 
+  - GUID: a67158f7-40f1-4351-b96b-cb638a79f99d
+    owner: {fileID: 11400000}
+    inputNodeGUID: ca876793-06ab-4cfa-a5d6-3bf6721acc99
+    outputNodeGUID: c5e36d0b-7386-4713-b6aa-ae2a6c4f377f
+    inputFieldName: executed
+    outputFieldName: executes
+    inputPortIdentifier: 
+    outputPortIdentifier: 
+  - GUID: ff0d3f76-0207-4ee3-803a-ef5a8e100f08
+    owner: {fileID: 11400000}
+    inputNodeGUID: 0361f27a-b047-4666-b8bf-e303f2fc9542
+    outputNodeGUID: ca876793-06ab-4cfa-a5d6-3bf6721acc99
+    inputFieldName: executed
+    outputFieldName: true
+    inputPortIdentifier: 
+    outputPortIdentifier: 
+  - GUID: 3a49f4f1-de08-4874-b9b9-3b9cd016e012
+    owner: {fileID: 11400000}
+    inputNodeGUID: c5b62d96-9fa6-4197-939e-0d9bfb5c1546
+    outputNodeGUID: ca876793-06ab-4cfa-a5d6-3bf6721acc99
+    inputFieldName: executed
+    outputFieldName: false
+    inputPortIdentifier: 
+    outputPortIdentifier: 
+  - GUID: 593c25cf-b6f6-4b24-bddf-ad943a17df16
+    owner: {fileID: 11400000}
+    inputNodeGUID: c5b62d96-9fa6-4197-939e-0d9bfb5c1546
+    outputNodeGUID: 1c7eae51-634b-4c28-b870-5cf54b578807
+    inputFieldName: obj
+    outputFieldName: output
+    inputPortIdentifier: 
+    outputPortIdentifier: 
   groups: []
   stackNodes: []
   pinnedElements:
   - position:
       serializedVersion: 2
-      x: 0
-      y: 87
-      width: 226.99998
-      height: 100
+      x: 97
+      y: 108
+      width: 150
+      height: 200
     opened: 1
     editorType:
       serializedType: GraphProcessor.ExposedParameterView, com.alelievr.NodeGraphProcessor.Editor,
         Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   - position:
       serializedVersion: 2
-      x: 17
-      y: 221
-      width: 150
-      height: 200
-    opened: 0
-    editorType:
-      serializedType: ConditionalProcessorView, Assembly-CSharp-Editor, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
-  - position:
-      serializedVersion: 2
-      x: 72
-      y: 254
+      x: 1
+      y: 298
       width: 150
       height: 200
     opened: 1
     editorType:
       serializedType: GraphProcessor.ProcessorView, com.alelievr.NodeGraphProcessor.Editor,
         Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-  exposedParameters: []
+  - position:
+      serializedVersion: 2
+      x: 0
+      y: 526
+      width: 150
+      height: 200
+    opened: 1
+    editorType:
+      serializedType: ConditionalProcessorView, com.RealityFlow.Contrib.NGP, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  exposedParameters:
+  - guid: aba9324e-36b6-47b1-bd28-085721612438
+    name: dhe
+    type: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    serializedValue:
+      serializedType: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      serializedName: 
+      serializedValue: '{"value":{"instanceID":-8342}}'
+    input: 1
+    settings:
+      isHidden: 0
+  - guid: f670a6fb-4ccc-4797-b6be-bb88d9e78292
+    name: abhhjk
+    type: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    serializedValue:
+      serializedType: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      serializedName: 
+      serializedValue: '{"value":{"instanceID":-8342}}'
+    input: 1
+    settings:
+      isHidden: 0
+  - guid: 3b0943e6-a782-4b92-ab12-08c146d57c3b
+    name: asddddddddddddwawdaaaaaaaaawdvvvvvvvvvv
+    type: System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    serializedValue:
+      serializedType: System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+      serializedName: 
+      serializedValue: '"qwerty"'
+    input: 1
+    settings:
+      isHidden: 0
   stickyNotes: []
-  position: {x: 296, y: 128, z: 0}
-  scale: {x: 0.43232757, y: 0.43232757, z: 1}
+  position: {x: 412, y: -432, z: 0}
+  scale: {x: 0.57175326, y: 0.57175326, z: 1}
   references:
     version: 1
