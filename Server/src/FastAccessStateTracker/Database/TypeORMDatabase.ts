@@ -84,11 +84,12 @@ export default class TypeORMDatabase
       vsGraph.groups = JSON.parse(vsGraph.groups);
       vsGraph.stackNodes = JSON.parse(vsGraph.stackNodes);
       vsGraph.pinnedElements = JSON.parse(vsGraph.pinnedElements);
-      vsGraph.exposedParameters = JSON.parse(vsGraph.exposedParameters);
+      vsGraph.exposedParameters = vsGraph.exposedParameters;
       vsGraph.stickyNotes = JSON.parse(vsGraph.stickyNotes);
       vsGraph.position = JSON.parse(vsGraph.position);
       vsGraph.scale = JSON.parse(vsGraph.scale);
       vsGraph.references = JSON.parse(vsGraph.references);
+      vsGraph.paramIdToObjId = vsGraph.paramIdToObjId;
     });
     
     let returnProject = new FlowProject(project);

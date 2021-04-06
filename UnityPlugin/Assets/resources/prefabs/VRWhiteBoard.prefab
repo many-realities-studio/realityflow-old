@@ -2637,7 +2637,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.0000072779317, y: -0.000037851732}
+  m_AnchoredPosition: {x: 0.0170807, y: 0.00039074116}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &2372541361876167438
@@ -5451,11 +5451,13 @@ MonoBehaviour:
   graph: {fileID: 11400000, guid: 9978faab71ef9bb48b5dd858387dc9e1, type: 2}
   vsGraph: {fileID: 0}
   connectorListener: {fileID: 5996133045580060763}
+  commandPalette: {fileID: 0}
   Labeled: {fileID: 7370409613916050289}
   contentPanel: {fileID: 2246444827872138121}
   parameterContent: {fileID: 2366857371169506254}
   parameterCreationCanvas: {fileID: 925419557936027455}
   SelectComparisonCanvas: {fileID: 4347223567869959304}
+  VSGraphDropdownCanvas: {fileID: 5815799648227210599}
   nodePortView: {fileID: 8411453318253863390, guid: 28881f12401db5d44b673fa6f9346913,
     type: 3}
   nodeView: {fileID: 1566273422334750335, guid: 442be4980aeb8e24690444fa43d79319,
@@ -5465,8 +5467,6 @@ MonoBehaviour:
   edgeView: {fileID: 1457824482079625673, guid: fa4d147f9eb15254093d34b8e9b94655,
     type: 3}
   nodeViewList: []
-  paramViews: []
-  paramList: []
   canvasDimensions: {x: 2560, y: 1080}
   padding: 0.1
 --- !u!114 &5996133045580060763
@@ -6897,8 +6897,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3659696602696122632}
   m_HandleRect: {fileID: 5506493602566703883}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 1
+  m_Value: 1
+  m_Size: 0.9999902
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -7265,7 +7265,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &7370409612422302776
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10489,9 +10489,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1995948595135668186}
-        m_TargetAssemblyTypeName: VSGraphSelectionDropdown, com.RealityFlow
-        m_MethodName: LoadGraphs
+      - m_Target: {fileID: 264781549739201302}
+        m_TargetAssemblyTypeName: RealityFlowGraphView, com.RealityFlow
+        m_MethodName: InitializeGraphStep1
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

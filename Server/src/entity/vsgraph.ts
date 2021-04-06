@@ -54,6 +54,9 @@ export class VSGraph extends BaseEntity{
     @Column()
     references: string;
 
+    @Column()
+    paramIdToObjId: string;
+
     @ManyToOne(type=>Project, proj => proj.VSGraphList, {onDelete: "CASCADE", onUpdate: "CASCADE"})
     Project: Project;
 }
