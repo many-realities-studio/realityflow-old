@@ -8,6 +8,7 @@ import { StateTracker } from "../StateTracker";
 
 import { FlowProject } from "../FlowLibrary/FlowProject";
 import { FlowObject } from "../FlowLibrary/FlowObject";
+import { FlowAvatar } from "../FlowLibrary/FlowAvatar";
 import { FlowBehaviour } from "../FlowLibrary/FlowBehaviour";
 import { FlowVSGraph } from "../FlowLibrary/FlowVSGraph";
 
@@ -455,6 +456,87 @@ class Command_FinalizedUpdateObject implements ICommand
   }
 }
 
+// Avatar Commands
+class Command_CreateAvatar implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+  {
+    let flowAvatar = new FlowAvatar(data.FlowAvatar);
+    //flowAvatar.Id = uuidv4();
+    
+    console.log(flowAvatar)
+
+    let returnData = await StateTracker.CreateAvatar(flowAvatar, data.ProjectId);
+    let returnContent = {
+      "MessageType": "CreateAvatar",
+      "FlowAvatar": returnData[0],
+      "WasSuccessful": (returnData[0] == null) ? false: true
+    }
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
+
+    return returnMessage;
+  }
+}
+
+class Command_DeleteAvatar implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+  {
+    let returnData = await StateTracker.DeleteAvatar(data.AvatarId, data.ProjectId, client);
+    let returnContent = {
+      "MessageType": "DeleteAvatar",
+      "AvatarId": returnData[0],
+      "WasSuccessful": (returnData[0] == null) ? false: true,
+    }
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
+
+    return returnMessage;
+  }
+}
+
+class Command_UpdateAvatar implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+  {
+    let flowAvatar = new FlowAvatar(data.FlowAvatar);
+    let returnData = await StateTracker.UpdateAvatar(flowAvatar, data.ProjectId, client,false, data.user);
+
+    let index = returnData[1].indexOf(client);
+    returnData[1].splice(index,1)
+
+    let returnContent = {
+      "MessageType": "UpdateAvatar",
+      "FlowAvatar": returnData[0],
+      "WasSuccessful": (returnData[0] == null) ? false: true,
+    }
+
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
+
+    return returnMessage;
+  }
+}
+
+class Command_FinalizedUpdateAvatar implements ICommand
+{
+  async ExecuteCommand(data: any, client:string): Promise<[String, Array<String>]> 
+  {
+    let flowAvatar = new FlowAvatar(data.FlowAvatar);
+    let returnData = await StateTracker.UpdateAvatar(flowAvatar, data.ProjectId, client, true);
+    let index = returnData[1].indexOf(client);
+    returnData[1].splice(index,1);
+
+    let returnContent = {
+      "MessageType": "UpdateAvatar",
+      "FlowAvatar": returnData[0],
+      "WasSuccessful": (returnData[0] == null) ? false: true,
+    }
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
+    
+    return returnMessage;
+
+  }
+}
+
 // behaviour Commands
 class Command_CreateBehaviour implements ICommand
 {
@@ -747,6 +829,15 @@ export class CommandContext
       this._CommandList.set("ReadObject", new Command_ReadObject());
       this._CommandList.set("CheckinObject", new Command_CheckinObject());
       this._CommandList.set("CheckoutObject", new Command_CheckoutObject());
+
+       // Avatar Commands
+       this._CommandList.set("CreateAvatar", new Command_CreateAvatar());
+       this._CommandList.set("DeleteAvatar", new Command_DeleteAvatar());
+       this._CommandList.set("UpdateAvatar", new Command_UpdateAvatar());
+       this._CommandList.set("FinalizedUpdateAvatar", new Command_FinalizedUpdateAvatar());
+       //this._CommandList.set("ReadAvatar", new Command_ReadObject());
+       //this._CommandList.set("CheckinAvatar", new Command_CheckinObject());
+       //this._CommandList.set("CheckoutAvatar", new Command_CheckoutObject());
 
       // Visual Scripting Graph Commands
       this._CommandList.set("CreateVSGraph", new Command_CreateVSGraph());
