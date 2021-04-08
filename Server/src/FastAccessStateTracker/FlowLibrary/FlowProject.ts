@@ -1,6 +1,7 @@
 import { FlowObject } from "./FlowObject";
 import { FlowBehaviour } from "./FlowBehaviour";
 import { FlowVSGraph } from "./FlowVSGraph";
+import { FlowNodeView} from "./FlowNodeView";
 
 export class FlowProject 
 {
@@ -10,6 +11,8 @@ export class FlowProject
   public _BehaviourList: Array<FlowBehaviour> = [];
   // TODO: list of VSGraphs
   public _VSGraphList: Array<FlowVSGraph> = [];
+
+  public _NodeViewList: Array<FlowNodeView> = [];
   
   // Used for identification in the FAM
   
@@ -224,6 +227,37 @@ export class FlowProject
     else return false;
   }
 
+  /**
+   * sets a nodeview to "checked out," preventing another user from checking out/editing that nodeview
+   * TODO: This will need to be modified as graphs themselves are not going to be checked out. Individual nodes are.
+   * @param nodeGUID 
+   * @param userName 
+   * @param client 
+   */
+   public CheckoutNodeView(nodeGUID: string, client: string){
+    let nv = this._NodeViewList.find(element => element.NodeGUID == nodeGUID);
+    
+    if (nv != undefined && nv.CurrentCheckout == null){
+      this._NodeViewList.find(element => element.NodeGUID == nodeGUID).CurrentCheckout = client;
+      return true
+    }
+    
+    else return false
+  }
+
+  /**
+   * sets a nodeview to "checked in," preventing another user from checking out/editing that nodeview
+   * @param nodeGUID
+   */
+  public CheckinNodeView(nodeGUID: string, client){
+    let nv = this._NodeViewList.find(element => element.NodeGUID == nodeGUID);
+    if(nv != undefined && nv.CurrentCheckout == client){
+      nv.CurrentCheckout = null;
+      return true;
+    }
+    else return false;
+  }
+
     /**
    * find out who has checked out the graph in question
    * @param vsGraphId 
@@ -242,6 +276,30 @@ export class FlowProject
     var oldVSGraph: FlowVSGraph = this._VSGraphList.find(element => element.Id == newVSGraph.Id);
     if(oldVSGraph != undefined && oldVSGraph.CurrentCheckout == client){
       oldVSGraph.UpdateProperties(newVSGraph);
+      return true;
+    }
+    else return false;
+  }
+
+  /**
+   * Returns FlowNodeView with the given ID number 
+   * @param nodeGUID
+   */
+   public GetNodeView(nodeGUID: string) : FlowNodeView
+   {
+     return this._NodeViewList.find(element => element.NodeGUID == nodeGUID);
+   }
+
+   /**
+   * Updates the nodeview in the FAM without saving to the database
+   * @param newNodeView 
+   */
+  public UpdateFAMNodeView(newNodeView: FlowNodeView, client: string) 
+  {
+    // Get the nodeview that we are changing from the specified project
+    var oldNodeView: FlowNodeView = this._NodeViewList.find(element => element.NodeGUID== newNodeView.NodeGUID);
+    if(oldNodeView != undefined && oldNodeView.CurrentCheckout == client){
+      oldNodeView.UpdateProperties(newNodeView);
       return true;
     }
     else return false;

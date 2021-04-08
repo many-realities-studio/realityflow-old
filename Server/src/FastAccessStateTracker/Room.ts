@@ -255,12 +255,35 @@ export class Room
 
   // TODO: finished: no tested: no
   /**
+   * check in a nodeview, if the nodeview is checked out by client
+   * @param nodeGUID the nodeview to be checked in
+   * @param client the client trying to check in the nodeview
+   * @returns success
+   */
+  public checkinNodeView(nodeGUID: string, client: string){
+    return this._CurrentProject.CheckinNodeView(nodeGUID, client)
+  }
+
+  // TODO: finished: no tested: no
+  /**
+   * check out a nodeview, assuming that client is open for checkout
+   * @param nodeGUID  node to check out
+   * @param client client who is checking out the nodeview
+   * @returns success
+   */
+  public checkoutNodeView(nodeGUID: string, client: string): boolean
+  {
+    return this._CurrentProject.CheckoutNodeView(nodeGUID, client)
+  }
+
+  // TODO: finished: no tested: no
+  /**
    * check in a graph, if the graph is checked out by client
    * @param vsGraphId the graph to be checked in
    * @param client the client trying to check in the graph
    * @returns success
    */
-  public checkinVSGraph(vsGraphId: string, client: string){
+   public checkinVSGraph(vsGraphId: string, client: string){
     return this._CurrentProject.CheckinVSGraph(vsGraphId, client)
   }
 
@@ -274,6 +297,28 @@ export class Room
   public checkoutVSGraph(vsGraphId: string, client: string): boolean
   {
     return this._CurrentProject.CheckoutVSGraph(vsGraphId, client)
+  }
+
+  // TODO: finished: no tested: no
+  /**
+   * Return the data of a nodeview
+   * @param nodeGUID the Id of the nodeview that you want
+   * @returns the nodeview to be read
+   */
+   public ReadNodeView(nodeGUID:string){
+    return this._CurrentProject.GetNodeView(nodeGUID)
+  }
+
+  // TODO: finished: no tested: no
+  /**
+   * update a nodeview, assuming the client sending the update is the client that has the nodeview checked in.
+   * @param nodeViewToUpdate the nodeview to update
+   * @param client the id of the client sending the update
+   * @returns success - whether or not the update actually happened in the FAM
+   */
+   public updateNodeView(nodeViewToUpdate, client){
+    let success = this._CurrentProject.UpdateFAMNodeView(nodeViewToUpdate, client);
+    return success;
   }
 
   /**

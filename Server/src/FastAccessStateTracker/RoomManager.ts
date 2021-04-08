@@ -2,6 +2,8 @@ import { Room } from "./Room";
 import { FlowObject } from "./FlowLibrary/FlowObject";
 import { FlowVSGraph } from "./FlowLibrary/FlowVSGraph";
 import { FlowBehaviour } from "./FlowLibrary/FlowBehaviour";
+import { FlowNodeView } from "./FlowLibrary/FlowNodeView";
+
 
 // TODO: Make a check for how many people are in a room and delete the room if there is nobody inside
 export class RoomManager
@@ -221,7 +223,7 @@ export class RoomManager
   /**
    * return the data of a given graph
    * @param projectId the id of the project that the graph is in
-   * @param vsGraphId the Id of the graph to delete
+   * @param vsGraphId the Id of the graph to read
    * @returns the graph
    */
   public static ReadVSGraph(projectId:string, vsGraphId:string){
@@ -250,6 +252,59 @@ export class RoomManager
   public static checkinVSGraph(projectId: string, vsGraphId: string,  client: string){
     let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
     return room.checkinVSGraph(vsGraphId, client)
+  }
+
+  /**
+   * return the data of a given nodeview
+   * @param projectId the id of the project that the nodeview is in
+   * @param nodeGUID the Id of the nodeview to read
+   * @returns the nodeview
+   */
+
+  /**
+   * checkout a graph, iff the client is allowed to check it out
+   * @param projectId the Id of the project that the graph is in
+   * @param vsGraphId the Id of the graph to check out
+   * @param client the Id of the client who wants to check out the graph
+   * @returns success
+   */
+   public static checkoutNodeView(projectId: string, nodeGUID: string, client: string){
+    let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
+    return room.checkoutNodeView(nodeGUID, client);
+  }
+
+  /**
+   * check in a NodeView iff the client is allowed to check out the NodeView
+   * @param projectId the project the graph is in
+   * @param nodeGUID the nodeGUID to be checked in
+   * @param client the client who is trying to check in the NodeView
+   * @returns success
+   */
+  public static checkinNodeView(projectId: string, nodeGUID: string,  client: string){
+    let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
+    return room.checkinNodeView(nodeGUID, client)
+  }
+
+  /**
+   * return the data of a given nodeview
+   * @param projectId the id of the project that the nodeview is in
+   * @param nodeGUID the Id of the nodeview to read
+   * @returns the nodeview
+   */
+   public static ReadNodeView(projectId:string, nodeGUID:string){
+    return this._RoomList.find(element => element.GetRoomCode() == projectId).ReadNodeView(nodeGUID);
+  }
+
+  /**
+   * update a nodeview, iff client is allowed to check out
+   * @param nodeViewToUpdate nodeview to update
+   * @param projectId id of the project the nodeview is in
+   * @param client the client who is trying to update the nodeview
+   * @return success
+   */
+   public static updateNodeView(nodeViewToUpdate: FlowNodeView, projectId: string, client:string){
+    let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
+    return room.updateNodeView(nodeViewToUpdate, client)
   }
 
 }

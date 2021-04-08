@@ -10,6 +10,7 @@ import { FlowProject } from "../FlowLibrary/FlowProject";
 import { FlowObject } from "../FlowLibrary/FlowObject";
 import { FlowBehaviour } from "../FlowLibrary/FlowBehaviour";
 import { FlowVSGraph } from "../FlowLibrary/FlowVSGraph";
+import { FlowNodeView } from "../FlowLibrary/FlowNodeView";
 
 import { MessageBuilder } from "./MessageBuilder";
 
@@ -706,6 +707,67 @@ class Command_FinalizedUpdateVSGraph implements ICommand
   }
 }
 
+class Command_UpdateNodeView implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+  {
+    let flowNodeView = new FlowNodeView(data.FlowNodeView);
+    let returnData = await StateTracker.UpdateNodeView(flowNodeView, data.ProjectId, client, data.user);
+
+    let index = returnData[1].indexOf(client);
+    returnData[1].splice(index,1)
+
+    let returnContent = {
+      "MessageType": "UpdateNodeView",
+      "FlowNodeView": returnData[0],
+      "WasSuccessful": (returnData[0] == null) ? false: true,
+    }
+
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
+
+    return returnMessage;
+  }
+}
+
+class Command_CheckinNodeView implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+  {
+    let nodeView = await StateTracker.ReadNodeView(data.NodeGUID, data.ProjectId, client);
+    console.log(nodeView)
+    let finalUpdate =  await StateTracker.UpdateNodeView(nodeView[0], data.ProjectId, client, true);
+
+    let returnData = await StateTracker.CheckinNodeView(data.ProjectId, data.NodeGUID, client)
+    let returnContent = {
+      "MessageType": "CheckinNodeView",
+      "WasSuccessful": ((returnData[0]) && finalUpdate[0] != null) ? true: false,
+      "NodeGUID": data.NodeGUID
+    }
+
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
+
+    return returnMessage;
+
+  }
+}
+
+class Command_CheckoutNodeView implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+  {
+    let returnData = await StateTracker.CheckoutNodeView(data.ProjectId, data.NodeGUID, client)
+    let returnContent = {
+      "MessageType": "CheckoutNodeView",
+      "WasSuccessful": returnData[0],
+      "NodeGUID": data.NodeGUID
+    }
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
+
+    return returnMessage;
+
+  }
+}
+
 /**
  * Holds the set of commands that can be executed and executes said commands 
  * with the provided data (JSON)
@@ -762,6 +824,7 @@ export class CommandContext
       this._CommandList.set("ReadVSGraph", new Command_ReadVSGraph());
       this._CommandList.set("CheckinVSGraph", new Command_CheckinVSGraph());
       this._CommandList.set("CheckoutVSGraph", new Command_CheckoutVSGraph());
+      this._CommandList.set("UpdateNodeView", new Command_UpdateNodeView());
 
       // behaviour Commands
       this._CommandList.set("CreateBehaviour", new Command_CreateBehaviour());
