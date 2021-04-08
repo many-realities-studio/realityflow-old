@@ -573,6 +573,9 @@ class Command_CreateVSGraph implements ICommand
 
     let returnData = await StateTracker.CreateVSGraph(flowVSGraph, data.ProjectId);
 
+    returnData[0].exposedParameters = JSON.stringify(returnData[0].exposedParameters);
+    returnData[0].paramIdToObjId = JSON.stringify(returnData[0].paramIdToObjId);
+
     let returnContent = {
       "MessageType": "CreateVSGraph",
       "FlowVSGraph": returnData[0],
@@ -649,6 +652,9 @@ class Command_UpdateVSGraph implements ICommand
 
     let index = returnData[1].indexOf(client);
     returnData[1].splice(index,1)
+
+    returnData[0].exposedParameters = JSON.stringify(returnData[0].exposedParameters);
+    returnData[0].paramIdToObjId = JSON.stringify(returnData[0].paramIdToObjId);
 
     let returnContent = {
       "MessageType": "UpdateVSGraph",
