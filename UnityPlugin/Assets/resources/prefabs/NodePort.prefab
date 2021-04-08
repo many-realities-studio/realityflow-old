@@ -137,7 +137,7 @@ RectTransform:
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 30, y: 30}
-  m_Pivot: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1647741349804125845
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -315,6 +315,7 @@ MonoBehaviour:
   currentNodeGUID: {fileID: 6867458983447094774}
   listener: {fileID: 0}
   type: 
+  edges: []
 --- !u!114 &2448927476474520177
 MonoBehaviour:
   m_ObjectHideFlags: 0
