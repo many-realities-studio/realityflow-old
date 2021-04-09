@@ -569,19 +569,25 @@ class Command_CreateVSGraph implements ICommand
     //console.log("INSIDE COMMANDCONTEXT -> Command_CreateVSGraph");
     // let parsedGraph = data.FlowVSGraph;
     let flowVSGraph = new FlowVSGraph(data.FlowVSGraph);
+    let returnedGraph = data.FlowVSGraph;
     
     console.log(flowVSGraph)
 
     let returnData = await StateTracker.CreateVSGraph(flowVSGraph, data.ProjectId);
 
-    returnData[0].exposedParameters = JSON.stringify(returnData[0].exposedParameters);
-    returnData[0].paramIdToObjId = JSON.stringify(returnData[0].paramIdToObjId);
+    // returnData[0].exposedParameters = JSON.stringify(returnData[0].exposedParameters);
+    // returnData[0].paramIdToObjId = JSON.stringify(returnData[0].paramIdToObjId);
+    // returnedGraph.exposedParameters = JSON.stringify(returnedGraph.exposedParameters);
+    // returnedGraph.paramIdToObjId = JSON.stringify(returnedGraph.paramIdToObjId);
+    returnedGraph.exposedParameters = JSON.stringify(returnedGraph.exposedParameters);
+    returnedGraph.paramIdToObjId = JSON.stringify(returnedGraph.paramIdToObjId);
 
     let returnContent = {
       "MessageType": "CreateVSGraph",
-      "FlowVSGraph": returnData[0],
+      "FlowVSGraph": returnedGraph,
       "WasSuccessful": (returnData[0] == null) ? false: true
     }
+
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
 
     return returnMessage;
@@ -649,20 +655,24 @@ class Command_UpdateVSGraph implements ICommand
   {
     // let parsedGraph = data.FlowVSGraph;
     let flowVSGraph = new FlowVSGraph(data.FlowVSGraph);
+    let returnedGraph = data.FlowVSGraph;
     let returnData = await StateTracker.UpdateVSGraph(flowVSGraph, data.ProjectId, client,false, data.user);
 
     let index = returnData[1].indexOf(client);
     returnData[1].splice(index,1)
 
-    if (returnData[0] != null)
-    {
-      returnData[0].exposedParameters = JSON.stringify(returnData[0].exposedParameters);
-      returnData[0].paramIdToObjId = JSON.stringify(returnData[0].paramIdToObjId);
-    }
+    // if (returnData[0] != null)
+    // {
+    //   returnData[0].exposedParameters = JSON.stringify(returnData[0].exposedParameters);
+    //   returnData[0].paramIdToObjId = JSON.stringify(returnData[0].paramIdToObjId);
+    // }
+
+    returnedGraph.exposedParameters = JSON.stringify(returnedGraph.exposedParameters);
+    returnedGraph.paramIdToObjId = JSON.stringify(returnedGraph.paramIdToObjId);
 
     let returnContent = {
       "MessageType": "UpdateVSGraph",
-      "FlowVSGraph": returnData[0],
+      "FlowVSGraph": returnedGraph,
       "WasSuccessful": (returnData[0] == null) ? false: true,
     }
 

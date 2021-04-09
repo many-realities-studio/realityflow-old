@@ -119,7 +119,11 @@ export class StateTracker{
     let affectedClients: string[] = []
     affectedClients.push(client);
 
-    let userJoinedRoom = await this.JoinRoom(projectToOpenID, username, client);
+    let projectFoundId: string;
+    if (projectFound)
+      projectFoundId = projectFound.Id;
+
+    let userJoinedRoom = await this.JoinRoom(projectFoundId, username, client);
 
     return [projectFound, affectedClients, userJoinedRoom];
   }
