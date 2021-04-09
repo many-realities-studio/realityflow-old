@@ -654,8 +654,11 @@ class Command_UpdateVSGraph implements ICommand
     let index = returnData[1].indexOf(client);
     returnData[1].splice(index,1)
 
-    returnData[0].exposedParameters = JSON.stringify(returnData[0].exposedParameters);
-    returnData[0].paramIdToObjId = JSON.stringify(returnData[0].paramIdToObjId);
+    if (returnData[0] != null)
+    {
+      returnData[0].exposedParameters = JSON.stringify(returnData[0].exposedParameters);
+      returnData[0].paramIdToObjId = JSON.stringify(returnData[0].paramIdToObjId);
+    }
 
     let returnContent = {
       "MessageType": "UpdateVSGraph",
@@ -735,12 +738,12 @@ class Command_CheckinNodeView implements ICommand
   {
     let nodeView = await StateTracker.ReadNodeView(data.NodeGUID, data.ProjectId, client);
     console.log(nodeView)
-    let finalUpdate =  await StateTracker.UpdateNodeView(nodeView[0], data.ProjectId, client, true);
+    let update =  await StateTracker.UpdateNodeView(nodeView[0], data.ProjectId, client);
 
     let returnData = await StateTracker.CheckinNodeView(data.ProjectId, data.NodeGUID, client)
     let returnContent = {
       "MessageType": "CheckinNodeView",
-      "WasSuccessful": ((returnData[0]) && finalUpdate[0] != null) ? true: false,
+      "WasSuccessful": ((returnData[0]) && update[0] != null) ? true: false,
       "NodeGUID": data.NodeGUID
     }
 
@@ -755,7 +758,8 @@ class Command_CheckoutNodeView implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let returnData = await StateTracker.CheckoutNodeView(data.ProjectId, data.NodeGUID, client)
+    let flowNodeView = new FlowNodeView(data.FlowNodeView);
+    let returnData = await StateTracker.CheckoutNodeView(data.ProjectId, flowNodeView, client)
     let returnContent = {
       "MessageType": "CheckoutNodeView",
       "WasSuccessful": returnData[0],
@@ -825,6 +829,8 @@ export class CommandContext
       this._CommandList.set("CheckinVSGraph", new Command_CheckinVSGraph());
       this._CommandList.set("CheckoutVSGraph", new Command_CheckoutVSGraph());
       this._CommandList.set("UpdateNodeView", new Command_UpdateNodeView());
+      this._CommandList.set("CheckinNodeView", new Command_CheckinNodeView());
+      this._CommandList.set("CheckoutNodeView", new Command_CheckoutNodeView());
 
       // behaviour Commands
       this._CommandList.set("CreateBehaviour", new Command_CreateBehaviour());

@@ -651,10 +651,10 @@ export class StateTracker{
    * @param nodeGUID 
    * @param client 
    */
-   public static async CheckoutNodeView(projectId: string, nodeGUID: string, client: string) : Promise<[any, Array<string>]>
+   public static async CheckoutNodeView(projectId: string, flowNodeView: FlowNodeView, client: string) : Promise<[any, Array<string>]>
    {
-     // make sure the graph is available for checkout
-     let success = RoomManager.checkoutNodeView(projectId, nodeGUID, client);
+     // make sure the nodeview is available for checkout
+     let success = RoomManager.checkoutNodeView(projectId, flowNodeView, client);
      
      return[success, [client]]
    }

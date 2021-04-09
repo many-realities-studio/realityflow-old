@@ -1,7 +1,7 @@
 import { FlowObject } from "./FlowObject";
 import { FlowBehaviour } from "./FlowBehaviour";
 import { FlowVSGraph } from "./FlowVSGraph";
-import { FlowNodeView} from "./FlowNodeView";
+import { FlowNodeView } from "./FlowNodeView";
 
 export class FlowProject 
 {
@@ -234,11 +234,12 @@ export class FlowProject
    * @param userName 
    * @param client 
    */
-   public CheckoutNodeView(nodeGUID: string, client: string){
-    let nv = this._NodeViewList.find(element => element.NodeGUID == nodeGUID);
+   public CheckoutNodeView(flowNodeView: FlowNodeView, client: string){
+    this._NodeViewList.push(flowNodeView);
+    let nv = this._NodeViewList.find(element => element.NodeGUID == flowNodeView.NodeGUID);
     
     if (nv != undefined && nv.CurrentCheckout == null){
-      this._NodeViewList.find(element => element.NodeGUID == nodeGUID).CurrentCheckout = client;
+      this._NodeViewList.find(element => element.NodeGUID == flowNodeView.NodeGUID).CurrentCheckout = client;
       return true
     }
     
@@ -253,6 +254,12 @@ export class FlowProject
     let nv = this._NodeViewList.find(element => element.NodeGUID == nodeGUID);
     if(nv != undefined && nv.CurrentCheckout == client){
       nv.CurrentCheckout = null;
+      
+      let index = this._NodeViewList.findIndex((element) => element.NodeGUID == nodeGUID);
+      if(index > -1 ) { // && this._NodeViewList[index].CurrentCheckout == client){
+        this._NodeViewList.splice(index);
+      }
+
       return true;
     }
     else return false;

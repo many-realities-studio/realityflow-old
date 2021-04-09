@@ -349,7 +349,19 @@ MonoBehaviour:
   elasticsManager: {fileID: 0}
   onManipulationStarted:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3300302344630200336}
+        m_TargetAssemblyTypeName: NodeView, com.RealityFlow
+        m_MethodName: CheckOut
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onManipulationEnded:
     m_PersistentCalls:
       m_Calls:
@@ -380,6 +392,18 @@ MonoBehaviour:
       - m_Target: {fileID: 3300302344630200336}
         m_TargetAssemblyTypeName: NodeView, com.RealityFlow
         m_MethodName: RedrawEdges
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 3300302344630200336}
+        m_TargetAssemblyTypeName: NodeView, com.RealityFlow
+        m_MethodName: CheckIn
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -470,9 +494,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: {fileID: 1690555627191123304}
   GUID: {fileID: 5360024694129910172}
+  nodeGUID: 
   inputPanel: {fileID: 3305285921034848028}
   outputPanel: {fileID: 5395750958566768771}
   rfgv: {fileID: 0}
+  localPos: {x: 0, y: 0, z: 0}
+  _canBeModified: 0
   inputPortViews: []
   outputPortViews: []
 --- !u!114 &5605375096946484618

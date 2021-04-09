@@ -255,22 +255,15 @@ export class RoomManager
   }
 
   /**
-   * return the data of a given nodeview
-   * @param projectId the id of the project that the nodeview is in
-   * @param nodeGUID the Id of the nodeview to read
-   * @returns the nodeview
-   */
-
-  /**
-   * checkout a graph, iff the client is allowed to check it out
-   * @param projectId the Id of the project that the graph is in
-   * @param vsGraphId the Id of the graph to check out
+   * checkout a nodeview, iff the client is allowed to check it out
+   * @param projectId the Id of the project that the nodeview is in
+   * @param nodeGUID the Id of the nodeview to check out
    * @param client the Id of the client who wants to check out the graph
    * @returns success
    */
-   public static checkoutNodeView(projectId: string, nodeGUID: string, client: string){
+   public static checkoutNodeView(projectId: string, flowNodeView: FlowNodeView, client: string){
     let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
-    return room.checkoutNodeView(nodeGUID, client);
+    return room.checkoutNodeView(flowNodeView, client);
   }
 
   /**

@@ -5,6 +5,7 @@ import { TypeORMDatabase } from "./Database/TypeORMDatabase";
 import { FlowClient } from "./FlowLibrary/FlowClient";
 import { FlowObject } from "./FlowLibrary/FlowObject";
 import { FlowVSGraph } from "./FlowLibrary/FlowVSGraph";
+import { FlowNodeView } from "./FlowLibrary/FlowNodeView";
 
 // Look into Pub/Sub architecture
 export class Room
@@ -271,9 +272,9 @@ export class Room
    * @param client client who is checking out the nodeview
    * @returns success
    */
-  public checkoutNodeView(nodeGUID: string, client: string): boolean
+  public checkoutNodeView(flowNodeView: FlowNodeView, client: string): boolean
   {
-    return this._CurrentProject.CheckoutNodeView(nodeGUID, client)
+    return this._CurrentProject.CheckoutNodeView(flowNodeView, client)
   }
 
   // TODO: finished: no tested: no
