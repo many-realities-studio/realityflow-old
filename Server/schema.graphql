@@ -18,8 +18,8 @@ type Mutation {
 
   deleteBehaviour(Id: String!): behaviour!
   
-
-  createUser(Username: String!, Password: String!, input:[ProjectInput]): user!
+# createUser(Username: String!, Password: String!, input:[ProjectInput]): user!
+  createUser(Username: String!, Password: String!): user!
   updateUser(Username: String, Password: String): user!
   deleteUser(Username: String!): user!
 
@@ -27,15 +27,25 @@ type Mutation {
   updateProject(Id: String!, ProjectName: String, Description: String, DateModified: DateTime, ownerUsername: String): project! 
   deleteProject(Id: String!): project!
 
-  createObject(Id: String!, Name: String!, X: Int!, Y: Int!, Z: Int!, Q_x: Int!, Q_y: Int!, Q_z: Int!
-                Q_w: Int!, S_x: Int!, S_y: Int!, S_z: Int!, R: Int!, G: Int!, B: Int!
-                A: Int!, Prefab: String!, projectId: String!): db_object!
+  createObject(Id: String!, Name: String!, X: Float!, Y: Float!, Z: Float!, Q_x: Float!, Q_y: Float!, Q_z: Float!
+                Q_w: Float!, S_x: Float!, S_y: Float!, S_z: Float!, R: Float!, G: Float!, B: Float!
+                A: Float!, Prefab: String!, projectId: String!): db_object!
 
-  updateObject(Id: String! Name: String, X: Int, Y: Int, Z: Int, Q_x: Int, Q_y: Int, Q_z: Int
-                Q_w: Int, S_x: Int, S_y: Int, S_z: Int, R: Int, G: Int, B: Int, A: Int,
+  updateObject(Id: String! Name: String, X: Float, Y: Float, Z: Float, Q_x: Float, Q_y: Float, Q_z: Float
+                Q_w: Float, S_x: Float, S_y: Float, S_z: Float, R: Float, G: Float, B: Float, A: Float,
                 Prefab: String, projectId: String): db_object!
 
   deleteObject(Id: String!): db_object!
+
+  createVSGraph(Id: String!, Name: String!, serializedNodes: String!, edges: String!, groups: String!,
+                stackNodes: String!, pinnedElements: String!, exposedParameters: String!, stickyNotes: String!
+                position: String!, scale: String!, references: String!, projectId: String!): vs_graph!
+
+  updateVSGraph(Id: String!, Name: String, serializedNodes: String, edges: String, groups: String,
+                stackNodes: String, pinnedElements: String, exposedParameters: String, stickyNotes: String
+                position: String, scale: String, references: String, projectId: String): vs_graph!
+
+  deleteVSGraph(Id: String!): vs_graph!
 }
 
 # Inputs
@@ -67,7 +77,7 @@ type behaviour {
 type user{
   Username: String!
   Password: String!
-  project: [project!]
+  #project: [project!]
 }
 
 type project{
@@ -86,22 +96,40 @@ type db_object{
   id: Int!
   Id: String!
   Name: String!
-  X: Int!
-  Y: Int!
-  Z: Int!
-  Q_x: Int!
-  Q_y: Int!
-  Q_z: Int!
-  Q_w: Int!
-  S_x: Int!
-  S_y: Int!
-  S_z: Int!
-  R: Int!
-  G: Int!
-  B: Int!
-  A: Int!
+  X: Float!
+  Y: Float!
+  Z: Float!
+  Q_x: Float!
+  Q_y: Float!
+  Q_z: Float!
+  Q_w: Float!
+  S_x: Float!
+  S_y: Float!
+  S_z: Float!
+  R: Float!
+  G: Float!
+  B: Float!
+  A: Float!
   Prefab: String!
   project: project!
   # Relational Field
   projectId: String!
+}
+
+type vs_graph {
+  id:                Int!
+  Id:                String!
+  Name:              String!
+  serializedNodes:   String!
+  edges:             String!
+  groups:            String!
+  stackNodes:        String!
+  pinnedElements:    String!
+  exposedParameters: String!
+  stickyNotes:       String!
+  position:          String!
+  scale:             String!
+  references:        String!
+  projectId:         String!
+  project:           project!
 }

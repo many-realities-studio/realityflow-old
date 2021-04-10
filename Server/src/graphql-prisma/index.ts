@@ -78,9 +78,9 @@ const resolvers = {
         data: {
           Username: args.Username,
           Password: args.Password,
-          project: {
-            create: [{...args.input[0],DateModified}]
-          }
+          // project: {
+          //   create: [{...args.input[0],DateModified}]
+          // }
         },
       })
       return newuser
@@ -223,7 +223,67 @@ const resolvers = {
         }
       })
       return delete_object
+    },
+
+
+    createVSGraph: (_, args, context, __) =>{
+      const create_VSGraph = context.prisma.vs_graph.create({
+        data: {
+          Name:              args.Name,
+          serializedNodes:   args.serializedNodes,
+          edges:             args.edges,
+          groups:            args.stackNodes,
+          stackNodes:        args.stackNodes,
+          pinnedElements:    args.pinnedElements,
+          exposedParameters: args.exposedParameters,
+          stickyNotes:       args.stickyNotes,
+          position:          args.position,
+          scale:             args.scale,
+          references:        args.references,
+          projectId:         args.projectId,
+          project:           args.project
+        },
+        include: {
+          project: true
+        }
+
+      })
+      return create_VSGraph;
+    },
+
+    updateVSGraph: (_, args, context, __) =>{
+      const update_VSGraph = context.prisma.vs_graph.update({
+        data: {
+          Name:              args.Name,
+          serializedNodes:   args.serializedNodes,
+          edges:             args.edges,
+          groups:            args.stackNodes,
+          stackNodes:        args.stackNodes,
+          pinnedElements:    args.pinnedElements,
+          exposedParameters: args.exposedParameters,
+          stickyNotes:       args.stickyNotes,
+          position:          args.position,
+          scale:             args.scale,
+          references:        args.references,
+          projectId:         args.projectId,
+          project:           args.project
+        },
+        where: { Id: args.Id }
+
+      })
+      return update_VSGraph;
+    },
+
+    deleteVSGraph: (_, args, context, __) =>{
+      const delete_VSGraph = context.prisma.vs_graph.delete({
+        where: {
+          Id: args.Id
+        }
+      })
+      return delete_VSGraph
     }
+
+
   }
 }
 module.exports = {resolvers}

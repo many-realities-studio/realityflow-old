@@ -22,20 +22,20 @@ model db_object {
   id        Int      @id @default(autoincrement()) @map("_id")
   Id        String   @unique
   Name      String
-  X         Int
-  Y         Int
-  Z         Int
-  Q_x       Int
-  Q_y       Int
-  Q_z       Int
-  Q_w       Int
-  S_x       Int
-  S_y       Int
-  S_z       Int
-  R         Int
-  G         Int
-  B         Int
-  A         Int
+  X         Float
+  Y         Float
+  Z         Float
+  Q_x       Float
+  Q_y       Float
+  Q_z       Float
+  Q_w       Float
+  S_x       Float
+  S_y       Float
+  S_z       Float
+  R         Float
+  G         Float
+  B         Float
+  A         Float
   Prefab    String
   projectId String?
   project   project? @relation(fields: [projectId], references: [Id])
