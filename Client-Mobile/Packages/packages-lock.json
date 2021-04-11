@@ -67,7 +67,7 @@
         "com.unity.modules.wind": "1.0.0",
         "com.unity.modules.xr": "1.0.0"
       },
-      "hash": "f3ee71e4173ad8b75d003d0a6f8853d8df068b0b"
+      "hash": "61be8d9783fa3a9eafe06dbf62a5947464940829"
     },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
@@ -234,6 +234,12 @@
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
+    },
+    "org.khronos.unitygltf": {
+      "version": "file:../../UnityGLTF",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
