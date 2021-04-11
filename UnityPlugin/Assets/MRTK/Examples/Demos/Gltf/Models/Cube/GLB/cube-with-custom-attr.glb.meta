@@ -1,21 +1,19 @@
 fileFormatVersion: 2
 guid: f0bb9fb635c69be4e8526b0fb6b48f39
 ScriptedImporter:
-  fileIDToRecycleName:
-    100000: main/glTF Scene cube-with-custom-attr
-    100002: main/glTF Scene cube-with-custom-attr/world
-    100004: main/glTF Scene cube-with-custom-attr/world/geometry_0
-    400000: main/glTF Scene cube-with-custom-attr/Transform
-    400002: main/glTF Scene cube-with-custom-attr/world/Transform
-    400004: main/glTF Scene cube-with-custom-attr/world/geometry_0/Transform
-    2300000: main/glTF Scene cube-with-custom-attr/world/geometry_0/MeshRenderer
-    2800000: Texture_0
-    3300000: main/glTF Scene cube-with-custom-attr/world/geometry_0/MeshFilter
-    4300000: geometry_0
-    11400000: glTF data
-    100100000: main
+  internalIDToNameTable: []
   externalObjects: {}
+  serializedVersion: 2
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-  script: {fileID: 11500000, guid: 75911c45f303c8f45927f5efeaa50cc4, type: 3}
+  script: {fileID: 11500000, guid: 804e1ce4c496647cfa3f1a1134187c71, type: 3}
+  _removeEmptyRootObjects: 1
+  _scaleFactor: 1
+  _maximumLod: 300
+  _readWriteEnabled: 1
+  _generateColliders: 0
+  _swapUvs: 0
+  _importNormals: 0
+  _importMaterials: 1
+  _useJpgTextures: 0
