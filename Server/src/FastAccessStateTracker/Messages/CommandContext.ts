@@ -96,14 +96,14 @@ class Command_OpenProject implements ICommand
   {
     
     let returnData = await StateTracker.OpenProject(data.ProjectId, data.FlowUser.Username, client);
-    
     // notify others in the room that user has joined
     Command_OpenProject.SendRoomAnnouncement(returnData[2], "UserJoinedRoom");
 
     let returnContent = {
       "MessageType": "OpenProject",
       "WasSuccessful": returnData[0] == null ? false : true,
-      "FlowProject": returnData[0]
+      "FlowProject": returnData[0],
+      "AvatarList": returnData[0].GetAvatarList()
     }
 
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])

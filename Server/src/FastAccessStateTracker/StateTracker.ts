@@ -377,7 +377,7 @@ export class StateTracker{
   public static async CreateObject(objectToCreate : FlowObject, projectId: string) : Promise<[any, Array<string>]>
   {
     let FAMSucccess = RoomManager.AddObject(objectToCreate, projectId);
-    //TypeORMDatabase.CreateObject(objectToCreate, projectId)
+    TypeORMDatabase.CreateObject(objectToCreate, projectId)
 
     // get all of the clients that are in that room so that we can tell them 
     let affectedClients: Array<string> = [];
@@ -428,7 +428,7 @@ export class StateTracker{
 
     // Perform the delete in both the FAM and the Database
     RoomManager.DeleteObject(projectId, objectId, client);
-    //TypeORMDatabase.DeleteObject(objectId, projectId)
+    TypeORMDatabase.DeleteObject(objectId, projectId)
 
     // get all of the clients that are in that room so that we can tell them 
     let affectedClients: Array<string> = [];

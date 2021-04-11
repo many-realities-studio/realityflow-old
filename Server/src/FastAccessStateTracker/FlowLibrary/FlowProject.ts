@@ -46,7 +46,7 @@ export class FlowProject
   public DeleteObject(objectToRemove: string, client: string) 
   {
     let index = this._ObjectList.findIndex((element) => element.Id == objectToRemove);
-    if(index > -1 /*&& this._ObjectList[index].CurrentCheckout == client*/){
+    if(index > -1 && this._ObjectList[index].CurrentCheckout == client){ /*&& this._ObjectList[index].CurrentCheckout == client*/
       this._ObjectList.splice(index);
       return true;
     }
@@ -148,7 +148,16 @@ export class FlowProject
     {
       return this._AvatarList.find(element => element.Id == AvatarId);
     }
-  
+
+
+    /**
+    * Returns _AvatarList
+    */
+    public GetAvatarList() : FlowAvatar[]
+    {
+      return this._AvatarList;
+    }
+
   //  /**
   //   * sets an Avatar to "checked out," preventing another user from checking out/editing that Avatar
   //   * @param AvatarId 
