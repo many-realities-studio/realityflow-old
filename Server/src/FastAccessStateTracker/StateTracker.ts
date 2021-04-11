@@ -773,6 +773,20 @@ export class StateTracker{
     return [nodeViewToUpdate , affectedClients]
   }
 
+  public static async RunVSGraph(vsGraphIdToRun : string, projectId: string,  client: string) : Promise<[any, Array<string>]>
+  {  
+    // get all of the clients that are in that room so that we can tell them 
+    let affectedClients: Array<string> = [];
+    let roomClients = await RoomManager.getClients(projectId)
+    
+    roomClients.forEach((clients, username, map) => {
+      // console.log(user)
+      affectedClients = affectedClients.concat(clients)
+    })
+
+    return [vsGraphIdToRun , affectedClients]
+  }
+
   /**
    * turn play mode on or off
    * @param projectId the id of the project for which play mode needs to be toggled

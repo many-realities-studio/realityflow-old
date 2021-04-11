@@ -782,6 +782,27 @@ class Command_CheckoutNodeView implements ICommand
   }
 }
 
+class Command_RunVSGraph implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+  {
+    let returnData = await StateTracker.UpdateNodeView(data.VSGraphId, data.ProjectId, client);
+
+    let index = returnData[1].indexOf(client);
+    returnData[1].splice(index,1)
+
+    let returnContent = {
+      "MessageType": "RunVSGraph",
+      "VSGraphId": returnData[0],
+      "WasSuccessful": (returnData[0] == null) ? false: true,
+    }
+
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
+
+    return returnMessage;
+  }
+}
+
 /**
  * Holds the set of commands that can be executed and executes said commands 
  * with the provided data (JSON)
