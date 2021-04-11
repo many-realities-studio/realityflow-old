@@ -862,6 +862,7 @@ export class CommandContext
       this._CommandList.set("UpdateNodeView", new Command_UpdateNodeView());
       this._CommandList.set("CheckinNodeView", new Command_CheckinNodeView());
       this._CommandList.set("CheckoutNodeView", new Command_CheckoutNodeView());
+      this._CommandList.set("RunVSGraph", new Command_RunVSGraph());
 
       // behaviour Commands
       this._CommandList.set("CreateBehaviour", new Command_CreateBehaviour());
