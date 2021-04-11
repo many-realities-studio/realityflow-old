@@ -1,4 +1,5 @@
 import { prisma } from "../server"
+import { ServerEventDispatcher } from "../server"
 import { StateTracker } from "../FastAccessStateTracker/StateTracker"
 import { FlowObject } from "../FastAccessStateTracker/FlowLibrary/FlowObject"
 import { FlowBehaviour } from "../FastAccessStateTracker/FlowLibrary/FlowBehaviour"
@@ -185,7 +186,8 @@ const resolvers = {
         }
       })
       // FAM Access
-      StateTracker.CreateObject(<FlowObject>args, args.projectId)
+      let res = StateTracker.CreateObject(<FlowObject>args, args.projectId)
+      TalkToClients(res);
 
       return create_object
     },
@@ -222,6 +224,10 @@ const resolvers = {
           Id: args.Id
         }
       })
+      
+      // FAM Access
+      let res = StateTracker.DeleteObject(args.Id, args.projectId, _)
+      TalkToClients(res)
       return delete_object
     },
 
@@ -286,4 +292,23 @@ const resolvers = {
 
   }
 }
+
+function TalkToClients(res: any){
+
+  let clients = res[1];
+
+  if(!clients)
+  {
+      console.log("Didn't receive a clients array [We're in Apollo]");
+  }
+  else
+  {
+      for(var i = 0; i < clients.length; i++)
+      {
+          let key = clients[i];
+          ServerEventDispatcher.SocketConnections.get(key).send(res[0]);
+      }
+  }
+}
+
 module.exports = {resolvers}

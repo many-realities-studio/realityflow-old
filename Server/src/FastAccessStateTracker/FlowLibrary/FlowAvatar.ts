@@ -18,7 +18,7 @@ export class FlowAvatar
   public G:              Number;
   public B:              Number;
   public A:              Number;
-  public Prefab:         string;
+  // public Prefab:         string;
 
   // Fields used for tracking this Avatar in the FAM
   public Id: string; 
@@ -43,7 +43,7 @@ export class FlowAvatar
     this.G = json.G;
     this.B = json.B;
     this.A = json.A;
-    this.Prefab = json.Prefab;
+    // this.Prefab = json.Prefab;
     //this.CurrentCheckout = null;
 }
 
@@ -64,6 +64,6 @@ export class FlowAvatar
     this.S_x = newAvatar.S_x;
     this.S_y = newAvatar.S_y;
     this.S_z = newAvatar.S_z;
-    this.Prefab = newAvatar.Prefab;
+    // this.Prefab = newAvatar.Prefab;
   }
 }

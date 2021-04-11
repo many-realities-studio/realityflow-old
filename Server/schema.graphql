@@ -35,7 +35,7 @@ type Mutation {
                 Q_w: Float, S_x: Float, S_y: Float, S_z: Float, R: Float, G: Float, B: Float, A: Float,
                 Prefab: String, projectId: String): db_object!
 
-  deleteObject(Id: String!): db_object!
+  deleteObject(Id: String!, projectId: String!): db_object!
 
   createVSGraph(Id: String!, Name: String!, serializedNodes: String!, edges: String!, groups: String!,
                 stackNodes: String!, pinnedElements: String!, exposedParameters: String!, stickyNotes: String!
