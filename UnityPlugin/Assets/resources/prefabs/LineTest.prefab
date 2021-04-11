@@ -75,6 +75,8 @@ LineRenderer:
   m_Positions:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: 1}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -154,3 +156,5 @@ MonoBehaviour:
   rfgv: {fileID: 0}
   input: {fileID: 0}
   output: {fileID: 0}
+  UpdateEdgesPerFrame: 0
+  padding: 0.1
