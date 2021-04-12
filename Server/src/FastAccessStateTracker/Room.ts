@@ -233,6 +233,13 @@ export class Room
     return this._CurrentProject.AddAvatar(AvatarToCreate);
   }
 
+   /**
+   * Get Avatar List
+   */
+    public GetAvatarList(){
+      return this._CurrentProject.GetAvatarList();
+    }
+
   // TODO: optimize all of these
   /**
    * delete an Avatar from the room, iff the client sending the delete call has the Avatar checked out

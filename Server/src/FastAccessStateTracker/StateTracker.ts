@@ -64,7 +64,7 @@ export class StateTracker{
 
 
   // TODO: finished: yes tested: yes
-  /**
+  /**]
    * Deletes the project from the FAM and the database - assumes that nobody is in the room
    * @param projectToDeleteId
    */
@@ -488,9 +488,10 @@ export class StateTracker{
    * @param AvatarToCreate 
    * @param projectId 
    */
-   public static async CreateAvatar(AvatarToCreate : FlowAvatar, projectId: string) : Promise<[any, Array<string>]>
+   public static async CreateAvatar(AvatarToCreate : FlowAvatar, projectId: string) : Promise<[any, Array<string>, Array<FlowAvatar>]>
    {
      let FAMSucccess = RoomManager.AddAvatar(AvatarToCreate, projectId)
+     let AvatarList = RoomManager.GetAvatarList(projectId);
      //TypeORMDatabase.CreateAvatar(AvatarToCreate, projectId)
  
      // get all of the clients that are in that room so that we can tell them 
@@ -500,7 +501,7 @@ export class StateTracker{
        affectedClients = affectedClients.concat(clients)
      })
  
-     return [AvatarToCreate, affectedClients]
+     return [AvatarToCreate, affectedClients, AvatarList]
    }
  
   //  /**

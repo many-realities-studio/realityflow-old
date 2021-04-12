@@ -103,7 +103,7 @@ class Command_OpenProject implements ICommand
       "MessageType": "OpenProject",
       "WasSuccessful": returnData[0] == null ? false : true,
       "FlowProject": returnData[0],
-      "AvatarList": returnData[0].GetAvatarList()
+      // "AvatarList":
     }
 
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
@@ -470,7 +470,8 @@ class Command_CreateAvatar implements ICommand
     let returnContent = {
       "MessageType": "CreateAvatar",
       "FlowAvatar": returnData[0],
-      "WasSuccessful": (returnData[0] == null) ? false: true
+      "WasSuccessful": (returnData[0] == null) ? false: true,
+      "AvatarList": returnData[2]
     }
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
 

@@ -207,6 +207,14 @@ export class RoomManager
     return room.AddAvatar(AvatarToCreate)
   }
 
+    /**
+     * Get Avatar List
+     */
+  public static GetAvatarList(projectId:string){
+    let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
+    return room.GetAvatarList()
+  }
+
   /**
      * delete an Avatar from the Fast Access State Tracker
      * @param projectId the id of the project from which to delete the obejct
