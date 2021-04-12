@@ -277,28 +277,28 @@ export class Room
     return this._CurrentProject.CheckoutNodeView(flowNodeView, client)
   }
 
-  // TODO: finished: no tested: no
-  /**
-   * check in a graph, if the graph is checked out by client
-   * @param vsGraphId the graph to be checked in
-   * @param client the client trying to check in the graph
-   * @returns success
-   */
-   public checkinVSGraph(vsGraphId: string, client: string){
-    return this._CurrentProject.CheckinVSGraph(vsGraphId, client)
-  }
+  // // TODO: finished: no tested: no
+  // /**
+  //  * check in a graph, if the graph is checked out by client
+  //  * @param vsGraphId the graph to be checked in
+  //  * @param client the client trying to check in the graph
+  //  * @returns success
+  //  */
+  //  public checkinVSGraph(vsGraphId: string, client: string){
+  //   return this._CurrentProject.CheckinVSGraph(vsGraphId, client)
+  // }
 
-  // TODO: finished: no tested: no
-  /**
-   * check out a graph, assuming that client is open for checkout
-   * @param vsGraphId  object to check out
-   * @param client client who is checking out the graph
-   * @returns success
-   */
-  public checkoutVSGraph(vsGraphId: string, client: string): boolean
-  {
-    return this._CurrentProject.CheckoutVSGraph(vsGraphId, client)
-  }
+  // // TODO: finished: no tested: no
+  // /**
+  //  * check out a graph, assuming that client is open for checkout
+  //  * @param vsGraphId  object to check out
+  //  * @param client client who is checking out the graph
+  //  * @returns success
+  //  */
+  // public checkoutVSGraph(vsGraphId: string, client: string): boolean
+  // {
+  //   return this._CurrentProject.CheckoutVSGraph(vsGraphId, client)
+  // }
 
   // TODO: finished: no tested: no
   /**

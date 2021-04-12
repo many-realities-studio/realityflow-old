@@ -230,29 +230,29 @@ export class RoomManager
     return this._RoomList.find(element => element.GetRoomCode() == projectId).ReadVSGraph(vsGraphId);
   }
 
-  /**
-   * checkout a graph, iff the client is allowed to check it out
-   * @param projectId the Id of the project that the graph is in
-   * @param vsGraphId the Id of the graph to check out
-   * @param client the Id of the client who wants to check out the graph
-   * @returns success
-   */
-  public static checkoutVSGraph(projectId: string, vsGraphId: string, client: string){
-    let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
-    return room.checkoutVSGraph(vsGraphId, client);
-  }
+  // /**
+  //  * checkout a graph, iff the client is allowed to check it out
+  //  * @param projectId the Id of the project that the graph is in
+  //  * @param vsGraphId the Id of the graph to check out
+  //  * @param client the Id of the client who wants to check out the graph
+  //  * @returns success
+  //  */
+  // public static checkoutVSGraph(projectId: string, vsGraphId: string, client: string){
+  //   let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
+  //   return room.checkoutVSGraph(vsGraphId, client);
+  // }
 
-  /**
-   * check in a graph iff the client is allowed to check out the graph
-   * @param projectId the project the graph is in
-   * @param vsGraphId the graph to be checked in
-   * @param client the client who is trying to check in the graph
-   * @returns success
-   */
-  public static checkinVSGraph(projectId: string, vsGraphId: string,  client: string){
-    let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
-    return room.checkinVSGraph(vsGraphId, client)
-  }
+  // /**
+  //  * check in a graph iff the client is allowed to check out the graph
+  //  * @param projectId the project the graph is in
+  //  * @param vsGraphId the graph to be checked in
+  //  * @param client the client who is trying to check in the graph
+  //  * @returns success
+  //  */
+  // public static checkinVSGraph(projectId: string, vsGraphId: string,  client: string){
+  //   let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
+  //   return room.checkinVSGraph(vsGraphId, client)
+  // }
 
   /**
    * checkout a nodeview, iff the client is allowed to check it out
