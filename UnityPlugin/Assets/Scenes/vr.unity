@@ -1538,6 +1538,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 506198130}
+  - component: {fileID: 506198131}
   m_Layer: 0
   m_Name: GraphQLClient
   m_TagString: GraphQL
@@ -1559,6 +1560,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &506198131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 506198129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 168f9388296ea704787dbd79309ce340, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  graphql_api: {fileID: 11400000, guid: f29a5231f1cbec34ebf6782c9163fc49, type: 2}
 --- !u!1 &511332221
 GameObject:
   m_ObjectHideFlags: 0

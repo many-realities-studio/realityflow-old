@@ -159,7 +159,7 @@ const resolvers = {
 
     },
 
-    createObject: (_, args, context, __) => {
+    createObject: async (_, args, context, __) => {
       const create_object = context.prisma.db_object.create({
         data: {
           Id: args.Id,
@@ -186,7 +186,7 @@ const resolvers = {
         }
       })
       // FAM Access
-      let res = StateTracker.CreateObject(<FlowObject>args, args.projectId)
+      let res = await StateTracker.CreateObject(<FlowObject>args, args.projectId)
       TalkToClients(res);
 
       return create_object
@@ -218,7 +218,7 @@ const resolvers = {
       return update_object
     },
 
-    deleteObject: (_, args, context, __) => {
+    deleteObject: async (_, args, context, __) => {
       const delete_object = context.prisma.db_object.delete({
         where: {
           Id: args.Id
@@ -226,7 +226,7 @@ const resolvers = {
       })
       
       // FAM Access
-      let res = StateTracker.DeleteObject(args.Id, args.projectId, _)
+      let res = await StateTracker.DeleteObject(args.Id, args.projectId, _)
       TalkToClients(res)
       return delete_object
     },

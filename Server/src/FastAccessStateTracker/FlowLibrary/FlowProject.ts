@@ -46,7 +46,7 @@ export class FlowProject
   public DeleteObject(objectToRemove: string, client: string) 
   {
     let index = this._ObjectList.findIndex((element) => element.Id == objectToRemove);
-    if(index > -1 && this._ObjectList[index].CurrentCheckout == client){ /*&& this._ObjectList[index].CurrentCheckout == client*/
+    if(index > -1 /*&& this._ObjectList[index].CurrentCheckout == client*/){ /*&& this._ObjectList[index].CurrentCheckout == client*/
       this._ObjectList.splice(index);
       return true;
     }

@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 6141740121607980992}
   - component: {fileID: 4466953296567239518}
   - component: {fileID: 4419841665110128062}
-  - component: {fileID: 2670537132046868794}
   m_Layer: 0
   m_Name: Avatar
   m_TagString: Untagged
@@ -96,23 +95,3 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2670537132046868794
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2763682688552975643}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb59edb2c0efc3a4297f0b6ee61b4bd7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  underlyingFlowObject:
-    _id: 
-    _X: 0
-    _canBeModified: 0
-    _Prefab: 
-  head: {fileID: 0}
-  lHand: {fileID: 0}
-  rHand: {fileID: 0}
