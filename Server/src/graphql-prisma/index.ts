@@ -186,8 +186,13 @@ const resolvers = {
         }
       })
       // FAM Access
-      let res = await StateTracker.CreateObject(<FlowObject>args, args.projectId)
-      TalkToClients(res);
+      StateTracker.CreateObject(<FlowObject>args, args.projectId)
+      // TalkToClients(createObjFAM);
+      // let response = await FAMaccess(1, args)
+      // if(response == true)
+      // {
+      //   console.log("Yes! we got a response and I think GraphQL worked!")
+      // }
 
       return create_object
     },
@@ -226,9 +231,14 @@ const resolvers = {
       })
       
       // FAM Access
-      let res = await StateTracker.DeleteObject(args.Id, args.projectId, _)
-      TalkToClients(res)
-      return delete_object
+      StateTracker.DeleteObject(args.Id, args.projectId, _)
+      // TalkToClients(deleteObjFAM)
+      // let response = await FAMaccess(2, args)
+      // if(response == true)
+      // {
+      //   console.log("Yes! we got a response and I think GraphQL worked!")
+      // }
+      // return delete_object
     },
 
 
@@ -293,7 +303,25 @@ const resolvers = {
   }
 }
 
-function TalkToClients(res: any){
+async function FAMaccess (FAM : number, args)
+{
+  switch(FAM) // Choosing which FAM Operation needs to be executed.
+  {
+    case 1:
+      var res1 = await StateTracker.CreateObject(<FlowObject>args, args.projectId)
+      TalkToClients(res1);
+      break;
+
+    case 2:
+      var res2 = await StateTracker.DeleteObject(args.Id, args.projectId, "none")
+      TalkToClients(res2)
+      break;
+  }
+
+  return true;
+}
+
+ function TalkToClients(res: any){
 
   let clients = res[1];
 
@@ -312,3 +340,5 @@ function TalkToClients(res: any){
 }
 
 module.exports = {resolvers}
+export { TalkToClients };
+export { TalkToClients as BacktoGraphQL };
