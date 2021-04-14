@@ -898,7 +898,7 @@ class Command_RunVSGraph implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let returnData = await StateTracker.UpdateNodeView(data.VSGraphId, data.ProjectId, client);
+    let returnData = await StateTracker.RunVSGraph(data.VSGraphId, data.ProjectId, client);
 
     let index = returnData[1].indexOf(client);
     returnData[1].splice(index,1)
