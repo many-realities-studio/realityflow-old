@@ -16,6 +16,8 @@ TagManager:
   - GameObjectManipulationNode
   - StartNode
   - PrintNode
+  - UI
+  - GraphQL
   layers:
   - Default
   - TransparentFX

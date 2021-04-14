@@ -1,4 +1,5 @@
 import { FlowObject } from "./FlowLibrary/FlowObject";
+import { FlowAvatar } from "./FlowLibrary/FlowAvatar";
 import { FlowVSGraph } from "./FlowLibrary/FlowVSGraph";
 import { FlowProject } from "./FlowLibrary/FlowProject";
 import { FlowBehaviour } from "./FlowLibrary/FlowBehaviour";
@@ -64,7 +65,7 @@ export class StateTracker{
 
 
   // TODO: finished: yes tested: yes
-  /**
+  /**]
    * Deletes the project from the FAM and the database - assumes that nobody is in the room
    * @param projectToDeleteId
    */
@@ -484,6 +485,118 @@ export class StateTracker{
     let objectRead = RoomManager.ReadObject(projectId, objectId)
     return [objectRead, [client]];
   }
+
+  
+  // Avatar Commands
+  /**
+   * create an Avatar in both the Fast Access State Tracker
+   * @param AvatarToCreate 
+   * @param projectId 
+   */
+   public static async CreateAvatar(AvatarToCreate : FlowAvatar, projectId: string) : Promise<[any, Array<string>, Array<FlowAvatar>]>
+   {
+     let FAMSucccess = RoomManager.AddAvatar(AvatarToCreate, projectId)
+     let AvatarList = RoomManager.GetAvatarList(projectId);
+     //TypeORMDatabase.CreateAvatar(AvatarToCreate, projectId)
+ 
+     // get all of the clients that are in that room so that we can tell them 
+     let affectedClients: Array<string> = [];
+     let roomClients = await RoomManager.getClients(projectId)  
+     roomClients.forEach((clients, username, map) => {
+       affectedClients = affectedClients.concat(clients)
+     })
+ 
+     return [AvatarToCreate, affectedClients, AvatarList]
+   }
+ 
+  //  /**
+  //   * check out an Avatar from the Fast Access State Tracker
+  //   * @param projectId 
+  //   * @param AvatarId 
+  //   * @param client 
+  //   */
+  //  public static async CheckoutAvatar(projectId: string, AvatarId: string, client: string) : Promise<[any, Array<string>]>
+  //  {
+  //    // make sure the Avatar is available for checkout
+  //    let success = RoomManager.checkoutAvatar(projectId, AvatarId, client);
+     
+  //    return[success, [client]]
+  //  }
+ 
+  //  /**
+  //   * check in an Avatar from the Fast Access State Tracker
+  //   * @param projectId 
+  //   * @param AvatarId 
+  //   * @param client 
+  //   */
+  //  public static async CheckinAvatar(projectId: string, AvatarId: string, client: string) : Promise<[any, Array<string>]>
+  //  {
+  //    // make sure the actual person that checked an Avatar out is the one checking it back in
+  //    let success = RoomManager.checkinAvatar(projectId, AvatarId, client)
+      
+  //    return[success, [client]]
+  //  }
+ 
+   /**
+    * Delete an Avatar from both the FAM and the Database
+    * @param AvatarId 
+    * @param projectId 
+    * @param client 
+    */
+   public static async DeleteAvatar(AvatarId: string, projectId: string, client: string) : Promise<[any, Array<string>]>
+   {
+ 
+     // Perform the delete in both the FAM and the Database
+     RoomManager.DeleteAvatar(projectId, AvatarId, client);
+     //TypeORMDatabase.DeleteAvatar(AvatarId, projectId)
+ 
+     // get all of the clients that are in that room so that we can tell them 
+     let affectedClients: Array<string> = [];
+     let roomClients = await RoomManager.getClients(projectId)
+     roomClients.forEach((clients, username, map) => {
+       affectedClients = affectedClients.concat(clients)
+     })
+ 
+     return [AvatarId, affectedClients]
+   }
+ 
+   /**
+    * update an Avatar in the FAM
+    * @param AvatarToUpdate the Avatar data to update - includes the Id of the Avatar
+    * @param projectId project Id that the client is in
+    * @param client client Id to make sure they have the Avatar checked out
+    */
+   public static async UpdateAvatar(AvatarToUpdate : FlowAvatar, projectId: string,  client: string,  saveToDatabase:boolean,user=null) : Promise<[any, Array<string>]>
+   {  
+     // perform the updates
+     let famSuccess = RoomManager.updateAvatar(AvatarToUpdate, projectId, client);
+     //console.log(RoomManager.ReadAvatar(projectId, AvatarToUpdate.Id))
+     if(!famSuccess)
+       return [null, [client]];
+ 
+     // get all of the clients that are in that room so that we can tell them 
+     let affectedClients: Array<string> = [];
+     let roomClients = await RoomManager.getClients(projectId)
+     
+     roomClients.forEach((clients, username, map) => {
+       // console.log(user)
+       affectedClients = affectedClients.concat(clients)
+     })
+ 
+     return [AvatarToUpdate , affectedClients]
+   }
+ 
+  //  /**
+  //   * return the data for a single Avatar
+  //   * @param AvatarId the Id of the Avatar
+  //   * @param projectId the Id of the project that the Avatar is in
+  //   * @param client the client who wants the Avatar
+  //   */
+  //  public static async ReadAvatar(AvatarId: string, projectId: string, client: string) :  Promise<[any, Array<string>]>
+  //  {
+  //    let AvatarRead = RoomManager.ReadAvatar(projectId, AvatarId)
+  //    return [AvatarRead, [client]];
+  //  }
 
   /**
    * Create a behaviour in both the Database and the Fast Access State Tracker

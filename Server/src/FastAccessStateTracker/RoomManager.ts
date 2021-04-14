@@ -1,5 +1,6 @@
 import { Room } from "./Room";
 import { FlowObject } from "./FlowLibrary/FlowObject";
+import { FlowAvatar } from "./FlowLibrary/FlowAvatar";
 import { FlowVSGraph } from "./FlowLibrary/FlowVSGraph";
 import { FlowBehaviour } from "./FlowLibrary/FlowBehaviour";
 import { FlowNodeView } from "./FlowLibrary/FlowNodeView";
@@ -182,6 +183,75 @@ export class RoomManager
     let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
     return room.checkinObject(objectId, client)
   }
+
+
+  // Avatar Section
+  /**
+     * update an Avatar, iff client is allowed to check out
+     * @param AvatarToUpdate Avatar to update
+     * @param projectId id of the project the Avatar is in
+     * @param client the client who is trying to update the Avatar
+     * @return success
+     */
+  public static updateAvatar(AvatarToUpdate: FlowAvatar, projectId: string, client:string){
+    let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
+    return room.updateAvatar(AvatarToUpdate, client)
+  }
+
+  /**
+     * add an Avatar to a specific room
+     * @param AvatarToCreate 
+     * @param projectId 
+     * @returns success
+     */
+  public static AddAvatar(AvatarToCreate: FlowAvatar, projectId:string){
+    let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
+    return room.AddAvatar(AvatarToCreate)
+  }
+
+    /**
+     * Get Avatar List
+     */
+  public static GetAvatarList(projectId:string){
+    let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
+    return room.GetAvatarList()
+  }
+
+  /**
+     * delete an Avatar from the Fast Access State Tracker
+     * @param projectId the id of the project from which to delete the obejct
+     * @param AvatarId the Id of the Avatar to delete
+     * @param client the client who wants to delete the Avatar
+     * @returns success
+     */
+  public static DeleteAvatar(projectId: string, AvatarId: string, client:string){
+    let success = this._RoomList.find(element => element.GetRoomCode() == projectId).DeleteAvatar(AvatarId, client);
+    return success
+  }
+
+  // /**
+  //  * return the data of a given Avatar
+  //  * @param projectId the id of the project that the Avatar is in
+  //  * @param AvatarId the Id of the Avatar to delete
+  //  * @returns the Avatar
+  //  */
+  // public static ReadAvatar(projectId:string, AvatarId:string){
+  //   return this._RoomList.find(element => element.GetRoomCode() == projectId).ReadAvatar(AvatarId);
+  // }
+
+  // /**
+  //  * checkout an Avatar, iff the client is allowed to check it out
+  //  * @param projectId the Id of the project that the Avatar is in
+  //  * @param AvatarId the Id of the  Avatar to check out
+  //  * @param client the Id of the client who wants to check out the Avatar
+  //  * @returns success
+  //  */
+  // public static checkoutAvatar(projectId: string, AvatarId: string, client: string){
+  //   let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
+  //   return room.checkoutAvatar(AvatarId, client);
+  // }
+
+  //   END OF AVATAR SECTION
 
   // Visual Scripting Graph section
 
