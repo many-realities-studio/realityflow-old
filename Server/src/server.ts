@@ -14,6 +14,20 @@ import { RoomManager } from "./FastAccessStateTracker/RoomManager";
 import { UserOperations } from "./ORMCommands/user";
 import { FlowProject } from "./FastAccessStateTracker/FlowLibrary/FlowProject";
 import {isNullOrUndefined} from "util";
+
+// GraphQL Logic
+import { PrismaClient } from '@prisma/client';
+export const prisma = new PrismaClient();
+const { GraphQLScalarType } = require('graphql');
+const fs = require('fs');
+const path = require('path');
+const fs1 = require('fs');
+const path1 = require('path');
+const { ApolloServer } = require('apollo-server');
+const { info } = require('console');
+const {resolvers} = require('./graphql-prisma');
+
+
 var pm2 = require('pm2');
 
 console.log("Server starting...")
@@ -126,7 +140,7 @@ export class ServerEventDispatcher {
         
             console.log(evt)
             try {
-
+                
                 const json = JSON.parse(evt);
                 json.user = ws.username
 
@@ -236,14 +250,35 @@ export class ServerEventDispatcher {
 })()
 
 
+const server1 = new ApolloServer({
+    typeDefs: fs.readFileSync(
+      path.join(__dirname, '../../../schema.graphql'),
+      'utf8'
+    ),
+    
+    resolvers,
+    context: {
+      prisma,
+    }
+  })
+
+
 const server = http.createServer();
-const sockServ = new ServerEventDispatcher(server);
+
+new ServerEventDispatcher(server);
 
 try {
-server.listen({"port": process.env.PORT || 8999, "host": "localhost"}, () => {
-    console.log("SYSTEM READY");
+    let port = process.env.PORT || 8999
+server.listen({"port": port, "host": "localhost"}, () => {
+    console.log("SYSTEM READY on port " + port);
 
 })
 } catch (err) {
   console.log(err)
 }
+  
+  server1
+    .listen()
+    .then(({ url }) =>
+      console.log(`Server is running on ${url}`)
+    ); // Allows you to run GraphQL Playground (a powerful IdE)

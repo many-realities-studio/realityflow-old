@@ -1,6 +1,7 @@
 import { FlowObject } from "./FlowObject";
 import { FlowBehaviour } from "./FlowBehaviour";
 import { FlowVSGraph } from "./FlowVSGraph";
+import { FlowAvatar } from "./FlowAvatar";
 
 export class FlowProject 
 {
@@ -10,6 +11,8 @@ export class FlowProject
   public _BehaviourList: Array<FlowBehaviour> = [];
   // TODO: list of VSGraphs
   public _VSGraphList: Array<FlowVSGraph> = [];
+
+  public _AvatarList: Array<FlowAvatar> = [];
   
   // Used for identification in the FAM
   
@@ -43,7 +46,7 @@ export class FlowProject
   public DeleteObject(objectToRemove: string, client: string) 
   {
     let index = this._ObjectList.findIndex((element) => element.Id == objectToRemove);
-    if(index > -1 && this._ObjectList[index].CurrentCheckout == client){
+    if(index > -1 /*&& this._ObjectList[index].CurrentCheckout == client*/){ /*&& this._ObjectList[index].CurrentCheckout == client*/
       this._ObjectList.splice(index);
       return true;
     }
@@ -112,6 +115,102 @@ export class FlowProject
     }
     else return false;
   }
+  
+  /**
+   * Adds an Avatar to a project, saving it to both FAM and the database
+   * @param AvatarToAdd The Avatar which should be added to the project
+   */
+    public AddAvatar(AvatarToAdd: FlowAvatar) 
+    {
+      this._AvatarList.push(AvatarToAdd);
+      return true;
+    }
+  
+    /**
+    * Removes an Avatar from the list of available Avatars
+    * @param AvatarToRemove 
+    */
+    public DeleteAvatar(AvatarToRemove: string, client: string) 
+    {
+      let index = this._AvatarList.findIndex((element) => element.Id == AvatarToRemove);
+      if(index > -1 /*&& this._AvatarList[index].CurrentCheckout == client*/){
+        this._AvatarList.splice(index);
+        return true;
+      }
+      else return false
+    }
+  
+    /**
+    * Returns FlowAvatar with the given ID number 
+    * @param AvatarId 
+    */
+    public GetAvatar(AvatarId: string) : FlowAvatar
+    {
+      return this._AvatarList.find(element => element.Id == AvatarId);
+    }
+
+
+    /**
+    * Returns _AvatarList
+    */
+    public GetAvatarList() : FlowAvatar[]
+    {
+      return this._AvatarList;
+    }
+
+  //  /**
+  //   * sets an Avatar to "checked out," preventing another user from checking out/editing that Avatar
+  //   * @param AvatarId 
+  //   * @param userName 
+  //   * @param client 
+  //   */
+  //  public CheckoutAvatar(AvatarId: string, client: string){
+  //    let obj = this._AvatarList.find(element => element.Id == AvatarId);
+      
+  //    if (obj != undefined && obj.CurrentCheckout == null){
+  //      this._AvatarList.find(element => element.Id == AvatarId).CurrentCheckout = client;
+  //      return true
+  //    }
+      
+  //    else return false
+  //  }
+  
+  
+  //  /**
+  //   * sets an Avatar to "checked in," preventing another user from checking out/editing that Avatar
+  //   * @param AvatarId 
+  //   */
+  //  public CheckinAvatar(AvatarId: string, client){
+  //    let obj = this._AvatarList.find(element => element.Id == AvatarId);
+  //    if(obj != undefined && obj.CurrentCheckout == client){
+  //      obj.CurrentCheckout = null;
+  //      return true;
+  //    }
+  //    else return false;
+  //  }
+  
+    //  We dont need this! /**
+    // * find out who has checked out the Avatar in question
+    // * @param AvatarId 
+    // */
+    // public GetAvatarHolder(AvatarId: string){
+    //   return this._AvatarList.find(element => element.Id == AvatarId).CurrentCheckout
+    // }
+  
+    /**
+    * Updates the Avatar in the FAM without saving to the database
+    * @param newAvatar 
+    */
+    public UpdateFAMAvatar(newAvatar: FlowAvatar, client: string) 
+    {
+      // Get the Avatar that we are changing from the specified project
+      var oldAvatar: FlowAvatar = this._AvatarList.find(element => element.Id == newAvatar.Id);
+      if(oldAvatar != undefined /*&& oldAvatar.CurrentCheckout == client*/){
+        oldAvatar.UpdateProperties(newAvatar);
+        return true;
+      }
+      else return false;
+    }
 
   public UpdateBehaviour(newBehaviour: FlowBehaviour, client: string) 
   {
