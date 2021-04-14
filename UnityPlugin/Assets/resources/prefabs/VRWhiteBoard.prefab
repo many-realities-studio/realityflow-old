@@ -1923,7 +1923,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2641660638994500374}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.9999902
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5868,7 +5868,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 3194855928771084812, guid: e2fcba78c442545408d161e16044d065,
+          type: 3}
         m_TargetAssemblyTypeName: KeyboardManager, com.RealityFlow
         m_MethodName: PresentKeyboard
         m_Mode: 1
@@ -6285,7 +6286,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.00011496614, y: 0.000053436495}
+  m_AnchoredPosition: {x: -0.0013482156, y: -0.015784081}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &5201406156305197843
@@ -13781,7 +13782,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 3194855928771084812, guid: e2fcba78c442545408d161e16044d065,
+          type: 3}
         m_TargetAssemblyTypeName: KeyboardManager, com.RealityFlow
         m_MethodName: PresentKeyboard
         m_Mode: 1
