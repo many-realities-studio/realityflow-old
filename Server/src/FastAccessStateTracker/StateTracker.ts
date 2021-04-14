@@ -5,8 +5,7 @@ import { FlowProject } from "./FlowLibrary/FlowProject";
 import { FlowBehaviour } from "./FlowLibrary/FlowBehaviour";
 
 import { RoomManager } from "./RoomManager";
-import { TypeORMDatabase } from "./Database/TypeORMDatabase";
-import { BacktoGraphQL } from "../graphql-prisma"
+import { TypeORMDatabase } from "./Database/TypeORMDatabase"
 
 // TODO: Add logging system
 
@@ -378,7 +377,7 @@ export class StateTracker{
   public static async CreateObject(objectToCreate : FlowObject, projectId: string) : Promise<[any, Array<string>]>
   {
     let FAMSucccess = RoomManager.AddObject(objectToCreate, projectId);
-    //TypeORMDatabase.CreateObject(objectToCreate, projectId)
+    TypeORMDatabase.CreateObject(objectToCreate, projectId)
 
     // get all of the clients that are in that room so that we can tell them 
     let affectedClients: Array<string> = [];
@@ -386,9 +385,6 @@ export class StateTracker{
     roomClients.forEach((clients, username, map) => {
       affectedClients = affectedClients.concat(clients)
     })
-
-    // Graphql route
-    BacktoGraphQL.TalkToClients([objectToCreate, affectedClients])
 
     return [objectToCreate, affectedClients]
   }
@@ -432,7 +428,7 @@ export class StateTracker{
 
     // Perform the delete in both the FAM and the Database
     RoomManager.DeleteObject(projectId, objectId, client);
-    //TypeORMDatabase.DeleteObject(objectId, projectId)
+    TypeORMDatabase.DeleteObject(objectId, projectId)
 
     // get all of the clients that are in that room so that we can tell them 
     let affectedClients: Array<string> = [];
@@ -440,9 +436,6 @@ export class StateTracker{
     roomClients.forEach((clients, username, map) => {
       affectedClients = affectedClients.concat(clients)
     })
-
-    // Graphql route
-    TalkToClients([objectId, affectedClients])
 
     return [objectId, affectedClients]
   }

@@ -1,6 +1,7 @@
 import { prisma } from "../server"
 import { ServerEventDispatcher } from "../server"
 import { StateTracker } from "../FastAccessStateTracker/StateTracker"
+import { RoomManager } from "../FastAccessStateTracker/RoomManager"
 import { FlowObject } from "../FastAccessStateTracker/FlowLibrary/FlowObject"
 import { FlowBehaviour } from "../FastAccessStateTracker/FlowLibrary/FlowBehaviour"
 // import { FlowObject } from "../FastAccessStateTracker/FlowLibrary/FlowObject"
@@ -186,14 +187,9 @@ const resolvers = {
         }
       })
       // FAM Access
-      StateTracker.CreateObject(<FlowObject>args, args.projectId)
+      // StateTracker.CreateObject(<FlowObject>args, args.projectId)
       // TalkToClients(createObjFAM);
-      // let response = await FAMaccess(1, args)
-      // if(response == true)
-      // {
-      //   console.log("Yes! we got a response and I think GraphQL worked!")
-      // }
-
+      FAMaccess(1, args)
       return create_object
     },
 
@@ -231,14 +227,10 @@ const resolvers = {
       })
       
       // FAM Access
-      StateTracker.DeleteObject(args.Id, args.projectId, _)
-      // TalkToClients(deleteObjFAM)
-      // let response = await FAMaccess(2, args)
-      // if(response == true)
-      // {
-      //   console.log("Yes! we got a response and I think GraphQL worked!")
-      // }
-      // return delete_object
+      // StateTracker.DeleteObject(args.Id, args.projectId, _)
+      //TalkToClients(deleteObjFAM)
+      await FAMaccess(2, args)
+      return delete_object
     },
 
 
@@ -308,8 +300,9 @@ async function FAMaccess (FAM : number, args)
   switch(FAM) // Choosing which FAM Operation needs to be executed.
   {
     case 1:
-      var res1 = await StateTracker.CreateObject(<FlowObject>args, args.projectId)
-      TalkToClients(res1);
+      var newObj = new FlowObject(args)
+      /*let res1 = await*/ StateTracker.CreateObject(newObj, args.projectId)
+      //TalkToClients(res1);
       break;
 
     case 2:
@@ -317,12 +310,10 @@ async function FAMaccess (FAM : number, args)
       TalkToClients(res2)
       break;
   }
-
-  return true;
 }
 
  function TalkToClients(res: any){
-
+  console.log("We made it from GraphQL!")
   let clients = res[1];
 
   if(!clients)
