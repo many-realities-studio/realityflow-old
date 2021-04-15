@@ -465,14 +465,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 1566273422334750335}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6bbf94fd03a9ec4087a40f998ace155, type: 3}
+  m_Script: {fileID: 11500000, guid: 7847c09f97ab00140bb5ae307fd2737e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   title: {fileID: 1690555627191123304}
   GUID: {fileID: 5360024694129910172}
-  inputPanel: {fileID: 5101957991842564871}
-  outputPanel: {fileID: 853561620688415498}
+  nodeGUID: 
+  inputPanel: {fileID: 3305285921034848028}
+  outputPanel: {fileID: 5395750958566768771}
   rfgv: {fileID: 0}
+  localPos: {x: 0, y: 0, z: 0}
+  nodeViewRigidbody: {fileID: 0}
+  _canBeModified: 0
   inputPortViews: []
   outputPortViews: []
 --- !u!114 &5605375096946484618

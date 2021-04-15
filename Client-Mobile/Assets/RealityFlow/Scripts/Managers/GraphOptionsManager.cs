@@ -12,7 +12,7 @@ public class GraphOptionsManager : MonoBehaviour
     TMP_Dropdown graphCommandsMenu;
 
     public RealityFlowGraphView realityFlowGraphView;
-    public VSGraphSelectionDropdown vsGraph;
+    public GameObject VSGraphDropdownCanvas;
     public SelectComparison boolSelection;
 
     // The reason this is being used is because in RealityFlowGraphView the node position is multiplied by this hardcoded
@@ -82,7 +82,8 @@ public class GraphOptionsManager : MonoBehaviour
                 Debug.Log("Clear Graph called from GraphOptionsSwitch");
 				break;
             case "Load Graph":
-                vsGraph.LoadGraphs();
+                VSGraphDropdownCanvas.SetActive(true);
+		        VSGraphDropdownCanvas.GetComponent<VSGraphSelectionDropdown>().LoadGraphs();
                 Debug.Log("Load Graph called from GraphOptionsSwitch");
 				break;
 			default:

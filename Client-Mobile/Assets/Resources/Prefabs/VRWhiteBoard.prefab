@@ -1278,7 +1278,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.0000072779317, y: -0.000037851732}
+  m_AnchoredPosition: {x: 0.041490268, y: 0.0048424997}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &740536599467061793
@@ -9840,7 +9840,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &5540249630457615639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10443,8 +10443,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1757465411383466023}
   m_HandleRect: {fileID: 7404165249338118692}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 1
+  m_Value: 1
+  m_Size: 0.9999902
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -12926,11 +12926,13 @@ MonoBehaviour:
   graph: {fileID: 11400000, guid: 9978faab71ef9bb48b5dd858387dc9e1, type: 2}
   vsGraph: {fileID: 0}
   connectorListener: {fileID: 8763042720922190196}
+  commandPalette: {fileID: 0}
   Labeled: {fileID: 5540249628965014110}
   contentPanel: {fileID: 3857023543878421158}
   parameterContent: {fileID: 752905895749802721}
   parameterCreationCanvas: {fileID: 2773619228234599952}
   SelectComparisonCanvas: {fileID: 1656883879270434215}
+  VSGraphDropdownCanvas: {fileID: 0}
   nodePortView: {fileID: 8411453318253863390, guid: 28881f12401db5d44b673fa6f9346913,
     type: 3}
   nodeView: {fileID: 1566273422334750335, guid: 442be4980aeb8e24690444fa43d79319,
@@ -12940,9 +12942,10 @@ MonoBehaviour:
   edgeView: {fileID: 1457824482079625673, guid: fa4d147f9eb15254093d34b8e9b94655,
     type: 3}
   nodeViewList: []
-  paramViews: []
-  paramList: []
   canvasDimensions: {x: 2560, y: 1080}
+  updateTimer: 0
+  maxUpdateTime: 0
+  reloadCoroutineStarted: 0
   padding: 0.1
 --- !u!114 &8763042720922190196
 MonoBehaviour:
