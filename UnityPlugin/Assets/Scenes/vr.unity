@@ -893,6 +893,11 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2641660638994500374, guid: 6b5dc551fbb15b4468833d6e7032260f,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7370409612422302757, guid: 6b5dc551fbb15b4468833d6e7032260f,
         type: 3}
       propertyPath: m_Pivot.x
@@ -2270,6 +2275,121 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 583370621}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &637623753
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 102228, guid: cc2b9f84f04070441acc55fd0b9f8797, type: 3}
+      propertyPath: m_Name
+      value: DissonanceSetup
+      objectReference: {fileID: 0}
+    - target: {fileID: 420108, guid: cc2b9f84f04070441acc55fd0b9f8797, type: 3}
+      propertyPath: m_RootOrder
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 420108, guid: cc2b9f84f04070441acc55fd0b9f8797, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.6165357
+      objectReference: {fileID: 0}
+    - target: {fileID: 420108, guid: cc2b9f84f04070441acc55fd0b9f8797, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.0614929
+      objectReference: {fileID: 0}
+    - target: {fileID: 420108, guid: cc2b9f84f04070441acc55fd0b9f8797, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -5.446854
+      objectReference: {fileID: 0}
+    - target: {fileID: 420108, guid: cc2b9f84f04070441acc55fd0b9f8797, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 420108, guid: cc2b9f84f04070441acc55fd0b9f8797, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 420108, guid: cc2b9f84f04070441acc55fd0b9f8797, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 420108, guid: cc2b9f84f04070441acc55fd0b9f8797, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 420108, guid: cc2b9f84f04070441acc55fd0b9f8797, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 420108, guid: cc2b9f84f04070441acc55fd0b9f8797, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 420108, guid: cc2b9f84f04070441acc55fd0b9f8797, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: cc2b9f84f04070441acc55fd0b9f8797, type: 3}
+--- !u!1 &637623754 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 102228, guid: cc2b9f84f04070441acc55fd0b9f8797,
+    type: 3}
+  m_PrefabInstance: {fileID: 637623753}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &637623755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 637623754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3737438748cf23f448d18cd2c6192e95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tokens:
+    _tokens: []
+  _roomName: Global
+  _useTrigger: 0
+--- !u!114 &637623756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 637623754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a066ddbf125f9546bcadc947418566b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tokens:
+    _tokens: []
+  _channelTypeExpanded: 1
+  _metadataExpanded: 0
+  _activationModeExpanded: 0
+  _tokensExpanded: 0
+  _ampExpanded: 0
+  _activationFaderSettings:
+    _volume: 1
+    _fadeInTicks: 0
+    _fadeOutTicks: 1500000
+  _triggerFaderSettings:
+    _volume: 1
+    _fadeInTicks: 7500000
+    _fadeOutTicks: 11500000
+  _broadcastPosition: 1
+  _channelType: 0
+  _inputName: 
+  _mode: 1
+  _muted: 0
+  _playerId: 
+  _useTrigger: 0
+  _roomName: Global
+  _priority: -2
 --- !u!1 &664953118
 GameObject:
   m_ObjectHideFlags: 0
