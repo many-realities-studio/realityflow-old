@@ -60,6 +60,7 @@ export default class TypeORMDatabase
    */
   public static async GetProject(projectId: string): Promise<FlowProject> {
     let idLength = projectId.length;
+    let foundprojectId;
     let project;
     
     if (idLength == 5)
@@ -74,9 +75,11 @@ export default class TypeORMDatabase
     if(!project)
       return null;
 
-    let objects = await ProjectOperations.getObjects(projectId);
-    let vsgraphs = await ProjectOperations.getVSGraphs(projectId);
-    let behaviours = await BehaviourOperations.getBehaviours(projectId);
+    foundprojectId = project.Id
+
+    let objects = await ProjectOperations.getObjects(foundprojectId);
+    let vsgraphs = await ProjectOperations.getVSGraphs(foundprojectId);
+    let behaviours = await BehaviourOperations.getBehaviours(foundprojectId);
     
     vsgraphs.forEach(function(vsGraph) {
       vsGraph.serializedNodes = JSON.parse(vsGraph.serializedNodes);

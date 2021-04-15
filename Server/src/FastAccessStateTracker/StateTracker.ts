@@ -3,6 +3,7 @@ import { FlowAvatar } from "./FlowLibrary/FlowAvatar";
 import { FlowVSGraph } from "./FlowLibrary/FlowVSGraph";
 import { FlowProject } from "./FlowLibrary/FlowProject";
 import { FlowBehaviour } from "./FlowLibrary/FlowBehaviour";
+import { FlowNodeView } from "./FlowLibrary/FlowNodeView";
 
 import { RoomManager } from "./RoomManager";
 import { TypeORMDatabase } from "./Database/TypeORMDatabase"
@@ -119,7 +120,11 @@ export class StateTracker{
     let affectedClients: string[] = []
     affectedClients.push(client);
 
-    let userJoinedRoom = await this.JoinRoom(projectToOpenID, username, client);
+    let projectFoundId: string;
+    if (projectFound)
+      projectFoundId = projectFound.Id;
+
+    let userJoinedRoom = await this.JoinRoom(projectFoundId, username, client);
 
     return [projectFound, affectedClients, userJoinedRoom];
   }
@@ -729,33 +734,61 @@ export class StateTracker{
     return [vsGraphToCreate, affectedClients]
   }
 
-  /**
-   * check out a graph from the Fast Access State Tracker
-   * @param projectId 
-   * @param vsGraphId 
-   * @param client 
-   */
-  public static async CheckoutVSGraph(projectId: string, vsGraphId: string, client: string) : Promise<[any, Array<string>]>
-  {
-    // make sure the graph is available for checkout
-    let success = RoomManager.checkoutVSGraph(projectId, vsGraphId, client);
+  // /**
+  //  * check out a graph from the Fast Access State Tracker
+  //  * @param projectId 
+  //  * @param vsGraphId 
+  //  * @param client 
+  //  */
+  // public static async CheckoutVSGraph(projectId: string, vsGraphId: string, client: string) : Promise<[any, Array<string>]>
+  // {
+  //   // make sure the graph is available for checkout
+  //   let success = RoomManager.checkoutVSGraph(projectId, vsGraphId, client);
     
-    return[success, [client]]
-  }
+  //   return[success, [client]]
+  // }
+
+  // /**
+  //  * check in a graph from the Fast Access State Tracker
+  //  * @param projectId 
+  //  * @param vsGraphId 
+  //  * @param client 
+  //  */
+  // public static async CheckinVSGraph(projectId: string, vsGraphId: string, client: string) : Promise<[any, Array<string>]>
+  // {
+  //   // make sure the actual person that checked a graph out is the one checking it back in
+  //   let success = RoomManager.checkinVSGraph(projectId, vsGraphId, client)
+     
+  //   return[success, [client]]
+  // }
 
   /**
-   * check in a graph from the Fast Access State Tracker
+   * check out a nodeview from the Fast Access State Tracker
    * @param projectId 
-   * @param vsGraphId 
+   * @param nodeGUID 
    * @param client 
    */
-  public static async CheckinVSGraph(projectId: string, vsGraphId: string, client: string) : Promise<[any, Array<string>]>
-  {
-    // make sure the actual person that checked a graph out is the one checking it back in
-    let success = RoomManager.checkinVSGraph(projectId, vsGraphId, client)
+   public static async CheckoutNodeView(projectId: string, flowNodeView: FlowNodeView, client: string) : Promise<[any, Array<string>]>
+   {
+     // make sure the nodeview is available for checkout
+     let success = RoomManager.checkoutNodeView(projectId, flowNodeView, client);
      
-    return[success, [client]]
-  }
+     return[success, [client]]
+   }
+ 
+   /**
+    * check in a NodeView from the Fast Access State Tracker
+    * @param projectId 
+    * @param vsGraphId 
+    * @param client 
+    */
+   public static async CheckinNodeView(projectId: string, nodeGUID: string, client: string) : Promise<[any, Array<string>]>
+   {
+     // make sure the actual person that checked a graph out is the one checking it back in
+     let success = RoomManager.checkinNodeView(projectId, nodeGUID, client)
+      
+     return[success, [client]]
+   }
 
   /**
    * Delete a graph from both the FAM and the Database
@@ -819,6 +852,52 @@ export class StateTracker{
   {
     let vsGraphRead = RoomManager.ReadVSGraph(projectId, vsGraphId)
     return [vsGraphRead, [client]];
+  }
+
+  /**
+   * return the data for a single NodeView
+   * @param nodeGUID the Id of the nodeview
+   * @param projectId the Id of the project that the nodeview is in
+   * @param client the client who wants the nodeview
+   */
+   public static async ReadNodeView(nodeGUID: string, projectId: string, client: string) :  Promise<[any, Array<string>]>
+   {
+     let nodeViewRead = RoomManager.ReadNodeView(projectId, nodeGUID)
+     return [nodeViewRead, [client]];
+   }
+
+  public static async UpdateNodeView(nodeViewToUpdate : FlowNodeView, projectId: string,  client: string, user=null) : Promise<[any, Array<string>]>
+  {  
+    // perform the updates
+    let famSuccess = RoomManager.updateNodeView(nodeViewToUpdate, projectId, client);
+    console.log(RoomManager.ReadNodeView(projectId, nodeViewToUpdate.NodeGUID))
+    if(!famSuccess)
+      return [null, [client]];
+
+    // get all of the clients that are in that room so that we can tell them 
+    let affectedClients: Array<string> = [];
+    let roomClients = await RoomManager.getClients(projectId)
+    
+    roomClients.forEach((clients, username, map) => {
+      // console.log(user)
+      affectedClients = affectedClients.concat(clients)
+    })
+
+    return [nodeViewToUpdate , affectedClients]
+  }
+
+  public static async RunVSGraph(vsGraphIdToRun : string, projectId: string,  client: string) : Promise<[any, Array<string>]>
+  {  
+    // get all of the clients that are in that room so that we can tell them 
+    let affectedClients: Array<string> = [];
+    let roomClients = await RoomManager.getClients(projectId)
+    
+    roomClients.forEach((clients, username, map) => {
+      // console.log(user)
+      affectedClients = affectedClients.concat(clients)
+    })
+
+    return [vsGraphIdToRun , affectedClients]
   }
 
   /**

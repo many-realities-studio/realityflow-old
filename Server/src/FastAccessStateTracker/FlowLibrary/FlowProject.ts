@@ -1,6 +1,7 @@
 import { FlowObject } from "./FlowObject";
 import { FlowBehaviour } from "./FlowBehaviour";
 import { FlowVSGraph } from "./FlowVSGraph";
+import { FlowNodeView } from "./FlowNodeView";
 import { FlowAvatar } from "./FlowAvatar";
 
 export class FlowProject 
@@ -12,6 +13,7 @@ export class FlowProject
   // TODO: list of VSGraphs
   public _VSGraphList: Array<FlowVSGraph> = [];
 
+  public _NodeViewList: Array<FlowNodeView> = [];
   public _AvatarList: Array<FlowAvatar> = [];
   
   // Used for identification in the FAM
@@ -276,7 +278,7 @@ export class FlowProject
   public DeleteVSGraph(vsGraphToRemove: string, client: string) 
   {
     let index = this._VSGraphList.findIndex((element) => element.Id == vsGraphToRemove);
-    if(index > -1 && this._VSGraphList[index].CurrentCheckout == client){
+    if(index > -1 /*&& this._VSGraphList[index].CurrentCheckout == client*/){
       this._VSGraphList.splice(index);
       return true;
     }
@@ -292,18 +294,50 @@ export class FlowProject
     return this._VSGraphList.find(element => element.Id == vsGraphId);
   }
 
+  // /**
+  //  * sets a graph to "checked out," preventing another user from checking out/editing that graph
+  //  * TODO: This will need to be modified as graphs themselves are not going to be checked out. Individual nodes are.
+  //  * @param vsGraphId 
+  //  * @param userName 
+  //  * @param client 
+  //  */
+  // public CheckoutVSGraph(vsGraphId: string, client: string){
+  //   let grph = this._VSGraphList.find(element => element.Id == vsGraphId);
+    
+  //   if (grph != undefined && grph.CurrentCheckout == null){
+  //     this._VSGraphList.find(element => element.Id == vsGraphId).CurrentCheckout = client;
+  //     return true
+  //   }
+    
+  //   else return false
+  // }
+
+  // /**
+  //  * sets an graph to "checked in," preventing another user from checking out/editing that graph
+  //  * @param vsGraphId 
+  //  */
+  // public CheckinVSGraph(vsGraphId: string, client){
+  //   let grph = this._VSGraphList.find(element => element.Id == vsGraphId);
+  //   if(grph != undefined && grph.CurrentCheckout == client){
+  //     grph.CurrentCheckout = null;
+  //     return true;
+  //   }
+  //   else return false;
+  // }
+
   /**
-   * sets a graph to "checked out," preventing another user from checking out/editing that graph
+   * sets a nodeview to "checked out," preventing another user from checking out/editing that nodeview
    * TODO: This will need to be modified as graphs themselves are not going to be checked out. Individual nodes are.
-   * @param vsGraphId 
+   * @param nodeGUID 
    * @param userName 
    * @param client 
    */
-  public CheckoutVSGraph(vsGraphId: string, client: string){
-    let grph = this._VSGraphList.find(element => element.Id == vsGraphId);
+   public CheckoutNodeView(flowNodeView: FlowNodeView, client: string){
+    this._NodeViewList.push(flowNodeView);
+    let nv = this._NodeViewList.find(element => element.NodeGUID == flowNodeView.NodeGUID);
     
-    if (grph != undefined && grph.CurrentCheckout == null){
-      this._VSGraphList.find(element => element.Id == vsGraphId).CurrentCheckout = client;
+    if (nv != undefined && nv.CurrentCheckout == null){
+      this._NodeViewList.find(element => element.NodeGUID == flowNodeView.NodeGUID).CurrentCheckout = client;
       return true
     }
     
@@ -311,25 +345,31 @@ export class FlowProject
   }
 
   /**
-   * sets an graph to "checked in," preventing another user from checking out/editing that graph
-   * @param vsGraphId 
+   * sets a nodeview to "checked in," preventing another user from checking out/editing that nodeview
+   * @param nodeGUID
    */
-  public CheckinVSGraph(vsGraphId: string, client){
-    let grph = this._VSGraphList.find(element => element.Id == vsGraphId);
-    if(grph != undefined && grph.CurrentCheckout == client){
-      grph.CurrentCheckout = null;
+  public CheckinNodeView(nodeGUID: string, client){
+    let nv = this._NodeViewList.find(element => element.NodeGUID == nodeGUID);
+    if(nv != undefined && nv.CurrentCheckout == client){
+      nv.CurrentCheckout = null;
+      
+      let index = this._NodeViewList.findIndex((element) => element.NodeGUID == nodeGUID);
+      if(index > -1 ) { // && this._NodeViewList[index].CurrentCheckout == client){
+        this._NodeViewList.splice(index);
+      }
+
       return true;
     }
     else return false;
   }
 
-    /**
-   * find out who has checked out the graph in question
-   * @param vsGraphId 
-   */
-  public GetVSGraphHolder(vsGraphId: string){
-    return this._VSGraphList.find(element => element.Id == vsGraphId).CurrentCheckout
-  }
+  //   /**
+  //  * find out who has checked out the graph in question
+  //  * @param vsGraphId 
+  //  */
+  // public GetVSGraphHolder(vsGraphId: string){
+  //   return this._VSGraphList.find(element => element.Id == vsGraphId).CurrentCheckout
+  // }
 
   /**
    * Updates the graph in the FAM without saving to the database
@@ -339,8 +379,32 @@ export class FlowProject
   {
     // Get the graph that we are changing from the specified project
     var oldVSGraph: FlowVSGraph = this._VSGraphList.find(element => element.Id == newVSGraph.Id);
-    if(oldVSGraph != undefined && oldVSGraph.CurrentCheckout == client){
+    if(oldVSGraph != undefined /*&& oldVSGraph.CurrentCheckout == client*/){
       oldVSGraph.UpdateProperties(newVSGraph);
+      return true;
+    }
+    else return false;
+  }
+
+  /**
+   * Returns FlowNodeView with the given ID number 
+   * @param nodeGUID
+   */
+   public GetNodeView(nodeGUID: string) : FlowNodeView
+   {
+     return this._NodeViewList.find(element => element.NodeGUID == nodeGUID);
+   }
+
+   /**
+   * Updates the nodeview in the FAM without saving to the database
+   * @param newNodeView 
+   */
+  public UpdateFAMNodeView(newNodeView: FlowNodeView, client: string) 
+  {
+    // Get the nodeview that we are changing from the specified project
+    var oldNodeView: FlowNodeView = this._NodeViewList.find(element => element.NodeGUID== newNodeView.NodeGUID);
+    if(oldNodeView != undefined && oldNodeView.CurrentCheckout == client){
+      oldNodeView.UpdateProperties(newNodeView);
       return true;
     }
     else return false;

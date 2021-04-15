@@ -11,6 +11,7 @@ import { FlowObject } from "../FlowLibrary/FlowObject";
 import { FlowAvatar } from "../FlowLibrary/FlowAvatar";
 import { FlowBehaviour } from "../FlowLibrary/FlowBehaviour";
 import { FlowVSGraph } from "../FlowLibrary/FlowVSGraph";
+import { FlowNodeView } from "../FlowLibrary/FlowNodeView";
 
 import { MessageBuilder } from "./MessageBuilder";
 
@@ -651,63 +652,69 @@ class Command_CreateVSGraph implements ICommand
     //console.log("INSIDE COMMANDCONTEXT -> Command_CreateVSGraph");
     // let parsedGraph = data.FlowVSGraph;
     let flowVSGraph = new FlowVSGraph(data.FlowVSGraph);
+    let returnedGraph = data.FlowVSGraph;
     
     console.log(flowVSGraph)
 
     let returnData = await StateTracker.CreateVSGraph(flowVSGraph, data.ProjectId);
 
-    returnData[0].exposedParameters = JSON.stringify(returnData[0].exposedParameters);
-    returnData[0].paramIdToObjId = JSON.stringify(returnData[0].paramIdToObjId);
+    // returnData[0].exposedParameters = JSON.stringify(returnData[0].exposedParameters);
+    // returnData[0].paramIdToObjId = JSON.stringify(returnData[0].paramIdToObjId);
+    // returnedGraph.exposedParameters = JSON.stringify(returnedGraph.exposedParameters);
+    // returnedGraph.paramIdToObjId = JSON.stringify(returnedGraph.paramIdToObjId);
+    returnedGraph.exposedParameters = JSON.stringify(returnedGraph.exposedParameters);
+    returnedGraph.paramIdToObjId = JSON.stringify(returnedGraph.paramIdToObjId);
 
     let returnContent = {
       "MessageType": "CreateVSGraph",
-      "FlowVSGraph": returnData[0],
+      "FlowVSGraph": returnedGraph,
       "WasSuccessful": (returnData[0] == null) ? false: true
     }
+
     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
 
     return returnMessage;
   }
 }
 
-class Command_CheckinVSGraph implements ICommand
-{
-  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
-  {
-    let vsGraph = await StateTracker.ReadVSGraph(data.VSGraphId, data.ProjectId, client);
-    console.log(vsGraph)
-    let finalUpdate =  await StateTracker.UpdateVSGraph(vsGraph[0], data.ProjectId, client, true);
+// class Command_CheckinVSGraph implements ICommand
+// {
+//   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+//   {
+//     let vsGraph = await StateTracker.ReadVSGraph(data.VSGraphId, data.ProjectId, client);
+//     console.log(vsGraph)
+//     let finalUpdate =  await StateTracker.UpdateVSGraph(vsGraph[0], data.ProjectId, client, true);
 
-    let returnData = await StateTracker.CheckinVSGraph(data.ProjectId, data.VSGraphId, client)
-    let returnContent = {
-      "MessageType": "CheckinVSGraph",
-      "WasSuccessful": ((returnData[0]) && finalUpdate[0] != null) ? true: false,
-      "VSGraphID": data.VSGraphId
-    }
+//     let returnData = await StateTracker.CheckinVSGraph(data.ProjectId, data.VSGraphId, client)
+//     let returnContent = {
+//       "MessageType": "CheckinVSGraph",
+//       "WasSuccessful": ((returnData[0]) && finalUpdate[0] != null) ? true: false,
+//       "VSGraphID": data.VSGraphId
+//     }
 
-    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
+//     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
 
-    return returnMessage;
+//     return returnMessage;
 
-  }
-}
+//   }
+// }
 
-class Command_CheckoutVSGraph implements ICommand
-{
-  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
-  {
-    let returnData = await StateTracker.CheckoutVSGraph(data.ProjectId, data.VSGraphId, client)
-    let returnContent = {
-      "MessageType": "CheckoutVSGraph",
-      "WasSuccessful": returnData[0],
-      "VSGraphID": data.VSGraphId
-    }
-    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
+// class Command_CheckoutVSGraph implements ICommand
+// {
+//   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+//   {
+//     let returnData = await StateTracker.CheckoutVSGraph(data.ProjectId, data.VSGraphId, client)
+//     let returnContent = {
+//       "MessageType": "CheckoutVSGraph",
+//       "WasSuccessful": returnData[0],
+//       "VSGraphID": data.VSGraphId
+//     }
+//     let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
 
-    return returnMessage;
+//     return returnMessage;
 
-  }
-}
+//   }
+// }
 
 class Command_DeleteVSGraph implements ICommand
 {
@@ -731,17 +738,24 @@ class Command_UpdateVSGraph implements ICommand
   {
     // let parsedGraph = data.FlowVSGraph;
     let flowVSGraph = new FlowVSGraph(data.FlowVSGraph);
+    let returnedGraph = data.FlowVSGraph;
     let returnData = await StateTracker.UpdateVSGraph(flowVSGraph, data.ProjectId, client,false, data.user);
 
     let index = returnData[1].indexOf(client);
     returnData[1].splice(index,1)
 
-    returnData[0].exposedParameters = JSON.stringify(returnData[0].exposedParameters);
-    returnData[0].paramIdToObjId = JSON.stringify(returnData[0].paramIdToObjId);
+    // if (returnData[0] != null)
+    // {
+    //   returnData[0].exposedParameters = JSON.stringify(returnData[0].exposedParameters);
+    //   returnData[0].paramIdToObjId = JSON.stringify(returnData[0].paramIdToObjId);
+    // }
+
+    returnedGraph.exposedParameters = JSON.stringify(returnedGraph.exposedParameters);
+    returnedGraph.paramIdToObjId = JSON.stringify(returnedGraph.paramIdToObjId);
 
     let returnContent = {
       "MessageType": "UpdateVSGraph",
-      "FlowVSGraph": returnData[0],
+      "FlowVSGraph": returnedGraph,
       "WasSuccessful": (returnData[0] == null) ? false: true,
     }
 
@@ -772,20 +786,132 @@ class Command_FinalizedUpdateVSGraph implements ICommand
 {
   async ExecuteCommand(data: any, client:string): Promise<[String, Array<String>]> 
   {
+    // let parsedGraph = data.FlowVSGraph;
     let flowVSGraph = new FlowVSGraph(data.FlowVSGraph);
+    let returnedGraph = data.FlowVSGraph;
     let returnData = await StateTracker.UpdateVSGraph(flowVSGraph, data.ProjectId, client, true);
+
     let index = returnData[1].indexOf(client);
-    returnData[1].splice(index,1);
+    returnData[1].splice(index,1)
+
+    // if (returnData[0] != null)
+    // {
+    //   returnData[0].exposedParameters = JSON.stringify(returnData[0].exposedParameters);
+    //   returnData[0].paramIdToObjId = JSON.stringify(returnData[0].paramIdToObjId);
+    // }
+
+    returnedGraph.exposedParameters = JSON.stringify(returnedGraph.exposedParameters);
+    returnedGraph.paramIdToObjId = JSON.stringify(returnedGraph.paramIdToObjId);
 
     let returnContent = {
-      "MessageType": "UpdateVSGraph",
-      "FlowVSGraph": returnData[0],
+      "MessageType": "FinalizedUpdateVSGraph",
+      "FlowVSGraph": returnedGraph,
       "WasSuccessful": (returnData[0] == null) ? false: true,
     }
-    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
+
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
+
+    return returnMessage;
+  }
+  // async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+  // {
+  //   let vsGraph = await StateTracker.ReadVSGraph(data.VSGraphId, data.ProjectId, client);
+  //   console.log(vsGraph)
+  //   let returnData =  await StateTracker.UpdateVSGraph(vsGraph[0], data.ProjectId, client, true);
     
+  //   let returnContent = {
+  //     "MessageType": "CheckinVSGraph",
+  //     "WasSuccessful": (returnData[0] != null) ? true: false,
+  //     "VSGraphID": data.VSGraphId
+  //   }
+
+  //   let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
+
+  //   return returnMessage;
+
+  // }
+}
+
+class Command_UpdateNodeView implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+  {
+    let flowNodeView = new FlowNodeView(data.FlowNodeView);
+    let returnData = await StateTracker.UpdateNodeView(flowNodeView, data.ProjectId, client, data.user);
+
+    let index = returnData[1].indexOf(client);
+    returnData[1].splice(index,1)
+
+    let returnContent = {
+      "MessageType": "UpdateNodeView",
+      "FlowNodeView": returnData[0],
+      "WasSuccessful": (returnData[0] == null) ? false: true,
+    }
+
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
+
+    return returnMessage;
+  }
+}
+
+class Command_CheckinNodeView implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+  {
+    let nodeView = await StateTracker.ReadNodeView(data.NodeGUID, data.ProjectId, client);
+    console.log(nodeView)
+    let update =  await StateTracker.UpdateNodeView(nodeView[0], data.ProjectId, client);
+
+    let returnData = await StateTracker.CheckinNodeView(data.ProjectId, data.NodeGUID, client)
+    let returnContent = {
+      "MessageType": "CheckinNodeView",
+      "WasSuccessful": ((returnData[0]) && update[0] != null) ? true: false,
+      "NodeGUID": data.NodeGUID
+    }
+
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
+
     return returnMessage;
 
+  }
+}
+
+class Command_CheckoutNodeView implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+  {
+    let flowNodeView = new FlowNodeView(data.FlowNodeView);
+    let returnData = await StateTracker.CheckoutNodeView(data.ProjectId, flowNodeView, client)
+    let returnContent = {
+      "MessageType": "CheckoutNodeView",
+      "WasSuccessful": returnData[0],
+      "NodeGUID": data.NodeGUID
+    }
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
+
+    return returnMessage;
+
+  }
+}
+
+class Command_RunVSGraph implements ICommand
+{
+  async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
+  {
+    let returnData = await StateTracker.RunVSGraph(data.VSGraphId, data.ProjectId, client);
+
+    let index = returnData[1].indexOf(client);
+    returnData[1].splice(index,1)
+
+    let returnContent = {
+      "MessageType": "RunVSGraph",
+      "VSGraphId": returnData[0],
+      "WasSuccessful": (returnData[0] == null) ? false: true,
+    }
+
+    let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1])
+
+    return returnMessage;
   }
 }
 
@@ -852,8 +978,12 @@ export class CommandContext
       this._CommandList.set("UpdateVSGraph", new Command_UpdateVSGraph());
       this._CommandList.set("FinalizedUpdateVSGraph", new Command_FinalizedUpdateVSGraph());
       this._CommandList.set("ReadVSGraph", new Command_ReadVSGraph());
-      this._CommandList.set("CheckinVSGraph", new Command_CheckinVSGraph());
-      this._CommandList.set("CheckoutVSGraph", new Command_CheckoutVSGraph());
+      // this._CommandList.set("CheckinVSGraph", new Command_CheckinVSGraph());
+      // this._CommandList.set("CheckoutVSGraph", new Command_CheckoutVSGraph());
+      this._CommandList.set("UpdateNodeView", new Command_UpdateNodeView());
+      this._CommandList.set("CheckinNodeView", new Command_CheckinNodeView());
+      this._CommandList.set("CheckoutNodeView", new Command_CheckoutNodeView());
+      this._CommandList.set("RunVSGraph", new Command_RunVSGraph());
 
       // behaviour Commands
       this._CommandList.set("CreateBehaviour", new Command_CreateBehaviour());
