@@ -1,6 +1,8 @@
 import { FlowObject } from "./FlowObject";
 import { FlowBehaviour } from "./FlowBehaviour";
 import { FlowVSGraph } from "./FlowVSGraph";
+import { FlowNodeView } from "./FlowNodeView";
+import { FlowAvatar } from "./FlowAvatar";
 
 export class FlowProject 
 {
@@ -10,6 +12,9 @@ export class FlowProject
   public _BehaviourList: Array<FlowBehaviour> = [];
   // TODO: list of VSGraphs
   public _VSGraphList: Array<FlowVSGraph> = [];
+
+  public _NodeViewList: Array<FlowNodeView> = [];
+  public _AvatarList: Array<FlowAvatar> = [];
   
   // Used for identification in the FAM
   
@@ -43,7 +48,7 @@ export class FlowProject
   public DeleteObject(objectToRemove: string, client: string) 
   {
     let index = this._ObjectList.findIndex((element) => element.Id == objectToRemove);
-    if(index > -1 && this._ObjectList[index].CurrentCheckout == client){
+    if(index > -1 /*&& this._ObjectList[index].CurrentCheckout == client*/){ /*&& this._ObjectList[index].CurrentCheckout == client*/
       this._ObjectList.splice(index);
       return true;
     }
@@ -112,6 +117,102 @@ export class FlowProject
     }
     else return false;
   }
+  
+  /**
+   * Adds an Avatar to a project, saving it to both FAM and the database
+   * @param AvatarToAdd The Avatar which should be added to the project
+   */
+    public AddAvatar(AvatarToAdd: FlowAvatar) 
+    {
+      this._AvatarList.push(AvatarToAdd);
+      return true;
+    }
+  
+    /**
+    * Removes an Avatar from the list of available Avatars
+    * @param AvatarToRemove 
+    */
+    public DeleteAvatar(AvatarToRemove: string, client: string) 
+    {
+      let index = this._AvatarList.findIndex((element) => element.Id == AvatarToRemove);
+      if(index > -1 /*&& this._AvatarList[index].CurrentCheckout == client*/){
+        this._AvatarList.splice(index);
+        return true;
+      }
+      else return false
+    }
+  
+    /**
+    * Returns FlowAvatar with the given ID number 
+    * @param AvatarId 
+    */
+    public GetAvatar(AvatarId: string) : FlowAvatar
+    {
+      return this._AvatarList.find(element => element.Id == AvatarId);
+    }
+
+
+    /**
+    * Returns _AvatarList
+    */
+    public GetAvatarList() : FlowAvatar[]
+    {
+      return this._AvatarList;
+    }
+
+  //  /**
+  //   * sets an Avatar to "checked out," preventing another user from checking out/editing that Avatar
+  //   * @param AvatarId 
+  //   * @param userName 
+  //   * @param client 
+  //   */
+  //  public CheckoutAvatar(AvatarId: string, client: string){
+  //    let obj = this._AvatarList.find(element => element.Id == AvatarId);
+      
+  //    if (obj != undefined && obj.CurrentCheckout == null){
+  //      this._AvatarList.find(element => element.Id == AvatarId).CurrentCheckout = client;
+  //      return true
+  //    }
+      
+  //    else return false
+  //  }
+  
+  
+  //  /**
+  //   * sets an Avatar to "checked in," preventing another user from checking out/editing that Avatar
+  //   * @param AvatarId 
+  //   */
+  //  public CheckinAvatar(AvatarId: string, client){
+  //    let obj = this._AvatarList.find(element => element.Id == AvatarId);
+  //    if(obj != undefined && obj.CurrentCheckout == client){
+  //      obj.CurrentCheckout = null;
+  //      return true;
+  //    }
+  //    else return false;
+  //  }
+  
+    //  We dont need this! /**
+    // * find out who has checked out the Avatar in question
+    // * @param AvatarId 
+    // */
+    // public GetAvatarHolder(AvatarId: string){
+    //   return this._AvatarList.find(element => element.Id == AvatarId).CurrentCheckout
+    // }
+  
+    /**
+    * Updates the Avatar in the FAM without saving to the database
+    * @param newAvatar 
+    */
+    public UpdateFAMAvatar(newAvatar: FlowAvatar, client: string) 
+    {
+      // Get the Avatar that we are changing from the specified project
+      var oldAvatar: FlowAvatar = this._AvatarList.find(element => element.Id == newAvatar.Id);
+      if(oldAvatar != undefined /*&& oldAvatar.CurrentCheckout == client*/){
+        oldAvatar.UpdateProperties(newAvatar);
+        return true;
+      }
+      else return false;
+    }
 
   public UpdateBehaviour(newBehaviour: FlowBehaviour, client: string) 
   {
@@ -177,7 +278,7 @@ export class FlowProject
   public DeleteVSGraph(vsGraphToRemove: string, client: string) 
   {
     let index = this._VSGraphList.findIndex((element) => element.Id == vsGraphToRemove);
-    if(index > -1 && this._VSGraphList[index].CurrentCheckout == client){
+    if(index > -1 /*&& this._VSGraphList[index].CurrentCheckout == client*/){
       this._VSGraphList.splice(index);
       return true;
     }
@@ -193,18 +294,50 @@ export class FlowProject
     return this._VSGraphList.find(element => element.Id == vsGraphId);
   }
 
+  // /**
+  //  * sets a graph to "checked out," preventing another user from checking out/editing that graph
+  //  * TODO: This will need to be modified as graphs themselves are not going to be checked out. Individual nodes are.
+  //  * @param vsGraphId 
+  //  * @param userName 
+  //  * @param client 
+  //  */
+  // public CheckoutVSGraph(vsGraphId: string, client: string){
+  //   let grph = this._VSGraphList.find(element => element.Id == vsGraphId);
+    
+  //   if (grph != undefined && grph.CurrentCheckout == null){
+  //     this._VSGraphList.find(element => element.Id == vsGraphId).CurrentCheckout = client;
+  //     return true
+  //   }
+    
+  //   else return false
+  // }
+
+  // /**
+  //  * sets an graph to "checked in," preventing another user from checking out/editing that graph
+  //  * @param vsGraphId 
+  //  */
+  // public CheckinVSGraph(vsGraphId: string, client){
+  //   let grph = this._VSGraphList.find(element => element.Id == vsGraphId);
+  //   if(grph != undefined && grph.CurrentCheckout == client){
+  //     grph.CurrentCheckout = null;
+  //     return true;
+  //   }
+  //   else return false;
+  // }
+
   /**
-   * sets a graph to "checked out," preventing another user from checking out/editing that graph
+   * sets a nodeview to "checked out," preventing another user from checking out/editing that nodeview
    * TODO: This will need to be modified as graphs themselves are not going to be checked out. Individual nodes are.
-   * @param vsGraphId 
+   * @param nodeGUID 
    * @param userName 
    * @param client 
    */
-  public CheckoutVSGraph(vsGraphId: string, client: string){
-    let grph = this._VSGraphList.find(element => element.Id == vsGraphId);
+   public CheckoutNodeView(flowNodeView: FlowNodeView, client: string){
+    this._NodeViewList.push(flowNodeView);
+    let nv = this._NodeViewList.find(element => element.NodeGUID == flowNodeView.NodeGUID);
     
-    if (grph != undefined && grph.CurrentCheckout == null){
-      this._VSGraphList.find(element => element.Id == vsGraphId).CurrentCheckout = client;
+    if (nv != undefined && nv.CurrentCheckout == null){
+      this._NodeViewList.find(element => element.NodeGUID == flowNodeView.NodeGUID).CurrentCheckout = client;
       return true
     }
     
@@ -212,25 +345,31 @@ export class FlowProject
   }
 
   /**
-   * sets an graph to "checked in," preventing another user from checking out/editing that graph
-   * @param vsGraphId 
+   * sets a nodeview to "checked in," preventing another user from checking out/editing that nodeview
+   * @param nodeGUID
    */
-  public CheckinVSGraph(vsGraphId: string, client){
-    let grph = this._VSGraphList.find(element => element.Id == vsGraphId);
-    if(grph != undefined && grph.CurrentCheckout == client){
-      grph.CurrentCheckout = null;
+  public CheckinNodeView(nodeGUID: string, client){
+    let nv = this._NodeViewList.find(element => element.NodeGUID == nodeGUID);
+    if(nv != undefined && nv.CurrentCheckout == client){
+      nv.CurrentCheckout = null;
+      
+      let index = this._NodeViewList.findIndex((element) => element.NodeGUID == nodeGUID);
+      if(index > -1 ) { // && this._NodeViewList[index].CurrentCheckout == client){
+        this._NodeViewList.splice(index);
+      }
+
       return true;
     }
     else return false;
   }
 
-    /**
-   * find out who has checked out the graph in question
-   * @param vsGraphId 
-   */
-  public GetVSGraphHolder(vsGraphId: string){
-    return this._VSGraphList.find(element => element.Id == vsGraphId).CurrentCheckout
-  }
+  //   /**
+  //  * find out who has checked out the graph in question
+  //  * @param vsGraphId 
+  //  */
+  // public GetVSGraphHolder(vsGraphId: string){
+  //   return this._VSGraphList.find(element => element.Id == vsGraphId).CurrentCheckout
+  // }
 
   /**
    * Updates the graph in the FAM without saving to the database
@@ -240,8 +379,32 @@ export class FlowProject
   {
     // Get the graph that we are changing from the specified project
     var oldVSGraph: FlowVSGraph = this._VSGraphList.find(element => element.Id == newVSGraph.Id);
-    if(oldVSGraph != undefined && oldVSGraph.CurrentCheckout == client){
+    if(oldVSGraph != undefined /*&& oldVSGraph.CurrentCheckout == client*/){
       oldVSGraph.UpdateProperties(newVSGraph);
+      return true;
+    }
+    else return false;
+  }
+
+  /**
+   * Returns FlowNodeView with the given ID number 
+   * @param nodeGUID
+   */
+   public GetNodeView(nodeGUID: string) : FlowNodeView
+   {
+     return this._NodeViewList.find(element => element.NodeGUID == nodeGUID);
+   }
+
+   /**
+   * Updates the nodeview in the FAM without saving to the database
+   * @param newNodeView 
+   */
+  public UpdateFAMNodeView(newNodeView: FlowNodeView, client: string) 
+  {
+    // Get the nodeview that we are changing from the specified project
+    var oldNodeView: FlowNodeView = this._NodeViewList.find(element => element.NodeGUID== newNodeView.NodeGUID);
+    if(oldNodeView != undefined && oldNodeView.CurrentCheckout == client){
+      oldNodeView.UpdateProperties(newNodeView);
       return true;
     }
     else return false;

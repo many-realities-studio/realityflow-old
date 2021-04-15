@@ -4,7 +4,9 @@ import { FlowProject } from "./FlowLibrary/FlowProject";
 import { TypeORMDatabase } from "./Database/TypeORMDatabase";
 import { FlowClient } from "./FlowLibrary/FlowClient";
 import { FlowObject } from "./FlowLibrary/FlowObject";
+import { FlowAvatar } from "./FlowLibrary/FlowAvatar";
 import { FlowVSGraph } from "./FlowLibrary/FlowVSGraph";
+import { FlowNodeView } from "./FlowLibrary/FlowNodeView";
 
 // Look into Pub/Sub architecture
 export class Room
@@ -141,6 +143,19 @@ export class Room
     return success;
   }
 
+  // TODO: finished: yes tested: no
+  /**
+   * update an object, assuming the client sending the update is the client that has the object checked in.
+   * @param objectToUpdate the object to update
+   * @param client the id of the client sending the update
+   * @returns success - whether or not the update actually happened in the FAM
+   */
+   public updateAvatar(AvatarToUpdate, client){
+    let success = this._CurrentProject.UpdateFAMAvatar(AvatarToUpdate, client);
+    return success;
+  }
+
+
   /**
    * update a behaviour
    * @param BehaviourToUpdate the behaviour to update
@@ -207,6 +222,72 @@ export class Room
     return this._CurrentProject.CheckoutObject(objectId, client)
   }
 
+  // Avatar Section
+
+   // TODO: optimize all of these
+ /**
+   * add an Avatar to the room
+   * @param AvatarToCreate the Avatar to add to the room
+   * @returns whether the Avatar was created
+   */
+  public AddAvatar(AvatarToCreate: FlowAvatar){
+    return this._CurrentProject.AddAvatar(AvatarToCreate);
+  }
+
+   /**
+   * Get Avatar List
+   */
+    public GetAvatarList(){
+      return this._CurrentProject.GetAvatarList();
+    }
+
+  // TODO: optimize all of these
+  /**
+   * delete an Avatar from the room, iff the client sending the delete call has the Avatar checked out
+   * @param AvatarId 
+   * @param client 
+   * @returns success value
+   */
+  public DeleteAvatar(AvatarId: string, client: string) {
+    let success = this._CurrentProject.DeleteAvatar(AvatarId, client)
+    return success;
+  }
+
+  // // TODO: finished: yes tested: no
+  // /**
+  //  * Return the data of an Avatar
+  //  * @param AvatarId the Id of the Avatar that you want
+  //  * @returns the Avatar to be read
+  //  */
+  // public ReadAvatar(AvatarId:string){
+  //   return this._CurrentProject.GetAvatar(AvatarId)
+  // }
+
+  // // TODO: finished: yes tested: no
+  // /**
+  //  * check in an Avatar, if the Avatar is checked out by client
+  //  * @param AvatarId the Avatar to be checked in
+  //  * @param client the client trying to check in the Avatar
+  //  * @returns success
+  //  */
+  // public checkinAvatar(AvatarId: string, client: string){
+  //   return this._CurrentProject.CheckinAvatar(AvatarId, client)
+  // }
+
+  // // TODO: finished: yes tested: no
+  // /**
+  //  * check out an Avatar, assuming that client is open for checkout
+  //  * @param AvatarId  Avatar to check out
+  //  * @param client client who is checking out the Avatar
+  //  * @returns success
+  //  */
+  // public checkoutAvatar(AvatarId: string, client: string): boolean
+  // {
+  //   return this._CurrentProject.CheckoutAvatar(AvatarId, client)
+  // }
+
+  // END OF AVATAR SECTION
+
   // Visual Scripting Graph section
 
   // TODO: finished: no tested: no
@@ -255,25 +336,70 @@ export class Room
 
   // TODO: finished: no tested: no
   /**
-   * check in a graph, if the graph is checked out by client
-   * @param vsGraphId the graph to be checked in
-   * @param client the client trying to check in the graph
+   * check in a nodeview, if the nodeview is checked out by client
+   * @param nodeGUID the nodeview to be checked in
+   * @param client the client trying to check in the nodeview
    * @returns success
    */
-  public checkinVSGraph(vsGraphId: string, client: string){
-    return this._CurrentProject.CheckinVSGraph(vsGraphId, client)
+  public checkinNodeView(nodeGUID: string, client: string){
+    return this._CurrentProject.CheckinNodeView(nodeGUID, client)
   }
 
   // TODO: finished: no tested: no
   /**
-   * check out a graph, assuming that client is open for checkout
-   * @param vsGraphId  object to check out
-   * @param client client who is checking out the graph
+   * check out a nodeview, assuming that client is open for checkout
+   * @param nodeGUID  node to check out
+   * @param client client who is checking out the nodeview
    * @returns success
    */
-  public checkoutVSGraph(vsGraphId: string, client: string): boolean
+  public checkoutNodeView(flowNodeView: FlowNodeView, client: string): boolean
   {
-    return this._CurrentProject.CheckoutVSGraph(vsGraphId, client)
+    return this._CurrentProject.CheckoutNodeView(flowNodeView, client)
+  }
+
+  // // TODO: finished: no tested: no
+  // /**
+  //  * check in a graph, if the graph is checked out by client
+  //  * @param vsGraphId the graph to be checked in
+  //  * @param client the client trying to check in the graph
+  //  * @returns success
+  //  */
+  //  public checkinVSGraph(vsGraphId: string, client: string){
+  //   return this._CurrentProject.CheckinVSGraph(vsGraphId, client)
+  // }
+
+  // // TODO: finished: no tested: no
+  // /**
+  //  * check out a graph, assuming that client is open for checkout
+  //  * @param vsGraphId  object to check out
+  //  * @param client client who is checking out the graph
+  //  * @returns success
+  //  */
+  // public checkoutVSGraph(vsGraphId: string, client: string): boolean
+  // {
+  //   return this._CurrentProject.CheckoutVSGraph(vsGraphId, client)
+  // }
+
+  // TODO: finished: no tested: no
+  /**
+   * Return the data of a nodeview
+   * @param nodeGUID the Id of the nodeview that you want
+   * @returns the nodeview to be read
+   */
+   public ReadNodeView(nodeGUID:string){
+    return this._CurrentProject.GetNodeView(nodeGUID)
+  }
+
+  // TODO: finished: no tested: no
+  /**
+   * update a nodeview, assuming the client sending the update is the client that has the nodeview checked in.
+   * @param nodeViewToUpdate the nodeview to update
+   * @param client the id of the client sending the update
+   * @returns success - whether or not the update actually happened in the FAM
+   */
+   public updateNodeView(nodeViewToUpdate, client){
+    let success = this._CurrentProject.UpdateFAMNodeView(nodeViewToUpdate, client);
+    return success;
   }
 
   /**

@@ -39,7 +39,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 300, y: 0}
   m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6550276864625041463
@@ -349,7 +349,31 @@ MonoBehaviour:
   elasticsManager: {fileID: 0}
   onManipulationStarted:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3300302344630200336}
+        m_TargetAssemblyTypeName: NodeView, com.RealityFlow
+        m_MethodName: RedrawEdges
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 3300302344630200336}
+        m_TargetAssemblyTypeName: NodeView, com.RealityFlow
+        m_MethodName: CheckOut
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   onManipulationEnded:
     m_PersistentCalls:
       m_Calls:
@@ -377,13 +401,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 3300302344630200336}
+      - m_Target: {fileID: 1566273422334750335}
         m_TargetAssemblyTypeName: NodeView, com.RealityFlow
-        m_MethodName: RedrawEdges
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -470,9 +494,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: {fileID: 1690555627191123304}
   GUID: {fileID: 5360024694129910172}
+  nodeGUID: 
   inputPanel: {fileID: 3305285921034848028}
   outputPanel: {fileID: 5395750958566768771}
   rfgv: {fileID: 0}
+  localPos: {x: 0, y: 0, z: 0}
+  nodeViewRigidbody: {fileID: 0}
+  _canBeModified: 0
   inputPortViews: []
   outputPortViews: []
 --- !u!114 &5605375096946484618
@@ -1278,7 +1306,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 100, y: 0}
   m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2829842567454825678

@@ -1,7 +1,10 @@
 import { Room } from "./Room";
 import { FlowObject } from "./FlowLibrary/FlowObject";
+import { FlowAvatar } from "./FlowLibrary/FlowAvatar";
 import { FlowVSGraph } from "./FlowLibrary/FlowVSGraph";
 import { FlowBehaviour } from "./FlowLibrary/FlowBehaviour";
+import { FlowNodeView } from "./FlowLibrary/FlowNodeView";
+
 
 // TODO: Make a check for how many people are in a room and delete the room if there is nobody inside
 export class RoomManager
@@ -181,6 +184,75 @@ export class RoomManager
     return room.checkinObject(objectId, client)
   }
 
+
+  // Avatar Section
+  /**
+     * update an Avatar, iff client is allowed to check out
+     * @param AvatarToUpdate Avatar to update
+     * @param projectId id of the project the Avatar is in
+     * @param client the client who is trying to update the Avatar
+     * @return success
+     */
+  public static updateAvatar(AvatarToUpdate: FlowAvatar, projectId: string, client:string){
+    let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
+    return room.updateAvatar(AvatarToUpdate, client)
+  }
+
+  /**
+     * add an Avatar to a specific room
+     * @param AvatarToCreate 
+     * @param projectId 
+     * @returns success
+     */
+  public static AddAvatar(AvatarToCreate: FlowAvatar, projectId:string){
+    let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
+    return room.AddAvatar(AvatarToCreate)
+  }
+
+    /**
+     * Get Avatar List
+     */
+  public static GetAvatarList(projectId:string){
+    let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
+    return room.GetAvatarList()
+  }
+
+  /**
+     * delete an Avatar from the Fast Access State Tracker
+     * @param projectId the id of the project from which to delete the obejct
+     * @param AvatarId the Id of the Avatar to delete
+     * @param client the client who wants to delete the Avatar
+     * @returns success
+     */
+  public static DeleteAvatar(projectId: string, AvatarId: string, client:string){
+    let success = this._RoomList.find(element => element.GetRoomCode() == projectId).DeleteAvatar(AvatarId, client);
+    return success
+  }
+
+  // /**
+  //  * return the data of a given Avatar
+  //  * @param projectId the id of the project that the Avatar is in
+  //  * @param AvatarId the Id of the Avatar to delete
+  //  * @returns the Avatar
+  //  */
+  // public static ReadAvatar(projectId:string, AvatarId:string){
+  //   return this._RoomList.find(element => element.GetRoomCode() == projectId).ReadAvatar(AvatarId);
+  // }
+
+  // /**
+  //  * checkout an Avatar, iff the client is allowed to check it out
+  //  * @param projectId the Id of the project that the Avatar is in
+  //  * @param AvatarId the Id of the  Avatar to check out
+  //  * @param client the Id of the client who wants to check out the Avatar
+  //  * @returns success
+  //  */
+  // public static checkoutAvatar(projectId: string, AvatarId: string, client: string){
+  //   let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
+  //   return room.checkoutAvatar(AvatarId, client);
+  // }
+
+  //   END OF AVATAR SECTION
+
   // Visual Scripting Graph section
 
   /**
@@ -221,35 +293,81 @@ export class RoomManager
   /**
    * return the data of a given graph
    * @param projectId the id of the project that the graph is in
-   * @param vsGraphId the Id of the graph to delete
+   * @param vsGraphId the Id of the graph to read
    * @returns the graph
    */
   public static ReadVSGraph(projectId:string, vsGraphId:string){
     return this._RoomList.find(element => element.GetRoomCode() == projectId).ReadVSGraph(vsGraphId);
   }
 
+  // /**
+  //  * checkout a graph, iff the client is allowed to check it out
+  //  * @param projectId the Id of the project that the graph is in
+  //  * @param vsGraphId the Id of the graph to check out
+  //  * @param client the Id of the client who wants to check out the graph
+  //  * @returns success
+  //  */
+  // public static checkoutVSGraph(projectId: string, vsGraphId: string, client: string){
+  //   let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
+  //   return room.checkoutVSGraph(vsGraphId, client);
+  // }
+
+  // /**
+  //  * check in a graph iff the client is allowed to check out the graph
+  //  * @param projectId the project the graph is in
+  //  * @param vsGraphId the graph to be checked in
+  //  * @param client the client who is trying to check in the graph
+  //  * @returns success
+  //  */
+  // public static checkinVSGraph(projectId: string, vsGraphId: string,  client: string){
+  //   let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
+  //   return room.checkinVSGraph(vsGraphId, client)
+  // }
+
   /**
-   * checkout a graph, iff the client is allowed to check it out
-   * @param projectId the Id of the project that the graph is in
-   * @param vsGraphId the Id of the graph to check out
+   * checkout a nodeview, iff the client is allowed to check it out
+   * @param projectId the Id of the project that the nodeview is in
+   * @param nodeGUID the Id of the nodeview to check out
    * @param client the Id of the client who wants to check out the graph
    * @returns success
    */
-  public static checkoutVSGraph(projectId: string, vsGraphId: string, client: string){
+   public static checkoutNodeView(projectId: string, flowNodeView: FlowNodeView, client: string){
     let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
-    return room.checkoutVSGraph(vsGraphId, client);
+    return room.checkoutNodeView(flowNodeView, client);
   }
 
   /**
-   * check in a graph iff the client is allowed to check out the graph
+   * check in a NodeView iff the client is allowed to check out the NodeView
    * @param projectId the project the graph is in
-   * @param vsGraphId the graph to be checked in
-   * @param client the client who is trying to check in the graph
+   * @param nodeGUID the nodeGUID to be checked in
+   * @param client the client who is trying to check in the NodeView
    * @returns success
    */
-  public static checkinVSGraph(projectId: string, vsGraphId: string,  client: string){
+  public static checkinNodeView(projectId: string, nodeGUID: string,  client: string){
     let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
-    return room.checkinVSGraph(vsGraphId, client)
+    return room.checkinNodeView(nodeGUID, client)
+  }
+
+  /**
+   * return the data of a given nodeview
+   * @param projectId the id of the project that the nodeview is in
+   * @param nodeGUID the Id of the nodeview to read
+   * @returns the nodeview
+   */
+   public static ReadNodeView(projectId:string, nodeGUID:string){
+    return this._RoomList.find(element => element.GetRoomCode() == projectId).ReadNodeView(nodeGUID);
+  }
+
+  /**
+   * update a nodeview, iff client is allowed to check out
+   * @param nodeViewToUpdate nodeview to update
+   * @param projectId id of the project the nodeview is in
+   * @param client the client who is trying to update the nodeview
+   * @return success
+   */
+   public static updateNodeView(nodeViewToUpdate: FlowNodeView, projectId: string, client:string){
+    let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
+    return room.updateNodeView(nodeViewToUpdate, client)
   }
 
 }
