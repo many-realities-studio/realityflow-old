@@ -2381,7 +2381,7 @@ MonoBehaviour:
     _volume: 1
     _fadeInTicks: 7500000
     _fadeOutTicks: 11500000
-  _broadcastPosition: 1
+  _broadcastPosition: 0
   _channelType: 0
   _inputName: 
   _mode: 1
