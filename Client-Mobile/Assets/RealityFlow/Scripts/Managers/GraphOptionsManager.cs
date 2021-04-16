@@ -5,9 +5,13 @@ using TMPro;
 
 public class GraphOptionsManager : MonoBehaviour
 {
-    bool startDetectingTouch = false;
-    Vector2 nodePosition;
-    public GameObject nodePlacementPopup;
+    public Camera cameraObject;
+    public RectTransform parentCanvas;
+    public Renderer parent;
+    bool setNodeStart = false;
+    private Vector2 panelDimension;
+    Vector3 nodePosition;
+    public GameObject nodeContentPanel;
     TMP_Dropdown addNodeTypeMenu;
     TMP_Dropdown graphCommandsMenu;
 
@@ -22,29 +26,41 @@ public class GraphOptionsManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-         addNodeTypeMenu = GameObject.FindWithTag("NodeOptionsDropdown").GetComponent<TMP_Dropdown>();
-         graphCommandsMenu =  GameObject.FindWithTag("GraphCommandsDropdown").GetComponent<TMP_Dropdown>(); 
+        
+        addNodeTypeMenu = GameObject.FindWithTag("NodeOptionsDropdown").GetComponent<TMP_Dropdown>();
+        graphCommandsMenu =  GameObject.FindWithTag("GraphCommandsDropdown").GetComponent<TMP_Dropdown>(); 
 
-         graphCommandsMenu.onValueChanged.AddListener(delegate {
+        graphCommandsMenu.onValueChanged.AddListener(delegate {
             GraphOptionsSwitch();
         });
 
         addNodeTypeMenu.onValueChanged.AddListener(delegate {
             StartCoroutine("NodeCreationSwitch");
         });
+        realityFlowGraphView.SetIsMobile();
     }
 
-    void Update()
+    void Update() 
     {
-        if(startDetectingTouch)
+        if(!setNodeStart)
         {
-            if (Input.GetMouseButtonDown(0))
+            if(Input.GetMouseButtonDown(0))
             {
-                 Vector2 mousePos = Input.mousePosition;
-                 Debug.Log(mousePos);
-                 //nodePosition = new Vector2(mousePos.x, mousePos.y); // This is the correct form. See node by canvasDimension declaration 
-                 nodePosition = new Vector2(mousePos.x / canvasDimensions.x, mousePos.y / canvasDimensions.y);
-                 startDetectingTouch = false;
+                // Vector2 mousePos = Input.mousePosition;
+                // //panelDimension = cameraObject.WorldToScreenPoint(Input.mousePosition);
+                // Vector3 [] cornerPos = new Vector3[4];
+                // parentCanvas.GetComponent<RectTransform>().GetWorldCorners(cornerPos);
+                // Debug.Log("Corners for Graph");
+                // foreach(Vector3 corner in cornerPos){
+                //     Debug.Log(corner);
+                // }
+
+                // nodePosition = new Vector2(mousePos.x / canvasDimensions.x, mousePos.y / canvasDimensions.y);
+                // panelDimension = Input.mousePosition;
+
+                panelDimension = new Vector2(parentCanvas.transform.localPosition.x, parentCanvas.transform.localPosition.y);
+                realityFlowGraphView.SetNewNodeLocation(panelDimension);
+                setNodeStart = true;
             }
         }
     }
@@ -55,6 +71,7 @@ public class GraphOptionsManager : MonoBehaviour
         {
             return;
         }
+
         switch(graphCommandsMenu.options[graphCommandsMenu.value].text.ToString())
 		{
 			case "Add Parameter":
@@ -95,52 +112,50 @@ public class GraphOptionsManager : MonoBehaviour
 
     private IEnumerator NodeCreationSwitch()
     {
-        // Turns on node placement popup
-        nodePlacementPopup.SetActive(!nodePlacementPopup.activeInHierarchy);
-        Debug.Log(startDetectingTouch);
-        
-        while(nodePlacementPopup.activeInHierarchy)
+        if(1 == 5)
         {
-            yield return null;
+            yield return true;
         }
-
-        if(!nodePlacementPopup.activeInHierarchy)
-        {
-            startDetectingTouch = true;
-            while(startDetectingTouch)
-            {
-                yield return null;
-            }
-            Debug.Log("Node placement: " + nodePosition);   
-            realityFlowGraphView.SetNewNodeLocation(nodePosition);
         
-            switch(addNodeTypeMenu.options[addNodeTypeMenu.value].text.ToString())
-            {
-                case "Text Node":
-                    realityFlowGraphView.AddNodeCommand("TextNode");
-                    Debug.Log("Text Node created from GraphOptionsSwitch");
-                    break;
-                case "Float Node":
-                    realityFlowGraphView.AddNodeCommand("FloatNode");
-                    Debug.Log("Float Node created from GraphOptionsSwitch");
-                    break;
-                case "Int Node":
-                    realityFlowGraphView.AddNodeCommand("IntNode");
-                    Debug.Log("Int Node created from GraphOptionsSwitch");
-                    break;
-                case "Bool Node":
-                    realityFlowGraphView.AddNodeCommand("BoolNode");
-                    Debug.Log("Bool Node created from GraphOptionsSwitch");
-                    break;
-                case "Conditional Node":
-                    realityFlowGraphView.AddNodeCommand("ConditionalNode");
-                    Debug.Log("Conditional Node created from GraphOptionsSwitch");
-                    break;
-                default:
-                    Debug.Log("No valid node option selected.");
-                    break;
-            }
+        switch(addNodeTypeMenu.options[addNodeTypeMenu.value].text.ToString())
+        {
+             case "Print Node":
+                realityFlowGraphView.AddNodeCommand("PrintNode");
+                Debug.Log("Print Node created from GraphOptionsSwitch");
+                break;
+            case "Text Node":
+                realityFlowGraphView.AddNodeCommand("TextNode");
+                Debug.Log("Text Node created from GraphOptionsSwitch");
+                break;
+            case "Float Node":
+                realityFlowGraphView.AddNodeCommand("FloatNode");
+                Debug.Log("Float Node created from GraphOptionsSwitch");
+                break;
+            case "Int Node":
+                realityFlowGraphView.AddNodeCommand("IntNode");
+                Debug.Log("Int Node created from GraphOptionsSwitch");
+                break;
+            case "Bool Node":
+                realityFlowGraphView.AddNodeCommand("BoolNode");
+                Debug.Log("Bool Node created from GraphOptionsSwitch");
+                break;
+            case "Start Node":
+                realityFlowGraphView.AddNodeCommand("StartNode");
+                Debug.Log("Start Node created from GraphOptionsSwitch");
+                break;
+            case "If() Node":
+                realityFlowGraphView.AddNodeCommand("ConditionalNode");
+                Debug.Log("Conditional Node created from GraphOptionsSwitch");
+                break;
+             case "Modify Node":
+                realityFlowGraphView.AddNodeCommand("GameObjectManipulationNode");
+                Debug.Log("GameObjectManipulation Node created from GraphOptionsSwitch");
+                break;
+            default:
+                Debug.Log("No valid node option selected.");
+                break;
         }
+        addNodeTypeMenu.value = 0;
     }
 
     private IEnumerator WaitForPosition()
@@ -150,33 +165,5 @@ public class GraphOptionsManager : MonoBehaviour
             yield return null;
         }
         Debug.Log(nodePosition);    
-    }
-
-    public void SetNodePositionStarter()
-    {
-        StartCoroutine("NodePositionSetter");
-    }
-    private IEnumerator NodePositionSetter()
-    {
-        // Turns on node placement popup
-        nodePlacementPopup.SetActive(!nodePlacementPopup.activeInHierarchy);
-        Debug.Log(startDetectingTouch);
-        
-        while(nodePlacementPopup.activeInHierarchy)
-        {
-            yield return null;
-        }
-
-        if(!nodePlacementPopup.activeInHierarchy)
-        {
-            startDetectingTouch = true;
-            while(startDetectingTouch)
-            {
-                yield return null;
-            }
-            Debug.Log("Node placement: " + nodePosition);   
-            realityFlowGraphView.SetNewNodeLocation(nodePosition);
-            boolSelection.GetDropDownValue();
-        }
     }
 }

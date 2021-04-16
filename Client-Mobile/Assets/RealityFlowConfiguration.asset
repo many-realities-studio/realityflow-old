@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: RealityFlowConfiguration
   m_EditorClassIdentifier: 
   s_currentProject:
-    _id: 8c59bc66-ae8a-409e-8a9e-c968644c4b9e
+    _id: 3b4e764f-a37b-4a68-8de0-95fcb31f1466
     _description: description
     _dateModified: 0
-    _projectName: ss
+    _projectName: aaaaaaaa
   s_currentUser:
     _username: a
     _password: a

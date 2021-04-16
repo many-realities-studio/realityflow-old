@@ -30,6 +30,7 @@ public class SlideMenuManager : MonoBehaviour
         // An object is selected
         if(Config.CurrentSelectedObjectId != null)
         {
+            Debug.Log("CAN BE MODIFIED: " + FlowTObject.idToGameObjectMapping[Config.CurrentSelectedObjectId].CanBeModified);
             // if the user has the object checked out, then toggle alll object editing buttons
             if (currentCheckoutObjects.Contains(Config.CurrentSelectedObjectId))
             {

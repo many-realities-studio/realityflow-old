@@ -52,7 +52,7 @@ public class MovePanel : MonoBehaviour {
     {
         objectInteractionItems.SetActive(false);
 
-        for(int i = 0; i < panelList.Length; i++)
+        for(int i = 1; i < panelList.Length; i++)
         {
             if(panelList[i].name == panelMenu.options[panelMenu.value].text.ToString())
             {

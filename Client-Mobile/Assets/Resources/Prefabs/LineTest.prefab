@@ -51,7 +51,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 499ca3c9c25c29746921c263743d6251, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -79,7 +79,7 @@ LineRenderer:
   - {x: 0, y: 0, z: 1}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 1
+    widthMultiplier: 10
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -156,5 +156,5 @@ MonoBehaviour:
   rfgv: {fileID: 0}
   input: {fileID: 0}
   output: {fileID: 0}
-  UpdateEdgesPerFrame: 0
+  UpdateEdgesPerFrame: 1
   padding: 0.1
