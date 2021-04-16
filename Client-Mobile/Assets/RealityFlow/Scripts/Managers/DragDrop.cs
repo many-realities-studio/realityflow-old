@@ -27,7 +27,7 @@ public class DragDrop : MonoBehaviour, IDragHandler
 
     private IEnumerator AdjustPosition()
     {
-         yield return new WaitForSeconds(5);
+         yield return new WaitForSeconds(3);
 
          this.gameObject.transform.localPosition = new Vector3(1500, -500, 500);
          Debug.Log("New POSITION: "+ this.gameObject.transform.localPosition);
