@@ -35,21 +35,21 @@ namespace Dissonance.Integrations.PhotonUnityNetworking2
                 Destroy(gameObject);
         }
 
-        // private IEnumerator Start ()
-        // {
-        //     PhotonNetwork.NetworkStatisticsEnabled = true;
-        //     PhotonNetwork.ConnectUsingSettings();
+        private IEnumerator Start ()
+        {
+            PhotonNetwork.NetworkStatisticsEnabled = true;
+            PhotonNetwork.ConnectUsingSettings();
 
-        //     // _state = State.Connecting;
+            // _state = State.Connecting;
 
-        //     //Wait until connected
-        //     while (PhotonNetwork.NetworkClientState != ClientState.ConnectedToMasterServer)
-        //         yield return true;
+            //Wait until connected
+            while (PhotonNetwork.NetworkClientState != ClientState.ConnectedToMasterServer)
+                yield return true;
 
-        //     // PhotonNetwork.JoinLobby();
+            // PhotonNetwork.JoinLobby();
 
-        //     // _state = State.ServerList;
-        // }
+            // _state = State.ServerList;
+        }
 
         public override void OnEnable()
         {
@@ -58,8 +58,6 @@ namespace Dissonance.Integrations.PhotonUnityNetworking2
 
             FlowNetworkManagerEditor.joinProjectEvent += OnJoinedRFProject;
             FlowNetworkManagerEditor.leaveProjectEvent += OnLeftRFProject;
-            FlowNetworkManagerEditor.rfLoginEvent += OnRFLogin;
-            FlowNetworkManagerEditor.rfLoginEvent += OnRFLogout;
         }
 
         public override void OnDisable()
@@ -69,8 +67,6 @@ namespace Dissonance.Integrations.PhotonUnityNetworking2
 
             FlowNetworkManagerEditor.joinProjectEvent -= OnJoinedRFProject;
             FlowNetworkManagerEditor.leaveProjectEvent -= OnLeftRFProject;
-            FlowNetworkManagerEditor.rfLoginEvent -= OnRFLogin;
-            FlowNetworkManagerEditor.rfLoginEvent -= OnRFLogout;
         }
 
         // void ILobbyCallbacks.OnRoomListUpdate(List<RoomInfo> roomList)
@@ -105,17 +101,6 @@ namespace Dissonance.Integrations.PhotonUnityNetworking2
             Debug.Log("Joined an existing Photon room.");
             // PhotonNetwork.LoadLevel(SceneName ?? "PUN2 Game World");
             // _state = State.InRoom;
-        }
-
-        private void OnRFLogin()
-        {
-            PhotonNetwork.NetworkStatisticsEnabled = true;
-            PhotonNetwork.ConnectUsingSettings();
-        }
-
-        private void OnRFLogout()
-        {
-            PhotonNetwork.Disconnect();
         }
 
         private void OnJoinedRFProject(string rfProjectId)
