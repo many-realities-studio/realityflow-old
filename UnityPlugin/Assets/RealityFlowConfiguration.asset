@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: RealityFlowConfiguration
   m_EditorClassIdentifier: 
   s_currentProject:
-    _id: 8d7b7654-6594-4952-a216-9989b9d49e64
+    _id: eeb3e894-29fb-4b7b-8ef8-0ded35a1b5b4
     _description: description
     _dateModified: 0
-    _projectName: FixedNewProjectLoginBug
+    _projectName: tet
   s_currentUser:
     _username: faisalS
     _password: 1

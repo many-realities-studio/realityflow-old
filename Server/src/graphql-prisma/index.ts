@@ -4,6 +4,7 @@ import { StateTracker } from "../FastAccessStateTracker/StateTracker"
 import { RoomManager } from "../FastAccessStateTracker/RoomManager"
 import { FlowObject } from "../FastAccessStateTracker/FlowLibrary/FlowObject"
 import { FlowBehaviour } from "../FastAccessStateTracker/FlowLibrary/FlowBehaviour"
+import { MessageBuilder } from "../FastAccessStateTracker/Messages/MessageBuilder";
 // import { FlowObject } from "../FastAccessStateTracker/FlowLibrary/FlowObject"
 // import { FlowVSGraph } from "../FastAccessStateTracker/FlowLibrary/FlowVSGraph"
 // import { FlowProject } from "../FastAccessStateTracker/FlowLibrary/FlowProject"
@@ -300,14 +301,34 @@ async function FAMaccess (FAM : number, args)
   switch(FAM) // Choosing which FAM Operation needs to be executed.
   {
     case 1:
-      var newObj = new FlowObject(args)
-      /*let res1 = await*/ StateTracker.CreateObject(newObj, args.projectId)
-      //TalkToClients(res1);
+      try{
+        var argsObj = new FlowObject(args)
+        var res1 = await StateTracker.CreateObject(argsObj, args.projectId)
+      }catch(error)
+      {
+        console.error(error)
+        process.exit(1)
+      }finally{
+        let returnContent = {
+          "MessageType": "CreateObject",
+          "FlowObject": res1[0],
+          "WasSuccessful": (res1[0] == null) ? false: true
+        }
+        let returnMessage = MessageBuilder.CreateMessage(returnContent, res1[1])
+        TalkToClients(returnMessage);
+      }
       break;
 
     case 2:
       var res2 = await StateTracker.DeleteObject(args.Id, args.projectId, "none")
-      TalkToClients(res2)
+      let returnContent = {
+        "MessageType": "DeleteObject",
+        "ObjectId": res2[0],
+        "WasSuccessful": (res2[0] == null) ? false: true,
+      }
+      let returnMessage = MessageBuilder.CreateMessage(returnContent, res2[1])
+  
+      TalkToClients(returnMessage)
       break;
   }
 }
