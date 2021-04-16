@@ -37,7 +37,7 @@ public class GraphOptionsManager : MonoBehaviour
         addNodeTypeMenu.onValueChanged.AddListener(delegate {
             StartCoroutine("NodeCreationSwitch");
         });
-        realityFlowGraphView.SetIsMobile();
+        realityFlowGraphView.SetToMobile();
     }
 
     void Update() 
