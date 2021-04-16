@@ -21,7 +21,7 @@ public class DragDrop : MonoBehaviour, IDragHandler
         Debug.Log(mousePos);
         //nodePosition = new Vector2(mousePos.x, mousePos.y); // This is the correct form. See node by canvasDimension declaration 
                 
-        transform.localPosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, transform.localPosition.z);
+        transform.localPosition = new Vector3(Input.mousePosition.x + 1000, Input.mousePosition.y - 500, transform.localPosition.z);
 
     }
 

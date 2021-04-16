@@ -35,8 +35,8 @@ public class MainMenuManager : MonoBehaviour {
     private string pword = null;
 
     // private const string url = "ws://68e6e63b.ngrok.io";
-    // private const string url = "ws://localhost:8999/";
-     private const string url = "ws://plato.mrl.ai:8999";
+    private const string url = "ws://localhost:8999/";
+    // private const string url = "ws://plato.mrl.ai:8999";
 
 
     void Start()
