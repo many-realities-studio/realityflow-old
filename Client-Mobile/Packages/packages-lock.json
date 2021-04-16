@@ -6,12 +6,6 @@
       "source": "local",
       "dependencies": {}
     },
-    "com.microsoft.mixedreality.webrtc": {
-      "version": "file:../../MRTK-WebRTC",
-      "depth": 0,
-      "source": "local",
-      "dependencies": {}
-    },
     "com.realityflow": {
       "version": "https://github.com/many-realities-lab-ucf/realityflow_package.git#MobileApp",
       "depth": 0,
@@ -67,7 +61,7 @@
         "com.unity.modules.wind": "1.0.0",
         "com.unity.modules.xr": "1.0.0"
       },
-      "hash": "b38ff29df6d8db2e9927df203fb986bd9efe0038"
+      "hash": "52e1a72629637a81be436ff4ea0e5056ec37f36c"
     },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
