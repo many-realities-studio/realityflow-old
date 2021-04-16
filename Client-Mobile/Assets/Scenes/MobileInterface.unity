@@ -47062,7 +47062,7 @@ MonoBehaviour:
   realityFlowGraphView: {fileID: 2072199877}
   VSGraphDropdownCanvas: {fileID: 582029419}
   boolSelection: {fileID: 1645104090}
-  canvasDimensions: {x: 2560, y: 1080}
+  canvasDimensions: {x: -1000, y: 500}
 --- !u!1 &2025705004
 GameObject:
   m_ObjectHideFlags: 0

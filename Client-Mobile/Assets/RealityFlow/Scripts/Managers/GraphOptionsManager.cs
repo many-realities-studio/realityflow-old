@@ -21,7 +21,7 @@ public class GraphOptionsManager : MonoBehaviour
 
     // The reason this is being used is because in RealityFlowGraphView the node position is multiplied by this hardcoded
     // canvas dimensions. So in order to compansate for this I am dividing by the canvas hardcoded dimensions.
-    public Vector2 canvasDimensions = new Vector2(2000, 1080); // FOR NOW, dont have these hardcoded in final demo
+    public Vector2 canvasDimensions = new Vector2(-2600, 500); // FOR NOW, dont have these hardcoded in final demo
 
     // Start is called before the first frame update
     void Start()
@@ -35,9 +35,10 @@ public class GraphOptionsManager : MonoBehaviour
         });
 
         addNodeTypeMenu.onValueChanged.AddListener(delegate {
+            realityFlowGraphView.SetToMobile(canvasDimensions);
             StartCoroutine("NodeCreationSwitch");
         });
-        realityFlowGraphView.SetToMobile(canvasDimensions);
+
     }
 
     void Update() 
