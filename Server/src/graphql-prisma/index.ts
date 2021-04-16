@@ -330,6 +330,29 @@ async function FAMaccess (FAM : number, args)
   
       TalkToClients(returnMessage)
       break;
+
+      /*case 3: // How do I get Client??? -I made change to update object "client" related undo it?
+      try{
+        var argsObj = new FlowObject(args)
+        var res3 = await StateTracker.UpdateObject(argsObj, args.projectId, "none", false, null);
+      }catch(error)
+      {
+        console.error(error)
+        process.exit(1)
+      }finally{
+        let index = res3[1].indexOf(client);
+        res3[1].splice(index,1)
+
+        let returnContent = {
+          "MessageType": "UpdateObject",
+          "FlowObject": res3[0],
+          "WasSuccessful": (res3[0] == null) ? false: true,
+        }
+
+        let returnMessage = MessageBuilder.CreateMessage(returnContent, res3[1])
+        TalkToClients(returnMessage);
+      }
+      break;*/
   }
 }
 
