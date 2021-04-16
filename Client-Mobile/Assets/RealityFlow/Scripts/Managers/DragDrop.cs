@@ -12,7 +12,8 @@ public class DragDrop : MonoBehaviour, IDragHandler
     {
         contentPanel = this.gameObject.transform.parent.gameObject;
         this.gameObject.transform.position = contentPanel.transform.position;
-        Debug.Log("Thsi POSITION " + this.gameObject.transform.position);
+        Debug.Log("This POSITION " + this.gameObject.transform.position);
+        StartCoroutine(AdjustPosition());
     }
     public void OnDrag(PointerEventData data)
     {
@@ -22,5 +23,13 @@ public class DragDrop : MonoBehaviour, IDragHandler
                 
         transform.localPosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, transform.localPosition.z);
 
+    }
+
+    private IEnumerator AdjustPosition()
+    {
+         yield return new WaitForSeconds(5);
+
+         this.gameObject.transform.localPosition = new Vector3(1500, -500, 500);
+         Debug.Log("New POSITION: "+ this.gameObject.transform.localPosition);
     }
 }

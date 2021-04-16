@@ -58,8 +58,10 @@ public class GraphOptionsManager : MonoBehaviour
                 // nodePosition = new Vector2(mousePos.x / canvasDimensions.x, mousePos.y / canvasDimensions.y);
                 // panelDimension = Input.mousePosition;
 
-                panelDimension = new Vector2(parentCanvas.transform.localPosition.x, parentCanvas.transform.localPosition.y);
-                realityFlowGraphView.SetNewNodeLocation(panelDimension);
+                //panelDimension = new Vector2(parentCanvas.transform.localPosition.x, parentCanvas.transform.localPosition.y);
+                Vector2 mousePos;
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(parentCanvas, Input.mousePosition, cameraObject, out mousePos);
+                realityFlowGraphView.SetNewNodeLocation(mousePos);
                 setNodeStart = true;
             }
         }
