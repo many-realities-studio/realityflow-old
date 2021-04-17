@@ -10,7 +10,7 @@ public class GraphOptionsManager : MonoBehaviour
     public Renderer parent;
     bool setNodeStart = false;
     private Vector2 panelDimension;
-    Vector2 nodePosition = new Vector2(-1, -1);
+    Vector2 nodePosition = new Vector2(0, 0);
     public GameObject nodeContentPanel;
     TMP_Dropdown addNodeTypeMenu;
     TMP_Dropdown graphCommandsMenu;
@@ -121,7 +121,7 @@ public class GraphOptionsManager : MonoBehaviour
         {
             yield return true;
         }
-        
+        realityFlowGraphView.SetNewNodeLocation(nodePosition);
         switch(addNodeTypeMenu.options[addNodeTypeMenu.value].text.ToString())
         {
              case "Print Node":
