@@ -9,13 +9,15 @@ public class GraphOptionsManager : MonoBehaviour
     TMP_Dropdown addNodeTypeMenu;
     TMP_Dropdown graphCommandsMenu;
 
+    public NewRealityFlowMenu realityFlowMenu;
+    public SketchfabModuleManager sketchfabModuleManager;
     public RealityFlowGraphView realityFlowGraphView;
     public GameObject VSGraphDropdownCanvas;
+    public KeyboardManager keyboard;
 
     // Start is called before the first frame update
     void Start()
     {
-        
         addNodeTypeMenu = GameObject.FindWithTag("NodeOptionsDropdown").GetComponent<TMP_Dropdown>();
         graphCommandsMenu =  GameObject.FindWithTag("GraphCommandsDropdown").GetComponent<TMP_Dropdown>(); 
 
@@ -56,8 +58,20 @@ public class GraphOptionsManager : MonoBehaviour
                 Debug.Log("Run Graph called from GraphOptionsSwitch");
 				break;
             case "Create Graph":
-                realityFlowGraphView.CreateGraph();
+                realityFlowMenu.ShowHideCreateVSGraph();
                 Debug.Log("Create Graph called from GraphOptionsSwitch");
+				break;
+            case "Delete Graph":
+                realityFlowMenu.LoadGraphsToDelete();
+                Debug.Log("Delete Graph called from GraphOptionsSwitch");
+				break;
+            case "Create Object":
+                realityFlowMenu.ShowHideCreateObject();
+                Debug.Log("Create Object called from GraphOptionsSwitch");
+				break;
+            case "Delete Object":
+                realityFlowMenu.LoadObjectsToDelete();
+                Debug.Log("Delete Object called from GraphOptionsSwitch");
 				break;
             case "Clear Graph":
                 realityFlowGraphView.ClearGraph();
@@ -67,6 +81,10 @@ public class GraphOptionsManager : MonoBehaviour
                 VSGraphDropdownCanvas.SetActive(true);
 		        VSGraphDropdownCanvas.GetComponent<VSGraphSelectionDropdown>().LoadGraphs();
                 Debug.Log("Load Graph called from GraphOptionsSwitch");
+				break;
+            case "SketchFab Importer":
+                sketchfabModuleManager.ToggelSketchfabModule();
+                Debug.Log("SketchFab Importer called from GraphOptionsSwitch");
 				break;
 			default:
 				Debug.Log("No valid option selected.");
