@@ -3,33 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class DragDrop : MonoBehaviour, IDragHandler
+public class DragDrop : MonoBehaviour, IDragHandler, IEndDragHandler
 {
-    public GameObject contentPanel;
     private Vector2 panelDimension;
+    private NodeView nodeView;
 
-    public void Start() 
-    {
-        //contentPanel = this.gameObject.transform.parent.gameObject;
-        //this.gameObject.transform.position = contentPanel.transform.position;
-        //Debug.Log("This POSITION " + this.gameObject.transform.position);
-        //StartCoroutine(AdjustPosition());
-    }
     public void OnDrag(PointerEventData data)
     {
         Vector2 mousePos = Input.mousePosition;
-        Debug.Log(mousePos);
-        //nodePosition = new Vector2(mousePos.x, mousePos.y); // This is the correct form. See node by canvasDimension declaration 
-                
         transform.localPosition = new Vector3(Input.mousePosition.x + 1000, Input.mousePosition.y - 500, transform.localPosition.z);
-
     }
 
-    private IEnumerator AdjustPosition()
+    public void OnEndDrag(PointerEventData eventData)
     {
-        yield return new WaitForSeconds(3);
-
-    //  this.gameObject.transform.localPosition = new Vector3(1500, -500, 500);
-        //Debug.Log("New POSITION: "+ this.gameObject.transform.localPosition);
+        nodeView = this.gameObject.GetComponent<NodeView>();
+        nodeView.ResetOrientation();
+        nodeView.UpdateNodeValues();
+        nodeView.RedrawEdges(true);
     }
 }

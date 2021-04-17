@@ -5,23 +5,12 @@ using TMPro;
 
 public class GraphOptionsManager : MonoBehaviour
 {
-    public Camera cameraObject;
-    public RectTransform parentCanvas;
-    public Renderer parent;
-    bool setNodeStart = false;
-    private Vector2 panelDimension;
     Vector2 nodePosition = new Vector2(0, 0);
-    public GameObject nodeContentPanel;
     TMP_Dropdown addNodeTypeMenu;
     TMP_Dropdown graphCommandsMenu;
 
     public RealityFlowGraphView realityFlowGraphView;
     public GameObject VSGraphDropdownCanvas;
-    public SelectComparison boolSelection;
-
-    // The reason this is being used is because in RealityFlowGraphView the node position is multiplied by this hardcoded
-    // canvas dimensions. So in order to compansate for this I am dividing by the canvas hardcoded dimensions.
-    Vector2 canvasDimensions = new Vector2(2560, 1080); // FOR NOW, dont have these hardcoded in final dem
 
     // Start is called before the first frame update
     void Start()
@@ -35,40 +24,11 @@ public class GraphOptionsManager : MonoBehaviour
         });
 
         addNodeTypeMenu.onValueChanged.AddListener(delegate {
-            //realityFlowGraphView.SetToMobile(canvasDimensions);
             realityFlowGraphView.SetNewNodeLocation(nodePosition);
-            StartCoroutine("NodeCreationSwitch");
+            NodeCreationSwitch();
         });
 
     }
-
-    // void Update() 
-    // {
-    //     if(!setNodeStart)
-    //     {
-    //         if(Input.GetMouseButtonDown(0))
-    //         {
-    //             //Vector2 mousePos = Input.mousePosition;
-    //             // //panelDimension = cameraObject.WorldToScreenPoint(Input.mousePosition);
-    //             // Vector3 [] cornerPos = new Vector3[4];
-    //             // parentCanvas.GetComponent<RectTransform>().GetWorldCorners(cornerPos);
-    //             // Debug.Log("Corners for Graph");
-    //             // foreach(Vector3 corner in cornerPos){
-    //             //     Debug.Log(corner);
-    //             // }
-
-    //             //nodePosition = new Vector2(mousePos.x / canvasDimensions.x, mousePos.y / canvasDimensions.y);
-    //             // panelDimension = Input.mousePosition;
-
-    //             //panelDimension = new Vector2(parentCanvas.transform.localPosition.x, parentCanvas.transform.localPosition.y);
-    //             //Vector2 mousePos;
-    //             //RectTransformUtility.ScreenPointToLocalPointInRectangle(parentCanvas, Input.mousePosition, cameraObject, out mousePos);
-    //             //realityFlowGraphView.SetNewNodeLocation(mousePos);
-    //            // realityFlowGraphView.SetNewNodeLocation(nodePosition);
-    //             setNodeStart = true;
-    //         }
-    //     }
-    // }
 
     public void GraphOptionsSwitch()
     {
@@ -115,12 +75,8 @@ public class GraphOptionsManager : MonoBehaviour
         graphCommandsMenu.value = 0;
     }
 
-    private IEnumerator NodeCreationSwitch()
+    public void NodeCreationSwitch()
     {
-        if(1 == 5)
-        {
-            yield return true;
-        }
         realityFlowGraphView.SetNewNodeLocation(nodePosition);
         switch(addNodeTypeMenu.options[addNodeTypeMenu.value].text.ToString())
         {
