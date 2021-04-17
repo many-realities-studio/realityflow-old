@@ -10,7 +10,7 @@ public class GraphOptionsManager : MonoBehaviour
     public Renderer parent;
     bool setNodeStart = false;
     private Vector2 panelDimension;
-    Vector3 nodePosition;
+    Vector2 nodePosition = new Vector2(-1, -1);
     public GameObject nodeContentPanel;
     TMP_Dropdown addNodeTypeMenu;
     TMP_Dropdown graphCommandsMenu;
@@ -21,7 +21,7 @@ public class GraphOptionsManager : MonoBehaviour
 
     // The reason this is being used is because in RealityFlowGraphView the node position is multiplied by this hardcoded
     // canvas dimensions. So in order to compansate for this I am dividing by the canvas hardcoded dimensions.
-    public Vector2 canvasDimensions = new Vector2(-2600, 500); // FOR NOW, dont have these hardcoded in final demo
+    Vector2 canvasDimensions = new Vector2(2560, 1080); // FOR NOW, dont have these hardcoded in final dem
 
     // Start is called before the first frame update
     void Start()
@@ -35,39 +35,40 @@ public class GraphOptionsManager : MonoBehaviour
         });
 
         addNodeTypeMenu.onValueChanged.AddListener(delegate {
-            realityFlowGraphView.SetToMobile(canvasDimensions);
+            //realityFlowGraphView.SetToMobile(canvasDimensions);
+            realityFlowGraphView.SetNewNodeLocation(nodePosition);
             StartCoroutine("NodeCreationSwitch");
         });
 
     }
 
-    void Update() 
-    {
-        if(!setNodeStart)
-        {
-            if(Input.GetMouseButtonDown(0))
-            {
-                //Vector2 mousePos = Input.mousePosition;
-                // //panelDimension = cameraObject.WorldToScreenPoint(Input.mousePosition);
-                // Vector3 [] cornerPos = new Vector3[4];
-                // parentCanvas.GetComponent<RectTransform>().GetWorldCorners(cornerPos);
-                // Debug.Log("Corners for Graph");
-                // foreach(Vector3 corner in cornerPos){
-                //     Debug.Log(corner);
-                // }
+    // void Update() 
+    // {
+    //     if(!setNodeStart)
+    //     {
+    //         if(Input.GetMouseButtonDown(0))
+    //         {
+    //             //Vector2 mousePos = Input.mousePosition;
+    //             // //panelDimension = cameraObject.WorldToScreenPoint(Input.mousePosition);
+    //             // Vector3 [] cornerPos = new Vector3[4];
+    //             // parentCanvas.GetComponent<RectTransform>().GetWorldCorners(cornerPos);
+    //             // Debug.Log("Corners for Graph");
+    //             // foreach(Vector3 corner in cornerPos){
+    //             //     Debug.Log(corner);
+    //             // }
 
-                //nodePosition = new Vector2(mousePos.x / canvasDimensions.x, mousePos.y / canvasDimensions.y);
-                // panelDimension = Input.mousePosition;
+    //             //nodePosition = new Vector2(mousePos.x / canvasDimensions.x, mousePos.y / canvasDimensions.y);
+    //             // panelDimension = Input.mousePosition;
 
-                //panelDimension = new Vector2(parentCanvas.transform.localPosition.x, parentCanvas.transform.localPosition.y);
-                Vector2 mousePos;
-                RectTransformUtility.ScreenPointToLocalPointInRectangle(parentCanvas, Input.mousePosition, cameraObject, out mousePos);
-                realityFlowGraphView.SetNewNodeLocation(mousePos);
-               // realityFlowGraphView.SetNewNodeLocation(nodePosition);
-                setNodeStart = true;
-            }
-        }
-    }
+    //             //panelDimension = new Vector2(parentCanvas.transform.localPosition.x, parentCanvas.transform.localPosition.y);
+    //             //Vector2 mousePos;
+    //             //RectTransformUtility.ScreenPointToLocalPointInRectangle(parentCanvas, Input.mousePosition, cameraObject, out mousePos);
+    //             //realityFlowGraphView.SetNewNodeLocation(mousePos);
+    //            // realityFlowGraphView.SetNewNodeLocation(nodePosition);
+    //             setNodeStart = true;
+    //         }
+    //     }
+    // }
 
     public void GraphOptionsSwitch()
     {
@@ -160,14 +161,5 @@ public class GraphOptionsManager : MonoBehaviour
                 break;
         }
         addNodeTypeMenu.value = 0;
-    }
-
-    private IEnumerator WaitForPosition()
-    {
-        while(nodePosition == null)
-        {
-            yield return null;
-        }
-        Debug.Log(nodePosition);    
     }
 }

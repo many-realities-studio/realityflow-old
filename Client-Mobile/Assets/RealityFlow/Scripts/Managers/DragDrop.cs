@@ -10,10 +10,10 @@ public class DragDrop : MonoBehaviour, IDragHandler
 
     public void Start() 
     {
-        contentPanel = this.gameObject.transform.parent.gameObject;
-        this.gameObject.transform.position = contentPanel.transform.position;
-        Debug.Log("This POSITION " + this.gameObject.transform.position);
-        StartCoroutine(AdjustPosition());
+        //contentPanel = this.gameObject.transform.parent.gameObject;
+        //this.gameObject.transform.position = contentPanel.transform.position;
+        //Debug.Log("This POSITION " + this.gameObject.transform.position);
+        //StartCoroutine(AdjustPosition());
     }
     public void OnDrag(PointerEventData data)
     {
@@ -30,6 +30,6 @@ public class DragDrop : MonoBehaviour, IDragHandler
         yield return new WaitForSeconds(3);
 
     //  this.gameObject.transform.localPosition = new Vector3(1500, -500, 500);
-        Debug.Log("New POSITION: "+ this.gameObject.transform.localPosition);
+        //Debug.Log("New POSITION: "+ this.gameObject.transform.localPosition);
     }
 }
