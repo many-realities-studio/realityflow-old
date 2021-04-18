@@ -3,6 +3,7 @@ import { createConnection, getConnection } from 'typeorm'
 import { User } from '../../entity/user'
 import { Project } from '../../entity/project'
 import { DBObject } from '../../entity/object'
+import { VSGraph } from '../../entity/vsgraph'
 import { UserSubscriber } from "../../subscriber/UserSubscriber"
 import * as bcrypt from 'bcrypt'
 import { Behaviour } from '../../entity/behaviour'
@@ -19,7 +20,8 @@ beforeAll( async () => {
            DBObject,
            User,
            Project,
-           Behaviour
+           Behaviour,
+           VSGraph
         ],
         subscribers: [
             UserSubscriber
@@ -153,6 +155,7 @@ describe('Project', () => {
         createdProject.Description = "createdProjectDescription"
         createdProject.DateModified = Date.now()
         createdProject.ObjectList = []
+        createdProject.VSGraphList = []
         // act
         let returnedProject = await conn.manager.save(createdProject)
         // assert
@@ -170,6 +173,7 @@ describe('Project', () => {
         foundProject.Description = "foundProjectDescription"
         foundProject.DateModified = Date.now()
         foundProject.ObjectList = []
+        foundProject.VSGraphList = []
 
         let returnedProject = await conn.manager.save(foundProject)
         // act
@@ -193,6 +197,7 @@ describe('Project', () => {
         updateProject.Description = "updateProjectDescription"
         updateProject.DateModified = Date.now()
         updateProject.ObjectList = []
+        updateProject.VSGraphList = []
         
         let returnedProject = await conn.manager.save(updateProject)
         
@@ -235,6 +240,7 @@ describe('Project', () => {
         deletedProject.Description = "deletedProjectDescription"
         deletedProject.DateModified = Date.now()
         deletedProject.ObjectList = []
+        deletedProject.VSGraphList = []
 
         let returnedProject = await conn.manager.save(deletedProject)
         
@@ -282,6 +288,7 @@ describe('Project', () => {
         createdProject.Description = "ownedProjectDescription"
         createdProject.DateModified = Date.now()
         createdProject.ObjectList = []
+        createdProject.VSGraphList = []
         createdProject.Owner = newUser
         
         // act
@@ -454,6 +461,137 @@ describe ('Object', () => {
     })
 
 
+})
+
+describe ('VSGraph', () => {
+    it("can be created", async () => {
+        // Arrange
+        let conn = getConnection("test")
+
+        let newVSGraph = new VSGraph();
+        newVSGraph.Id = "newVSGraphId"
+        newVSGraph.Name = "newVSGraphName"
+        newVSGraph.serializedNodes = "[]";
+        newVSGraph.edges = "[]";
+        newVSGraph.groups = "[]";
+        newVSGraph.stackNodes = "[]";
+        newVSGraph.pinnedElements = "[]";
+        newVSGraph.exposedParameters = "[]";
+        newVSGraph.stickyNotes = "[]";
+        newVSGraph.position = "{\"x\":0,\"y\":0,\"z\":0}";
+        newVSGraph.scale = "{\"x\":1,\"y\":1,\"z\":1}";
+        newVSGraph.references = "{\"version\":1,\"00000000\":{\"type\":{\"class\":\"Terminus\",\"ns\":\"UnityEngine.DMAT\",\"asm\":\"FAKE_ASM\"},\"data\":{}}}";
+        newVSGraph.paramIdToObjId = "{\"keys\":[],\"values\":[]}";
+
+        // act
+        let returnedVSGraph = await conn.manager.save(newVSGraph)
+        // assert
+        expect(returnedVSGraph.Id).toEqual("newVSGraphId")
+        expect(returnedVSGraph.Name).toEqual("newVSGraphName")
+
+    })
+
+    it("can be found", async () => {
+        // arrange/act
+        let conn = getConnection("test")
+
+        let foundVSGraph = new VSGraph();
+        foundVSGraph.Id = "foundVSGraphId"
+        foundVSGraph.Name = "foundVSGraphName"
+        foundVSGraph.serializedNodes = "[]";
+        foundVSGraph.edges = "[]";
+        foundVSGraph.groups = "[]";
+        foundVSGraph.stackNodes = "[]";
+        foundVSGraph.pinnedElements = "[]";
+        foundVSGraph.exposedParameters = "[]";
+        foundVSGraph.stickyNotes = "[]";
+        foundVSGraph.position = "{\"x\":0,\"y\":0,\"z\":0}";
+        foundVSGraph.scale = "{\"x\":1,\"y\":1,\"z\":1}";
+        foundVSGraph.references = "{\"version\":1,\"00000000\":{\"type\":{\"class\":\"Terminus\",\"ns\":\"UnityEngine.DMAT\",\"asm\":\"FAKE_ASM\"},\"data\":{}}}";
+        foundVSGraph.paramIdToObjId = "{\"keys\":[],\"values\":[]}";
+        
+        let returnedVSGraph = await conn.manager.save(foundVSGraph)
+        // assert 
+        expect(returnedVSGraph.Id).toEqual("foundVSGraphId")
+        expect(returnedVSGraph.Name).toEqual("foundVSGraphName")
+
+        let check = await conn.createQueryBuilder().select("vsgraph").from(VSGraph, "vsgraph").where("vsgraph.Id = :id", {id: "foundVSGraphId"}).getOne();
+        expect(check.Name).toEqual("foundVSGraphName");
+    })
+
+    it("can be updated", async () => {
+        // arrange
+        let conn = getConnection("test")
+
+        let updatedVSGraph = new VSGraph();
+        updatedVSGraph.Id = "updatedVSGraphId"
+        updatedVSGraph.Name = "updatedVSGraphName"
+        updatedVSGraph.serializedNodes = "[]";
+        updatedVSGraph.edges = "[]";
+        updatedVSGraph.groups = "[]";
+        updatedVSGraph.stackNodes = "[]";
+        updatedVSGraph.pinnedElements = "[]";
+        updatedVSGraph.exposedParameters = "[]";
+        updatedVSGraph.stickyNotes = "[]";
+        updatedVSGraph.position = "{\"x\":0,\"y\":0,\"z\":0}";
+        updatedVSGraph.scale = "{\"x\":1,\"y\":1,\"z\":1}";
+        updatedVSGraph.references = "{\"version\":1,\"00000000\":{\"type\":{\"class\":\"Terminus\",\"ns\":\"UnityEngine.DMAT\",\"asm\":\"FAKE_ASM\"},\"data\":{}}}";
+        updatedVSGraph.paramIdToObjId = "{\"keys\":[],\"values\":[]}";
+        
+        let returnedVSGraph = await conn.manager.save(updatedVSGraph)
+
+        expect(returnedVSGraph.Id).toEqual("updatedVSGraphId")
+        expect(returnedVSGraph.Name).toEqual("updatedVSGraphName")
+
+        let check = await conn.createQueryBuilder().select("vsgraph").from(VSGraph, "vsgraph").where("vsgraph.Id = :id", {id: "updatedVSGraphId"}).getOne();
+        expect(check.Name).toEqual("updatedVSGraphName");
+        // act
+        await conn.createQueryBuilder().update(VSGraph).set({Name: "newName"}).where("Id = :id", {id: "updatedVSGraphId"}).execute()
+        // assert
+        let check_Updated = await conn.createQueryBuilder().select("vsgraph").from(VSGraph, "vsgraph").where("vsgraph.Id = :id", {id: "updatedVSGraphId"}).getOne();
+        expect(check_Updated.Name).toEqual("newName");
+
+    })
+
+    it("can be deleted", async () => {
+        // arrange
+        let conn = getConnection("test")
+
+        let deletedVSGraph = new VSGraph();
+        deletedVSGraph.Id = "deletedVSGraphId"
+        deletedVSGraph.Name = "deletedVSGraphName"
+        deletedVSGraph.serializedNodes = "[]";
+        deletedVSGraph.edges = "[]";
+        deletedVSGraph.groups = "[]";
+        deletedVSGraph.stackNodes = "[]";
+        deletedVSGraph.pinnedElements = "[]";
+        deletedVSGraph.exposedParameters = "[]";
+        deletedVSGraph.stickyNotes = "[]";
+        deletedVSGraph.position = "{\"x\":0,\"y\":0,\"z\":0}";
+        deletedVSGraph.scale = "{\"x\":1,\"y\":1,\"z\":1}";
+        deletedVSGraph.references = "{\"version\":1,\"00000000\":{\"type\":{\"class\":\"Terminus\",\"ns\":\"UnityEngine.DMAT\",\"asm\":\"FAKE_ASM\"},\"data\":{}}}";
+        deletedVSGraph.paramIdToObjId = "{\"keys\":[],\"values\":[]}";
+
+        let returnedVSGraph = await conn.manager.save(deletedVSGraph)
+
+        expect(returnedVSGraph.Id).toEqual("deletedVSGraphId")
+        expect(returnedVSGraph.Name).toEqual("deletedVSGraphName")
+
+        let check = await conn.createQueryBuilder().select("vsgraph").from(VSGraph, "vsgraph").where("vsgraph.Id = :id", {id: "deletedVSGraphId"}).getOne();
+        expect(check.Name).toEqual("deletedVSGraphName");
+        // act
+        let result = await conn
+            .createQueryBuilder()
+            .delete()
+            .from(VSGraph)
+            .where("Id = :id", {id: "deletedVSGraphId"})
+            .execute()
+
+        // assert
+        let check_deleted = await conn.createQueryBuilder().select("vsgraph").from(VSGraph, "vsgraph").where("vsgraph.Id = :id", {id: "deletedVSGraphId"}).getOne();
+        expect(check_deleted).toBeFalsy();
+
+    })
 })
 
 // TODO: has not been run yet
