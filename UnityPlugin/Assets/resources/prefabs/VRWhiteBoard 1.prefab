@@ -6166,7 +6166,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 56886437230756819}
         m_TargetAssemblyTypeName: NewRealityFlowMenu, com.RealityFlow
         m_MethodName: CreateObjectStep1
         m_Mode: 1
@@ -6299,7 +6299,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 56886437230756819}
         m_TargetAssemblyTypeName: NewRealityFlowMenu, com.RealityFlow
         m_MethodName: LoadGraphsToDelete
         m_Mode: 1
@@ -6432,7 +6432,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 56886437230756819}
         m_TargetAssemblyTypeName: NewRealityFlowMenu, com.RealityFlow
         m_MethodName: CreateVSGraph
         m_Mode: 1
@@ -6565,7 +6565,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 56886437230756819}
         m_TargetAssemblyTypeName: NewRealityFlowMenu, com.RealityFlow
         m_MethodName: ShowHideCreateObject
         m_Mode: 1
@@ -6824,7 +6824,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 56886437230756819}
         m_TargetAssemblyTypeName: NewRealityFlowMenu, com.RealityFlow
         m_MethodName: LoadObjectsToDelete
         m_Mode: 1
@@ -10982,6 +10982,7 @@ GameObject:
   - component: {fileID: 4496000424146979697}
   - component: {fileID: 4496000424146979698}
   - component: {fileID: 4496000424146979696}
+  - component: {fileID: 56886437230756819}
   m_Layer: 6
   m_Name: VRWhiteBoard 1
   m_TagString: Canvas
@@ -11140,6 +11141,35 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &56886437230756819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4496000424146979691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ee15e0b06bd3fd409a9c31634d1f904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  VSGraphList: []
+  vsDeleteGraphDropdown: {fileID: 3198956246239763776}
+  realityFlowMenuPanel: {fileID: 0}
+  guestUserComfirmationPanel: {fileID: 0}
+  guestUserHubPanel: {fileID: 0}
+  guestUserProjectPanel: {fileID: 0}
+  createVSGraphView: {fileID: 3198956245472021071}
+  deleteVSGraphView: {fileID: 3198956246376255010}
+  createObjectView: {fileID: 9152809479259570141}
+  deleteObjectView: {fileID: 3198956246615151192}
+  deleteVSGraphButtonCollection: {fileID: 0}
+  vsGraphDeleteButton: {fileID: 1827486007908430951, guid: 05de8d64630976e46b02f840818d4d48,
+    type: 3}
+  FirstObjectCreationStep: {fileID: 3198956246265946393}
+  FinalObjectCreationStep: {fileID: 3198956246280511053}
+  objectList: []
+  deleteObjectDropdown: {fileID: 3198956246068319885}
 --- !u!1 &4496000424425183628
 GameObject:
   m_ObjectHideFlags: 0
@@ -16155,7 +16185,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 56886437230756819}
         m_TargetAssemblyTypeName: NewRealityFlowMenu, com.RealityFlow
         m_MethodName: CreateObject
         m_Mode: 1
@@ -17326,7 +17356,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 56886437230756819}
         m_TargetAssemblyTypeName: NewRealityFlowMenu, com.RealityFlow
         m_MethodName: DeleteObject
         m_Mode: 1
@@ -18561,7 +18591,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 56886437230756819}
         m_TargetAssemblyTypeName: NewRealityFlowMenu, com.RealityFlow
         m_MethodName: DeleteGraph
         m_Mode: 1
@@ -22430,7 +22460,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 56886437230756819}
         m_TargetAssemblyTypeName: NewRealityFlowMenu, com.RealityFlow
         m_MethodName: ShowHideCreateVSGraph
         m_Mode: 1
