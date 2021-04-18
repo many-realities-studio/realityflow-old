@@ -111,7 +111,7 @@ export class FlowProject
   {
     // Get the object that we are changing from the specified project
     var oldObject: FlowObject = this._ObjectList.find(element => element.Id == newObject.Id);
-    if(oldObject != undefined /*&& oldObject.CurrentCheckout == client*/){ //used to be uncommented out. PRE-GraphQL
+    if(oldObject != undefined && oldObject.CurrentCheckout == client){ 
       oldObject.UpdateProperties(newObject);
       return true;
     }

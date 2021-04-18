@@ -398,12 +398,12 @@ export class StateTracker{
    * check out an object from the Fast Access State Tracker
    * @param projectId 
    * @param objectId 
-   * @param client 
+   * @param client (user)
    */
-  public static async CheckoutObject(projectId: string, objectId: string, client: string) : Promise<[any, Array<string>]>
+  public static async CheckoutObject(projectId: string, objectId: string, client: string, user: string) : Promise<[any, Array<string>]>
   {
     // make sure the object is available for checkout
-    let success = RoomManager.checkoutObject(projectId, objectId, client);
+    let success = RoomManager.checkoutObject(projectId, objectId, user);
     
     return[success, [client]]
   }
@@ -414,10 +414,11 @@ export class StateTracker{
    * @param objectId 
    * @param client 
    */
-  public static async CheckinObject(projectId: string, objectId: string, client: string) : Promise<[any, Array<string>]>
+  public static async CheckinObject(projectId: string, objectId: string, client: string, user: string) : Promise<[any, Array<string>]>
   {
     // make sure the actual person that checked an object out is the one checking it back in
-    let success = RoomManager.checkinObject(projectId, objectId, client)
+    // Using Username to keep track of checkIn/Out and have client return the socketId for server updates.
+    let success = RoomManager.checkinObject(projectId, objectId, user)
      
     return[success, [client]]
   }
@@ -452,13 +453,15 @@ export class StateTracker{
    * @param client client Id to make sure they have the object checked out
    * @param saveToDatabase Flag to save the object update to the database 
    */
-  public static async UpdateObject(objectToUpdate : FlowObject, projectId: string,  client: string,  saveToDatabase:boolean,user=null) : Promise<[any, Array<string>]>
+  public static async UpdateObject(objectToUpdate : FlowObject, projectId: string,  client: string,  saveToDatabase:boolean, user : string) : Promise<[any, Array<string>]>
   {  
     // perform the updates
-    let famSuccess = RoomManager.updateObject(objectToUpdate, projectId, client);
+    let famSuccess = RoomManager.updateObject(objectToUpdate, projectId, user);
     console.log(RoomManager.ReadObject(projectId, objectToUpdate.Id))
     if(!famSuccess)
       return [null, [client]];
+    
+    // Check GraphQL related documentation to understand why this was commented out.
     if(saveToDatabase)
       TypeORMDatabase.UpdateObject(objectToUpdate, projectId)
 
