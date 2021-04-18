@@ -1,7 +1,9 @@
 import { Project } from '../../entity/project'
 import { DBObject } from '../../entity/object'
+import { VSGraph } from '../../entity/vsgraph'
 import { ProjectOperations } from '../../ORMCommands/project'
 import { ObjectOperations } from '../../ORMCommands/object'
+import { VSGraphOperations } from '../../ORMCommands/vsgraph'
 import { Behaviour } from '../../entity/behaviour'
 import { User } from '../../entity/user'
 import { UserSubscriber } from '../../subscriber/UserSubscriber'
@@ -22,7 +24,8 @@ beforeAll( async () => {
            DBObject,
            User,
            Project,
-           Behaviour
+           Behaviour,
+           VSGraph
         ],
         subscribers: [
             UserSubscriber
@@ -47,6 +50,7 @@ describe("entity", () => {
     createdProject.Description = "createdProjectDescription"
     createdProject.DateModified = Date.now()
     createdProject.ObjectList = []
+    createdProject.VSGraphList = []
 
     let returnedProject = await conn.manager.save(createdProject)
 
@@ -67,6 +71,7 @@ describe("entity", () => {
         G:              1,
         B:              1,
         A:              1,
+        Prefab:         "prefab1"
     }
 
     var object2 = {
@@ -86,34 +91,45 @@ describe("entity", () => {
         G:              1,
         B:              1,
         A:              1,
+        Prefab:         "prefab2"
     }
 
     let x =  await ObjectOperations.createObject(object1, returnedProject.Id)
     let y =  await ObjectOperations.createObject(object2, returnedProject.Id)
 
+    let nextBehaviour1 = new Array<string>()
+    let nextBehaviour2 = new Array<string>()
+
+    nextBehaviour1.push("Behaviour")
+    nextBehaviour2.push("Behaviour2")
+
+        // Was unable to finish fixing this outdated test from last team, TODO:
+        // bring up to date with current behaviour system.
         let Behaviour1 = new FlowBehaviour({
             Id: "TestBehaviourId",
-            Name: 'Name',
-            Trigger: "Trigger",
-            Target: "Target",
-            Index: 1,
-            ChainOwner: "Trigger"
+            TriggerObjectId: "Trigger",
+            TargetObjectId: "Target",
+            TypeOfTrigger: "Type",
+            Action: "Action",
+            NextBehaviour: nextBehaviour1,
+            ProjectId: "ProjectId"
         })
 
         let Behaviour2 = new FlowBehaviour({
             Id: "TestBehaviourId2",
-            Name: 'Name',
-            Trigger: "Target",
-            Target: "Trigger",
-            Index: 0,
-            ChainOwner: "Trigger"
+            TriggerObjectId: "Target",
+            TargetObjectId: "Trigger",
+            TypeOfTrigger: "Type",
+            Action: "Action",
+            NextBehaviour: nextBehaviour2,
+            ProjectId: "ProjectId"
         })
         
         let check = await BehaviourOperations.CreateBehaviour([Behaviour1, Behaviour2])
         expect(check).toBeTruthy()
         
         let find = await getConnection(process.env.NODE_ENV).createQueryBuilder()
-            .select()
+            .select("Behaviour")
             .from(Behaviour, "Behaviour")
             .where("ChainOwner = :owner", {owner: "Trigger"})
             .orderBy("Behaviour.Index", "ASC")
