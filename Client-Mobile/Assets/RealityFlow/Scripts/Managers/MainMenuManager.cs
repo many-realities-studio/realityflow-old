@@ -42,8 +42,8 @@ public class MainMenuManager : MonoBehaviour {
     void Start()
     {
         // Operations.ConnectToServer(url);
-        //activePanel = REDIRECT_PANEL;
-        Debug.Log("I'm starting");
+        // activePanel = REDIRECT_PANEL;
+        // Debug.Log("I'm starting");
 
         if(Config.LeftProject == true)
         {
@@ -71,13 +71,13 @@ public class MainMenuManager : MonoBehaviour {
         {
             panels[activePanel].SetActive(false);
             panels[panel].SetActive(true);
-            Debug.Log("Active panel = " + activePanel + " \tNext Panel = " + panel);
+            // Debug.Log("Active panel = " + activePanel + " \tNext Panel = " + panel);
             return;
         }
 
         panels[panel].SetActive(true);
         panels[activePanel].SetActive(false);
-        Debug.Log("Active panel = " + activePanel + " \tNext Panel = " + panel);
+        // Debug.Log("Active panel = " + activePanel + " \tNext Panel = " + panel);
         activePanel = panel;
     }
 
@@ -133,7 +133,7 @@ public class MainMenuManager : MonoBehaviour {
         FlowUser user = new FlowUser(username, password);
         Operations.Login(user, url, (sender, e) =>
         {
-            Debug.Log("login callback: " + e.message.WasSuccessful.ToString());
+            Debug.Log("Login callback: " + e.message.WasSuccessful.ToString());
             if (e.message.WasSuccessful == true)
             {
                 uname = username; pword = password;

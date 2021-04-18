@@ -19,7 +19,7 @@ public class DragDrop : MonoBehaviour, IDragHandler, IEndDragHandler
         nodeView.CheckOut();
         nodeView.RedrawEdges(true);
         Vector2 mousePos = Input.mousePosition;
-        transform.localPosition = new Vector3(Input.mousePosition.x + 1000, Input.mousePosition.y - 500, transform.localPosition.z);
+        transform.localPosition = new Vector3(Input.mousePosition.x - 650, Input.mousePosition.y - 400, transform.localPosition.z);
     }
 
     public void OnEndDrag(PointerEventData eventData)

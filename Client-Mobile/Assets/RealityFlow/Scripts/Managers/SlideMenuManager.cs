@@ -30,7 +30,6 @@ public class SlideMenuManager : MonoBehaviour
         // An object is selected
         if(Config.CurrentSelectedObjectId != null)
         {
-            Debug.Log("CAN BE MODIFIED: " + FlowTObject.idToGameObjectMapping[Config.CurrentSelectedObjectId].CanBeModified);
             // if the user has the object checked out, then toggle alll object editing buttons
             if (currentCheckoutObjects.Contains(Config.CurrentSelectedObjectId))
             {
@@ -168,5 +167,18 @@ public class SlideMenuManager : MonoBehaviour
             string objectName = FlowTObject.idToGameObjectMapping[Config.CurrentSelectedObjectId].Name;
             objectToDeleteText.text = "Are you sure you want to delete " + objectName + "?";
         }
+    }
+
+    public void UpdateObjectFromSlideMenu()
+    {
+        if(Config.CurrentSelectedObjectId != null)
+        {
+            if (FlowTObject.idToGameObjectMapping[Config.CurrentSelectedObjectId].CanBeModified == true)
+            {
+                Operations.UpdateObject(FlowTObject.idToGameObjectMapping[Config.CurrentSelectedObjectId], ConfigurationSingleton.SingleInstance.CurrentUser, ConfigurationSingleton.SingleInstance.CurrentProject.Id, (_, e) => {/* Debug.Log(e.message);*/ });
+            }
+        }
+
+        
     }
 }

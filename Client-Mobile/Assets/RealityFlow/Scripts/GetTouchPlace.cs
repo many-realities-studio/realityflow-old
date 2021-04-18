@@ -23,7 +23,7 @@ public class GetTouchPlace : MonoBehaviour
             Vector2 mousePos;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(parentCanvas, Input.mousePosition, cameraObject, out mousePos);
             
-            //Debug.Log(mousePos);
+            // Debug.Log(mousePos);
             touchPlaceTrackerImage.anchoredPosition = mousePos;
         }
     }
