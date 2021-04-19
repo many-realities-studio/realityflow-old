@@ -2,16 +2,19 @@
 
 import { ProjectOperations } from "../../ORMCommands/project";
 import { ObjectOperations } from "../../ORMCommands/object";
+import { VSGraphOperations } from "../../ORMCommands/vsgraph";
 import { UserOperations } from "../../ORMCommands/user"
 
 
 import {FlowUser} from "../FlowLibrary/FlowUser";
 import {FlowProject} from "../FlowLibrary/FlowProject";
 import {FlowObject} from "../FlowLibrary/FlowObject";
+import {FlowVSGraph} from "../FlowLibrary/FlowVSGraph";
 import TypeORMDatabase from "./TypeORMDatabase";
 
 import { Project } from "../../entity/project";
 import { User } from "../../entity/user";
+import { BehaviourOperations } from "../../ORMCommands/behaviour";
 
 
 // this may seem like a pointless exercise. 
@@ -244,6 +247,12 @@ describe("ProjectOperations", ()=>{
 
         let fakeGetObjects = jest.fn(async (projectId) => [])
         ProjectOperations.getObjects = fakeGetObjects;
+
+        let fakeGetVSGraphs = jest.fn(async (projectId) => [])
+        ProjectOperations.getVSGraphs = fakeGetVSGraphs;
+
+        let fakeGetBehaviours = jest.fn(async (projectId) => [])
+        BehaviourOperations.getBehaviours = fakeGetBehaviours;
 
         // act
         await TypeORMDatabase.GetProject(testProject1.Id);
