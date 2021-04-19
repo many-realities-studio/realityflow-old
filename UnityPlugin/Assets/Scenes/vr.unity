@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.3731193, g: 0.38073996, b: 0.35872698, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1743,6 +1743,65 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 583370621}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &633623155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f9c661467785d748aeba96986713c45, type: 3}
+  m_Name: ww - 20840b2b-e62e-46d7-a108-e1cc3aa443aa
+  m_EditorClassIdentifier: 
+  serializedNodes:
+  - type: BoolNode, com.RealityFlow.Contrib.NGP, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    jsonDatas: '{"GUID":"21b034ce-8a26-4fc8-b0bb-96b77cea1672","computeOrder":-1,"position":{"serializedVersion":"2","x":0.3716924488544464,"y":-0.7027231454849243,"width":100.0,"height":100.0},"expanded":false,"debug":false,"nodeLock":false,"inA":0.0,"inB":0.0,"compared":true,"compareFunction":">="}'
+  - type: PrintNode, com.RealityFlow.Contrib.NGP, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    jsonDatas: '{"GUID":"deab5480-3f4c-4fda-ba76-8964babaa2d7","computeOrder":-1,"position":{"serializedVersion":"2","x":0.38727396726608279,"y":-0.532338559627533,"width":100.0,"height":100.0},"expanded":false,"debug":false,"nodeLock":false}'
+  - type: TextNode, com.RealityFlow.Contrib.NGP, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    jsonDatas: '{"GUID":"2aa808e4-f121-48a9-9c89-44ed91cd1ea9","computeOrder":-1,"position":{"serializedVersion":"2","x":0.3639998137950897,"y":-0.5471962094306946,"width":100.0,"height":100.0},"expanded":false,"debug":false,"nodeLock":false,"output":"Hello
+      World"}'
+  - type: FloatNode, com.RealityFlow.Contrib.NGP, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    jsonDatas: '{"GUID":"7f92b756-0e3f-451c-bdb9-3f269a44767f","computeOrder":-1,"position":{"serializedVersion":"2","x":0.4037841856479645,"y":-0.6073099374771118,"width":100.0,"height":100.0},"expanded":false,"debug":false,"nodeLock":false,"output":0.0,"input":0.0}'
+  - type: IntNode, com.RealityFlow.Contrib.NGP, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    jsonDatas: '{"GUID":"18c04c04-e650-4934-9544-bdad72224df7","computeOrder":-1,"position":{"serializedVersion":"2","x":0.37304455041885378,"y":-0.6201358437538147,"width":100.0,"height":100.0},"expanded":false,"debug":false,"nodeLock":false,"output":0,"input":0}'
+  - type: GraphProcessor.ParameterNode, com.alelievr.NodeGraphProcessor.Runtime,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    jsonDatas: '{"GUID":"6bc61329-98ac-4281-bf7b-73af281774d5","computeOrder":-1,"position":{"serializedVersion":"2","x":0.0,"y":0.0,"width":100.0,"height":100.0},"expanded":false,"debug":false,"nodeLock":false,"parameterGUID":"8a66a69d-903a-4587-89e4-6f23ecf071f3","accessor":0}'
+  edges: []
+  groups: []
+  stackNodes: []
+  pinnedElements: []
+  exposedParameters:
+  - guid: 8a66a69d-903a-4587-89e4-6f23ecf071f3
+    name: www
+    type: System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    serializedValue:
+      serializedType: System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+      serializedName: 
+      serializedValue: '"ddd"'
+    input: 1
+    settings:
+      isHidden: 0
+  stickyNotes: []
+  position: {x: 0, y: 0, z: 0}
+  scale: {x: 1, y: 1, z: 1}
+  paramIdToObjId:
+    keys: []
+    values: []
+  _isUpdated: 0
+  Name: ww
+  Id: 20840b2b-e62e-46d7-a108-e1cc3aa443aa
+  references:
+    version: 1
 --- !u!1001 &637623753
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2242,6 +2301,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 692711186}
   m_CullTransparentMesh: 1
+--- !u!1 &714630859
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 714630861}
+  - component: {fileID: 714630860}
+  m_Layer: 0
+  m_Name: ww
+  m_TagString: VSGraph
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &714630860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 714630859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f64598381e9de8e4bb90f94e0d18ba88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  underlyingFlowVSGraph: {fileID: 633623155}
+--- !u!4 &714630861
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 714630859}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &717522880
 GameObject:
   m_ObjectHideFlags: 0
@@ -6814,6 +6917,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1252738696379802334, guid: 6b5dc551fbb15b4468833d6e7032260f,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.00050610147
+      objectReference: {fileID: 0}
+    - target: {fileID: 1252738696379802334, guid: 6b5dc551fbb15b4468833d6e7032260f,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.0000013221505
+      objectReference: {fileID: 0}
+    - target: {fileID: 1729828444446128686, guid: 6b5dc551fbb15b4468833d6e7032260f,
+        type: 3}
+      propertyPath: m_Text
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1957192990170904200, guid: 6b5dc551fbb15b4468833d6e7032260f,
         type: 3}
       propertyPath: m_Pivot.x
@@ -6919,10 +7037,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1957192990170904202, guid: 6b5dc551fbb15b4468833d6e7032260f,
+        type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1957192990170904212, guid: 6b5dc551fbb15b4468833d6e7032260f,
         type: 3}
       propertyPath: m_Name
       value: VRWhiteBoard
+      objectReference: {fileID: 0}
+    - target: {fileID: 3819236045072103761, guid: 6b5dc551fbb15b4468833d6e7032260f,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6511140320629647331, guid: 6b5dc551fbb15b4468833d6e7032260f,
         type: 3}
@@ -6932,6 +7060,11 @@ PrefabInstance:
     - target: {fileID: 6511140320629647331, guid: 6b5dc551fbb15b4468833d6e7032260f,
         type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6511140320629647331, guid: 6b5dc551fbb15b4468833d6e7032260f,
+        type: 3}
+      propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7172145914994766024, guid: 6b5dc551fbb15b4468833d6e7032260f,
