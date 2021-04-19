@@ -459,7 +459,7 @@ export class StateTracker{
     let famSuccess = RoomManager.updateObject(objectToUpdate, projectId, user);
     console.log(RoomManager.ReadObject(projectId, objectToUpdate.Id))
     if(!famSuccess)
-      return [null, [client]];
+      return [null, [client]]; // since gql dosnt have client how do we reply error?
     
     // Check GraphQL related documentation to understand why this was commented out.
     if(saveToDatabase)
