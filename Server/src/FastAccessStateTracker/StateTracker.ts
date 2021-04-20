@@ -462,8 +462,8 @@ export class StateTracker{
       return [null, [client]]; // since gql dosnt have client how do we reply error?
     
     // Check GraphQL related documentation to understand why this was commented out.
-    if(saveToDatabase)
-      TypeORMDatabase.UpdateObject(objectToUpdate, projectId)
+    // if(saveToDatabase)
+    //   TypeORMDatabase.UpdateObject(objectToUpdate, projectId)
 
     // get all of the clients that are in that room so that we can tell them 
     let affectedClients: Array<string> = [];
