@@ -585,7 +585,6 @@ namespace RuntimeGizmos
 
 		public void ClearTargets(bool addCommand = true)
 		{
-			Debug.Log("deselected " );
 			Config.CurrentSelectedObjectId = null;
 			Debug.Log("current selected object is " + 
 				(Config.CurrentSelectedObjectId == null ? 

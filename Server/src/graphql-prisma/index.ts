@@ -194,30 +194,38 @@ const resolvers = {
       return create_object
     },
 
-    updateObject: (_, args, context, __) => {
-      const update_object = context.prisma.db_object.update({
-        data: {
-          Name: args.Name,
-          X: args.X,
-          Y: args.Y,
-          Z: args.Z,
-          Q_x: args.Q_x,
-          Q_y: args.Q_y,
-          Q_z: args.Q_z,
-          Q_w: args.Q_w,
-          S_x: args.S_x,
-          S_y: args.S_y,
-          S_z: args.S_z,
-          R: args.R,
-          G: args.G,
-          B: args.B,
-          A: args.A,
-          Prefab: args.Prefab,
-          projectId: args.projectId,
-        },
-        where: { Id: args.Id }
-      })
-      return update_object
+    updateObject: async (_, args, context, __) => {
+      try{
+      var object = await StateTracker.ReadObject(args.Id, args.projectId, args.username);
+      }catch(error)
+      {
+        console.error(error)
+        process.exit(1)
+      }finally{
+        const update_object = context.prisma.db_object.update({
+          data: {
+            Name: object[0].Name,
+            X: object[0].X,
+            Y: object[0].Y,
+            Z: object[0].Z,
+            Q_x: object[0].Q_x,
+            Q_y: object[0].Q_y,
+            Q_z: object[0].Q_z,
+            Q_w: object[0].Q_w,
+            S_x: object[0].S_x,
+            S_y: object[0].S_y,
+            S_z: object[0].S_z,
+            R: object[0].R,
+            G: object[0].G,
+            B: object[0].B,
+            A: object[0].A,
+            Prefab: object[0].Prefab,
+            projectId: object[0].projectId,
+          },
+          where: { Id: object[0].Id }
+        })
+        return update_object
+      }
     },
 
     deleteObject: async (_, args, context, __) => {
@@ -331,28 +339,27 @@ async function FAMaccess (FAM : number, args)
       TalkToClients(returnMessage)
       break;
 
-      /*case 3: // How do I get Client??? -I made change to update object "client" related undo it?
-      try{
-        var argsObj = new FlowObject(args)
-        var res3 = await StateTracker.UpdateObject(argsObj, args.projectId, "none", false, null);
-      }catch(error)
-      {
-        console.error(error)
-        process.exit(1)
-      }finally{
-        let index = res3[1].indexOf(client);
-        res3[1].splice(index,1)
+      // case 3: // How do I get Client??? -I made change to update object "client" related undo it?
+      // try{
+        
+      // }catch(error)
+      // {
+      //   console.error(error)
+      //   process.exit(1)
+      // }finally
+      // {
+      //   let returnData = await StateTracker.CheckinObject(args.projectId, args.Id, client, user)
+      //   let returnContent = {
+      //     "MessageType": "CheckinObject",
+      //     "WasSuccessful": ((returnData[0]) && finalUpdate[0] != null) ? true: false,
+      //     "ObjectID": data.ObjectId
+      //   }
 
-        let returnContent = {
-          "MessageType": "UpdateObject",
-          "FlowObject": res3[0],
-          "WasSuccessful": (res3[0] == null) ? false: true,
-        }
+      //   let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
 
-        let returnMessage = MessageBuilder.CreateMessage(returnContent, res3[1])
-        TalkToClients(returnMessage);
-      }
-      break;*/
+      //   return returnMessage;
+      // }
+      // break;
   }
 }
 

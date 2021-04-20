@@ -7,7 +7,7 @@ public class GetTouchPlace : MonoBehaviour
     public GameObject touchPlaceTracker;
     public RectTransform touchPlaceTrackerImage;
     public RectTransform parentCanvas;
-    public Camera camera;
+    public Camera cameraObject;
 
     // Start is called before the first frame update
     void Start()
@@ -21,9 +21,9 @@ public class GetTouchPlace : MonoBehaviour
         if(Input.GetMouseButtonDown(0))
         {
             Vector2 mousePos;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(parentCanvas, Input.mousePosition, camera, out mousePos);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(parentCanvas, Input.mousePosition, cameraObject, out mousePos);
             
-            //Debug.Log(mousePos);
+            // Debug.Log(mousePos);
             touchPlaceTrackerImage.anchoredPosition = mousePos;
         }
     }
