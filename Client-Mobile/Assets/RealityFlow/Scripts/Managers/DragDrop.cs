@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+// This class handles the drag and drop functionality of nodes in the graph view
+// It is attached to the node prefab
 public class DragDrop : MonoBehaviour, IDragHandler, IEndDragHandler
 {
     private Vector2 panelDimension;
@@ -14,6 +16,8 @@ public class DragDrop : MonoBehaviour, IDragHandler, IEndDragHandler
         nodeView.isMobile = true;
     }
 
+    // Once Unity detects draging it checks out the nodes and redraws the edges om real time.
+    // It then sets the node position at whereever you let go.
     public void OnDrag(PointerEventData data)
     {
         nodeView.CheckOut();
