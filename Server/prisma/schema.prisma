@@ -53,7 +53,7 @@ model project {
 }
 
 model user {
-  Username String    @id
+  Username String    @unique @id 
   Password String
   project  project[]
 }
