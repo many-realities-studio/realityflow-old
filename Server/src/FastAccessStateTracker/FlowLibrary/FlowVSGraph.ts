@@ -17,11 +17,8 @@ export class FlowVSGraph
   public paramIdToObjId:      any;
 
   // Fields used for tracking this graph in the FAM
-
-  // Graphs will highly likely use the following fields:
   public Id: string; 
   public RoomNumber: number;
-  // public CurrentCheckout: string; // TODO: Entire graphs are not checked out/in, nodes are, but for now the graph itself can be
 
   constructor(json: any)
   {
@@ -38,7 +35,6 @@ export class FlowVSGraph
     this.scale = json.scale;
     this.references = json.references;
     this.paramIdToObjId = json.paramIdToObjId;
-    // this.CurrentCheckout = null;
 }
 
   /**

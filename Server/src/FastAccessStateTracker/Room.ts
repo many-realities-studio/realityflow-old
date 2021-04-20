@@ -290,7 +290,7 @@ export class Room
 
   // Visual Scripting Graph section
 
-  // TODO: finished: no tested: no
+  // TODO: finished: yes tested: yes
   /**
    * update a graph, assuming the client sending the update is the client that has the graph checked in.
    * @param vsGraphToUpdate the graph to update
@@ -302,7 +302,7 @@ export class Room
     return success;
   }
 
-  // TODO: finished: no tested: no
+  // TODO: finished: yes tested: yes
   /**
    * add a graph to the room
    * @param vsGraphToCreate the graph to add to the room
@@ -312,9 +312,8 @@ export class Room
     return this._CurrentProject.AddVSGraph(vsGraphToCreate);
   }
 
-  // TODO: optimize all of these
   /**
-   * delete a graph from the room, iff the client sending the delete call has the graph checked out
+   * delete a graph from the room
    * @param vsGraphId
    * @param client 
    * @returns success value
@@ -324,7 +323,7 @@ export class Room
     return success;
   }
 
-  // TODO: finished: no tested: no
+  // TODO: finished: yes tested: yes
   /**
    * Return the data of a graph
    * @param vsGraphId the Id of the graph that you want
@@ -334,7 +333,7 @@ export class Room
     return this._CurrentProject.GetVSGraph(vsGraphId)
   }
 
-  // TODO: finished: no tested: no
+  // TODO: finished: yes tested: yes
   /**
    * check in a nodeview, if the nodeview is checked out by client
    * @param nodeGUID the nodeview to be checked in
@@ -345,7 +344,7 @@ export class Room
     return this._CurrentProject.CheckinNodeView(nodeGUID, client)
   }
 
-  // TODO: finished: no tested: no
+  // TODO: finished: yes tested: yes
   /**
    * check out a nodeview, assuming that client is open for checkout
    * @param nodeGUID  node to check out
@@ -357,30 +356,7 @@ export class Room
     return this._CurrentProject.CheckoutNodeView(flowNodeView, client)
   }
 
-  // // TODO: finished: no tested: no
-  // /**
-  //  * check in a graph, if the graph is checked out by client
-  //  * @param vsGraphId the graph to be checked in
-  //  * @param client the client trying to check in the graph
-  //  * @returns success
-  //  */
-  //  public checkinVSGraph(vsGraphId: string, client: string){
-  //   return this._CurrentProject.CheckinVSGraph(vsGraphId, client)
-  // }
-
-  // // TODO: finished: no tested: no
-  // /**
-  //  * check out a graph, assuming that client is open for checkout
-  //  * @param vsGraphId  object to check out
-  //  * @param client client who is checking out the graph
-  //  * @returns success
-  //  */
-  // public checkoutVSGraph(vsGraphId: string, client: string): boolean
-  // {
-  //   return this._CurrentProject.CheckoutVSGraph(vsGraphId, client)
-  // }
-
-  // TODO: finished: no tested: no
+  // TODO: finished: yes tested: yes
   /**
    * Return the data of a nodeview
    * @param nodeGUID the Id of the nodeview that you want
@@ -390,7 +366,7 @@ export class Room
     return this._CurrentProject.GetNodeView(nodeGUID)
   }
 
-  // TODO: finished: no tested: no
+  // TODO: finished: yes tested: yes
   /**
    * update a nodeview, assuming the client sending the update is the client that has the nodeview checked in.
    * @param nodeViewToUpdate the nodeview to update
