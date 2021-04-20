@@ -346,11 +346,13 @@ class Command_CheckinObject implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
+    // Check-in/out will be handled by "user" instead of client for easier GraphQL integration.
+    var user = data.UserId;
     let object = await StateTracker.ReadObject(data.ObjectId, data.ProjectId, client);
     console.log(object)
-    let finalUpdate =  await StateTracker.UpdateObject(object[0], data.ProjectId, client, true);
+    let finalUpdate =  await StateTracker.UpdateObject(object[0], data.ProjectId, client, true, user);
 
-    let returnData = await StateTracker.CheckinObject(data.ProjectId, data.ObjectId, client)
+    let returnData = await StateTracker.CheckinObject(data.ProjectId, data.ObjectId, client, user)
     let returnContent = {
       "MessageType": "CheckinObject",
       "WasSuccessful": ((returnData[0]) && finalUpdate[0] != null) ? true: false,
@@ -368,7 +370,9 @@ class Command_CheckoutObject implements ICommand
 {
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
-    let returnData = await StateTracker.CheckoutObject(data.ProjectId, data.ObjectId, client)
+    // for Graphql change we are checking in and out with username instaed of websocketId
+    var user = data.UserId;
+    let returnData = await StateTracker.CheckoutObject(data.ProjectId, data.ObjectId, client, user)
     let returnContent = {
       "MessageType": "CheckoutObject",
       "WasSuccessful": returnData[0],
@@ -402,7 +406,7 @@ class Command_UpdateObject implements ICommand
   async ExecuteCommand(data: any, client: string): Promise<[String, Array<String>]> 
   {
     let flowObject = new FlowObject(data.FlowObject);
-    let returnData = await StateTracker.UpdateObject(flowObject, data.ProjectId, client,false, data.user);
+    let returnData = await StateTracker.UpdateObject(flowObject, data.ProjectId, client,false, data.UserId);
 
     let index = returnData[1].indexOf(client);
     returnData[1].splice(index,1)
@@ -440,8 +444,9 @@ class Command_FinalizedUpdateObject implements ICommand
 {
   async ExecuteCommand(data: any, client:string): Promise<[String, Array<String>]> 
   {
+    var user = data.UserId
     let flowObject = new FlowObject(data.FlowObject);
-    let returnData = await StateTracker.UpdateObject(flowObject, data.ProjectId, client, true);
+    let returnData = await StateTracker.UpdateObject(flowObject, data.ProjectId, client, true, user);
     let index = returnData[1].indexOf(client);
     returnData[1].splice(index,1);
 

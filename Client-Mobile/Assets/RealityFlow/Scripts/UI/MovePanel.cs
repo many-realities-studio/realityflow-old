@@ -50,12 +50,11 @@ public class MovePanel : MonoBehaviour {
 
     public void TogglePanel()
     {
-        objectInteractionItems.SetActive(false);
-
         for(int i = 0; i < panelList.Length; i++)
         {
             if(panelList[i].name == panelMenu.options[panelMenu.value].text.ToString())
             {
+                objectInteractionItems.SetActive(false);
                 panelList[i].SetActive(true);
             }
         }

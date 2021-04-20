@@ -111,6 +111,7 @@ export class RoomManager
    * @return success
    */
   public static updateObject(objectToUpdate: FlowObject, projectId: string, client:string){
+    // "user" is going to be the client variable used to keep track of checkIns/Out
     let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
     return room.updateObject(objectToUpdate, client)
   }
@@ -168,6 +169,7 @@ export class RoomManager
    * @returns success
    */
   public static checkoutObject(projectId: string, objectId: string, client: string){
+    //"user" is going to stand as the "client" used to keep tack of CheckIn/Out
     let room = this._RoomList.find(element => element.GetRoomCode() == projectId)
     return room.checkoutObject(objectId, client);
   }

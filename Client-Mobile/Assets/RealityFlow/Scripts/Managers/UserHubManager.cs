@@ -29,7 +29,7 @@ public class UserHubManager : MonoBehaviour
         {
             userProjects = new List<FlowProject>();
         }
-        Debug.Log("User hub starting");
+        // Debug.Log("User hub starting");
         RefreshProjectList();
         //Update();
 
@@ -137,7 +137,6 @@ public class UserHubManager : MonoBehaviour
         {
             if(e.message.WasSuccessful == true)
             {
-                Debug.Log("We in here");
                 RefreshProjectList();
             }
         });
