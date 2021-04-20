@@ -11,6 +11,7 @@ public class ColorManager : MonoBehaviour {
     public TransformGizmo gizmo;
     public SlideMenuManager slideMenu;
 
+    // Sets the color of a object using the color picker. Right now it only works locally.
     private void Start()
     {
         slideMenu = (SlideMenuManager)FindObjectOfType(typeof(SlideMenuManager));
@@ -24,6 +25,7 @@ public class ColorManager : MonoBehaviour {
                 Renderer renderer = o.gameObject.GetComponent<Renderer>();
                 if (renderer != null)
                 {
+                    // To fix the update only being done locally you would need to edit the renderer of the object.
                     renderer.material.color = color;
                     slideMenu.UpdateObjectFromSlideMenu();
                 }

@@ -169,6 +169,9 @@ public class SlideMenuManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Sends updates of an object to the server for other clients to receive
+    /// </summary>
     public void UpdateObjectFromSlideMenu()
     {
         if(Config.CurrentSelectedObjectId != null)

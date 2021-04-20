@@ -67,6 +67,7 @@ public class UserHubManager : MonoBehaviour
         values = listOfProjects.Values;
     }
 
+    // Function that creates the project list for a user.
     private void CreateProjectListItems()
     {
         projectListEntries = new List<ProjectListItem>();

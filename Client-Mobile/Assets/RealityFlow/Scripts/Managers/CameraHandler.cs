@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// This class handles the movement around the scene in the mobile app
+// It is needed fpr 6DOF
 public class CameraHandler : MonoBehaviour
 {
     Vector3 posInput;
@@ -19,6 +21,7 @@ public class CameraHandler : MonoBehaviour
 
     }
 
+    // Preform the actual movement of the camera by entering new positional information
     void ActuallyMove()
     {
         if(powered)

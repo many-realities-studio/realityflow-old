@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+// This function handles the GraphView Canvas Operations
 public class GraphOptionsManager : MonoBehaviour
 {
     Vector2 nodePosition = new Vector2(0, 0);
@@ -15,7 +16,7 @@ public class GraphOptionsManager : MonoBehaviour
     public GameObject VSGraphDropdownCanvas;
     public KeyboardManager keyboard;
 
-    // Start is called before the first frame update
+    // Retrieves the dropdowns in the GraphView Canvas and set listeners for them when they change.
     void Start()
     {
         addNodeTypeMenu = GameObject.FindWithTag("NodeOptionsDropdown").GetComponent<TMP_Dropdown>();
@@ -32,6 +33,8 @@ public class GraphOptionsManager : MonoBehaviour
 
     }
 
+    // This function handles the various graph functions by getting the item from the
+    // Drop down then then calling that appropriate function in realityFlowGraphView script.
     public void GraphOptionsSwitch()
     {
         if(graphCommandsMenu.value == 0)
@@ -93,6 +96,8 @@ public class GraphOptionsManager : MonoBehaviour
         graphCommandsMenu.value = 0;
     }
 
+    // This function handles the various node types  from the drop down then then calling 
+    // that appropriate node creation type in realityFlowGraphView script.
     public void NodeCreationSwitch()
     {
         realityFlowGraphView.SetNewNodeLocation(nodePosition);

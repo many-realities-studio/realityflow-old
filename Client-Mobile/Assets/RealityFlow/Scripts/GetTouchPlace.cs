@@ -15,7 +15,8 @@ public class GetTouchPlace : MonoBehaviour
         
     }
 
-    // Update is called once per frame
+    // Used to move the cinemachine around by translating where ever you touch to the local position in the canvas
+    // and then sets the gameobject to that position so that the cinemachine can follow to that location.
     void Update()
     {
         if(Input.GetMouseButtonDown(0))
@@ -23,7 +24,6 @@ public class GetTouchPlace : MonoBehaviour
             Vector2 mousePos;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(parentCanvas, Input.mousePosition, cameraObject, out mousePos);
             
-            // Debug.Log(mousePos);
             touchPlaceTrackerImage.anchoredPosition = mousePos;
         }
     }

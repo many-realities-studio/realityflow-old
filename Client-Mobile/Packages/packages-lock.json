@@ -7,7 +7,7 @@
       "dependencies": {}
     },
     "com.realityflow": {
-      "version": "https://github.com/many-realities-lab-ucf/realityflow_package.git#MobileApp",
+      "version": "https://github.com/many-realities-lab-ucf/realityflow_package.git#Demo-package",
       "depth": 0,
       "source": "git",
       "dependencies": {
@@ -61,7 +61,7 @@
         "com.unity.modules.wind": "1.0.0",
         "com.unity.modules.xr": "1.0.0"
       },
-      "hash": "a5a00ff71df3556e7cfaf5519d3713a50ae673e4"
+      "hash": "1f7f9fca2fa3c85b19364e0dbd042e9243a86a52"
     },
     "com.unity.2d.sprite": {
       "version": "1.0.0",

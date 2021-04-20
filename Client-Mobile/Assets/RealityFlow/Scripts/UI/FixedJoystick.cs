@@ -6,6 +6,8 @@ using UnityEngine.UI;
 [System.Serializable]
 public enum JoyStickDirection { Horizontal, Vertical, Both}
 
+// This class is used to get the directional data from the joysticks and translates that into movement of
+// the camera to give 6DOF functionality. 
 public class FixedJoystick : MonoBehaviour, IDragHandler, IPointerDownHandler, IPointerUpHandler
 {
     public JoyStickDirection JoyStickDirection = JoyStickDirection.Both;
@@ -24,6 +26,7 @@ public class FixedJoystick : MonoBehaviour, IDragHandler, IPointerDownHandler, I
         OnDrag(eventdata);
     }
 
+    // This function detects the direction of the joystick and sends that data to the camera to be processed as movement.
     public void OnDrag(PointerEventData eventdata)
     {
         Vector2 JoyDirection = eventdata.position - RectTransformUtility.WorldToScreenPoint(new Camera(), Background.position);
@@ -36,6 +39,7 @@ public class FixedJoystick : MonoBehaviour, IDragHandler, IPointerDownHandler, I
         Handle.anchoredPosition = (input * Background.sizeDelta.x / 2f) * HandleLimit;
     }
 
+    // Sets the position of the josticks buttons.
     public void OnPointerUp(PointerEventData eventdata)
     {
         input = Vector2.zero;
