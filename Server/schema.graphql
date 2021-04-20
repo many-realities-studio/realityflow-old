@@ -33,7 +33,7 @@ type Mutation {
 
   updateObject(Id: String! Name: String, X: Float, Y: Float, Z: Float, Q_x: Float, Q_y: Float, Q_z: Float
                 Q_w: Float, S_x: Float, S_y: Float, S_z: Float, R: Float, G: Float, B: Float, A: Float,
-                Prefab: String, projectId: String): db_object!
+                Prefab: String, projectId: String, username: String): db_object!
 
   deleteObject(Id: String!, projectId: String!): db_object!
 
@@ -114,6 +114,7 @@ type db_object{
   project: project!
   # Relational Field
   projectId: String!
+  username: String! 
 }
 
 type vs_graph {

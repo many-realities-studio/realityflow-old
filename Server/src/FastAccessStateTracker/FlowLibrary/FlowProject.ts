@@ -48,7 +48,7 @@ export class FlowProject
   public DeleteObject(objectToRemove: string, client: string) 
   {
     let index = this._ObjectList.findIndex((element) => element.Id == objectToRemove);
-    if(index > -1 /*&& this._ObjectList[index].CurrentCheckout == client*/){ /*&& this._ObjectList[index].CurrentCheckout == client*/
+    if(index > -1 && this._ObjectList[index].CurrentCheckout == client){
       this._ObjectList.splice(index);
       return true;
     }
@@ -111,7 +111,7 @@ export class FlowProject
   {
     // Get the object that we are changing from the specified project
     var oldObject: FlowObject = this._ObjectList.find(element => element.Id == newObject.Id);
-    if(oldObject != undefined && oldObject.CurrentCheckout == client){
+    if(oldObject != undefined && oldObject.CurrentCheckout == client){ 
       oldObject.UpdateProperties(newObject);
       return true;
     }

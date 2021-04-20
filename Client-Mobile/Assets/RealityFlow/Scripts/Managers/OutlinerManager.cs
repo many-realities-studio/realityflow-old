@@ -65,7 +65,7 @@ public class OutlinerManager : MonoBehaviour {
     public void selectedInOutliner(OutlinerItemManager item)
     {
         
-        Debug.Log("Selected in outliner");
+        // Debug.Log("Selected in outliner");
 
         toggleButton toggle = item.GetComponent<toggleButton>();
 
@@ -144,7 +144,7 @@ public class OutlinerManager : MonoBehaviour {
 
         objectIds.Clear();
 
-        Debug.Log("The count is " + FlowTObject.idToGameObjectMapping.Count);
+        // Debug.Log("The count is " + FlowTObject.idToGameObjectMapping.Count);
         foreach(FlowTObject obj in FlowTObject.idToGameObjectMapping.Values)
         {
           //  objectIds.Add(obj.Id);
