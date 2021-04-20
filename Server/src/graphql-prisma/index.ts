@@ -196,13 +196,15 @@ const resolvers = {
 
     updateObject: async (_, args, context, __) => {
       try{
-      var object = await StateTracker.ReadObject(args.Id, args.projectId, args.username);
+        var object = await StateTracker.ReadObject(args.Id, args.projectId, args.username)
       }catch(error)
       {
         console.error(error)
         process.exit(1)
       }finally{
-        const update_object = context.prisma.db_object.update({
+          StateTracker.UpdateObject(object[0], args.projectId, "client:none", true, args.username)
+          StateTracker.CheckinObject(args.projectId, args.Id, "client:none", args.username)
+          const update_object = context.prisma.db_object.update({
           data: {
             Name: object[0].Name,
             X: object[0].X,
