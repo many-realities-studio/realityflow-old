@@ -14,6 +14,8 @@ public class ProjectHubManager : MonoBehaviour
     public TMP_Text projectNameText;
     public TMP_Text projectInviteCode;
 
+    public Transform cameraObject;
+
     private const int BUILD_SETTING_LOGIN_REGISTER = 0;
 
     public GameObject objectCreatedSuccess;
@@ -76,7 +78,8 @@ public class ProjectHubManager : MonoBehaviour
         // Grab the name of the new object
         string objectName = objectNameField.text;
 
-        Vector3 position = new Vector3(-2, 0);
+        // Object always appears 5 feet in front of the camera.
+        Vector3 position = new Vector3(cameraObject.position.x, cameraObject.position.y, cameraObject.position.z + 5);
         Quaternion rotation = new Quaternion(0f, 0f, 0f, 1f);
         Vector3 scale = new Vector3(1f, 1f, 1f);
         Color color = new Color(0,0,0);
@@ -88,7 +91,7 @@ public class ProjectHubManager : MonoBehaviour
             // if(e.message.WasSuccessful
             objectCreatedSuccess.SetActive(true);
 
-            Debug.Log("Object has been created!");
+            // Debug.Log("Object has been created!");
         });
     }
 

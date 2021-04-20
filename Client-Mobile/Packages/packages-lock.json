@@ -6,14 +6,8 @@
       "source": "local",
       "dependencies": {}
     },
-    "com.microsoft.mixedreality.webrtc": {
-      "version": "file:../../MRTK-WebRTC",
-      "depth": 0,
-      "source": "local",
-      "dependencies": {}
-    },
     "com.realityflow": {
-      "version": "https://github.com/many-realities-lab-ucf/realityflow_package.git#Demo-package",
+      "version": "https://github.com/many-realities-lab-ucf/realityflow_package.git#MobileApp",
       "depth": 0,
       "source": "git",
       "dependencies": {
@@ -67,7 +61,7 @@
         "com.unity.modules.wind": "1.0.0",
         "com.unity.modules.xr": "1.0.0"
       },
-      "hash": "f3ee71e4173ad8b75d003d0a6f8853d8df068b0b"
+      "hash": "a5a00ff71df3556e7cfaf5519d3713a50ae673e4"
     },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
@@ -234,6 +228,12 @@
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
+    },
+    "org.khronos.unitygltf": {
+      "version": "file:../../UnityGLTF",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",

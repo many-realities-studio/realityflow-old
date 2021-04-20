@@ -18,7 +18,7 @@ public class TouchPositionTracker : MonoBehaviour
         if(Input.GetMouseButtonDown(0))
         {
             Vector3 mousePos = Input.mousePosition;
-            Debug.Log(mousePos);
+            // Debug.Log(mousePos);
 
             touchPlaceTracker.transform.position = mousePos;
         }

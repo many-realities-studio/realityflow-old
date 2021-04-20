@@ -113,7 +113,7 @@ public class SlideMenuManager : MonoBehaviour
     /// </summary>
     public void CheckInObject()
     {
-        Operations.CheckinObject(Config.CurrentSelectedObjectId, ConfigurationSingleton.SingleInstance.CurrentProject.Id, (_, e) =>
+        Operations.CheckinObject(Config.CurrentSelectedObjectId, ConfigurationSingleton.SingleInstance.CurrentProject.Id, ConfigurationSingleton.SingleInstance.CurrentUser.Username, (_, e) =>
         {
             if (e.message.WasSuccessful)
             {
@@ -167,5 +167,18 @@ public class SlideMenuManager : MonoBehaviour
             string objectName = FlowTObject.idToGameObjectMapping[Config.CurrentSelectedObjectId].Name;
             objectToDeleteText.text = "Are you sure you want to delete " + objectName + "?";
         }
+    }
+
+    public void UpdateObjectFromSlideMenu()
+    {
+        if(Config.CurrentSelectedObjectId != null)
+        {
+            if (FlowTObject.idToGameObjectMapping[Config.CurrentSelectedObjectId].CanBeModified == true)
+            {
+                Operations.UpdateObject(FlowTObject.idToGameObjectMapping[Config.CurrentSelectedObjectId], ConfigurationSingleton.SingleInstance.CurrentUser, ConfigurationSingleton.SingleInstance.CurrentProject.Id, ConfigurationSingleton.SingleInstance.CurrentUser.Username, (_, e) => {/* Debug.Log(e.message);*/ });
+            }
+        }
+
+        
     }
 }
