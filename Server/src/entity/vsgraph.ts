@@ -9,12 +9,10 @@ import {
   } from 'typeorm';
 
 import {Project} from './project'
-// import { Behaviour } from './behaviour';
 
 @Entity()
 export class VSGraph extends BaseEntity{
 
-    //TODO: Graph properties go here
     @PrimaryGeneratedColumn()
     _id: number;  
 

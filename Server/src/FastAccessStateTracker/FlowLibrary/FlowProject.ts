@@ -294,37 +294,6 @@ export class FlowProject
     return this._VSGraphList.find(element => element.Id == vsGraphId);
   }
 
-  // /**
-  //  * sets a graph to "checked out," preventing another user from checking out/editing that graph
-  //  * TODO: This will need to be modified as graphs themselves are not going to be checked out. Individual nodes are.
-  //  * @param vsGraphId 
-  //  * @param userName 
-  //  * @param client 
-  //  */
-  // public CheckoutVSGraph(vsGraphId: string, client: string){
-  //   let grph = this._VSGraphList.find(element => element.Id == vsGraphId);
-    
-  //   if (grph != undefined && grph.CurrentCheckout == null){
-  //     this._VSGraphList.find(element => element.Id == vsGraphId).CurrentCheckout = client;
-  //     return true
-  //   }
-    
-  //   else return false
-  // }
-
-  // /**
-  //  * sets an graph to "checked in," preventing another user from checking out/editing that graph
-  //  * @param vsGraphId 
-  //  */
-  // public CheckinVSGraph(vsGraphId: string, client){
-  //   let grph = this._VSGraphList.find(element => element.Id == vsGraphId);
-  //   if(grph != undefined && grph.CurrentCheckout == client){
-  //     grph.CurrentCheckout = null;
-  //     return true;
-  //   }
-  //   else return false;
-  // }
-
   /**
    * sets a nodeview to "checked out," preventing another user from checking out/editing that nodeview
    * TODO: This will need to be modified as graphs themselves are not going to be checked out. Individual nodes are.
@@ -333,6 +302,8 @@ export class FlowProject
    * @param client 
    */
    public CheckoutNodeView(flowNodeView: FlowNodeView, client: string){
+    // A NodeView is first added to the project's NodeView list so that it can be managed. Multiple of the same NodeView should not be possible,
+    // because another user should fail to send a checkout for an already checked out NodeView to begin with.
     this._NodeViewList.push(flowNodeView);
     let nv = this._NodeViewList.find(element => element.NodeGUID == flowNodeView.NodeGUID);
     
@@ -353,6 +324,7 @@ export class FlowProject
     if(nv != undefined && nv.CurrentCheckout == client){
       nv.CurrentCheckout = null;
       
+      // Delete the NodeView from the project's NodeView list again. NodeViews exist on the server side temporarily to handle checking them out/in.
       let index = this._NodeViewList.findIndex((element) => element.NodeGUID == nodeGUID);
       if(index > -1 ) { // && this._NodeViewList[index].CurrentCheckout == client){
         this._NodeViewList.splice(index);
@@ -362,14 +334,6 @@ export class FlowProject
     }
     else return false;
   }
-
-  //   /**
-  //  * find out who has checked out the graph in question
-  //  * @param vsGraphId 
-  //  */
-  // public GetVSGraphHolder(vsGraphId: string){
-  //   return this._VSGraphList.find(element => element.Id == vsGraphId).CurrentCheckout
-  // }
 
   /**
    * Updates the graph in the FAM without saving to the database
