@@ -737,34 +737,6 @@ export class StateTracker{
     return [vsGraphToCreate, affectedClients]
   }
 
-  // /**
-  //  * check out a graph from the Fast Access State Tracker
-  //  * @param projectId 
-  //  * @param vsGraphId 
-  //  * @param client 
-  //  */
-  // public static async CheckoutVSGraph(projectId: string, vsGraphId: string, client: string) : Promise<[any, Array<string>]>
-  // {
-  //   // make sure the graph is available for checkout
-  //   let success = RoomManager.checkoutVSGraph(projectId, vsGraphId, client);
-    
-  //   return[success, [client]]
-  // }
-
-  // /**
-  //  * check in a graph from the Fast Access State Tracker
-  //  * @param projectId 
-  //  * @param vsGraphId 
-  //  * @param client 
-  //  */
-  // public static async CheckinVSGraph(projectId: string, vsGraphId: string, client: string) : Promise<[any, Array<string>]>
-  // {
-  //   // make sure the actual person that checked a graph out is the one checking it back in
-  //   let success = RoomManager.checkinVSGraph(projectId, vsGraphId, client)
-     
-  //   return[success, [client]]
-  // }
-
   /**
    * check out a nodeview from the Fast Access State Tracker
    * @param projectId 

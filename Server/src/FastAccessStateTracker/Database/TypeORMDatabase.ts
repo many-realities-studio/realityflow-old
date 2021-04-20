@@ -81,6 +81,9 @@ export default class TypeORMDatabase
     let vsgraphs = await ProjectOperations.getVSGraphs(foundprojectId);
     let behaviours = await BehaviourOperations.getBehaviours(foundprojectId);
     
+    // For VSGraphs, certain fields must be returned to clients as strings so that NewtonSoft does not fail to deserialze them.
+    // Here, JSON.parse is used to unstringify data from the database, except for exposedParameters and paramIdToObjId as those
+    // need to be received as strings, at least with the current way things are being deserialized.
     vsgraphs.forEach(function(vsGraph) {
       vsGraph.serializedNodes = JSON.parse(vsGraph.serializedNodes);
       vsGraph.edges = JSON.parse(vsGraph.edges);

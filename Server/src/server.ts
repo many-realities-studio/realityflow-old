@@ -99,9 +99,9 @@ export class ServerEventDispatcher {
         ServerEventDispatcher.wss.on('connection', this.connection)
           
         server.on("upgrade", async (request, socket, head) => {
-                //console.log(request.headers.cookie);
                 let auth_header;
                 let dashboardConnection = false;
+                // Check if the connecting user is a dashboard connection
                 if (request.headers.authorization === null || request.headers.authorization === undefined) {
                     auth_header = request.headers.cookie;
                     dashboardConnection = true;
@@ -187,7 +187,6 @@ export class ServerEventDispatcher {
 
         ws.on('message', onMessageEvent);
 
-        //if (ws.dashboard) {
         // Open pm2 connection and launch bus for sending log files to dashboard
         pm2.connect(function(err) {
             if (err) {
