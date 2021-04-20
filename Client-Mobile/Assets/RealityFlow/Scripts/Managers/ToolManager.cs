@@ -41,6 +41,7 @@ public class ToolManager : MonoBehaviour
         //}
     }
 
+    // Switch case that allows for the various toggles of the different transformation abilities of an object.
     private RuntimeGizmos.TransformType getTransformType(int i, RuntimeGizmos.TransformType current)
     {
         switch (i)

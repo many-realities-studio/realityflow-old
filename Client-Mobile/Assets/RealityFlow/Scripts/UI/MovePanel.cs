@@ -48,6 +48,7 @@ public class MovePanel : MonoBehaviour {
     }
     */
 
+    // Turns on the Project or Scene Panels in the Root View Canavas
     public void TogglePanel()
     {
         for(int i = 0; i < panelList.Length; i++)
@@ -61,6 +62,7 @@ public class MovePanel : MonoBehaviour {
         panelMenu.value = 0;
     }
 
+    // Turns off the Project or Scene Panels in the Root View Canavas
     public void closePanel()
     {
         transform.parent.gameObject.SetActive(false);

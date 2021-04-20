@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// This file is attached to the camera as that is regarded as the player in the scene.
 public class PlayerInput : MonoBehaviour
 {
     CameraHandler cameraHand;
@@ -27,7 +28,8 @@ public class PlayerInput : MonoBehaviour
         cameraHand = GetComponent<CameraHandler>();
     }
 
-    // Update is called once per frame
+    // It receives the joysticks information and creates a vector3 out of the
+    // directional data.
     void Update()
     {
         if(listCanvas.activeInHierarchy)

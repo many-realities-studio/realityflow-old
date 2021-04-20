@@ -6,13 +6,9 @@ public class TouchPositionTracker : MonoBehaviour
 {
      public GameObject touchPlaceTracker;
      
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
+    // Allows for the movement around the GraphView panel using the Cinemachine Unity plugin.
+    // This class is attached to an invisible gameobject that moves around the scene
+    // That gameobject is then set to be the followed object by Cinemachine in the inspector.
     void Update()
     {
         if(Input.GetMouseButtonDown(0))
