@@ -20,6 +20,10 @@ public class SlideMenuManager : MonoBehaviour
 
     List<string> currentCheckoutObjects = new List<string>();
 
+    void Start()
+    {
+        Operations.mobileObjectCheckIn += CheckIn;
+    }
 
     /// <summary>
     /// Activates the slide menu buttons if the selected object is checked out, leaves them disabled if object is not checked out.
@@ -181,7 +185,17 @@ public class SlideMenuManager : MonoBehaviour
                 Operations.UpdateObject(FlowTObject.idToGameObjectMapping[Config.CurrentSelectedObjectId], ConfigurationSingleton.SingleInstance.CurrentUser, ConfigurationSingleton.SingleInstance.CurrentProject.Id, ConfigurationSingleton.SingleInstance.CurrentUser.Username, (_, e) => {/* Debug.Log(e.message);*/ });
             }
         }
-
-        
     }
+
+
+    public void CheckIn(string objectID)
+    {
+        FlowTObject checkedInObject = FlowTObject.idToGameObjectMapping[objectID];
+        Debug.Log("Checking in " + checkedInObject.Name);
+        checkedInObject.CanBeModified = false;
+        currentCheckoutObjects.Remove(objectID);
+        ToggleEditingButtons(false);
+    }
+
+    //  FlowTObject.idToGameObjectMapping[e.message.ObjectID].CanBeModified = true;
 }
