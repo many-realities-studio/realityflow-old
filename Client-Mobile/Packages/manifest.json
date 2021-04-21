@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.alelievr.node-graph-processor": "file:../../NGP Master/Assets/com.alelievr.NodeGraphProcessor",
-    "com.realityflow": "https://github.com/many-realities-lab-ucf/realityflow_package.git#Demo-package",
+    "com.realityflow": "https://github.com/many-realities-lab-ucf/realityflow_package.git#Demo-package-unstable",
     "com.unity.cinemachine": "2.6.4",
     "com.unity.collab-proxy": "1.3.9",
     "com.unity.ide.rider": "2.0.7",
