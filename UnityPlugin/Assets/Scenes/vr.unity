@@ -1754,6 +1754,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11495240, guid: cc2b9f84f04070441acc55fd0b9f8797, type: 3}
+      propertyPath: _isMuted
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cc2b9f84f04070441acc55fd0b9f8797, type: 3}
 --- !u!1 &637623754 stripped
@@ -1794,7 +1798,7 @@ MonoBehaviour:
     _tokens: []
   _channelTypeExpanded: 0
   _metadataExpanded: 0
-  _activationModeExpanded: 0
+  _activationModeExpanded: 1
   _tokensExpanded: 0
   _ampExpanded: 0
   _activationFaderSettings:
@@ -1809,7 +1813,7 @@ MonoBehaviour:
   _channelType: 0
   _inputName: 
   _mode: 1
-  _muted: 0
+  _muted: 1
   _playerId: 
   _useTrigger: 0
   _roomName: Global
