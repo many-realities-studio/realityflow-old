@@ -725,7 +725,7 @@ export class StateTracker{
   public static async CreateVSGraph(vsGraphToCreate : FlowVSGraph, projectId: string) : Promise<[any, Array<string>]>
   {
     let FAMSucccess = RoomManager.AddVSGraph(vsGraphToCreate, projectId);
-    //TypeORMDatabase.CreateVSGraph(vsGraphToCreate, projectId)
+    TypeORMDatabase.CreateVSGraph(vsGraphToCreate, projectId)
 
     // get all of the clients that are in that room so that we can tell them 
     let affectedClients: Array<string> = [];
@@ -776,7 +776,7 @@ export class StateTracker{
 
     // Perform the delete in both the FAM and the Database
     RoomManager.DeleteVSGraph(projectId, vsGraphId, client);
-    //TypeORMDatabase.DeleteVSGraph(vsGraphId, projectId)
+    TypeORMDatabase.DeleteVSGraph(vsGraphId, projectId)
 
     // get all of the clients that are in that room so that we can tell them 
     let affectedClients: Array<string> = [];
@@ -802,11 +802,9 @@ export class StateTracker{
     console.log(RoomManager.ReadVSGraph(projectId, vsGraphToUpdate.Id))
     if(!famSuccess)
       return [null, [client]];
-      
-      // GraphQL documentation explains why this is commented out
-      if(saveToDatabase)
-        TypeORMDatabase.UpdateVSGraph(vsGraphToUpdate, projectId)
-      
+    if(saveToDatabase)
+      TypeORMDatabase.UpdateVSGraph(vsGraphToUpdate, projectId)
+
     // get all of the clients that are in that room so that we can tell them 
     let affectedClients: Array<string> = [];
     let roomClients = await RoomManager.getClients(projectId)

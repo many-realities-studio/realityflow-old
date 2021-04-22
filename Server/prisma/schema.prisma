@@ -53,14 +53,14 @@ model project {
 }
 
 model user {
-  Username String    @id
+  Username String    @unique @id 
   Password String
   project  project[]
 }
 
 model vs_graph {
   id                Int      @id @default(autoincrement()) @map("_id")
-  Id                String   @unique
+  Id                String
   Name              String
   serializedNodes   String
   edges             String
@@ -71,7 +71,7 @@ model vs_graph {
   stickyNotes       String
   position          String
   scale             String
-  paramIdToObjId    String
+  references        String
   projectId         String?
   project           project? @relation(fields: [projectId], references: [Id])
 }

@@ -480,6 +480,7 @@ describe ('VSGraph', () => {
         newVSGraph.stickyNotes = "[]";
         newVSGraph.position = "{\"x\":0,\"y\":0,\"z\":0}";
         newVSGraph.scale = "{\"x\":1,\"y\":1,\"z\":1}";
+        newVSGraph.references = "{\"version\":1,\"00000000\":{\"type\":{\"class\":\"Terminus\",\"ns\":\"UnityEngine.DMAT\",\"asm\":\"FAKE_ASM\"},\"data\":{}}}";
         newVSGraph.paramIdToObjId = "{\"keys\":[],\"values\":[]}";
 
         // act
@@ -506,6 +507,7 @@ describe ('VSGraph', () => {
         foundVSGraph.stickyNotes = "[]";
         foundVSGraph.position = "{\"x\":0,\"y\":0,\"z\":0}";
         foundVSGraph.scale = "{\"x\":1,\"y\":1,\"z\":1}";
+        foundVSGraph.references = "{\"version\":1,\"00000000\":{\"type\":{\"class\":\"Terminus\",\"ns\":\"UnityEngine.DMAT\",\"asm\":\"FAKE_ASM\"},\"data\":{}}}";
         foundVSGraph.paramIdToObjId = "{\"keys\":[],\"values\":[]}";
         
         let returnedVSGraph = await conn.manager.save(foundVSGraph)
@@ -533,6 +535,7 @@ describe ('VSGraph', () => {
         updatedVSGraph.stickyNotes = "[]";
         updatedVSGraph.position = "{\"x\":0,\"y\":0,\"z\":0}";
         updatedVSGraph.scale = "{\"x\":1,\"y\":1,\"z\":1}";
+        updatedVSGraph.references = "{\"version\":1,\"00000000\":{\"type\":{\"class\":\"Terminus\",\"ns\":\"UnityEngine.DMAT\",\"asm\":\"FAKE_ASM\"},\"data\":{}}}";
         updatedVSGraph.paramIdToObjId = "{\"keys\":[],\"values\":[]}";
         
         let returnedVSGraph = await conn.manager.save(updatedVSGraph)
@@ -566,6 +569,7 @@ describe ('VSGraph', () => {
         deletedVSGraph.stickyNotes = "[]";
         deletedVSGraph.position = "{\"x\":0,\"y\":0,\"z\":0}";
         deletedVSGraph.scale = "{\"x\":1,\"y\":1,\"z\":1}";
+        deletedVSGraph.references = "{\"version\":1,\"00000000\":{\"type\":{\"class\":\"Terminus\",\"ns\":\"UnityEngine.DMAT\",\"asm\":\"FAKE_ASM\"},\"data\":{}}}";
         deletedVSGraph.paramIdToObjId = "{\"keys\":[],\"values\":[]}";
 
         let returnedVSGraph = await conn.manager.save(deletedVSGraph)
