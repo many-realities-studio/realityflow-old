@@ -22,6 +22,7 @@ public class SlideMenuManager : MonoBehaviour
 
     void Start()
     {
+        CreateAvatarOnStart();
         Operations.mobileObjectCheckIn += CheckIn;
     }
 
@@ -198,4 +199,13 @@ public class SlideMenuManager : MonoBehaviour
     }
 
     //  FlowTObject.idToGameObjectMapping[e.message.ObjectID].CanBeModified = true;
+
+    // Upon entering the project an Avatar is created for you and sent
+    // to the other clients.
+    public void CreateAvatarOnStart()
+    {
+        Transform head = GameObject.Find("Main Camera").transform;
+        FlowAvatar createAvatar = new FlowAvatar(head);
+        Operations.CreateAvatar(createAvatar, ConfigurationSingleton.SingleInstance.CurrentProject.Id, (_, f) => { Debug.Log(f.message); });
+    }
 }
