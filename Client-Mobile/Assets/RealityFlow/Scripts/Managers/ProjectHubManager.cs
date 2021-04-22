@@ -102,13 +102,21 @@ public class ProjectHubManager : MonoBehaviour
     /// </summary>
     public void LeaveProject()
     {
+        foreach (FlowAvatar avatar in FlowAvatar.idToAvatarMapping.Values)
+        {
+            if (avatar.currentAvatarIsMe == true)
+            {
+                Operations.DeleteAvatar(avatar.Id,ConfigurationSingleton.SingleInstance.CurrentProject.Id, (_, e) => { });
+            }
+        }
+        
         Operations.LeaveProject(ConfigurationSingleton.SingleInstance.CurrentProject.Id, ConfigurationSingleton.SingleInstance.CurrentUser, (_, e) =>
         {
             if(e.message.WasSuccessful == true)
             {
                 MainMenuManager.activePanel = MainMenuManager.USERHUB_PANEL;
                 Config.LeftProject = true;
-
+                
                 // Load the build Login/Register scene but open it at the UserHub view
                 SceneManager.LoadScene(BUILD_SETTING_LOGIN_REGISTER);
                 FlowTObject.idToGameObjectMapping.Clear();

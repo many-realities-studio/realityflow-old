@@ -1,0 +1,235 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ccf793b7ca1cc645b9cd36d753b8e3c, type: 3}
+  m_Name: GraphQLAPI_1
+  m_EditorClassIdentifier: 
+  url: https://gql.realityflow.io/
+  queries: []
+  mutations:
+  - name: CreateObject
+    type: 1
+    query: "mutation CreateObject{\n    createObject{\n        Id\n    }\n}"
+    queryString: createObject
+    returnType: db_object
+    queryOptions:
+    - createBehaviour
+    - updateBehaviour
+    - deleteBehaviour
+    - createUser
+    - updateUser
+    - deleteUser
+    - createProject
+    - updateProject
+    - deleteProject
+    - createObject
+    - updateObject
+    - deleteObject
+    - createVSGraph
+    - updateVSGraph
+    - deleteVSGraph
+    fields:
+    - index: 1
+      name: Id
+      type: String
+      parentIndexes: 
+      hasSubField: 0
+      possibleFields:
+      - name: id
+        type: Int
+      - name: Id
+        type: String
+      - name: Name
+        type: String
+      - name: X
+        type: Float
+      - name: Y
+        type: Float
+      - name: Z
+        type: Float
+      - name: Q_x
+        type: Float
+      - name: Q_y
+        type: Float
+      - name: Q_z
+        type: Float
+      - name: Q_w
+        type: Float
+      - name: S_x
+        type: Float
+      - name: S_y
+        type: Float
+      - name: S_z
+        type: Float
+      - name: R
+        type: Float
+      - name: G
+        type: Float
+      - name: B
+        type: Float
+      - name: A
+        type: Float
+      - name: Prefab
+        type: String
+      - name: project
+        type: project
+      - name: projectId
+        type: String
+      - name: username
+        type: String
+      hasChanged: 0
+    isComplete: 1
+  - name: UpdateObject
+    type: 1
+    query: "mutation UpdateObject{\n    updateObject{\n        Id\n    }\n}"
+    queryString: updateObject
+    returnType: db_object
+    queryOptions:
+    - createBehaviour
+    - updateBehaviour
+    - deleteBehaviour
+    - createUser
+    - updateUser
+    - deleteUser
+    - createProject
+    - updateProject
+    - deleteProject
+    - createObject
+    - updateObject
+    - deleteObject
+    - createVSGraph
+    - updateVSGraph
+    - deleteVSGraph
+    fields:
+    - index: 1
+      name: Id
+      type: String
+      parentIndexes: 
+      hasSubField: 0
+      possibleFields:
+      - name: id
+        type: Int
+      - name: Id
+        type: String
+      - name: Name
+        type: String
+      - name: X
+        type: Float
+      - name: Y
+        type: Float
+      - name: Z
+        type: Float
+      - name: Q_x
+        type: Float
+      - name: Q_y
+        type: Float
+      - name: Q_z
+        type: Float
+      - name: Q_w
+        type: Float
+      - name: S_x
+        type: Float
+      - name: S_y
+        type: Float
+      - name: S_z
+        type: Float
+      - name: R
+        type: Float
+      - name: G
+        type: Float
+      - name: B
+        type: Float
+      - name: A
+        type: Float
+      - name: Prefab
+        type: String
+      - name: project
+        type: project
+      - name: projectId
+        type: String
+      - name: username
+        type: String
+      hasChanged: 0
+    isComplete: 1
+  - name: DeleteObject
+    type: 1
+    query: "mutation DeleteObject{\n    deleteObject{\n        Id\n    }\n}"
+    queryString: deleteObject
+    returnType: db_object
+    queryOptions:
+    - createBehaviour
+    - updateBehaviour
+    - deleteBehaviour
+    - createUser
+    - updateUser
+    - deleteUser
+    - createProject
+    - updateProject
+    - deleteProject
+    - createObject
+    - updateObject
+    - deleteObject
+    - createVSGraph
+    - updateVSGraph
+    - deleteVSGraph
+    fields:
+    - index: 1
+      name: Id
+      type: String
+      parentIndexes: 
+      hasSubField: 0
+      possibleFields:
+      - name: id
+        type: Int
+      - name: Id
+        type: String
+      - name: Name
+        type: String
+      - name: X
+        type: Float
+      - name: Y
+        type: Float
+      - name: Z
+        type: Float
+      - name: Q_x
+        type: Float
+      - name: Q_y
+        type: Float
+      - name: Q_z
+        type: Float
+      - name: Q_w
+        type: Float
+      - name: S_x
+        type: Float
+      - name: S_y
+        type: Float
+      - name: S_z
+        type: Float
+      - name: R
+        type: Float
+      - name: G
+        type: Float
+      - name: B
+        type: Float
+      - name: A
+        type: Float
+      - name: Prefab
+        type: String
+      - name: project
+        type: project
+      - name: projectId
+        type: String
+      - name: username
+        type: String
+      hasChanged: 0
+    isComplete: 1
+  subscriptions: []
+  loading: 0
