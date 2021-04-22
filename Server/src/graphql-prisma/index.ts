@@ -6,7 +6,7 @@ import { FlowObject } from "../FastAccessStateTracker/FlowLibrary/FlowObject"
 import { FlowBehaviour } from "../FastAccessStateTracker/FlowLibrary/FlowBehaviour"
 import { MessageBuilder } from "../FastAccessStateTracker/Messages/MessageBuilder";
 // import { FlowObject } from "../FastAccessStateTracker/FlowLibrary/FlowObject"
-import { FlowVSGraph } from "../FastAccessStateTracker/FlowLibrary/FlowVSGraph"
+// import { FlowVSGraph } from "../FastAccessStateTracker/FlowLibrary/FlowVSGraph"
 // import { FlowProject } from "../FastAccessStateTracker/FlowLibrary/FlowProject"
 
 
@@ -182,7 +182,10 @@ const resolvers = {
           A: args.A,
           Prefab: args.Prefab,
           projectId: args.projectId,
-          },
+        },
+        include: {
+          project: true
+        }
       })
       // FAM Access
       // StateTracker.CreateObject(<FlowObject>args, args.projectId)
@@ -237,15 +240,14 @@ const resolvers = {
       // FAM Access
       // StateTracker.DeleteObject(args.Id, args.projectId, _)
       //TalkToClients(deleteObjFAM)
-      FAMaccess(2, args)
+      await FAMaccess(2, args)
       return delete_object
     },
 
 
-    createVSGraph: async (_, args, context, __) =>{
-      const create_VSGraph = await context.prisma.vs_graph.create({
+    createVSGraph: (_, args, context, __) =>{
+      const create_VSGraph = context.prisma.vs_graph.create({
         data: {
-          Id:                args.Id,
           Name:              args.Name,
           serializedNodes:   args.serializedNodes,
           edges:             args.edges,
@@ -256,20 +258,20 @@ const resolvers = {
           stickyNotes:       args.stickyNotes,
           position:          args.position,
           scale:             args.scale,
-          paramIdToObjId:    args.paramIdToObjId,
-          project:{
-            connect:{
-              Id: args.projectId
-            }
-          }
-      }
+          references:        args.references,
+          projectId:         args.projectId,
+          project:           args.project
+        },
+        include: {
+          project: true
+        }
+
       })
-      FAMaccess(3, args)
-      return create_VSGraph
+      return create_VSGraph;
     },
 
-    updateVSGraph: async(_, args, context, __) =>{
-      const update_VSGraph = await context.prisma.vs_graph.update({
+    updateVSGraph: (_, args, context, __) =>{
+      const update_VSGraph = context.prisma.vs_graph.update({
         data: {
           Name:              args.Name,
           serializedNodes:   args.serializedNodes,
@@ -281,31 +283,22 @@ const resolvers = {
           stickyNotes:       args.stickyNotes,
           position:          args.position,
           scale:             args.scale,
-          paramIdToObjId:    args.paramIdToObjId,
-          project:{
-            connect:{
-              Id: args.projectId
-            }
-          }
+          references:        args.references,
+          projectId:         args.projectId,
+          project:           args.project
         },
         where: { Id: args.Id }
 
       })
-
-      //FAM Access
-      await FAMaccess(4, args)
       return update_VSGraph;
     },
 
-    deleteVSGraph: async (_, args, context, __) =>{
+    deleteVSGraph: (_, args, context, __) =>{
       const delete_VSGraph = context.prisma.vs_graph.delete({
         where: {
           Id: args.Id
         }
       })
-
-      //FAM Access
-      await FAMaccess(5, args)
       return delete_VSGraph
     }
 
@@ -326,91 +319,49 @@ async function FAMaccess (FAM : number, args)
         console.error(error)
         process.exit(1)
       }finally{
-        let returnContent1 = {
+        let returnContent = {
           "MessageType": "CreateObject",
           "FlowObject": res1[0],
           "WasSuccessful": (res1[0] == null) ? false: true
         }
-        let returnMessage1 = MessageBuilder.CreateMessage(returnContent1, res1[1])
-        TalkToClients(returnMessage1);
+        let returnMessage = MessageBuilder.CreateMessage(returnContent, res1[1])
+        TalkToClients(returnMessage);
       }
       break;
 
     case 2:
-      var res2 = await StateTracker.DeleteObject(args.Id, args.projectId, null)
-      let returnContent2 = {
+      var res2 = await StateTracker.DeleteObject(args.Id, args.projectId, "none")
+      let returnContent = {
         "MessageType": "DeleteObject",
         "ObjectId": res2[0],
         "WasSuccessful": (res2[0] == null) ? false: true,
       }
-      let returnMessage2 = MessageBuilder.CreateMessage(returnContent2, res2[1])
+      let returnMessage = MessageBuilder.CreateMessage(returnContent, res2[1])
   
-      TalkToClients(returnMessage2)
+      TalkToClients(returnMessage)
       break;
 
-      case 3:
-        try{
-          var returnedGraph = args;
-          var Graph = new FlowVSGraph(args);
-          var res3 = await StateTracker.CreateVSGraph(Graph, args.projectId);
-          }catch(error)
-          {
-            console.error(error)
-            process.exit(1)
-          }finally{
-            // Stringify these two graph fields so that clients can properly deserialize them as they will be empty on creation.
-            returnedGraph.exposedParameters = JSON.stringify(returnedGraph.exposedParameters);
-            returnedGraph.paramIdToObjId = JSON.stringify(returnedGraph.paramIdToObjId);
+      // case 3: // How do I get Client??? -I made change to update object "client" related undo it?
+      // try{
+        
+      // }catch(error)
+      // {
+      //   console.error(error)
+      //   process.exit(1)
+      // }finally
+      // {
+      //   let returnData = await StateTracker.CheckinObject(args.projectId, args.Id, client, user)
+      //   let returnContent = {
+      //     "MessageType": "CheckinObject",
+      //     "WasSuccessful": ((returnData[0]) && finalUpdate[0] != null) ? true: false,
+      //     "ObjectID": data.ObjectId
+      //   }
 
-            let returnContent3 = {
-              "MessageType": "CreateVSGraph",
-              "FlowVSGraph": returnedGraph,
-              "WasSuccessful": (res3[0] == null) ? false: true
-            }
+      //   let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
 
-            let returnMessage3 = MessageBuilder.CreateMessage(returnContent3, res3[1])
-
-            TalkToClients(returnMessage3)
-          }
-      break;
-
-      case 4:
-        try{
-          var returnedGraph = args;
-          let flowVSGraph = new FlowVSGraph(args);
-          var res4 = await StateTracker.UpdateVSGraph(flowVSGraph, args.projectId, "none", true);
-          }catch(error)
-          {
-            console.error(error)
-            process.exit(1)
-          }finally{
-            // Stringify these two graph fields so that clients can properly deserialize them as they will be empty on creation.
-            returnedGraph.exposedParameters = JSON.stringify(returnedGraph.exposedParameters);
-            returnedGraph.paramIdToObjId = JSON.stringify(returnedGraph.paramIdToObjId);
-
-            let returnContent4 = {
-              "MessageType": "FinalizedUpdateVSGraph",
-              "FlowVSGraph": returnedGraph,
-              "WasSuccessful": (res4[0] == null) ? false: true
-            }
-
-            let returnMessage4 = MessageBuilder.CreateMessage(returnContent4, res4[1])
-
-            TalkToClients(returnMessage4)
-          }
-      break;
-
-      case 5:
-        let res5 = await StateTracker.DeleteVSGraph(args.Id, args.projectId, "none"); //!!!!! Look into client checkout check!
-        let returnContent5 = {
-          "MessageType": "DeleteVSGraph",
-          "VSGraphId": res5[0],
-          "WasSuccessful": (res5[0] == null) ? false: true,
-        }
-        let returnMessage5 = MessageBuilder.CreateMessage(returnContent5, res5[1])
-
-        TalkToClients(returnMessage5)
-      break;
+      //   return returnMessage;
+      // }
+      // break;
   }
 }
 
@@ -433,3 +384,5 @@ async function FAMaccess (FAM : number, args)
 }
 
 module.exports = {resolvers}
+export { TalkToClients };
+export { TalkToClients as BacktoGraphQL };
