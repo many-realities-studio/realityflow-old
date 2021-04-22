@@ -424,7 +424,6 @@ describe("VSGraph in a room", () => {
             stickyNotes:        "[]",
             position:           "{\"x\":0,\"y\":0,\"z\":0}",
             scale:              "{\"x\":1,\"y\":1,\"z\":1}",
-            references:         "{\"version\":1,\"00000000\":{\"type\":{\"class\":\"Terminus\",\"ns\":\"UnityEngine.DMAT\",\"asm\":\"FAKE_ASM\"},\"data\":{}}}",
             paramIdToObjId:     "{\"keys\":[],\"values\":[]}"
         })
 
@@ -451,7 +450,6 @@ describe("VSGraph in a room", () => {
             stickyNotes:        "[]",
             position:           "{\"x\":0,\"y\":0,\"z\":0}",
             scale:              "{\"x\":1,\"y\":1,\"z\":1}",
-            references:         "{\"version\":1,\"00000000\":{\"type\":{\"class\":\"Terminus\",\"ns\":\"UnityEngine.DMAT\",\"asm\":\"FAKE_ASM\"},\"data\":{}}}",
             paramIdToObjId:     "{\"keys\":[],\"values\":[]}"
         })
 
@@ -478,7 +476,6 @@ describe("VSGraph in a room", () => {
             stickyNotes:        "[]",
             position:           "{\"x\":0,\"y\":0,\"z\":0}",
             scale:              "{\"x\":1,\"y\":1,\"z\":1}",
-            references:         "{\"version\":1,\"00000000\":{\"type\":{\"class\":\"Terminus\",\"ns\":\"UnityEngine.DMAT\",\"asm\":\"FAKE_ASM\"},\"data\":{}}}",
             paramIdToObjId:     "{\"keys\":[],\"values\":[]}"
         })
 
@@ -496,7 +493,6 @@ describe("VSGraph in a room", () => {
             stickyNotes:        "[]",
             position:           "{\"x\":0,\"y\":0,\"z\":0}",
             scale:              "{\"x\":1,\"y\":1,\"z\":1}",
-            references:         "{\"version\":1,\"00000000\":{\"type\":{\"class\":\"Terminus\",\"ns\":\"UnityEngine.DMAT\",\"asm\":\"FAKE_ASM\"},\"data\":{}}}",
             paramIdToObjId:     "{\"keys\":[newParamId],\"values\":[newFlowObjectId]}"
         })
 
@@ -524,7 +520,6 @@ describe("VSGraph in a room", () => {
         stickyNotes:        "[]",
         position:           "{\"x\":0,\"y\":0,\"z\":0}",
         scale:              "{\"x\":1,\"y\":1,\"z\":1}",
-        references:         "{\"version\":1,\"00000000\":{\"type\":{\"class\":\"Terminus\",\"ns\":\"UnityEngine.DMAT\",\"asm\":\"FAKE_ASM\"},\"data\":{}}}",
         paramIdToObjId:     "{\"keys\":[],\"values\":[]}"
     })
 

@@ -6566,6 +6566,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 335927632809231015, guid: 5017af625300e5e45b866366582e1c0c,
+        type: 3}
+      propertyPath: graphql_api
+      value: 
+      objectReference: {fileID: 11400000, guid: 2308ed74d7f1fee409d1f12fb436069c,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5017af625300e5e45b866366582e1c0c, type: 3}
 --- !u!1 &851574209056185561 stripped

@@ -48,9 +48,6 @@ export class VSGraph extends BaseEntity{
     
     @Column()
     scale: string;
-    
-    @Column()
-    references: string;
 
     @Column()
     paramIdToObjId: string;
