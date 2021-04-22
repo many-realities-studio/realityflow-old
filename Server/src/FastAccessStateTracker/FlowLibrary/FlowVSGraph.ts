@@ -13,7 +13,6 @@ export class FlowVSGraph
   public stickyNotes:         Array<any>;
   public position:            any;
   public scale:               any;
-  public references:          any;
   public paramIdToObjId:      any;
 
   // Fields used for tracking this graph in the FAM
@@ -33,7 +32,6 @@ export class FlowVSGraph
     this.stickyNotes = json.stickyNotes;
     this.position = json.position;
     this.scale = json.scale;
-    this.references = json.references;
     this.paramIdToObjId = json.paramIdToObjId;
 }
 
@@ -53,7 +51,6 @@ export class FlowVSGraph
     this.stickyNotes = newVSGraph.stickyNotes;
     this.position = newVSGraph.position;
     this.scale = newVSGraph.scale;
-    this.references = newVSGraph.references;
     this.paramIdToObjId = newVSGraph.paramIdToObjId;
   }
 }

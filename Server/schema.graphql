@@ -39,13 +39,13 @@ type Mutation {
 
   createVSGraph(Id: String!, Name: String!, serializedNodes: String!, edges: String!, groups: String!,
                 stackNodes: String!, pinnedElements: String!, exposedParameters: String!, stickyNotes: String!
-                position: String!, scale: String!, references: String!, projectId: String!): vs_graph!
+                position: String!, scale: String!, paramIdToObjId: String!, projectId: String!): vs_graph!
 
   updateVSGraph(Id: String!, Name: String, serializedNodes: String, edges: String, groups: String,
                 stackNodes: String, pinnedElements: String, exposedParameters: String, stickyNotes: String
-                position: String, scale: String, references: String, projectId: String): vs_graph!
+                position: String, scale: String, paramIdToObjId: String!, projectId: String): vs_graph!
 
-  deleteVSGraph(Id: String!): vs_graph!
+  deleteVSGraph(Id: String!, projectId: String!): vs_graph!
 }
 
 # Inputs
@@ -130,7 +130,7 @@ type vs_graph {
   stickyNotes:       String!
   position:          String!
   scale:             String!
-  references:        String!
+  paramIdToObjId:    String!
   projectId:         String!
   project:           project!
 }

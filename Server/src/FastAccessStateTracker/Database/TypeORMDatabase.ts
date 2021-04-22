@@ -94,7 +94,6 @@ export default class TypeORMDatabase
       vsGraph.stickyNotes = JSON.parse(vsGraph.stickyNotes);
       vsGraph.position = JSON.parse(vsGraph.position);
       vsGraph.scale = JSON.parse(vsGraph.scale);
-      vsGraph.references = JSON.parse(vsGraph.references);
       vsGraph.paramIdToObjId = vsGraph.paramIdToObjId;
     });
     

@@ -395,7 +395,6 @@ describe("VSGraph", () => {
             stickyNotes:        "[]",
             position:           "{\"x\":0,\"y\":0,\"z\":0}",
             scale:              "{\"x\":1,\"y\":1,\"z\":1}",
-            references:         "{\"version\":1,\"00000000\":{\"type\":{\"class\":\"Terminus\",\"ns\":\"UnityEngine.DMAT\",\"asm\":\"FAKE_ASM\"},\"data\":{}}}",
             paramIdToObjId:     "{\"keys\":[],\"values\":[]}"
         }
 
@@ -427,7 +426,6 @@ describe("VSGraph", () => {
         foundVSGraph.stickyNotes = "[]"
         foundVSGraph.position = "{\"x\":0,\"y\":0,\"z\":0}"
         foundVSGraph.scale = "{\"x\":1,\"y\":1,\"z\":1}"
-        foundVSGraph.references = "{\"version\":1,\"00000000\":{\"type\":{\"class\":\"Terminus\",\"ns\":\"UnityEngine.DMAT\",\"asm\":\"FAKE_ASM\"},\"data\":{}}}"
         foundVSGraph.paramIdToObjId = "{\"keys\":[],\"values\":[]}"
 
         let returnedVSGraph = await getConnection(process.env.NODE_ENV).manager.save(foundVSGraph)
@@ -466,7 +464,6 @@ describe("VSGraph", () => {
         foundVSGraph.stickyNotes = "[]"
         foundVSGraph.position = "{\"x\":0,\"y\":0,\"z\":0}"
         foundVSGraph.scale = "{\"x\":1,\"y\":1,\"z\":1}"
-        foundVSGraph.references = "{\"version\":1,\"00000000\":{\"type\":{\"class\":\"Terminus\",\"ns\":\"UnityEngine.DMAT\",\"asm\":\"FAKE_ASM\"},\"data\":{}}}"
         foundVSGraph.paramIdToObjId = "{\"keys\":[],\"values\":[]}"
 
         let returnedVSGraph = await getConnection(process.env.NODE_ENV).manager.save(foundVSGraph)
@@ -483,7 +480,6 @@ describe("VSGraph", () => {
         updatedVSGraph.stickyNotes = "[]"
         updatedVSGraph.position = "{\"x\":0,\"y\":0,\"z\":0}"
         updatedVSGraph.scale = "{\"x\":1,\"y\":1,\"z\":1}"
-        updatedVSGraph.references = "{\"version\":1,\"00000000\":{\"type\":{\"class\":\"Terminus\",\"ns\":\"UnityEngine.DMAT\",\"asm\":\"FAKE_ASM\"},\"data\":{}}}"
         updatedVSGraph.paramIdToObjId = "{\"keys\":[\"newParamId\"],\"values\":[\"newFlowObjectId\"]}"
 
         await VSGraphOperations.updateVSGraph(updatedVSGraph, createdProject.Id)
@@ -524,7 +520,6 @@ describe("VSGraph", () => {
         foundVSGraph.stickyNotes = "[]"
         foundVSGraph.position = "{\"x\":0,\"y\":0,\"z\":0}"
         foundVSGraph.scale = "{\"x\":1,\"y\":1,\"z\":1}"
-        foundVSGraph.references = "{\"version\":1,\"00000000\":{\"type\":{\"class\":\"Terminus\",\"ns\":\"UnityEngine.DMAT\",\"asm\":\"FAKE_ASM\"},\"data\":{}}}"
         foundVSGraph.paramIdToObjId = "{\"keys\":[],\"values\":[]}"
 
         let returnedVSGraph = await getConnection(process.env.NODE_ENV).manager.save(foundVSGraph)

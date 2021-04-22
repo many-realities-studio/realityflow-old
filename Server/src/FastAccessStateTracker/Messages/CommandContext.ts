@@ -659,7 +659,7 @@ class Command_CreateVSGraph implements ICommand
     
     console.log(flowVSGraph)
 
-    let returnData = await StateTracker.CreateVSGraph(flowVSGraph, data.ProjectId);
+    let returnData = await StateTracker.CreateVSGraph(flowVSGraph, data.ProjectId)
 
     // Stringify these two graph fields so that clients can properly deserialize them as they will be empty on creation.
     returnedGraph.exposedParameters = JSON.stringify(returnedGraph.exposedParameters);
