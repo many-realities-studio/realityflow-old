@@ -10,7 +10,7 @@ public class PanelManager : MonoBehaviour
 
     [Header("Canvas")]
     // Canvas
-    public GameObject graphViewCanvas;
+    public Canvas graphViewCanvas;
     public GameObject listViewCanvas;
 
     [Header("Graph View Panels")]
@@ -43,7 +43,8 @@ public class PanelManager : MonoBehaviour
     // Toggels betweens the Root View Canvas and the Graph View Canavas
     public void ToggleListViewGraphView(){
         listViewCanvas.SetActive(!listViewCanvas.activeInHierarchy);
-        graphViewCanvas.SetActive(!graphViewCanvas.activeInHierarchy);
+        graphViewCanvas.enabled = !graphViewCanvas.enabled;
+        cameraFollow.SetActive(graphViewCanvas.enabled);
     }
 
     // Sets the Cinemachine toggle off so that you would no longer be able to move around
