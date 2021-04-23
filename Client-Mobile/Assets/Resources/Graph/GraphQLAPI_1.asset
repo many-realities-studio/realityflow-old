@@ -17,7 +17,11 @@ MonoBehaviour:
   mutations:
   - name: CreateObject
     type: 1
-    query: "mutation CreateObject{\n    createObject{\n        Id\n    }\n}"
+    query: "mutation CreateObject{\n    createObject(  Id :\"e297e6cf-73b7-4448-9e35-263453eb4885\",
+      Name :\"PIGGY\", X :0.0, Y :0.0, Z :-5.0, Q_x :0.0, Q_y :0.0, Q_z :0.0, Q_w
+      :1.0, S_x :1.0, S_y :1.0, S_z :1.0, R :0.0, G :0.0, B :0.0, A :0.0, Prefab
+      :\"Pig\", projectId :\"6ce5cf41-f748-41b0-bb83-9439fbf000c0\" ){\n        Id\n   
+      }\n}"
     queryString: createObject
     returnType: db_object
     queryOptions:
@@ -89,7 +93,9 @@ MonoBehaviour:
     isComplete: 1
   - name: UpdateObject
     type: 1
-    query: "mutation UpdateObject{\n    updateObject{\n        Id\n    }\n}"
+    query: "mutation UpdateObject{\n    updateObject(  Id :\"0f48a6b8-ddfb-4062-b661-1025d35cfcbe\",
+      projectId :\"50dba736-3d4d-49ce-8d5b-182ae4ca093e\", username :\"f\" ){\n       
+      Id\n    }\n}"
     queryString: updateObject
     returnType: db_object
     queryOptions:
@@ -161,7 +167,8 @@ MonoBehaviour:
     isComplete: 1
   - name: DeleteObject
     type: 1
-    query: "mutation DeleteObject{\n    deleteObject{\n        Id\n    }\n}"
+    query: "mutation DeleteObject{\n    deleteObject(  Id :\"2722c977-e8b0-4842-bb98-1a0ed84cdeda\",
+      projectId :\"90059caa-ab63-427e-a5c3-f856ccfc071e\" ){\n        Id\n    }\n}"
     queryString: deleteObject
     returnType: db_object
     queryOptions:
@@ -229,6 +236,205 @@ MonoBehaviour:
         type: String
       - name: username
         type: String
+      hasChanged: 0
+    isComplete: 1
+  - name: CreateVSGraph
+    type: 1
+    query: "mutation CreateVSGraph{\n    createVSGraph(  Id :\"c7d97e49-0be8-4a64-a095-6a658c4ea4b8\",
+      Name :\"df\", serializedNodes :\"[]\", edges :\"[]\", groups :\"[]\", stackNodes
+      :\"[]\", pinnedElements :\"[]\", exposedParameters :\"[]\", stickyNotes :\"[]\",
+      position :\"{\\\"x\\\":0.0,\\\"y\\\":0.0,\\\"z\\\":0.0}\", scale :\"{\\\"x\\\":1.0,\\\"y\\\":1.0,\\\"z\\\":1.0}\",
+      paramIdToObjId :\"{\\\"keys\\\":[],\\\"values\\\":[]}\", projectId :\"6ce5cf41-f748-41b0-bb83-9439fbf000c0\"
+      ){\n        Id\n    }\n}"
+    queryString: createVSGraph
+    returnType: vs_graph
+    queryOptions:
+    - createBehaviour
+    - updateBehaviour
+    - deleteBehaviour
+    - createUser
+    - updateUser
+    - deleteUser
+    - createProject
+    - updateProject
+    - deleteProject
+    - createObject
+    - updateObject
+    - deleteObject
+    - createVSGraph
+    - updateVSGraph
+    - deleteVSGraph
+    fields:
+    - index: 1
+      name: Id
+      type: String
+      parentIndexes: 
+      hasSubField: 0
+      possibleFields:
+      - name: id
+        type: Int
+      - name: Id
+        type: String
+      - name: Name
+        type: String
+      - name: serializedNodes
+        type: String
+      - name: edges
+        type: String
+      - name: groups
+        type: String
+      - name: stackNodes
+        type: String
+      - name: pinnedElements
+        type: String
+      - name: exposedParameters
+        type: String
+      - name: stickyNotes
+        type: String
+      - name: position
+        type: String
+      - name: scale
+        type: String
+      - name: references
+        type: String
+      - name: paramIdToObjId
+        type: String
+      - name: projectId
+        type: String
+      - name: project
+        type: project
+      hasChanged: 0
+    isComplete: 1
+  - name: UpdateVSGraph
+    type: 1
+    query: "mutation UpdateVSGraph{\n    updateVSGraph(  Id :\"07cdf27b-5a76-4452-a9aa-fb5f633c3f63\",
+      Name :\"Graphy1\", serializedNodes :\"[]\", edges :\"[]\", groups :\"[]\",
+      stackNodes :\"[]\", pinnedElements :\"[]\", exposedParameters :[\"{\\\"guid\\\":\\\"e93139ea-cb31-4b98-9295-774de4798774\\\",\\\"name\\\":\\\"Yesy\\\",\\\"type\\\":\\\"UnityEngine.GameObject,
+      UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null\\\",\\\"serializedValue\\\":{\\\"serializedType\\\":\\\"UnityEngine.GameObject,
+      UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null\\\",\\\"serializedName\\\":null,\\\"serializedValue\\\":null,\\\"value\\\":null},\\\"input\\\":true,\\\"settings\\\":{\\\"isHidden\\\":false},\\\"shortType\\\":\\\"GameObject\\\"}\"],
+      stickyNotes :\"[]\", position :\"{\\\"x\\\":0.0,\\\"y\\\":0.0,\\\"z\\\":0.0}\",
+      scale :\"{\\\"x\\\":1.0,\\\"y\\\":1.0,\\\"z\\\":1.0}\", paramIdToObjId :\"{\\\"keys\\\":[],\\\"values\\\":[]}\",
+      projectId :\"8852a072-6677-479d-b532-44ea0fe1bb04\" ){\n        Id\n    }\n}"
+    queryString: updateVSGraph
+    returnType: vs_graph
+    queryOptions:
+    - createBehaviour
+    - updateBehaviour
+    - deleteBehaviour
+    - createUser
+    - updateUser
+    - deleteUser
+    - createProject
+    - updateProject
+    - deleteProject
+    - createObject
+    - updateObject
+    - deleteObject
+    - createVSGraph
+    - updateVSGraph
+    - deleteVSGraph
+    fields:
+    - index: 1
+      name: Id
+      type: String
+      parentIndexes: 
+      hasSubField: 0
+      possibleFields:
+      - name: id
+        type: Int
+      - name: Id
+        type: String
+      - name: Name
+        type: String
+      - name: serializedNodes
+        type: String
+      - name: edges
+        type: String
+      - name: groups
+        type: String
+      - name: stackNodes
+        type: String
+      - name: pinnedElements
+        type: String
+      - name: exposedParameters
+        type: String
+      - name: stickyNotes
+        type: String
+      - name: position
+        type: String
+      - name: scale
+        type: String
+      - name: references
+        type: String
+      - name: paramIdToObjId
+        type: String
+      - name: projectId
+        type: String
+      - name: project
+        type: project
+      hasChanged: 0
+    isComplete: 1
+  - name: DeleteVSGraph
+    type: 1
+    query: "mutation DeleteVSGraph{\n    deleteVSGraph(  Id :\"c7d97e49-0be8-4a64-a095-6a658c4ea4b8\",
+      projectId :\"6ce5cf41-f748-41b0-bb83-9439fbf000c0\" ){\n        Id\n    }\n}"
+    queryString: deleteVSGraph
+    returnType: vs_graph
+    queryOptions:
+    - createBehaviour
+    - updateBehaviour
+    - deleteBehaviour
+    - createUser
+    - updateUser
+    - deleteUser
+    - createProject
+    - updateProject
+    - deleteProject
+    - createObject
+    - updateObject
+    - deleteObject
+    - createVSGraph
+    - updateVSGraph
+    - deleteVSGraph
+    fields:
+    - index: 1
+      name: Id
+      type: String
+      parentIndexes: 
+      hasSubField: 0
+      possibleFields:
+      - name: id
+        type: Int
+      - name: Id
+        type: String
+      - name: Name
+        type: String
+      - name: serializedNodes
+        type: String
+      - name: edges
+        type: String
+      - name: groups
+        type: String
+      - name: stackNodes
+        type: String
+      - name: pinnedElements
+        type: String
+      - name: exposedParameters
+        type: String
+      - name: stickyNotes
+        type: String
+      - name: position
+        type: String
+      - name: scale
+        type: String
+      - name: references
+        type: String
+      - name: paramIdToObjId
+        type: String
+      - name: projectId
+        type: String
+      - name: project
+        type: project
       hasChanged: 0
     isComplete: 1
   subscriptions: []

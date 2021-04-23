@@ -34,7 +34,8 @@ public class MainMenuManager : MonoBehaviour {
     private string uname = null;
     private string pword = null;
 
-    // Demo server
+
+    // Demo Server
     private const string url = "wss://api.realityflow.io";
     // private const string url = "ws://localhost:8999/";
     // private const string url = "ws://plato.mrl.ai:8999";
