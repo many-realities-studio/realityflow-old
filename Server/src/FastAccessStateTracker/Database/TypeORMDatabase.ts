@@ -16,9 +16,7 @@ import { BehaviourOperations } from "../../ORMCommands/behaviour"
 import { DBObject } from "../../entity/object";
 import { VSGraph } from "../../entity/vsgraph";
 import { Project } from "../../entity/project";
-/**
- * Implementation of Mongoose Database
- */
+
 export default class TypeORMDatabase
 {
     
