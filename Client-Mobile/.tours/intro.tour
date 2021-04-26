@@ -1,0 +1,87 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "Intro",
+  "steps": [
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/MainMenuManager.cs",
+      "description": "Here is the begining of the Reality Flow Mobile App. This class handles the logging in of users and creation of projects",
+      "line": 9
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/MainMenuManager.cs",
+      "description": "Edit this URL to swtich from logging into the Dev server or local host",
+      "line": 39
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/MainMenuManager.cs",
+      "description": "This line creates an active Websocket connection for us to use the server.",
+      "line": 63
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/MainMenuManager.cs",
+      "description": "If you haven't already created a project you would use this function to do so.",
+      "line": 92
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/MainMenuManager.cs",
+      "description": "This call to Operations.Register then creates a user account for you which you can then head back to the login screen and then use to login.",
+      "line": 105
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/MainMenuManager.cs",
+      "description": "Using the data provided you would then have a call to the login function in Operations to then signin.",
+      "line": 136
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/MainMenuManager.cs",
+      "description": "After we recieve the success message we would then assign all returned projects from the call back into your config.",
+      "line": 142
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Config.cs",
+      "description": "Here is the Config.cs file. This will remain constant throughout the lifetime of you signing in.",
+      "line": 9
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/UserHubManager.cs",
+      "description": "After logging in you would then be shown the screen where you can create a project or load one. The functions in this file have a lot to do with creating the projects and the UI of it.",
+      "line": 12
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/UserHubManager.cs",
+      "description": "This function will be called near the startup of you logging into Reality Flow and then being brought to the UserHub Menu. This will generate the list of projects that is tied to a user and from there it will create the UI for it in CreateProjectListItems.",
+      "line": 105,
+      "selection": {
+        "start": {
+          "line": 118,
+          "character": 17
+        },
+        "end": {
+          "line": 118,
+          "character": 36
+        }
+      }
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/UserHubManager.cs",
+      "description": "Here it creates the UI for the Projects.",
+      "line": 71
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/UserHubManager.cs",
+      "description": "At this point there are three paths that you can take which is creating a project, joining another person's project or loading one of your own project. For now lets look at creating your own project which would be done by the CreateProject function which creates an empty FlowProject using Operations.CreateProject and the refreshes the project list.",
+      "line": 131
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/UserHubManager.cs",
+      "description": "The next path that can be taken is joining another person's project by entering the ProjectID of said project in the Join Project UI Panel. A call to OpenProject is sent and if successful we will set the current project in config to that project ID and then load the mobile interface scene with that info.",
+      "line": 152
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/UserHubManager.cs",
+      "description": "The last path that we can take is choosing one of your own projects to open. From the Project List you can double click a project which will the initate the process. Since the project information is already on the device we can simply load in the project and then enter the scene with that infomation.",
+      "line": 172
+    }
+  ],
+  "ref": "Stable"
+}
