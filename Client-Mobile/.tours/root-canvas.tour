@@ -1,0 +1,137 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "Root Canvas",
+  "steps": [
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/SlideMenuManager.cs",
+      "description": "For this section of the Code tours alot of the functionality does not happen in sequence as it is dependant on user iteraction. However I think here is a good place to start. This file is one of the first ones that will be ran automatically once you are in the mobile interface scene. This file and it's functions handles the slide menu that you would see on the screen on startup as well as the creation of the avatar.",
+      "line": 11,
+      "selection": {
+        "start": {
+          "line": 209,
+          "character": 33
+        },
+        "end": {
+          "line": 209,
+          "character": 45
+        }
+      }
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/SlideMenuManager.cs",
+      "description": "Here we call Create Avatar.",
+      "line": 25
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/SlideMenuManager.cs",
+      "description": "We create a local copy of Avatar and then send that to the server to be displayed on the other clients.",
+      "line": 205
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/SlideMenuManager.cs",
+      "description": "Here we make a requests to the server to checkout an object for us to manipulate, if successful we will move on to the next step that involves a setting all the values as checkout out for us. We would then unlock the SlideMenu options such as changing the colors, deleting the object, etc.",
+      "line": 93
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/SlideMenuManager.cs",
+      "description": "Here we can set those buttons active.",
+      "line": 76
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/SlideMenuManager.cs",
+      "description": "When it's time to check the object back in we will use the new GraphQL implemntation of this that involves the mobile app having a subscription to that call set in place. Please refer to the Operation.cs code tour for the progression of this.\r\n\r\nOnce our subcribtion is invoked in the Operations.cs file we then invoke CheckIn() to perform all the check in operations.",
+      "line": 120
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/SlideMenuManager.cs",
+      "description": "This is called due to the subscription.",
+      "line": 192
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/SlideMenuManager.cs",
+      "description": "Everytime a change is made to an object this is called to send that change to all clients.",
+      "line": 180
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/SlideMenuManager.cs",
+      "description": "This enables us to delete the object from the scene.",
+      "line": 147
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/ToggleCamera.cs",
+      "description": "This class handles the three Camera/Avatar reset buttons, Main, Top and Angled.",
+      "line": 5
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/UI/FixedJoystick.cs",
+      "description": "This class handles the 6DOF in the mobile app using the Joysticks.",
+      "line": 7
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/UI/FixedJoystick.cs",
+      "description": "It uses the joysticks and recieves the directional data and translates that to actual movement of the camera",
+      "line": 30
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/UI/PlayerInput.cs",
+      "description": "In here we recieve the joysticks data and sets them to the appropriate axis",
+      "line": 35
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/UI/PlayerInput.cs",
+      "description": "We then send that data to the cameraHand or Camera Handler which performs the actual movement of the camera.",
+      "line": 79
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/CameraHandler.cs",
+      "description": "In here we recieve the movement from the function call and then perform the movement",
+      "line": 14
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/ToolManager.cs",
+      "description": "This Tool Manger class handles the 3 bulit in Unity transformations (Scale, Movement and Rotation)",
+      "line": 6
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/ToolManager.cs",
+      "description": "On the SlideMenu it would then get which one of the transformation types are selected and then return that type for the user to then use like normal in the actual scene.",
+      "line": 22
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/PanelManager.cs",
+      "description": "This is a minor class that simply handles the showing and hiding of the various views. No order to this, it is dependant on the user input.",
+      "line": 7
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/PanelManager.cs",
+      "description": "If the user is in the GraphView and clicks the output panel toggel this will be triggered.",
+      "line": 35
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/PanelManager.cs",
+      "description": "If the user is in the GraphView and clicks the parameter panel toggel this will be triggered.",
+      "line": 40
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/PanelManager.cs",
+      "description": "This toggels between the Root Canvas view and the Graph View.",
+      "line": 44
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/PanelManager.cs",
+      "description": "This stops Cinemachine from being active in the graph view. The relevant toggel for this is Toggle Camera Follow.",
+      "line": 52
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/GetTouchPlace.cs",
+      "description": "This function works with Cinemachine in the graph view. It uses an invisble gameobject which the camera is set to follow and upon clicking in a spot on the graph view it then moves the gameobject there which in turn cause the cinemachine camera to follow.",
+      "line": 5
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/GetTouchPlace.cs",
+      "description": "In the Graph view it is always listening for the mouse touch to move the gameobject to that place. Use the toggle button to turn this off.",
+      "line": 20
+    }
+  ],
+  "ref": "Stable"
+}

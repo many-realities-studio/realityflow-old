@@ -1,0 +1,102 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "Visual Scripting In the Mobile App",
+  "steps": [
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/GraphOptionsManager.cs",
+      "description": "Most of the visual scripting code happens in the packages which is located in the UnityPlugin, the Mobile App only has a dependcy that relies on that. As that is the case the mobile app only has a \"shadow\" copy of those files which are not accessible in this code tour so to offset that at certain points in this tour I will defer to the UnityPlugin's code tour of that file. \r\n\r\nMost of the functions in this file simply act as a gate way to the UnityPlugin's functions that have the actual functionality that is needed.",
+      "line": 7
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/GraphOptionsManager.cs",
+      "description": "What differs in the mobile app is on the creation of nodes from the mobile app, everything is created in the top left corner of the graphview canvas aka Vector2(0,0)",
+      "line": 9
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/GraphOptionsManager.cs",
+      "description": "This file NewRealityFlowMenu and RealityFlowGraphView are what's needed to get most of the functionality working.",
+      "line": 13,
+      "selection": {
+        "start": {
+          "line": 15,
+          "character": 12
+        },
+        "end": {
+          "line": 15,
+          "character": 32
+        }
+      }
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/GraphOptionsManager.cs",
+      "description": "Here we set listeners for the two dropdowns graphCommandsMenu and addNodeTypeMenu which handles, graph operations like creation of graphs and the creation of node types respectively. \r\n\r\n",
+      "line": 25,
+      "selection": {
+        "start": {
+          "line": 52,
+          "character": 17
+        },
+        "end": {
+          "line": 52,
+          "character": 37
+        }
+      }
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/GraphOptionsManager.cs",
+      "description": "Once the graphCommandsMenu listener once it detects a change it will then call GraphOptionsSwitch which then uses the value of that drop down to perform a variety of functions using the realityFlowGraphView to call the matching functions.",
+      "line": 26
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/GraphOptionsManager.cs",
+      "description": "Here process the value of the dropdown and find the equivalent function in the switch statement. At this point please continue with the UnityPlugin's code tour to view the following steps after it goes into the RealityFlowGraphView file.\r\n\r\nOnce you are back from the RealityFlowGraphView file we set the value back to 0 and wait for the next change.",
+      "line": 38,
+      "selection": {
+        "start": {
+          "line": 15,
+          "character": 12
+        },
+        "end": {
+          "line": 15,
+          "character": 32
+        }
+      }
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/GraphOptionsManager.cs",
+      "description": "Once the addNodeTypeMenu listener once it detects a change it will then call NodeCreationSwitch which then uses the value of that drop down to perform a variety of functions using the realityFlowGraphView to call the matching functions.",
+      "line": 31,
+      "selection": {
+        "start": {
+          "line": 107,
+          "character": 17
+        },
+        "end": {
+          "line": 107,
+          "character": 37
+        }
+      }
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/GraphOptionsManager.cs",
+      "description": "Here we use the addNodeDropdown to get the node type that the user wants and then creates it using the realityFlowGraphView.AddNodeCommand(). At this point please look to the UnityPlugin's code tour to continue the path of that function call.",
+      "line": 101,
+      "selection": {
+        "start": {
+          "line": 107,
+          "character": 17
+        },
+        "end": {
+          "line": 107,
+          "character": 52
+        }
+      }
+    },
+    {
+      "file": "Assets/RealityFlow/Scripts/Managers/DragDrop.cs",
+      "description": "Not directly related to the previous steps but this function handles the drag and drop functionality of nodes on the graph view canvas in place of the MRTK controls.",
+      "line": 8
+    }
+  ],
+  "ref": "Stable"
+}
