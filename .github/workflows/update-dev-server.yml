@@ -2,8 +2,7 @@ name: Update Dev Server Action
 on:
   push:
     branches:
-    - development
-    - Demo3
+    - main
 
 jobs:
   deploy:
