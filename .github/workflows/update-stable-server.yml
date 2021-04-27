@@ -2,7 +2,7 @@ name: Update Stable Server Action
 on:
   push:
     branches:
-    - main
+    - Stable
 
 jobs:
   deploy:
