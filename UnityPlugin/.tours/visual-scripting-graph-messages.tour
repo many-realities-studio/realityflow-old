@@ -1,0 +1,81 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "Visual Scripting Graph Messages (and Other Similar Messages)",
+  "steps": [
+    {
+      "file": "Packages/RealityFlow/Editor/VSGraphSettings.cs",
+      "description": "This tour covers the general sequence in which Visual Scripting Graph messages are sent to and received from the server. Information from this tour should also be helpful for other message types as the message sending/receiving system is fairly uniform. We start here, where a user has clicked the button to create a Visual Scripting Graph. Slightly above this, a new FlowVSGraph is instantiated using a FlowVSGraph's normal constructor, which is a lot more straightforward than what happens upon receiving any messages from the server that contain FlowVSGraph data. This tour will get to what happens upon receiving such a message as well.",
+      "line": 54
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/Operations.cs",
+      "description": "Inside Operations.cs, the message to be sent to the server gets constructed. In our case, we're sending the data of a newly instantiated FlowVSGraph to the server along with other necessary properties inside the message. For FlowTObjects, the message is constructed using a separate SendToServer class found in Messages/ObjectMessages. For graphs, due to the way the original developer serialized elements of the graph, the message construction system used for building messages of any type other than VSGraph messages could not be used and the string had to be formulated manually. The commented out parts of this operation are unfinished attempts to get GraphQL to work with creating (and deleting, in that function which is below,) VSGraphs.",
+      "line": 221
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/Operations.cs",
+      "description": "We then send the message to the server with FlowWebsocket using the SendGraphMessage function. Non-graph operations use the normal SendMessage function.",
+      "line": 223
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/Operations.cs",
+      "description": "An event handler is then added, which causes the _CreateVSGraph message to be called when the return message is sent back from the server.",
+      "line": 225
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/Messages/VSGraphMessages/CreateVSGraph_Received.cs",
+      "description": "Upon receiving a return CreateVSGraph message back from the server, we find ourselves in this CreateVSGraph_Received class. This system utilizes Newtonsoft.Json to set the flowVSGraph property by deserializing the graph data from the received message, causing a new instance of a FlowVSGraph to be created. This then takes us to the FlowVSGraph structure's JsonConstructor.",
+      "line": 14
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/Structures/FlowVSGraph.cs",
+      "description": "In the FlowVSGraph JsonConstructor, we use the graph data from the received server message to set all of the values of a newly instantiated FlowVSGraph.",
+      "line": 111
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/Structures/FlowVSGraph.cs",
+      "description": "When serializing graph data, for some reason, the graph that owns the edge is never properly serialized. Due to this, we manually set the owner to be this instance here.",
+      "line": 120
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/Structures/FlowVSGraph.cs",
+      "description": "Properly setting a graph's exposed parameters was definitely the most difficult part about getting graph data to work with the server. To deal with the problems ran into, Exposed Parameter data is received from the server as a string. This string is then deserialized to an anonymous type list using the definition set right above this line. This allows us to access the Exposed Parameter properties without needing to actually instantiate any Exposed Parameters yet. This was necessary because instantiating an Exposed Parameter also instantiates a new SerializableObject, which has a constructor that will throw an exception as we are missing required data at this point.",
+      "line": 134
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/Structures/FlowVSGraph.cs",
+      "description": "When we originally attempted to serialize a graph that had GameObjects attached to parameters, all that was getting serialized was the object's instance Id, which is useless to any user that isn't the person who created the original object. To make it so that every user's exposed parameters refer to the \"same object\", we force every attachable object to be a FlowTObject so we can track it through its Id. To then connect the parameters to their objects, we created a new dictionary that holds this data.",
+      "line": 150
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/Structures/FlowVSGraph.cs",
+      "description": "In this foreach loop, we properly set the Exposed Parameters to have their intended values again. Hopefully the comments here should be sufficient in explaining what occurs.",
+      "line": 153
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/Structures/FlowVSGraph.cs",
+      "description": "If the static dictionary idToVSGraphMapping already contains this graph's Id, that means it must already exist in our local scene and can thus simply be updated.",
+      "line": 239
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/Structures/FlowVSGraph.cs",
+      "description": "Deserialize is necessary for BaseGraph to turn its serializedNodes and edges into actual NGP nodes and edges.",
+      "line": 241
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/Structures/FlowVSGraph.cs",
+      "description": "FlowVSGraphs are represented within a scene through their AttachedGameObjects, much like FlowTObjects. Also just like FlowTObjects, this object has a monobehavior script attached that handles sending update messages for their respective VSGraphs or FlowObjects. If this is the first time a user receives a message containing data for this graph, this is necessary so they can send updates from this graph.\r\nImportant note: Whether it is in the normal constructor or the JsonConstructor, the AttachedGameObject will always be accessed when setting values. Whenever the AttachedGameObject is accessed, we'll find ourselves at the public GameObject AttachedGameObject, and that block of code will be executed. This allows the AttachedGameObject to be instantiated if it does not exist yet, making sure that we always have the AttachedGameObject we need.",
+      "line": 249
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/Structures/FlowVSGraph.cs",
+      "description": "Since we created the FlowVSGraph at the start of this tour, we should already have the graph in our local dictionary. This allows us to simply copy the values of the FlowVSGraph that was just instantiated from the received server message and apply them to our already existent graph that shares the same Id.",
+      "line": 293
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/Operations.cs",
+      "description": "After the deserialization finishes, we then find ourselves in the functions that get called upon receiving a response message to an operation. Since we called CreateVSGraph, _CreateVSGraph is set up to execute when the response to CreateVSGraph has been received from the server. Since the process we just walked through with the JsonConstructor handles everything we need, this function is empty and likely not even necessary. I just set this up to be identical to how FlowTObjects are handled, which was done by the previous team. This concludes the tour and should hopefully have been informative to getting a general understanding of how messages are sent and received.",
+      "line": 529
+    }
+  ]
+}

@@ -1,0 +1,116 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "Adding a Node",
+  "steps": [
+    {
+      "title": "Introduction",
+      "description": "Adding a node can be called in a multitude of ways, be it when a graph is loaded, a user drags a node from the node brush onto the whiteboard, or when a user adds a parameter node from the Exposed Parameter window. Here's a general idea of what happens after one of those triggers is activated."
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/RealityFlowGraphView.cs",
+      "description": "The first thing we do before adding the node is that we save the state of the graph to the command palette. This allows us to have a fallback for if the user wants to undo this change.",
+      "line": 302,
+      "selection": {
+        "start": {
+          "line": 301,
+          "character": 3
+        },
+        "end": {
+          "line": 302,
+          "character": 73
+        }
+      }
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/RealityFlowGraphView.cs",
+      "description": "After creating the save-point, when then determine what type of node needs to be created by sending the nodeTag (sent as an argument) through a switch case. After matching it to the right case, we set in it's default value and type, then call the Coroutine that will create a NodeView game object based off of it.",
+      "line": 305,
+      "selection": {
+        "start": {
+          "line": 305,
+          "character": 3
+        },
+        "end": {
+          "line": 305,
+          "character": 18
+        }
+      }
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/RealityFlowGraphView.cs",
+      "description": "Here we instantiate a NodeView object using the \"VR Compatible Node UX 2\" prefab, then set it's default values and parent. This makes sure that all the right information is given to the node.\r\n\r\nPossible improvements: You could create an Init() function for NodeViews, where lines 586 - 593 are moved into that init function and passed through as arguments.",
+      "line": 585,
+      "selection": {
+        "start": {
+          "line": 585,
+          "character": 1
+        },
+        "end": {
+          "line": 593,
+          "character": 32
+        }
+      }
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/RealityFlowGraphView.cs",
+      "description": "At this stage we iterate through the ports of the BaseNode (which may vary between the many different types of nodes we allow to be sent), creating a NodePortView for each port that will then be displayed inside of the NodeView once it's done initializing.",
+      "line": 594,
+      "selection": {
+        "start": {
+          "line": 594,
+          "character": 9
+        },
+        "end": {
+          "line": 613,
+          "character": 10
+        }
+      }
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/RealityFlowGraphView.cs",
+      "description": "Here we add the newly created NodeView to the list of tracked NodeViews in the whiteboard.",
+      "line": 614,
+      "selection": {
+        "start": {
+          "line": 614,
+          "character": 9
+        },
+        "end": {
+          "line": 623,
+          "character": 4
+        }
+      }
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/RealityFlowGraphView.cs",
+      "description": "Simple Operation call to check in the NodeView for other clients.",
+      "line": 625,
+      "selection": {
+        "start": {
+          "line": 625,
+          "character": 1
+        },
+        "end": {
+          "line": 626,
+          "character": 1
+        }
+      }
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/RealityFlowGraphView.cs",
+      "description": "Here we find the use the newNodePosition we set back in NodeManipulation to find out where we need to place our newly created NodeView.",
+      "line": 629,
+      "selection": {
+        "start": {
+          "line": 627,
+          "character": 3
+        },
+        "end": {
+          "line": 633,
+          "character": 4
+        }
+      }
+    }
+  ],
+  "ref": "Stable"
+}

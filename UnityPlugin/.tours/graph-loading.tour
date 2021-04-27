@@ -1,0 +1,94 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "Graph Loading",
+  "steps": [
+    {
+      "title": "Introduction",
+      "description": "Here we're going to go over the multiple ways RealityFlow loads in a graph from the server. For graph loading we have 2 different methods that we utilize. Here we'll have general definitions of each that will get more elaborate throughout this code tour.\r\n1. Soft Loading\r\n2. Hard Loading\r\n\r\nHard loading clears both the whiteboard and the BaseGraph object before loading. Whereas Soft loading only clears the whiteboard."
+    },
+    {
+      "title": "Soft Loading",
+      "description": ""
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/RealityFlowGraphView.cs",
+      "description": "Soft loading is initially called in ReloadRFGV when a change is made to the graph, where it is initialized as a Coroutine.",
+      "line": 171,
+      "selection": {
+        "start": {
+          "line": 171,
+          "character": 20
+        },
+        "end": {
+          "line": 171,
+          "character": 43
+        }
+      }
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/RealityFlowGraphView.cs",
+      "description": "After we initialize the coroutine we wait to make sure we aren't trying to create any View objects. Once that condition passes we finally make a call to SoftLoadGraph and begin redrawing the graph.",
+      "line": 199,
+      "selection": {
+        "start": {
+          "line": 199,
+          "character": 1
+        },
+        "end": {
+          "line": 199,
+          "character": 48
+        }
+      }
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/RealityFlowGraphView.cs",
+      "description": "Here's the actual function of soft loading the graph. We start by first clearing the graph of all the View elements. Afterwards we then read through the BaseGraph object's parameters, nodes, then edges. Creating the appropriate Views for each\r\n\r\nFor more information on how these objects are created, please review the corresponding CodeTours.\r\n\r\nLastly, we make sure that the NodeViews that have been initialized are all checked in, this helps make sure that no nodes are accidentally ",
+      "line": 104,
+      "selection": {
+        "start": {
+          "line": 104,
+          "character": 2
+        },
+        "end": {
+          "line": 104,
+          "character": 48
+        }
+      }
+    },
+    {
+      "title": "Hard Loading",
+      "description": ""
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/RealityFlowGraphView.cs",
+      "description": "Hard load graph is primarily called on undo operations and on the initial loading of a graph. It takes in a graph argument that will be used to draw on the currently instantiated whiteboard.",
+      "line": 100,
+      "selection": {
+        "start": {
+          "line": 100,
+          "character": 3
+        },
+        "end": {
+          "line": 100,
+          "character": 23
+        }
+      }
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/RealityFlowGraphView.cs",
+      "description": "Finally we're inside of the HardLoadGraph Method. While the process is similar to Soft Loading, here we make a call to ClearGraph instead, which will go through the BaseGraph object inside of RealityFlowGraphView.cs and delete all the graph objects inside.",
+      "line": 151,
+      "selection": {
+        "start": {
+          "line": 151,
+          "character": 2
+        },
+        "end": {
+          "line": 151,
+          "character": 47
+        }
+      }
+    }
+  ],
+  "ref": "Stable"
+}

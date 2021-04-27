@@ -1,0 +1,26 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "Adding an Exposed Parameter",
+  "steps": [
+    {
+      "title": "Introduction",
+      "description": "Adding an Exposed Parameter begins immediately after a user hits the Add Exposed Parameter button on the whiteboard."
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/RealityFlowGraphView.cs",
+      "description": "First thing we do is wait for the user to input some values for the parameter they want to add.\r\n",
+      "line": 398
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/RealityFlowGraphView.cs",
+      "description": "Determines what type of parameter will be added based on the drop-down box.",
+      "line": 412
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/RealityFlowGraphView.cs",
+      "description": "Adding an exposed parameter works similarly in function to how a node gets added. We set a running flag to true, instantiate a ParameterView prefab, then set its initial values before finally adding it to a dictionary to be tracked.",
+      "line": 429
+    }
+  ],
+  "ref": "Stable"
+}

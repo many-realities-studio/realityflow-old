@@ -1,0 +1,12 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "Updating the Package",
+  "steps": [
+    {
+      "file": "Packages/manifest.json",
+      "description": "Here is where you would set the package to be updated. First close unity if open then delete the package-lock.json file. Set whatever branch you want it to use by entering the branch after the #.\r\n\r\nHere is the Unity Doc that explains this: https://docs.unity3d.com/Manual/upm-git.html",
+      "line": 4
+    }
+  ],
+  "ref": "Stable"
+}
