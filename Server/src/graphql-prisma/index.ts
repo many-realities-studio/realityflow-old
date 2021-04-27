@@ -10,6 +10,7 @@ import { MessageBuilder } from "../FastAccessStateTracker/Messages/MessageBuilde
 // import { FlowProject } from "../FastAccessStateTracker/FlowLibrary/FlowProject"
 
 
+// These re the resolver functions for the queries and mutations described in schema.graphql file.
 const resolvers = {
   Query: {
     behaviour: async (parent, args, context) => {
@@ -44,8 +45,6 @@ const resolvers = {
           Action: JSON.stringify(args.Action),
         },
       })
-
-      //StateTracker.CreateBehaviour(<FlowBehaviour>args, args.ProjectId)
       return newBehaviour
     },
 
@@ -94,7 +93,6 @@ const resolvers = {
         data: {
           Username: args.Username,
           Password: args.Password,
-          //projects: args.projects
         },
         where: { Username: args.Username }
       })
@@ -188,8 +186,6 @@ const resolvers = {
         }
       })
       // FAM Access
-      // StateTracker.CreateObject(<FlowObject>args, args.projectId)
-      // TalkToClients(createObjFAM);
       FAMaccess(1, args)
       return create_object
     },
@@ -238,8 +234,6 @@ const resolvers = {
       })
       
       // FAM Access
-      // StateTracker.DeleteObject(args.Id, args.projectId, _)
-      //TalkToClients(deleteObjFAM)
       await FAMaccess(2, args)
       return delete_object
     },
@@ -306,6 +300,8 @@ const resolvers = {
   }
 }
 
+// The purpose of this method is to recreate the priming of return data for Unity.
+// i.e: The return message type and other info.
 async function FAMaccess (FAM : number, args)
 {
   switch(FAM) // Choosing which FAM Operation needs to be executed.
@@ -341,30 +337,17 @@ async function FAMaccess (FAM : number, args)
       TalkToClients(returnMessage)
       break;
 
-      // case 3: // How do I get Client??? -I made change to update object "client" related undo it?
-      // try{
-        
-      // }catch(error)
-      // {
-      //   console.error(error)
-      //   process.exit(1)
-      // }finally
-      // {
-      //   let returnData = await StateTracker.CheckinObject(args.projectId, args.Id, client, user)
-      //   let returnContent = {
-      //     "MessageType": "CheckinObject",
-      //     "WasSuccessful": ((returnData[0]) && finalUpdate[0] != null) ? true: false,
-      //     "ObjectID": data.ObjectId
-      //   }
-
-      //   let returnMessage = MessageBuilder.CreateMessage(returnContent, returnData[1]);
-
-      //   return returnMessage;
-      // }
+      // case 3: 
+      // The next cases and changes that have to do with vs_graphs are buggy and incomplete
+      // They can be found in the FaisalCleanUp branch
       // break;
   }
 }
 
+
+// Since we dont have the ability to tweek what response going back to Unity from the initial HTTP request
+// made to get here(inside the Apollo server) then using the list of websocketId's and helpfer methods used in server.ts
+// we can send out the changes to the appropriate users from this file.
  function TalkToClients(res: any){
   console.log("We made it from GraphQL!")
   let clients = res[1];
@@ -384,5 +367,3 @@ async function FAMaccess (FAM : number, args)
 }
 
 module.exports = {resolvers}
-export { TalkToClients };
-export { TalkToClients as BacktoGraphQL };
