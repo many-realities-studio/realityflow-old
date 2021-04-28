@@ -45,6 +45,8 @@ namespace Dissonance.Integrations.PhotonUnityNetworking2
             // Subscribe to NewRealityFlowWindow events to let users join/leave rooms alongside RF projects.
             FlowNetworkManagerEditor.joinProjectEvent += OnJoinedRFProject;
             FlowNetworkManagerEditor.leaveProjectEvent += OnLeftRFProject;
+            NewRealityFlowMenu.vrJoinProjectEvent += OnJoinedRFProject;
+            NewRealityFlowMenu.vrLeaveProjectEvent += OnLeftRFProject;
         }
 
         public override void OnDisable()

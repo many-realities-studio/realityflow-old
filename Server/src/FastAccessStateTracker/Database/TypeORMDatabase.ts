@@ -16,9 +16,7 @@ import { BehaviourOperations } from "../../ORMCommands/behaviour"
 import { DBObject } from "../../entity/object";
 import { VSGraph } from "../../entity/vsgraph";
 import { Project } from "../../entity/project";
-/**
- * Implementation of Mongoose Database
- */
+
 export default class TypeORMDatabase
 {
     
@@ -94,6 +92,7 @@ export default class TypeORMDatabase
       vsGraph.stickyNotes = JSON.parse(vsGraph.stickyNotes);
       vsGraph.position = JSON.parse(vsGraph.position);
       vsGraph.scale = JSON.parse(vsGraph.scale);
+      vsGraph.references = JSON.parse(vsGraph.references);
       vsGraph.paramIdToObjId = vsGraph.paramIdToObjId;
     });
     

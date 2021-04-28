@@ -1,0 +1,136 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "Adding an Edge",
+  "steps": [
+    {
+      "title": "Introduction",
+      "description": "Here is the process for how an edge is added into a Whiteboard using our edge listener class."
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/NodePortView.cs",
+      "description": "The edge process begins all the way inside a NodePortView, where each nodeport contains a button that will trigger an event within our EdgeListener class. Depending on the type of port (input/output), we send that argument to one of the two handler functions in EdgeListener.",
+      "line": 47,
+      "selection": {
+        "start": {
+          "line": 47,
+          "character": 5
+        },
+        "end": {
+          "line": 47,
+          "character": 29
+        }
+      }
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/EdgeListener.cs",
+      "description": "Here in our EdgeListener class, when we receive an NodePortView we immediately store it in either our input/output variables. As of now it overwrites the previous value inside that input/output variable. This is so we don't accidentally create multiple edges at once.",
+      "line": 27,
+      "selection": {
+        "start": {
+          "line": 27,
+          "character": 1
+        },
+        "end": {
+          "line": 35,
+          "character": 6
+        }
+      }
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/EdgeListener.cs",
+      "description": "After we overwrite one of those values, we then immediately check to see if both the input and output NodePortView variables are filled. If so, we then have both an input port and an output port to draw an edge between. So we then send those values to RealityFlowGraphView to create the edge on the whiteboard.",
+      "line": 37,
+      "selection": {
+        "start": {
+          "line": 29,
+          "character": 9
+        },
+        "end": {
+          "line": 29,
+          "character": 27
+        }
+      }
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/RealityFlowGraphView.cs",
+      "description": "Now that we've sent the two NodePortViews to our RFGV class, we then first save the state of the graph (for our undo system), then create a new SerializableEdge using NGP BaseGraph's built-in connect method. This just stores the edge inside of our BaseGraph object, we still have to create the EdgeView on the whiteboard, which we handle within our AddEdgeCoroutine.",
+      "line": 495,
+      "selection": {
+        "start": {
+          "line": 498,
+          "character": 3
+        },
+        "end": {
+          "line": 498,
+          "character": 19
+        }
+      }
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/RealityFlowGraphView.cs",
+      "description": "Since edges are dependent on nodes, we want to make sure we don't run into a case where we try to create an EdgeView who's dependent on a NodeView that is still being created. Thusly we have this coroutine wait until our nodeRoutineRunning flag is set to false, meaning we aren't trying to create any nodes at the moment.",
+      "line": 557,
+      "selection": {
+        "start": {
+          "line": 557,
+          "character": 3
+        },
+        "end": {
+          "line": 557,
+          "character": 57
+        }
+      }
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/RealityFlowGraphView.cs",
+      "description": "Here we find the NodeView's that contain the NodePorts we just connected to create our edge. We will need these for positional data as well as storing the information needed to find what ports we need.\r\n\r\nNOTE: this is very messy at the time of our final demo. And is largely the cause of the Undo Issue, which will be detailed in its own CodeTour.",
+      "line": 562
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/RealityFlowGraphView.cs",
+      "description": "Here we're just adding our newly created edge to the input & output NodeView's lists of edges. This is used later for deletion, so that if a node is deleted, any edges connected to it will also be deleted.\r\n\r\nThe rest of of this coroutine simply sets the edges value, and tells it to perform its Init() function, which uses the NodeView data to draw it's position.",
+      "line": 571,
+      "selection": {
+        "start": {
+          "line": 557,
+          "character": 3
+        },
+        "end": {
+          "line": 557,
+          "character": 57
+        }
+      }
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/EdgeView.cs",
+      "description": "This just uses the NodePortViews to find the location of the Button, we use this world position as a reference point to draw our edges.",
+      "line": 48,
+      "selection": {
+        "start": {
+          "line": 48,
+          "character": 17
+        },
+        "end": {
+          "line": 48,
+          "character": 21
+        }
+      }
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/EdgeView.cs",
+      "description": "Using all of the data needed to create the edge. We can finally tell our LineRenderer component where EXACTLY the points on the edges need to be. The buffer variables are used to create the circuit board aesthetic.",
+      "line": 33,
+      "selection": {
+        "start": {
+          "line": 33,
+          "character": 17
+        },
+        "end": {
+          "line": 33,
+          "character": 27
+        }
+      }
+    }
+  ],
+  "ref": "Stable"
+}

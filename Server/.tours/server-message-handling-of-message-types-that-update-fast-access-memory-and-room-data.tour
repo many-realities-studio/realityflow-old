@@ -1,0 +1,96 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "Server Message Handling of Message Types that Update Fast Access Memory and Room Data",
+  "steps": [
+    {
+      "file": "src/FastAccessStateTracker/Messages/CommandContext.ts",
+      "description": "This tour expands upon the generic Server Message Handling Sequence tour with a slightly different case that was not covered there: Executing a command that affects multiple users and updates both the Fast Access Memory and Room data. For this tour, we will go through how a Finalized Update Visual Scripting Graph message is processed by the server. This process is very similar for FlowObjects, so this tour should be sufficient for covering how those work as well, except that FlowObjects have check in and check out messages as well, which should be relatively easy to understand from tracing through the associated functions. Just know that for UpdateObject messages, the server does not access the database at all as this only occurs when an object is checked in, which calls UpdateObject with the database flag set to true.",
+      "line": 741
+    },
+    {
+      "file": "src/FastAccessStateTracker/Messages/CommandContext.ts",
+      "description": "As with a CreateProject Message, a command gets executed based on a received message's type. This command executes from \"FinalizedUpdateVSGraph\" using the parsed message as a json object (data).",
+      "line": 743
+    },
+    {
+      "file": "src/FastAccessStateTracker/Messages/CommandContext.ts",
+      "description": "As with CreateProject, we first create a new instance of a FlowVSGraph from the passed in data's FlowVSGraph property. After that, a returnedGraph object is also created to simplify the process of sending back the correct graph data. This is required due to graph data being stringified and parsed throughout this command's execution, and as you can see in FlowVSGraph.cs in the Unity Plugin, certain FlowVSGraph properties must be returned to clients as strings while others must be returned as lists.",
+      "line": 747
+    },
+    {
+      "file": "src/FastAccessStateTracker/Messages/CommandContext.ts",
+      "description": "We now enter the StateTracker's UpdateVSGraph function with the newly created FlowVSGraph, the projectId (needed to identify which users to send return messages to), the sending client, and a true boolean which indicates that we will be accessing the database.",
+      "line": 748
+    },
+    {
+      "file": "src/FastAccessStateTracker/StateTracker.ts",
+      "description": "Inside of this function, we first update the graph in the room using the RoomManager.",
+      "line": 801
+    },
+    {
+      "file": "src/FastAccessStateTracker/RoomManager.ts",
+      "description": "To update the state of the VSGraph on the server, we first need to find the room in which to perform the update. We find the room using the Id of the project.",
+      "line": 268
+    },
+    {
+      "file": "src/FastAccessStateTracker/RoomManager.ts",
+      "description": "After finding the room, we need to update the VSGraph within this room.",
+      "line": 269
+    },
+    {
+      "file": "src/FastAccessStateTracker/Room.ts",
+      "description": "Inside of the room, we call UpdateFAMVSGraph on the current project to update the graph within the project's list of graphs.",
+      "line": 301
+    },
+    {
+      "file": "src/FastAccessStateTracker/FlowLibrary/FlowProject.ts",
+      "description": "Inside of FlowProject.ts in the FastAccessStateTracker, we first have to find the old graph so that we can update it with new data. This is done by looking in the FlowProject's _VSGraphList using the graph's Id to find the element in the list that matches this Id.",
+      "line": 345
+    },
+    {
+      "file": "src/FastAccessStateTracker/FlowLibrary/FlowProject.ts",
+      "description": "If the old graph was successfully retrieved (not undefined), we use the old FlowVSGraph's UpdateProperties function to update its data using the values of the up to date FlowVSGraph (newVSGraph). We then return true.",
+      "line": 347
+    },
+    {
+      "file": "src/FastAccessStateTracker/Room.ts",
+      "description": "If the update of the FlowVSGraph in the FAM was successful, we will be returning a true value here.",
+      "line": 302
+    },
+    {
+      "file": "src/FastAccessStateTracker/StateTracker.ts",
+      "description": "If updating the graph in the FAM was not successful, the command finishes execution here and null is returned. If it was successful, we can continue onwards.",
+      "line": 803
+    },
+    {
+      "file": "src/FastAccessStateTracker/StateTracker.ts",
+      "description": "Since all graph updates are persisted to the database (saveToDatabase was passed in as true), the server now updates the VSGraph in the database.",
+      "line": 806
+    },
+    {
+      "file": "src/ORMCommands/vsgraph.ts",
+      "description": "Updating the VSGraph in the database happens much like how projects are created, which is covered in the Server Message Handling Sequence tour. The differences between that process and updating a VSGraph is that the database operation here is an update instead of just saving a new project to the database, and that stringification of the graph's properties must occur to allow them to be stored in the database using our current system.",
+      "line": 75
+    },
+    {
+      "file": "src/FastAccessStateTracker/StateTracker.ts",
+      "description": "Next, we get all clients in the room so that we can send the return data of this UpdateVSGraph command to them.",
+      "line": 810
+    },
+    {
+      "file": "src/FastAccessStateTracker/StateTracker.ts",
+      "description": "We now return an array with the updated VSGraph at index 0 and the list of affected clients at index 1.",
+      "line": 817
+    },
+    {
+      "file": "src/FastAccessStateTracker/Messages/CommandContext.ts",
+      "description": "With update messages, we do not want the original sending client to receive the return message as they do not need to be informed of the update (since they already performed the update locally and sent the update message to begin with), so we remove them from the list of affected clients.",
+      "line": 751
+    },
+    {
+      "file": "src/FastAccessStateTracker/Messages/CommandContext.ts",
+      "description": "As with the Server Message Handling Sequence tour, the return message is built using the returnData and returnContent object before sending the message to affected clients. ",
+      "line": 763
+    }
+  ]
+}

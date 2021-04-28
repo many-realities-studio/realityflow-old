@@ -1,0 +1,74 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "Clearing the Graph",
+  "steps": [
+    {
+      "title": "Introduction",
+      "description": "Here is the process in which a user hits the \"Clear Graph\" button on the misc functions bar"
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/RealityFlowGraphView.cs",
+      "description": "Save the state of the graph prior to clearing onto the Command Palette.",
+      "line": 511
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/RealityFlowGraphView.cs",
+      "description": "Clear all the ParameterView Objects.",
+      "line": 514
+    },
+    {
+      "title": "ParameterView Deletion",
+      "description": "IN this section we'll cover the deletion process for the ParameterView objects."
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/ParameterView.cs",
+      "description": "Here we call the delete helper function. This targets the rfgv's BaseGraph and removes the ExposedParamter on the backend, then we destroy the ParameterView instance.",
+      "line": 46
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/RealityFlowGraphView.cs",
+      "description": "Next we iterate through our NodeViews and begin the removal process for them.",
+      "line": 519,
+      "selection": {
+        "start": {
+          "line": 515,
+          "character": 13
+        },
+        "end": {
+          "line": 515,
+          "character": 19
+        }
+      }
+    },
+    {
+      "title": "NodeView Deletion",
+      "description": "Here we'll cover how a NodeView is deleted from the Whiteboard."
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/NodeView.cs",
+      "description": "Before we delete the NodeView entirely, we first have to clear out all the NodePortViews and EdgeViews that exist within it. We first iterate through all the NodePortViews in and call their deletion functions first.",
+      "line": 130
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/NodePortView.cs",
+      "description": "Just like w/ the NodeView, first we will delete all the EdgeViews existing w/in the NodePortView. Then we delete our gameobject. We don't have to tell our BaseGraph to remove NodePorts since it does that by default when we call its RemoveNode() function.",
+      "line": 67,
+      "selection": {
+        "start": {
+          "line": 67,
+          "character": 1
+        },
+        "end": {
+          "line": 68,
+          "character": 1
+        }
+      }
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/GraphScripts/NodeView.cs",
+      "description": "Now that we've destroyed all the inner elements of the NodeView, we target the BaseGraph and perform its built-in RemoveNode function, before destroy its related View object.",
+      "line": 136
+    }
+  ],
+  "ref": "Stable"
+}

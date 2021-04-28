@@ -1,0 +1,96 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "Server Message Handling Sequence",
+  "steps": [
+    {
+      "file": "src/server.ts",
+      "description": "When a server receives a message from a client, the server-side processing of the message begins in onMessageEvent, which is called with the received string message data. ",
+      "line": 139
+    },
+    {
+      "file": "src/server.ts",
+      "description": "The received message is parsed into a json object and assigned a username property based on the user that sent the message.",
+      "line": 145
+    },
+    {
+      "file": "src/server.ts",
+      "description": "This line is where the processing of the message truly begins. ParseMessage is called with the WebSocket connection ID and the recently parsed json object.",
+      "line": 147
+    },
+    {
+      "file": "src/FastAccessStateTracker/Messages/NewMessageProcessor.ts",
+      "description": "Here, the server uses the MessageType property of the received json to determine what command needs to be executed in the CommandContext. The json object is passed in as data, and the socketID is used to identify the sender.",
+      "line": 9
+    },
+    {
+      "file": "src/FastAccessStateTracker/Messages/CommandContext.ts",
+      "description": "This function holds all of the possible types of commands that the server can execute. The MessageType of the received message determines which command will be executed here.",
+      "line": 871
+    },
+    {
+      "file": "src/FastAccessStateTracker/Messages/CommandContext.ts",
+      "description": "If the MessageType was \"CreateProject\", this is the command that would get executed. For this tour, let's assume the server was sent a CreateProject message. Other types of messages are processed in a very similar way to what is shown in this tour.",
+      "line": 30
+    },
+    {
+      "file": "src/FastAccessStateTracker/Messages/CommandContext.ts",
+      "description": "The command first creates a new uuidv4 for the project to uniquely identify it. After that, a new instance of a FlowProject is created using the FlowProject property of the data json object.",
+      "line": 36
+    },
+    {
+      "file": "src/FastAccessStateTracker/Messages/CommandContext.ts",
+      "description": "The next step is to create the returnData to be sent back to affected clients. To create this returnData, we now go to the StateTracker, where more important processing of the message occurs. We send in the recently created FlowProject, the sender's username (from the json data), and the WebSocket ID.",
+      "line": 38
+    },
+    {
+      "file": "src/FastAccessStateTracker/StateTracker.ts",
+      "description": "After making sure that the sending user is logged in, we continue our processing of the message by going into TypeORMDatabase with the newly instantiated FlowProject and the client ID. TypeORMDatabase handles operations that interact with the database, which is necessary here as we are creating a new project.",
+      "line": 47
+    },
+    {
+      "file": "src/FastAccessStateTracker/Database/TypeORMDatabase.ts",
+      "description": "We now go into ProjectOperations (project.ts in ORMCommands), which handles any database operations for projects. Other Reality Flow entities that require interaction with the database have similar ORMCommands classes. We call createProject with our newly created FlowProject and the user ID.",
+      "line": 33
+    },
+    {
+      "file": "src/ORMCommands/project.ts",
+      "description": "After getting the sending user from the database, the server creates a new Project() entity using the properties of the passed in projectInfo FlowProject. This newProject is then persisted to the database. We return from here with the project's ID.",
+      "line": 30
+    },
+    {
+      "file": "src/FastAccessStateTracker/Database/TypeORMDatabase.ts",
+      "description": "After creating the project in the database, we now use findProject to make sure the project is in the database and so that we can return the created project entity.",
+      "line": 35
+    },
+    {
+      "file": "src/FastAccessStateTracker/StateTracker.ts",
+      "description": "We now return an array with 2 elements: The newly created project at index 0, and the affected client (the sending user) at index 1. For other StateTracker functions, this return statement is similar, where the returned data is returned at index 0 of the array and affected clients are in index 1. In some cases, additional data to be returned is added in additional indices.",
+      "line": 49
+    },
+    {
+      "file": "src/FastAccessStateTracker/Messages/CommandContext.ts",
+      "description": "Here, the content for the return message is set up as a new object called returnContent. The message type gets set so that the client can handle it appropriately, WasSuccessful is set depending on if the command successfully executed to completion, and the FlowProject property is set to contain the data returned by the server's execution of the command.",
+      "line": 42
+    },
+    {
+      "file": "src/FastAccessStateTracker/Messages/CommandContext.ts",
+      "description": "To finalize the return message, the MessageBuilder's CreateMessage function is used. We pass in the newly created returnContent and the affected client(s) (in this case, the sending user only as they created the project and nobody else could receive a response to this message).",
+      "line": 48
+    },
+    {
+      "file": "src/FastAccessStateTracker/Messages/MessageBuilder.ts",
+      "description": "In this function, the returnContent (payload) is stringified so it can be sent back to clients.",
+      "line": 11
+    },
+    {
+      "file": "src/FastAccessStateTracker/Messages/NewMessageProcessor.ts",
+      "description": "The finalized response is now ready to be sent back to affected clients.",
+      "line": 11
+    },
+    {
+      "file": "src/server.ts",
+      "description": "Here, the resulting message is sent to any clients that should receive a response to the sent message. For messages such as CreateProject, only the sending user should receive a response. For other messages such as CreateObject, every user in the same room (project) should receive the message as they need to instantiate and manage the created object on their devices.",
+      "line": 160
+    }
+  ]
+}
