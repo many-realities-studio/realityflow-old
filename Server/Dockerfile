@@ -18,9 +18,9 @@ RUN npm run build
 # Bundle app source
 FROM node:lts-alpine3.10 as api-prod
 RUN apk update \
+  && apk add --no-cache python3 py3-pip \
   && apk add sqlite \
   && apk add socat \
-  && apk add --no-cache python3 py3-pip \
   && apk add dumb-init
 ENV NODE_ENV production
 WORKDIR /usr/
