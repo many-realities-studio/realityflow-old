@@ -1,4 +1,4 @@
-FROM node:lts-alpine3.14 as build
+FROM nikolaik/python-nodejs:python3.9-nodejs14-alpine as build
 # Create app directory
 WORKDIR /usr/
 RUN apk update \
@@ -16,7 +16,7 @@ RUN npm run build
 # If you are building your code for production
 # RUN npm ci --only=production
 # Bundle app source
-FROM node:lts-alpine3.10 as api-prod
+FROM nikolaik/python-nodejs:python3.9-nodejs14-alpine as api-prod
 RUN apk update \
   && apk add --no-cache python3 py3-pip \
   && apk add sqlite \
