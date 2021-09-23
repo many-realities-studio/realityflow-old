@@ -27,5 +27,4 @@ WORKDIR /usr/
 COPY --from=build /usr/dist ./dist
 COPY ./package* ./
 RUN npm ci --only=production
-
 CMD ["dumb-init", "node", "dist/server.js"]
