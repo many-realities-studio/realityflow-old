@@ -18,7 +18,7 @@ RUN npm run build
 FROM nikolaik/python-nodejs:python3.9-nodejs14-alpine as api-prod
 RUN apk update \
   && apk add sqlite \
-  && add --update alpine-sdk \
+  && apk add --update alpine-sdk \
   && apk add socat \
   && apk add dumb-init
 ENV NODE_ENV production
