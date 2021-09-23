@@ -1,7 +1,7 @@
 version: "3.4"
 services:
   api:
-    image: api:prod
+    image: rf-api:prod
     build:
       context: .
       target: build
