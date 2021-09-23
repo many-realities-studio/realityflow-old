@@ -4,7 +4,7 @@ services:
     image: api:prod
     build:
       context: .
-      target: api-prod
+      target: build
     container_name: api
     environment:
       NODE_APACHE_PASSWORD: "Basic "
