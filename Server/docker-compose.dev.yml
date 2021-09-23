@@ -9,4 +9,4 @@ services:
     volumes:
       - "./src:/usr/src:delegated"
       - /usr/node_modules
-    command: ["npm", "run", "debug"]
+    command: ["npm", "run", "watch"]
