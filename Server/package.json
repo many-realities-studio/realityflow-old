@@ -87,6 +87,7 @@
     "test": "jest",
     "clean": "rm -r node/* || rm run/*.pid 2> /dev/null || :",
     "build": "tsc",
+    "watch": "tsc-watch --onSuccess \"node --inspect=0.0.0.0:9230 ./dist/server.js\" --onFailure \"echo WHOOPS! Server compilation failed\"",
     "restart": "touch node/server/bld/server.js",
     "restart-remote": "ssh realityflow_daemon@plato.mrl.ai \"cd development && npm run restart\""
   },
