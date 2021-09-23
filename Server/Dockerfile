@@ -1,6 +1,9 @@
 FROM node:lts-alpine3.14 as build
 # Create app directory
 WORKDIR /usr/
+RUN apk update \
+  && apk add sqlite \
+  && apk add socat
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
