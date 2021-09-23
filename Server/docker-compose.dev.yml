@@ -3,7 +3,7 @@ services:
   api:
     image: rf-api:prod
     build:
-      context: .
+      context: ./
       target: build
     container_name: api
     volumes:
