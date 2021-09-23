@@ -12,7 +12,6 @@ RUN apk update \
 COPY . .
 VOLUME /usr/src
 RUN npm install
-ENTRYPOINT ["/bin/bash"]
 # RUN npm run build
 
 # If you are building your code for production
