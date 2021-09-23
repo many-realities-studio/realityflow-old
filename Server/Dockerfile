@@ -1,4 +1,4 @@
-FROM nikolaik/python-nodejs:python3.9-nodejs14-alpine as build
+FROM nikolaik/python-nodejs:latest as build
 # Create app directory
 WORKDIR /usr/
 RUN apk update \
@@ -17,15 +17,15 @@ RUN npm install
 # If you are building your code for production
 # RUN npm ci --only=production
 # Bundle app source
-FROM nikolaik/python-nodejs:python3.9-nodejs14-alpine as api-prod
-RUN apk update \
-  && apk add sqlite \
-  && apk add --update alpine-sdk \
-  && apk add socat \
-  && apk add dumb-init
-ENV NODE_ENV production
-WORKDIR /usr/
-COPY --from=build /usr/dist ./dist
-COPY ./package* ./
-RUN npm ci --only=production
-CMD ["dumb-init", "node", "dist/server.js"]
+# FROM nikolaik/python-nodejs:python3.9-nodejs14-alpine as api-prod
+# RUN apk update \
+#   && apk add sqlite \
+#   && apk add --update alpine-sdk \
+#   && apk add socat \
+#   && apk add dumb-init
+# ENV NODE_ENV production
+# WORKDIR /usr/
+# COPY --from=build /usr/dist ./dist
+# COPY ./package* ./
+# RUN npm ci --only=production
+# CMD ["dumb-init", "node", "dist/server.js"]
