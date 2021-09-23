@@ -15,7 +15,10 @@ RUN npm run build
 # RUN npm ci --only=production
 # Bundle app source
 FROM node:lts-alpine3.10 as api-prod
-RUN apk add dumb-init
+RUN apk update \
+  && apk add sqlite \
+  && apk add socatRUN \
+  && apk add dumb-init
 ENV NODE_ENV production
 WORKDIR /usr/
 COPY --from=build /usr/dist ./dist
