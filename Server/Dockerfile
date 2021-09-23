@@ -9,7 +9,7 @@ RUN apk update \
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
-COPY prisma/ src/ run/ tsconfig.json pcakgae*.json ./
+COPY prisma/ src/ run/ tsconfig.json package*.json ./
 VOLUME /usr/src
 RUN npm install
 # RUN npm run build
