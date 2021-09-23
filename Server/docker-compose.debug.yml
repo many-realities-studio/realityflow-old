@@ -7,5 +7,6 @@ services:
       target: build
     container_name: api
     volumes:
-      - /usr/node_modules
-    command: ["node", "dist/server.js"]
+      - "./server/src:/usr/src:delegated"
+      - /usr/src/node_modules
+    command: ["npm", "run", "debug"]
