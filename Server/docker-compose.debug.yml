@@ -1,0 +1,19 @@
+version: "3.4"
+services:
+  api:
+    image: api:prod
+    build:
+      context: server
+      target: api-prod
+    container_name: api
+    environment:
+      NODE_APACHE_PASSWORD: "Basic "
+      PROTOCOL: "https"
+      MONGO_USER: ${MONGO_USER}
+      MONGO_PASS: ${MONGO_PASS}
+      # NODE_ENV: production
+    volumes:
+      - /usr/node_modules
+    command: ["node", "dist/server.js"]
+    depends_on:
+      - mongo
