@@ -3,7 +3,7 @@ services:
   api:
     image: api:prod
     build:
-      context: server
+      context: .
       target: api-prod
     container_name: api
     environment:
@@ -15,5 +15,3 @@ services:
     volumes:
       - /usr/node_modules
     command: ["node", "dist/server.js"]
-    depends_on:
-      - mongo
