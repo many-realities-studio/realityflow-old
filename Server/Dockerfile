@@ -1,4 +1,4 @@
-FROM node:lts-alpine3.14
+FROM node:lts-alpine3.14 as build
 # Create app directory
 WORKDIR /usr/
 # Install app dependencies
@@ -11,4 +11,12 @@ RUN npm run build
 # If you are building your code for production
 # RUN npm ci --only=production
 # Bundle app source
-COPY . .
+FROM node:lts-alpine3.10 as api-prod
+RUN apk add dumb-init
+ENV NODE_ENV production
+WORKDIR /usr/
+COPY --from=build /usr/dist ./dist
+COPY ./package* ./
+RUN npm ci --only=production
+
+CMD ["dumb-init", "node", "dist/server.js"]
