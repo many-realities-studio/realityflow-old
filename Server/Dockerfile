@@ -2,7 +2,7 @@ FROM nikolaik/python-nodejs:python3.9-nodejs14-alpine as build
 # Create app directory
 WORKDIR /usr/
 RUN apk update \
-  && add --update alpine-sdk \
+  && apk add --update alpine-sdk \
   && apk add sqlite \
   && apk add socat 
 # Install app dependencies
