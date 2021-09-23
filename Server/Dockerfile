@@ -18,7 +18,7 @@ RUN npm run build
 FROM node:lts-alpine3.10 as api-prod
 RUN apk update \
   && apk add sqlite \
-  && apk add socatRUN \
+  && apk add socat \
   && apk add dumb-init
 ENV NODE_ENV production
 WORKDIR /usr/
