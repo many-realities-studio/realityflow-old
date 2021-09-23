@@ -1,6 +1,6 @@
-FROM node:14
+FROM node:lts-alpine3.14
 # Create app directory
-WORKDIR /usr/src/app
+WORKDIR /usr/
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
