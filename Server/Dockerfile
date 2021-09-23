@@ -3,9 +3,7 @@ FROM nikolaik/python-nodejs:python3.9-nodejs14-alpine as build
 WORKDIR /usr/
 RUN apk update \
   && apk add sqlite \
-  && apk add socat \
-  && apk add python
-
+  && apk add socat 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
@@ -18,7 +16,6 @@ RUN npm run build
 # Bundle app source
 FROM nikolaik/python-nodejs:python3.9-nodejs14-alpine as api-prod
 RUN apk update \
-  && apk add --no-cache python3 py3-pip \
   && apk add sqlite \
   && apk add socat \
   && apk add dumb-init
