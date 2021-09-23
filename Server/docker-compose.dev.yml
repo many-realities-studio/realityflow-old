@@ -8,5 +8,5 @@ services:
     container_name: api
     volumes:
       - "./src:/usr/src:delegated"
-      - /usr/src/node_modules
+      - /usr/node_modules
     command: ["npm", "run", "debug"]
