@@ -8,7 +8,7 @@ RUN apk update \
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
-COPY package*.json tsconfig.json ./
+COPY . .
 VOLUME /usr/src
 RUN npm install
 RUN npm run build
