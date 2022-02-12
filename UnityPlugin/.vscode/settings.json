@@ -53,5 +53,6 @@
         "ProjectSettings/":true,
         "temp/":true,
         "Temp/":true
-    }
+    },
+    "gitdoc.enabled": false
 }
