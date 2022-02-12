@@ -1,0 +1,51 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "A Typical GraphQL Operation ",
+  "steps": [
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/Operations.cs",
+      "description": "When a CreateObject is called it starts by instantiating the graphqlClient_Editor and passing in the object data (flowObject) and projectId to the API editor\r\nWhere it goes through the logic of formating the data into a GraphQL mutation format",
+      "line": 143
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/API Editor/graphqlAPI_Editor.cs",
+      "description": "Here, we determine which mutation we will be attempting (CreateObject in this case) and using the SetArgs() method to send the data to serializer inside of GraphApi.cs where it is also parsed though to make sure its in GraphQL mutation format ",
+      "line": 51
+    },
+    {
+      "file": "Packages/RealityFlow/Resources/objectData/graphQl-client/Scripts/Core/GraphApi.cs",
+      "description": "This is where we serialize our input. We then take the generated string and parse it. In the method JsonToArgument(), listed below.",
+      "line": 347,
+      "selection": {
+        "start": {
+          "line": 348,
+          "character": 24
+        },
+        "end": {
+          "line": 348,
+          "character": 38
+        }
+      }
+    },
+    {
+      "file": "Packages/RealityFlow/Resources/objectData/graphQl-client/Scripts/Core/GraphApi.cs",
+      "description": "Inside of the if statements we added an \"&&\" and supplemented the statment with logic that gets rid of '\\\\\\' inside of specific seralized exceptions. (VSGraphs)",
+      "line": 99,
+      "selection": {
+        "start": {
+          "line": 92,
+          "character": 31
+        },
+        "end": {
+          "line": 92,
+          "character": 45
+        }
+      }
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/API Editor/graphqlAPI_Editor.cs",
+      "description": "At this point the code has returned here( To Unity ) from the Apollo server either with a error message or an actual predefiend query set for this operation. (Currently for CreateObject, it returns the newly created Object's ID)",
+      "line": 62
+    }
+  ]
+}

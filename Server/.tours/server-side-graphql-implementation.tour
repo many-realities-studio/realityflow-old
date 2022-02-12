@@ -1,0 +1,16 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "Server-side GraphQL Implementation",
+  "steps": [
+    {
+      "file": "src/graphql-prisma/index.ts",
+      "description": "Since we were trying to wrap the GraphQL around the current implentation istead of getting the current emplementation wrapped around GraphQL we have mimicked the CommanContext.ts return logic inside of this file.",
+      "line": 316
+    },
+    {
+      "file": "src/graphql-prisma/index.ts",
+      "description": "Every case in this switch case has a TalkToClients() method that uses the existing list of client websocketID'd to broadcast changes and updates to the affected users via a websocket connection. This is an important observation because the return call of the initial HTTP request to the Apollo server from the Unity client dosnt notify users of anything.",
+      "line": 335
+    }
+  ]
+}

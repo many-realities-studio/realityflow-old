@@ -1,0 +1,16 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "The Exception of VSGraphs",
+  "steps": [
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/API Editor/graphqlAPI_Editor.cs",
+      "description": "The logic order of VSGraphs is identical to objects. However, for updating VSGraphs we run into issues with serializing the FlowVSGraph. You might be wondering by we are serailizing an object that will be inevitably serialized inside of GraphApi.cs? Thats because all the sub-parameters of this type arnt serialized properly by newtonsoft and are treated ast empty sets '{}'. serializing them beforehand treats them as strings and gets the information through to the parser,  JsonToArgument().",
+      "line": 126
+    },
+    {
+      "file": "Packages/RealityFlow/Runtime/scripts/API Editor/graphqlAPI_Editor.cs",
+      "description": "While adding and editing the VSGraph in the scene, more complex (longer strings packing in different types of info) object data is sent which runs into the issue of self referencing loops when trying to serialize. We havn't figured out to fix this issue yet. \r\n\r\nWe've avoided the referencing errors but we still dont get values serialized.",
+      "line": 137
+    }
+  ]
+}
