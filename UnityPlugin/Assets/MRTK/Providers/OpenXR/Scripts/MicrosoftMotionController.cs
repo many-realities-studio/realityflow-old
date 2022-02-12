@@ -16,31 +16,15 @@ namespace Microsoft.MixedReality.Toolkit.XRSDK.OpenXR
     [MixedRealityController(
         SupportedControllerType.WindowsMixedReality,
         new[] { Handedness.Left, Handedness.Right },
-        "StandardAssets/Textures/MotionController")]
+        "Textures/MotionController")]
     public class MicrosoftMotionController : GenericXRSDKController
     {
         /// <summary>
         /// Constructor.
         /// </summary>
         public MicrosoftMotionController(TrackingState trackingState, Handedness controllerHandedness, IMixedRealityInputSource inputSource = null, MixedRealityInteractionMapping[] interactions = null)
-                : base(trackingState, controllerHandedness, inputSource, interactions) { }
-
-        /// <inheritdoc />
-        public override MixedRealityInteractionMapping[] DefaultInteractions => new[]
-        {
-            new MixedRealityInteractionMapping(0, "Spatial Pointer", AxisType.SixDof, DeviceInputType.SpatialPointer),
-            new MixedRealityInteractionMapping(1, "Spatial Grip", AxisType.SixDof, DeviceInputType.SpatialGrip),
-            new MixedRealityInteractionMapping(2, "Grip Press", AxisType.SingleAxis, DeviceInputType.GripPress),
-            new MixedRealityInteractionMapping(3, "Trigger Position", AxisType.SingleAxis, DeviceInputType.Trigger),
-            new MixedRealityInteractionMapping(4, "Trigger Touch", AxisType.Digital, DeviceInputType.TriggerTouch),
-            new MixedRealityInteractionMapping(5, "Trigger Press (Select)", AxisType.Digital, DeviceInputType.Select),
-            new MixedRealityInteractionMapping(6, "Touchpad Position", AxisType.DualAxis, DeviceInputType.Touchpad),
-            new MixedRealityInteractionMapping(7, "Touchpad Touch", AxisType.Digital, DeviceInputType.TouchpadTouch),
-            new MixedRealityInteractionMapping(8, "Touchpad Press", AxisType.Digital, DeviceInputType.TouchpadPress),
-            new MixedRealityInteractionMapping(9, "Menu Press", AxisType.Digital, DeviceInputType.Menu),
-            new MixedRealityInteractionMapping(10, "Thumbstick Position", AxisType.DualAxis, DeviceInputType.ThumbStick),
-            new MixedRealityInteractionMapping(11, "Thumbstick Press", AxisType.Digital, DeviceInputType.ThumbStickPress),
-        };
+            : base(trackingState, controllerHandedness, inputSource, interactions, new WindowsMixedRealityControllerDefinition(controllerHandedness))
+        { }
 
         private Vector3 currentPointerPosition = Vector3.zero;
         private Quaternion currentPointerRotation = Quaternion.identity;
@@ -86,5 +70,54 @@ namespace Microsoft.MixedReality.Toolkit.XRSDK.OpenXR
                 }
             }
         }
+
+#if MSFT_OPENXR
+        private MicrosoftControllerModelProvider controllerModelProvider;
+
+        /// <inheritdoc />
+        protected override bool TryRenderControllerModel(System.Type controllerType, InputSourceType inputSourceType)
+        {
+            if (GetControllerVisualizationProfile() == null ||
+                !GetControllerVisualizationProfile().GetUsePlatformModelsOverride(GetType(), ControllerHandedness))
+            {
+                return base.TryRenderControllerModel(controllerType, inputSourceType);
+            }
+            else
+            {
+                TryRenderControllerModelWithModelProvider();
+                return true;
+            }
+        }
+
+        private async void TryRenderControllerModelWithModelProvider()
+        {
+            if (controllerModelProvider == null)
+            {
+                controllerModelProvider = new MicrosoftControllerModelProvider(ControllerHandedness);
+            }
+
+            GameObject controllerModel = await controllerModelProvider.TryGenerateControllerModelFromPlatformSDK();
+
+            if (this != null)
+            {
+                if (controllerModel != null
+                    && MixedRealityControllerModelHelpers.TryAddVisualizationScript(controllerModel, GetType(), ControllerHandedness)
+                    && TryAddControllerModelToSceneHierarchy(controllerModel))
+                {
+                    controllerModel.SetActive(true);
+                    return;
+                }
+
+                Debug.LogWarning("Failed to create controller model from driver; defaulting to BaseController behavior.");
+                base.TryRenderControllerModel(GetType(), InputSource.SourceType);
+            }
+
+            if (controllerModel != null)
+            {
+                // If we didn't successfully set up the model and add it to the hierarchy (which returns early), set it inactive.
+                controllerModel.SetActive(false);
+            }
+        }
+#endif // MSFT_OPENXR
     }
 }

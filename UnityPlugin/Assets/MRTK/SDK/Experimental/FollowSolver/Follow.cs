@@ -1,18 +1,16 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using Microsoft.MixedReality.Toolkit.Utilities;
-using Microsoft.MixedReality.Toolkit.Utilities.Solvers;
 using UnityEngine;
 
-namespace Microsoft.MixedReality.Toolkit.Experimental.Utilities
+namespace Microsoft.MixedReality.Toolkit.Utilities.Solvers
 {
     /// <summary>
     /// Follow solver positions an element in front of the of the tracked target (relative to its local forward axis).
     /// The element can be loosely constrained (a.k.a. tag-along) so that it doesn't follow until the tracked target moves
     /// beyond user defined bounds.
-    /// </summary> 
-    [AddComponentMenu("Scripts/MRTK/Experimental/Solver/Follow")]
+    /// </summary>
+    [AddComponentMenu("Scripts/MRTK/SDK/Follow")]
     public class Follow : Solver
     {
         [SerializeField]
@@ -41,7 +39,6 @@ namespace Microsoft.MixedReality.Toolkit.Experimental.Utilities
             set => faceTrackedObjectWhileClamped = value;
         }
 
-        [Experimental]
         [SerializeField]
         [Tooltip("Face a user defined transform rather than using the solver orientation type.")]
         private bool faceUserDefinedTargetTransform = false;
@@ -329,8 +326,6 @@ namespace Microsoft.MixedReality.Toolkit.Experimental.Utilities
 
         private Vector3 ReferencePosition => SolverHandler.TransformTarget != null ? SolverHandler.TransformTarget.position : Vector3.zero;
         private Quaternion ReferenceRotation => SolverHandler.TransformTarget != null ? SolverHandler.TransformTarget.rotation : Quaternion.identity;
-        private Vector3 PreviousReferencePosition = Vector3.zero;
-        private Quaternion PreviousReferenceRotation = Quaternion.identity;
         private Quaternion PreviousGoalRotation = Quaternion.identity;
         private bool recenterNextUpdate = true;
         private Vector3 boundsExtents = Vector3.one;
@@ -338,7 +333,6 @@ namespace Microsoft.MixedReality.Toolkit.Experimental.Utilities
         protected override void OnEnable()
         {
             base.OnEnable();
-            Recenter();
             RecalculateBoundsExtents();
         }
 
@@ -368,7 +362,7 @@ namespace Microsoft.MixedReality.Toolkit.Experimental.Utilities
 
             // Distance clamp to determine goal position to place the element
             Vector3 goalPosition = currentPosition;
-            if (!ignoreDistanceClamp)
+            if (!ignoreDistanceClamp && !recenterNextUpdate)
             {
                 wasClamped |= DistanceClamp(currentPosition, refPosition, goalDirection, ref goalPosition);
             }
@@ -377,22 +371,25 @@ namespace Microsoft.MixedReality.Toolkit.Experimental.Utilities
             Quaternion goalRotation = Quaternion.identity;
             ComputeOrientation(goalPosition, wasClamped, ref goalRotation);
 
-            // Avoid drift by not updating the goal position when not clamped
-            if (wasClamped)
+            if (recenterNextUpdate)
             {
-                GoalPosition = goalPosition;
+                PreviousGoalRotation = goalRotation;
+                SnapTo(goalPosition, goalRotation, WorkingScale);
+                recenterNextUpdate = false;
             }
+            else
+            {
+                // Avoid drift by not updating the goal position when not clamped
+                if (wasClamped)
+                {
+                    GoalPosition = goalPosition;
+                }
 
-            GoalRotation = goalRotation;
-
-            PreviousGoalRotation = goalRotation;
-
-            PreviousReferencePosition = refPosition;
-            PreviousReferenceRotation = refRotation;
-            recenterNextUpdate = false;
-
-            UpdateWorkingPositionToGoal();
-            UpdateWorkingRotationToGoal();
+                GoalRotation = goalRotation;
+                PreviousGoalRotation = goalRotation;
+                UpdateWorkingPositionToGoal();
+                UpdateWorkingRotationToGoal();
+            }
         }
 
         /// <summary>
@@ -440,7 +437,7 @@ namespace Microsoft.MixedReality.Toolkit.Experimental.Utilities
         }
 
         /// <summary>
-        /// This method ensures that the refForward vector remains within the bounds set by the 
+        /// This method ensures that the refForward vector remains within the bounds set by the
         /// leashing parameters. To do this, it determines the angles between toTarget and the reference
         /// local xz and yz planes. If these angles fall within the leashing bounds, then we don't have
         /// to modify refForward. Otherwise, we apply a correction rotation to bring it within bounds.
@@ -558,7 +555,7 @@ namespace Microsoft.MixedReality.Toolkit.Experimental.Utilities
         }
 
         /// <summary>
-        /// This method ensures that the distance from clampedPosition to the tracked target remains within 
+        /// This method ensures that the distance from clampedPosition to the tracked target remains within
         /// the bounds set by the leashing parameters. To do this, it clamps the current distance to these
         /// bounds and then uses this clamped distance with refForward to calculate the new position. If
         /// IgnoreReferencePitchAndRoll is true and we have a PitchOffset, we only apply these calculations
@@ -637,15 +634,15 @@ namespace Microsoft.MixedReality.Toolkit.Experimental.Utilities
             if (FaceUserDefinedTargetTransform)
             {
                 Vector3 directionToTarget = TargetToFace != null ? goalPosition - TargetToFace.position : Vector3.zero;
-                if (!PivotAxis.HasFlag(AxisFlags.XAxis))
+                if (!PivotAxis.IsMaskSet(AxisFlags.XAxis))
                 {
                     directionToTarget.x = 0;
                 }
-                if (!PivotAxis.HasFlag(AxisFlags.YAxis))
+                if (!PivotAxis.IsMaskSet(AxisFlags.YAxis))
                 {
                     directionToTarget.y = 0;
                 }
-                if (!PivotAxis.HasFlag(AxisFlags.ZAxis))
+                if (!PivotAxis.IsMaskSet(AxisFlags.ZAxis))
                 {
                     directionToTarget.z = 0;
                 }

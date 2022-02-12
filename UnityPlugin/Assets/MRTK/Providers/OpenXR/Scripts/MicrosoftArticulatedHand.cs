@@ -9,10 +9,11 @@ using System.Collections.Generic;
 using Unity.Profiling;
 using UnityEngine;
 using UnityEngine.XR;
+using Handedness = Microsoft.MixedReality.Toolkit.Utilities.Handedness;
 
-#if MSFT_OPENXR
-using Microsoft.MixedReality.OpenXR.Preview;
-#endif // MSFT_OPENXR
+#if MSFT_OPENXR && (UNITY_STANDALONE_WIN || UNITY_WSA)
+using Microsoft.MixedReality.OpenXR;
+#endif // MSFT_OPENXR && (UNITY_STANDALONE_WIN || UNITY_WSA)
 
 namespace Microsoft.MixedReality.Toolkit.XRSDK.OpenXR
 {
@@ -23,39 +24,41 @@ namespace Microsoft.MixedReality.Toolkit.XRSDK.OpenXR
     /// </summary>
     [MixedRealityController(
         SupportedControllerType.ArticulatedHand,
-        new[] { Utilities.Handedness.Left, Utilities.Handedness.Right })]
+        new[] { Handedness.Left, Handedness.Right })]
     public class MicrosoftArticulatedHand : GenericXRSDKController, IMixedRealityHand
     {
         /// <summary>
         /// Constructor.
         /// </summary>
-        public MicrosoftArticulatedHand(TrackingState trackingState, Utilities.Handedness controllerHandedness, IMixedRealityInputSource inputSource = null, MixedRealityInteractionMapping[] interactions = null)
-                : base(trackingState, controllerHandedness, inputSource, interactions)
+        public MicrosoftArticulatedHand(TrackingState trackingState, Handedness controllerHandedness, IMixedRealityInputSource inputSource = null, MixedRealityInteractionMapping[] interactions = null)
+            : base(trackingState, controllerHandedness, inputSource, interactions, new ArticulatedHandDefinition(inputSource, controllerHandedness))
         {
-            handDefinition = new ArticulatedHandDefinition(inputSource, controllerHandedness);
-#if MSFT_OPENXR
-            handTracker = new HandTracker(controllerHandedness == Utilities.Handedness.Left ? MixedReality.OpenXR.Preview.Handedness.Left : MixedReality.OpenXR.Preview.Handedness.Right, HandPoseType.Tracked);
-#endif // MSFT_OPENXR
+            handDefinition = Definition as ArticulatedHandDefinition;
+            handMeshProvider = controllerHandedness == Handedness.Left ? OpenXRHandMeshProvider.Left : OpenXRHandMeshProvider.Right;
+            handMeshProvider?.SetInputSource(inputSource);
+
+#if MSFT_OPENXR && (UNITY_STANDALONE_WIN || UNITY_WSA)
+            handTracker = controllerHandedness == Handedness.Left ? HandTracker.Left : HandTracker.Right;
+#endif // MSFT_OPENXR && (UNITY_STANDALONE_WIN || UNITY_WSA)
         }
 
-        /// <inheritdoc />
-        public override MixedRealityInteractionMapping[] DefaultInteractions => handDefinition?.DefaultInteractions;
+        private readonly ArticulatedHandDefinition handDefinition;
+        private readonly OpenXRHandMeshProvider handMeshProvider;
 
         protected readonly Dictionary<TrackedHandJoint, MixedRealityPose> unityJointPoses = new Dictionary<TrackedHandJoint, MixedRealityPose>();
-        protected readonly ArticulatedHandDefinition handDefinition;
-
-        private static readonly HandFinger[] handFingers = Enum.GetValues(typeof(HandFinger)) as HandFinger[];
-        private readonly List<Bone> fingerBones = new List<Bone>();
 
         private Vector3 currentPointerPosition = Vector3.zero;
         private Quaternion currentPointerRotation = Quaternion.identity;
         private MixedRealityPose currentPointerPose = MixedRealityPose.ZeroIdentity;
 
-#if MSFT_OPENXR
+#if MSFT_OPENXR && (UNITY_STANDALONE_WIN || UNITY_WSA)
         private static readonly HandJoint[] HandJoints = Enum.GetValues(typeof(HandJoint)) as HandJoint[];
         private readonly HandTracker handTracker = null;
         private readonly HandJointLocation[] locations = new HandJointLocation[HandTracker.JointCount];
-#endif // MSFT_OPENXR
+#else
+        private static readonly HandFinger[] handFingers = Enum.GetValues(typeof(HandFinger)) as HandFinger[];
+        private readonly List<Bone> fingerBones = new List<Bone>();
+#endif // MSFT_OPENXR && (UNITY_STANDALONE_WIN || UNITY_WSA)
 
         #region IMixedRealityHand Implementation
 
@@ -67,7 +70,7 @@ namespace Microsoft.MixedReality.Toolkit.XRSDK.OpenXR
         /// <inheritdoc/>
         public override bool IsInPointingPose => handDefinition.IsInPointingPose;
 
-        private static readonly ProfilerMarker UpdateControllerPerfMarker = new ProfilerMarker("[MRTK] WindowsMixedRealityOpenXRArticulatedHand.UpdateController");
+        private static readonly ProfilerMarker UpdateControllerPerfMarker = new ProfilerMarker("[MRTK] MicrosoftArticulatedHand.UpdateController");
 
         /// <summary>
         /// The OpenXR plug-in uses extensions to expose all possible data, which might be surfaced through multiple input devices.
@@ -107,7 +110,7 @@ namespace Microsoft.MixedReality.Toolkit.XRSDK.OpenXR
             }
         }
 
-        private static readonly ProfilerMarker UpdateSingleAxisDataPerfMarker = new ProfilerMarker("[MRTK] WindowsMixedRealityOpenXRArticulatedHand.UpdateSingleAxisData");
+        private static readonly ProfilerMarker UpdateSingleAxisDataPerfMarker = new ProfilerMarker("[MRTK] MicrosoftArticulatedHand.UpdateSingleAxisData");
 
         /// <inheritdoc />
         protected override void UpdateSingleAxisData(MixedRealityInteractionMapping interactionMapping, InputDevice inputDevice)
@@ -146,7 +149,7 @@ namespace Microsoft.MixedReality.Toolkit.XRSDK.OpenXR
             }
         }
 
-        private static readonly ProfilerMarker UpdateButtonDataPerfMarker = new ProfilerMarker("[MRTK] WindowsMixedRealityOpenXRArticulatedHand.UpdateButtonData");
+        private static readonly ProfilerMarker UpdateButtonDataPerfMarker = new ProfilerMarker("[MRTK] MicrosoftArticulatedHand.UpdateButtonData");
 
         /// <inheritdoc />
         protected override void UpdateButtonData(MixedRealityInteractionMapping interactionMapping, InputDevice inputDevice)
@@ -162,6 +165,11 @@ namespace Microsoft.MixedReality.Toolkit.XRSDK.OpenXR
                         if (inputDevice.TryGetFeatureValue(CommonUsages.primaryButton, out bool buttonPressed))
                         {
                             interactionMapping.BoolData = buttonPressed;
+                        }
+                        else
+                        {
+                            base.UpdateButtonData(interactionMapping, inputDevice);
+                            return;
                         }
                         break;
                     default:
@@ -185,7 +193,7 @@ namespace Microsoft.MixedReality.Toolkit.XRSDK.OpenXR
             }
         }
 
-        private static readonly ProfilerMarker UpdatePoseDataPerfMarker = new ProfilerMarker("[MRTK] WindowsMixedRealityOpenXRArticulatedHand.UpdatePoseData");
+        private static readonly ProfilerMarker UpdatePoseDataPerfMarker = new ProfilerMarker("[MRTK] MicrosoftArticulatedHand.UpdatePoseData");
 
         /// <inheritdoc />
         protected override void UpdatePoseData(MixedRealityInteractionMapping interactionMapping, InputDevice inputDevice)
@@ -198,12 +206,12 @@ namespace Microsoft.MixedReality.Toolkit.XRSDK.OpenXR
                         handDefinition?.UpdateCurrentIndexPose(interactionMapping);
                         break;
                     case DeviceInputType.SpatialPointer:
-                        if (inputDevice.TryGetFeatureValue(Input.CustomUsages.PointerPosition, out currentPointerPosition))
+                        if (inputDevice.TryGetFeatureValue(CustomUsages.PointerPosition, out currentPointerPosition))
                         {
                             currentPointerPose.Position = MixedRealityPlayspace.TransformPoint(currentPointerPosition);
                         }
 
-                        if (inputDevice.TryGetFeatureValue(Input.CustomUsages.PointerRotation, out currentPointerRotation))
+                        if (inputDevice.TryGetFeatureValue(CustomUsages.PointerRotation, out currentPointerRotation))
                         {
                             currentPointerPose.Rotation = MixedRealityPlayspace.Rotation * currentPointerRotation;
                         }
@@ -224,7 +232,7 @@ namespace Microsoft.MixedReality.Toolkit.XRSDK.OpenXR
             }
         }
 
-        private static readonly ProfilerMarker UpdateHandDataPerfMarker = new ProfilerMarker("[MRTK] WindowsMixedRealityOpenXRArticulatedHand.UpdateHandData");
+        private static readonly ProfilerMarker UpdateHandDataPerfMarker = new ProfilerMarker("[MRTK] MicrosoftArticulatedHand.UpdateHandData");
 
         /// <summary>
         /// Update the hand data from the device.
@@ -234,7 +242,9 @@ namespace Microsoft.MixedReality.Toolkit.XRSDK.OpenXR
         {
             using (UpdateHandDataPerfMarker.Auto())
             {
-#if MSFT_OPENXR
+                handMeshProvider?.UpdateHandMesh();
+
+#if MSFT_OPENXR && (UNITY_STANDALONE_WIN || UNITY_WSA)
                 if (handTracker != null && handTracker.TryLocateHandJoints(FrameTime.OnUpdate, locations))
                 {
                     foreach (HandJoint handJoint in HandJoints)
@@ -243,8 +253,8 @@ namespace Microsoft.MixedReality.Toolkit.XRSDK.OpenXR
 
                         // We want input sources to follow the playspace, so fold in the playspace transform here to
                         // put the pose into world space.
-                        Vector3 position = MixedRealityPlayspace.TransformPoint(handJointLocation.Position);
-                        Quaternion rotation = MixedRealityPlayspace.Rotation * handJointLocation.Rotation;
+                        Vector3 position = MixedRealityPlayspace.TransformPoint(handJointLocation.Pose.position);
+                        Quaternion rotation = MixedRealityPlayspace.Rotation * handJointLocation.Pose.rotation;
 
                         unityJointPoses[ConvertToTrackedHandJoint(handJoint)] = new MixedRealityPose(position, rotation);
                     }
@@ -266,14 +276,14 @@ namespace Microsoft.MixedReality.Toolkit.XRSDK.OpenXR
                             }
                         }
                     }
-#endif // MSFT_OPENXR
+#endif // MSFT_OPENXR && (UNITY_STANDALONE_WIN || UNITY_WSA)
 
                     handDefinition?.UpdateHandJoints(unityJointPoses);
                 }
             }
         }
 
-#if MSFT_OPENXR
+#if MSFT_OPENXR && (UNITY_STANDALONE_WIN || UNITY_WSA)
         private TrackedHandJoint ConvertToTrackedHandJoint(HandJoint handJoint)
         {
             switch (handJoint)
@@ -352,6 +362,6 @@ namespace Microsoft.MixedReality.Toolkit.XRSDK.OpenXR
                 default: return TrackedHandJoint.None;
             }
         }
-#endif // MSFT_OPENXR
+#endif // MSFT_OPENXR && (UNITY_STANDALONE_WIN || UNITY_WSA)
     }
 }

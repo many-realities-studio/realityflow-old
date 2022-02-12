@@ -1,8 +1,7 @@
 ﻿using System.Collections;
-using System.Net.NetworkInformation;
 using UnityEngine;
 
-namespace Microsoft.MixedReality.Toolkit.Experimental.UI.HandCoach
+namespace Microsoft.MixedReality.Toolkit.UI.HandCoach
 {
     /// <summary>
     /// This class provides functionality to move the hand hint from a tracking position to a target position over time.

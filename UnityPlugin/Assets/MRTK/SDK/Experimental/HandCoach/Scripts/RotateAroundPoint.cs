@@ -1,9 +1,7 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
-namespace Microsoft.MixedReality.Toolkit.Experimental.UI.HandCoach
+namespace Microsoft.MixedReality.Toolkit.UI.HandCoach
 {
     /// <summary>
     /// This class provides functionality to rotate the hand hint around a pivot point over time.

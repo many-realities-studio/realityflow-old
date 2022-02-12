@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-namespace Microsoft.MixedReality.Toolkit.Experimental.Dialog
+namespace Microsoft.MixedReality.Toolkit.UI
 {
     /// <summary>
     /// This class implements the abstract class Dialog.
@@ -54,7 +54,7 @@ namespace Microsoft.MixedReality.Toolkit.Experimental.Dialog
             foreach (DialogButtonType buttonType in Enum.GetValues(typeof(DialogButtonType)))
             {
                 // If this button type flag is set
-                if (buttonType != DialogButtonType.None && result.Buttons.HasFlag(buttonType))
+                if (buttonType != DialogButtonType.None && result.Buttons.IsMaskSet(buttonType))
                 {
                     buttonTypes.Add(buttonType);
                 }
@@ -130,7 +130,7 @@ namespace Microsoft.MixedReality.Toolkit.Experimental.Dialog
         /// <summary>
         /// Function to destroy the Dialog.
         /// </summary>
-        public void DismissDialog()
+        public override void DismissDialog()
         {
             State = DialogState.InputReceived;
         }
