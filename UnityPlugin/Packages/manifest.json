@@ -1,7 +1,7 @@
 {
   "scopedRegistries": [],
   "dependencies": {
-    "com.alelievr.node-graph-processor": "file:../../NGP Master/Assets/com.alelievr.NodeGraphProcessor",
+    "com.alelievr.node-graph-processor": "file:../../NGP/Assets/com.alelievr.NodeGraphProcessor",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.2d.tilemap": "1.0.0",
     "com.unity.ads": "3.7.1",

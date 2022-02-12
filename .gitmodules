@@ -4,3 +4,6 @@
 [submodule "realityflow-server"]
 	path = realityflow-server
 	url = https://github.com/many-realities-studio/realityflow-server.git
+[submodule "NGP"]
+	path = NGP
+	url = git@github.com:many-realities-studio/NodeGraphProcessor.git
