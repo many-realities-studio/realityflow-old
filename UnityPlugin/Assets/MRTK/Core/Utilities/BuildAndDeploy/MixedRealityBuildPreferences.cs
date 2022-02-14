@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using Microsoft.MixedReality.Toolkit.Utilities.Gltf;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
@@ -20,31 +19,11 @@ namespace Microsoft.MixedReality.Toolkit.Build.Editor
         private const string AppLauncherPath = @"Assets\AppLauncherModel.glb";
         private static readonly GUIContent AppLauncherModelLabel = new GUIContent("3D App Launcher Model", "Location of .glb model to use as a 3D App Launcher");
         private static UnityEditor.Editor gameObjectEditor = null;
-        private static GUIStyle appLauncherPreviewBackgroundColor = null;
         private static bool isBuilding = false;
 
         // Arbitrary callback order, chosen to be larger so that it runs after other things that
         // a developer may have already.
         int IOrderedCallback.callbackOrder => 100;
-
-        [SettingsProvider]
-        private static SettingsProvider BuildPreferences()
-        {
-            var provider = new SettingsProvider("Project/Mixed Reality Toolkit/Build Settings", SettingsScope.Project)
-            {
-                guiHandler = GUIHandler,
-
-                keywords = new HashSet<string>(new[] { "Mixed", "Reality", "Toolkit", "Build" })
-            };
-
-            void GUIHandler(string searchContext)
-            {
-                EditorGUILayout.HelpBox("These settings are serialized into ProjectPreferences.asset in the MixedRealityToolkit-Generated folder.\nThis file can be checked into source control to maintain consistent settings across collaborators.", MessageType.Info);
-                DrawAppLauncherModelField();
-            }
-
-            return provider;
-        }
 
         /// <summary>
         /// Helper script for rendering an object field to set the 3D app launcher model in an editor window.
@@ -52,6 +31,7 @@ namespace Microsoft.MixedReality.Toolkit.Build.Editor
         /// <remarks>See <see href="https://docs.microsoft.com/en-us/windows/mixed-reality/distribute/3d-app-launcher-design-guidance">3D app launcher design guidance</see> for more information.</remarks>
         public static void DrawAppLauncherModelField(bool showInteractivePreview = true)
         {
+#if !MRTK_GLTF_IMPORTER_OFF
             using (new EditorGUILayout.HorizontalScope())
             {
                 GltfAsset newGlbModel;
@@ -59,7 +39,7 @@ namespace Microsoft.MixedReality.Toolkit.Build.Editor
 
                 // 3D launcher model
                 string curAppLauncherModelLocation = BuildDeployPreferences.AppLauncherModelLocation;
-                var curGlbModel = AssetDatabase.LoadAssetAtPath(curAppLauncherModelLocation, typeof(GltfAsset));
+                Object curGlbModel = AssetDatabase.LoadAssetAtPath(curAppLauncherModelLocation, typeof(GltfAsset));
 
                 using (new EditorGUILayout.VerticalScope())
                 {
@@ -90,6 +70,7 @@ namespace Microsoft.MixedReality.Toolkit.Build.Editor
                     gameObjectEditor.OnInteractivePreviewGUI(GUILayoutUtility.GetRect(128, 128), appLauncherPreviewBackgroundColor);
                 }
             }
+#endif
         }
 
         void IPreprocessBuildWithReport.OnPreprocessBuild(BuildReport report)
@@ -123,10 +104,10 @@ namespace Microsoft.MixedReality.Toolkit.Build.Editor
 
         private static void AddAppLauncherModelToProject(string filePath)
         {
-            var text = File.ReadAllText(filePath);
-            var doc = new XmlDocument();
+            string text = File.ReadAllText(filePath);
+            XmlDocument doc = new XmlDocument();
             doc.LoadXml(text);
-            var root = doc.DocumentElement;
+            XmlElement root = doc.DocumentElement;
 
             // Check to see if model has already been added
             XmlNodeList nodes = root.SelectNodes($"//None[@Include = \"{AppLauncherPath}\"]");
@@ -135,23 +116,23 @@ namespace Microsoft.MixedReality.Toolkit.Build.Editor
                 return;
             }
 
-            var newNodeDoc = new XmlDocument();
+            XmlDocument newNodeDoc = new XmlDocument();
             newNodeDoc.LoadXml($"<None Include=\"{AppLauncherPath}\">" +
                             "<DeploymentContent>true</DeploymentContent>" +
                             "</None>");
-            var newNode = doc.ImportNode(newNodeDoc.DocumentElement, true);
-            var list = doc.GetElementsByTagName("ItemGroup");
-            var items = list.Item(1);
-            items.AppendChild(newNode);
+            XmlNode newNode = doc.ImportNode(newNodeDoc.DocumentElement, true);
+            XmlNodeList list = doc.GetElementsByTagName("ItemGroup");
+            XmlNode items = list.Item(1);
+            _ = items.AppendChild(newNode);
             doc.Save(filePath);
         }
 
         private static void AddAppLauncherModelToFilter(string filePath)
         {
-            var text = File.ReadAllText(filePath);
-            var doc = new XmlDocument();
+            string text = File.ReadAllText(filePath);
+            XmlDocument doc = new XmlDocument();
             doc.LoadXml(text);
-            var root = doc.DocumentElement;
+            XmlElement root = doc.DocumentElement;
 
             // Check to see if model has already been added
             XmlNodeList nodes = root.SelectNodes($"//None[@Include = \"{AppLauncherPath}\"]");
@@ -160,23 +141,23 @@ namespace Microsoft.MixedReality.Toolkit.Build.Editor
                 return;
             }
 
-            var newNodeDoc = new XmlDocument();
+            XmlDocument newNodeDoc = new XmlDocument();
             newNodeDoc.LoadXml($"<None Include=\"{AppLauncherPath}\">" +
                             "<Filter>Assets</Filter>" +
                             "</None>");
-            var newNode = doc.ImportNode(newNodeDoc.DocumentElement, true);
-            var list = doc.GetElementsByTagName("ItemGroup");
-            var items = list.Item(0);
-            items.AppendChild(newNode);
+            XmlNode newNode = doc.ImportNode(newNodeDoc.DocumentElement, true);
+            XmlNodeList list = doc.GetElementsByTagName("ItemGroup");
+            XmlNode items = list.Item(0);
+            _ = items.AppendChild(newNode);
             doc.Save(filePath);
         }
 
         private static void UpdateManifest(string filePath)
         {
-            var text = File.ReadAllText(filePath);
-            var doc = new XmlDocument();
+            string text = File.ReadAllText(filePath);
+            XmlDocument doc = new XmlDocument();
             doc.LoadXml(text);
-            var root = doc.DocumentElement;
+            XmlElement root = doc.DocumentElement;
 
             // Check to see if the element exists already
             XmlNamespaceManager nsmgr = new XmlNamespaceManager(doc.NameTable);
@@ -191,14 +172,14 @@ namespace Microsoft.MixedReality.Toolkit.Build.Editor
             }
             root.SetAttribute("xmlns:uap5", "http://schemas.microsoft.com/appx/manifest/uap/windows10/5");
 
-            var ignoredValue = root.GetAttribute("IgnorableNamespaces");
+            string ignoredValue = root.GetAttribute("IgnorableNamespaces");
             root.SetAttribute("IgnorableNamespaces", ignoredValue + " uap5");
 
-            var newElement = doc.CreateElement("uap5", "MixedRealityModel", "http://schemas.microsoft.com/appx/manifest/uap/windows10/5");
+            XmlElement newElement = doc.CreateElement("uap5", "MixedRealityModel", "http://schemas.microsoft.com/appx/manifest/uap/windows10/5");
             newElement.SetAttribute("Path", AppLauncherPath);
-            var list = doc.GetElementsByTagName("uap:DefaultTile");
-            var items = list.Item(0);
-            items.AppendChild(newElement);
+            XmlNodeList list = doc.GetElementsByTagName("uap:DefaultTile");
+            XmlNode items = list.Item(0);
+            _ = items.AppendChild(newElement);
 
             doc.Save(filePath);
         }

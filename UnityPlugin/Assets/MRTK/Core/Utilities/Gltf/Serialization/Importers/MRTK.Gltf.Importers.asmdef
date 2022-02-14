@@ -1,12 +1,12 @@
 {
     "name": "Microsoft.MixedReality.Toolkit.Gltf.Importers",
+    "rootNamespace": "",
     "references": [
         "Microsoft.MixedReality.Toolkit",
         "Microsoft.MixedReality.Toolkit.Async",
         "Microsoft.MixedReality.Toolkit.Gltf",
         "Microsoft.MixedReality.Toolkit.Editor.Utilities"
     ],
-    "optionalUnityReferences": [],
     "includePlatforms": [
         "Editor"
     ],
@@ -15,5 +15,9 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": []
+    "defineConstraints": [
+        "!MRTK_GLTF_IMPORTER_OFF"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

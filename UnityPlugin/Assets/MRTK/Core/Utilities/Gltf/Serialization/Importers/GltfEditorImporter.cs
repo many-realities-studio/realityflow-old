@@ -2,7 +2,9 @@
 // Licensed under the MIT License.
 
 using Microsoft.MixedReality.Toolkit.Utilities.Editor;
+#if !MRTK_GLTF_IMPORTER_OFF
 using Microsoft.MixedReality.Toolkit.Utilities.Gltf.Schema;
+#endif
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -35,6 +37,7 @@ namespace Microsoft.MixedReality.Toolkit.Utilities.Gltf.Serialization.Editor
 
         public static async void OnImportGltfAsset(AssetImportContext context)
         {
+          #if !MRTK_GLTF_IMPORTER_OFF
             var importedObject = await GltfUtility.ImportGltfObjectFromPathAsync(context.assetPath);
 
             if (importedObject == null ||
@@ -55,13 +58,13 @@ namespace Microsoft.MixedReality.Toolkit.Utilities.Gltf.Serialization.Editor
 
             bool reImport = false;
 
-            for (var i = 0; i < gltfAsset.GltfObject.textures?.Length; i++)
+            for (int i = 0; i < gltfAsset.GltfObject.textures?.Length; i++)
             {
                 GltfTexture gltfTexture = gltfAsset.GltfObject.textures[i];
 
                 if (gltfTexture == null) { continue; }
 
-                var path = AssetDatabase.GetAssetPath(gltfTexture.Texture);
+                string path = AssetDatabase.GetAssetPath(gltfTexture.Texture);
 
                 if (string.IsNullOrWhiteSpace(path))
                 {
@@ -79,7 +82,7 @@ namespace Microsoft.MixedReality.Toolkit.Utilities.Gltf.Serialization.Editor
                 {
                     if (!gltfTexture.Texture.isReadable)
                     {
-                        var textureImporter = AssetImporter.GetAtPath(path) as TextureImporter;
+                        TextureImporter textureImporter = AssetImporter.GetAtPath(path) as TextureImporter;
                         if (textureImporter != null)
                         {
                             textureImporter.isReadable = true;
@@ -93,12 +96,12 @@ namespace Microsoft.MixedReality.Toolkit.Utilities.Gltf.Serialization.Editor
 
             if (reImport)
             {
-                var importer = AssetImporter.GetAtPath(context.assetPath);
+                AssetImporter importer = AssetImporter.GetAtPath(context.assetPath);
                 importer.SaveAndReimport();
                 return;
             }
 
-            for (var i = 0; i < gltfAsset.GltfObject.meshes?.Length; i++)
+            for (int i = 0; i < gltfAsset.GltfObject.meshes?.Length; i++)
             {
                 GltfMesh gltfMesh = gltfAsset.GltfObject.meshes[i];
 
@@ -115,6 +118,7 @@ namespace Microsoft.MixedReality.Toolkit.Utilities.Gltf.Serialization.Editor
                     context.AddObjectToAsset(gltfMaterial.name, gltfMaterial.Material);
                 }
             }
+            #endif
         }
     }
 }
