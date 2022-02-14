@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.alelievr.node-graph-processor": {
-      "version": "file:../../NGP Master/Assets/com.alelievr.NodeGraphProcessor",
+      "version": "file:../../NGP/Assets/com.alelievr.NodeGraphProcessor",
       "depth": 0,
       "source": "local",
       "dependencies": {}
@@ -127,7 +127,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.vscode": {
-      "version": "1.2.3",
+      "version": "1.2.5",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
@@ -163,16 +163,10 @@
       "dependencies": {}
     },
     "com.unity.purchasing": {
-      "version": "3.2.2",
-      "depth": 0,
+      "version": "2.0.6",
+      "depth": 1,
       "source": "registry",
-      "dependencies": {
-        "com.unity.ugui": "1.0.0",
-        "com.unity.modules.unityanalytics": "1.0.0",
-        "com.unity.modules.unitywebrequest": "1.0.0",
-        "com.unity.modules.jsonserialize": "1.0.0",
-        "com.unity.modules.androidjni": "1.0.0"
-      },
+      "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.subsystemregistration": {
@@ -270,18 +264,23 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+    "com.unity.xr.openxr": {
+      "version": "1.3.1",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.xr.management": "4.0.1",
+        "com.unity.xr.legacyinputhelpers": "2.1.2",
+        "com.unity.inputsystem": "1.0.2"
+      },
+      "url": "https://packages.unity.com"
+    },
     "nuget.mono-cecil": {
       "version": "0.1.6-preview",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
-    },
-    "org.khronos.unitygltf": {
-      "version": "file:../../UnityGLTF",
-      "depth": 0,
-      "source": "local",
-      "dependencies": {}
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
