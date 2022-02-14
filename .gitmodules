@@ -7,3 +7,6 @@
 [submodule "NGP"]
 	path = NGP
 	url = git@github.com:many-realities-studio/NodeGraphProcessor.git
+[submodule "UnityGLTF"]
+	path = UnityGLTF
+	url = https://github.com/sketchfab/UnityGLTF.git
