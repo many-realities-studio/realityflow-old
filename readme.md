@@ -1,5 +1,8 @@
 [![Actions status](https://github.com/lucidbard/realityflow_f19/workflows/Actions%20%F0%9F%98%8E/badge.svg)](https://github.com/lucidbard/realityflow_f19/actions?query=branch%3Amaster+workflow%3A%22Actions+%F0%9F%98%8E%22)
 
+# Current Status
+This project is currently undergoing a refactor and consolidation to make it easier to get it running. 
+
 # RealityFlow
 Content creation tool designed to enable rapid experimental content creation and user
 testing for XR. Includes real-time collaboration and streamlined interaction/content
