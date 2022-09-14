@@ -88,4 +88,14 @@ package-lock.json
 node/server/bld/
 
 database/prod.db
-.vscode/settings.json
+
+# VSCode project settings
+.vscode/*      
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+# !.vscode/extensions.json // may not be necessary
+**/.history
+
+# Miscelaneous
+.DS_Store

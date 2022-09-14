@@ -39,3 +39,14 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+
+# VSCode project settings
+.vscode/*      
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+# !.vscode/extensions.json // may not be necessary
+**/.history
+
+# Miscelaneous
+.DS_Store
