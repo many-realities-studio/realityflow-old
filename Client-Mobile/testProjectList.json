@@ -1,9 +1,0 @@
-{
-	"userId" : "OUSsr98b0koFho",
-	"deviceId" : "fjhaIUG897Bf",
-	"listOfProjects" :
-	[
-		{ "projectName" : "project1", "projectId" :  "XYZ123abc789" },
-		{ "projectName" : "project2", "projectId" : "ABC123xyz123"  }
-	]
-}
