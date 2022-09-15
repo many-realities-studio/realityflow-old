@@ -17,6 +17,7 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: UnityPlugin/Library
+          ssh-key: '${{ secrets.SSH_KEY }}'
           key: Library-RealityFlow-TargetPlatform
           restore-keys: |
             Library-RealityFlow-
