@@ -4,23 +4,6 @@ on:
   push: { branches: [main] }
   
 jobs:
-  requestActivation:
-    name: Request activation ✔
-    runs-on: ubuntu-latest
-    steps:
-      # Checkout repository
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        with:
-          lfs: true
-      # Activate Unity
-      - name: Unity - Activate
-        uses: game-ci/unity-activate@v2.0.0
-        env:
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
-
   testRunnerInAllModes:
     name: Test all modes ✨
     runs-on: ubuntu-latest
@@ -62,22 +45,3 @@ jobs:
         with:
           name: Coverage results
           path: ${{ steps.myTestStep.outputs.coveragePath }}
-
-  activateAndThenReturnLicense:
-    name: returnLicense 🎈
-    runs-on: ubuntu-latest
-    env:
-      UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-
-    steps:
-      # Checkout repository (required to test local actions)
-      - name: Checkout repository
-        uses: actions/checkout@v1
-
-      # Activate Unity
-      - name: Activate Unity
-        uses: game-ci/unity-activate@v2.0.0
-
-      # Return License
-      - name: Return license
-        uses: game-ci/unity-return-license@v2.0.0
