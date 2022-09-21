@@ -5,10 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Dissonance/Integrations/PhotonUnityNetworking2/Demo/PUN2 Demo.unity
     guid: beea722e0e0a9b94d9a930a0ab1a3f95
-  - enabled: 1
+  - enabled: 0
     path: Assets/Dissonance/Integrations/PhotonUnityNetworking2/Demo/PUN2 Game World.unity
     guid: 8ce0b35beaf0d714f956693ff9885a9d
   - enabled: 0
