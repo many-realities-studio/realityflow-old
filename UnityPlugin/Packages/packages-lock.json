@@ -283,7 +283,7 @@
       "url": "https://packages.unity.com"
     },
     "org.khronos.unitygltf": {
-      "version": "file:C:/Users/jo284142/git/realityflow/UnityGLTF",
+      "version": "file:../../UnityGLTF",
       "depth": 0,
       "source": "local",
       "dependencies": {}
