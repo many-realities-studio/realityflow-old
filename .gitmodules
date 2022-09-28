@@ -1,9 +1,11 @@
 [submodule "UnityPlugin/Packages/RealityFlow"]
 	path = UnityPlugin/Packages/RealityFlow
 	url = https://github.com/lucidbard/realityflow_package.git
+	main = Main-package
 [submodule "realityflow-server"]
 	path = realityflow-server
 	url = https://github.com/many-realities-studio/realityflow-server.git
+	main = main
 [submodule "NGP"]
 	path = NGP
 	url = git@github.com:many-realities-studio/NodeGraphProcessor.git
