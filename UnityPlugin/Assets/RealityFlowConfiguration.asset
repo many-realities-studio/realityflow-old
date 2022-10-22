@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: RealityFlowConfiguration
   m_EditorClassIdentifier: 
   s_currentProject:
-    _id: noRoom
-    _description: this is not a room
-    _dateModified: 1664389397933
-    _projectName: noRoom
+    _id: 9a0c3d7e-bc6b-436e-b11c-aa19e70d5772
+    _description: description
+    _dateModified: 0
+    _projectName: test project
   s_currentUser:
     _username: user
     _password: pass
